@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 70" role="img" aria-label="Vrijburg laat zien">
+  <g fill="none" stroke="#2eb8e6" stroke-width="1.5">
+    <rect x="6" y="6" width="52" height="52" transform="rotate(-4 32 32)"/>
+    <rect x="12" y="10" width="52" height="52" transform="rotate(3 38 36)"/>
+  </g>
+  <text x="18" y="30" font-family="Georgia,serif" font-size="16" font-weight="700" fill="#2eb8e6">Vrijburg</text>
+  <text x="16" y="50" font-family="Georgia,serif" font-size="15" font-style="italic" fill="#222">laat zien</text>
+</svg>

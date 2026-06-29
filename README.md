@@ -4,13 +4,20 @@ Webformulier waarmee medewerkers (of dominees zelf) de wekelijkse liturgie kunne
 
 ## Hoe werkt het?
 
-1. Open `index.html` in een browser (of via de GitHub Pages URL)
-2. Vul de dienstgegevens in: datum, voorganger, organist, lector
-3. Voeg liederen en lezingen toe in de juiste volgorde
-4. Collecte wordt automatisch ingevuld op basis van de datum
-5. Klik **Download liturgie (.docx)**
+1. Open de app via GitHub Pages
+2. Kies bovenaan uw rol (voorganger, organist, bureaumedewerker)
+3. Vul alleen uw eigen onderdeel in — niet alles hoeft tegelijk
+4. Deel de link met anderen; uiteindelijk komt alles samen in één .docx
 
-Het gegenereerde document bevat alle vaste teksten (Bemoediging, Groet, Onze Vader, footer) automatisch.
+### Typische workflow
+
+1. **Bureaumedewerker** zet datum → predikant, organist, lector en cantorij worden ingevuld vanuit de dienstplanning
+2. **Bureaumedewerker** stuurt link naar voorganger en organist
+2. **Voorganger** vult thema en orde van dienst in, stuurt link terug
+3. **Organist** vult orgelspel en muziek in, stuurt link terug
+4. **Bureaumedewerker** controleert agenda en collecte, downloadt de liturgie
+
+Zie `HANDOVER.md` voor technische details.
 
 ## GitHub Pages deployment
 
@@ -25,6 +32,9 @@ Het gegenereerde document bevat alle vaste teksten (Bemoediging, Groet, Onze Vad
 |---|---|
 | `index.html` | De volledige applicatie (HTML + CSS + JS) |
 | `collectes.json` | Collectes 2026-2027, per datum, met beschrijving en rekeningnummer |
+| `dienstplanning.json` | Dienstplanning 2026: predikant, organist, lector, cantorij, kinderkerk per datum |
+| `dienstplanning-2026.csv` | Bronbestand voor dienstplanning (export uit Google Sheet) |
+| `HANDOVER.md` | Technische documentatie en doorontwikkelingsprioriteiten |
 | `README.md` | Dit bestand |
 
 ## Collectes bijwerken
@@ -53,6 +63,11 @@ De vaste teksten (Bemoediging, Groet, Onze Vader, QR-code tekst, footer) staan b
 
 ## Toekomstige uitbreidingen
 
-- Agenda automatisch ophalen van vrijburg.nl
-- Bijbelteksten automatisch invullen via een bijbel-API
-- Emailformulier waarmee de medewerker de link rechtstreeks naar de dominee stuurt
+Zie `HANDOVER.md` voor de volledige lijst. Recent toegevoegd:
+
+- Bijbelteksten automatisch ophalen bij lezingen (via BijbelAPI)
+- Deelbare link en mailto-knop voor dominees
+- Agenda importeren van vrijburg.nl
+- Concept opslaan in de browser (localStorage)
+
+Nog open: collectes 2027-2028, liedboek lookup, bijzondere diensten.

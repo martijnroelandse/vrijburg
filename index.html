@@ -246,6 +246,172 @@
     }
     .status-msg.ok { background: #e8f5e9; color: #2e7d32; }
     .status-msg.err { background: #ffeaea; color: #c00; }
+
+    .btn-secondary {
+      background: white;
+      color: var(--purple);
+      border: 1px solid var(--purple);
+      border-radius: var(--radius);
+      padding: 10px 18px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+    .btn-secondary:hover { background: var(--purple-light); }
+    .btn-secondary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .btn-fetch {
+      background: white;
+      border: 1px solid var(--purple-mid);
+      border-radius: 4px;
+      padding: 4px 10px;
+      font-size: 12px;
+      color: var(--purple);
+      cursor: pointer;
+      align-self: flex-start;
+    }
+    .btn-fetch:hover { background: var(--purple-light); }
+    .btn-fetch:disabled { opacity: 0.5; cursor: wait; }
+
+    .toolbar { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+    .draft-notice {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+    .draft-notice a { color: var(--purple); cursor: pointer; }
+
+    /* Workflow / rollen */
+    .workflow-section { border: 2px solid var(--purple-mid); }
+    .workflow-intro {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 16px;
+      line-height: 1.5;
+    }
+    .role-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .role-card {
+      background: white;
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .role-card:hover { border-color: var(--purple-mid); background: var(--purple-light); }
+    .role-card.active {
+      border-color: var(--purple);
+      background: var(--purple-light);
+      box-shadow: 0 0 0 3px rgba(90,45,130,0.12);
+    }
+    .role-card strong { display: block; font-size: 14px; color: var(--purple); margin-bottom: 4px; }
+    .role-card span { font-size: 12px; color: var(--muted); line-height: 1.4; }
+
+    .workflow-hint {
+      font-size: 13px;
+      background: #fff8e1;
+      border: 1px solid #ffe082;
+      border-radius: 4px;
+      padding: 10px 14px;
+      margin-bottom: 14px;
+      line-height: 1.5;
+    }
+    .workflow-options {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .workflow-options input { width: auto; }
+
+    .section.primary .section-header {
+      background: #e8dff5;
+      border-bottom-color: var(--purple);
+    }
+    .section.primary .section-header::after {
+      content: ' ← uw onderdeel';
+      font-weight: 400;
+      font-size: 11px;
+      opacity: 0.8;
+    }
+    .section.secondary { opacity: 0.85; }
+    .section.secondary.collapsed .section-body { display: none; }
+    .section.secondary .section-header {
+      cursor: pointer;
+      font-size: 13px;
+    }
+    .section.secondary .section-header::before {
+      content: '▸ ';
+      font-size: 11px;
+    }
+    .section.secondary:not(.collapsed) .section-header::before {
+      content: '▾ ';
+    }
+    .section.hidden { display: none; }
+
+    .field-mine label { color: var(--purple); }
+    .field-other label { opacity: 0.65; }
+
+    .vl-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .vl-card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 12px;
+      background: #fafcff;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .vl-card.active {
+      border-color: #2eb8e6;
+      box-shadow: 0 0 0 3px rgba(46,184,230,0.12);
+    }
+    .vl-card img {
+      height: 40px;
+      width: auto;
+      max-width: 100%;
+      object-fit: contain;
+      object-position: left center;
+    }
+    .vl-card-head {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .vl-card-head input { width: auto; flex-shrink: 0; }
+    .vl-card-head label {
+      text-transform: none;
+      letter-spacing: 0;
+      font-size: 13px;
+      color: var(--text);
+      line-height: 1.3;
+    }
+    .vl-card-head label strong {
+      display: block;
+      color: #1a8fb5;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+    .vl-detail {
+      font-size: 13px;
+      padding: 6px 8px;
+    }
   </style>
 </head>
 <body>
@@ -260,35 +426,130 @@
 
 <main>
 
+  <!-- 0. WORKFLOW -->
+  <div class="section workflow-section" id="section-workflow">
+    <div class="section-header">Wie vult wat in?</div>
+    <div class="section-body">
+      <p class="workflow-intro">
+        De liturgie wordt door meerdere mensen aangeleverd. Kies uw rol — u ziet dan vooral de onderdelen die bij u horen.
+        Niet alles hoeft in één keer ingevuld; via een gedeelde link komt het uiteindelijk bij elkaar.
+      </p>
+      <div class="role-cards" id="role-cards">
+        <button type="button" class="role-card" data-role="voorganger" onclick="setRol('voorganger')">
+          <strong>Voorganger</strong>
+          <span>Thema, orde van dienst, lezingen en liederen</span>
+        </button>
+        <button type="button" class="role-card" data-role="organist" onclick="setRol('organist')">
+          <strong>Organist</strong>
+          <span>Orgelspel en muziek in de dienst</span>
+        </button>
+        <button type="button" class="role-card" data-role="medewerker" onclick="setRol('medewerker')">
+          <strong>Bureaumedewerker</strong>
+          <span>Agenda, collecte, bloemen en samenvoegen</span>
+        </button>
+        <button type="button" class="role-card" data-role="compleet" onclick="setRol('compleet')">
+          <strong>Alles bekijken</strong>
+          <span>Volledig overzicht en download .docx</span>
+        </button>
+      </div>
+      <div id="workflow-hint" class="workflow-hint"></div>
+      <label class="workflow-options">
+        <input type="checkbox" id="toon-alles" onchange="applyRolUI()">
+        Toon ook onderdelen van anderen (ter referentie)
+      </label>
+    </div>
+  </div>
+
   <!-- 1. DIENST INFO -->
-  <div class="section">
+  <div class="section" id="section-dienst" data-section="dienst">
     <div class="section-header">1. Dienst</div>
     <div class="section-body">
+      <div id="planning-notice" class="collecte-auto-notice" style="display:none"></div>
       <div class="row">
-        <div class="field">
+        <div class="field" data-owner="all">
           <label>Datum</label>
           <input type="date" id="datum" onchange="onDatumChange()">
         </div>
-        <div class="field">
-          <label>Voorganger</label>
-          <input type="text" id="voorganger" placeholder="bijv. ds. Rachelle van Andel">
+        <div class="field" data-owner="medewerker">
+          <label>Afwijkende aanvangstijd <span class="opt">optioneel</span></label>
+          <input type="text" id="aanvangstijd" placeholder="bijv. 14.30 of 19.30">
+        </div>
+        <div class="field" data-owner="medewerker">
+          <label>Bijzondere dienst <span class="opt">uit dienstplanning</span></label>
+          <input type="text" id="bijzondere_dienst" placeholder="bijv. Pasen, Pinksteren, Kerstavond">
         </div>
       </div>
       <div class="row">
-        <div class="field">
-          <label>Organist</label>
+        <div class="field" data-owner="medewerker">
+          <label>Voorganger / predikant <span class="opt">uit dienstplanning</span></label>
+          <input type="text" id="voorganger" placeholder="bijv. ds. Rachelle van Andel">
+        </div>
+        <div class="field" data-owner="medewerker">
+          <label>Organist <span class="opt">uit dienstplanning</span></label>
           <input type="text" id="organist" placeholder="bijv. Jan Pieter Lanooy">
         </div>
-        <div class="field">
-          <label>Lector</label>
+        <div class="field" data-owner="medewerker">
+          <label>Lector <span class="opt">bureaumedewerker vult in</span></label>
           <input type="text" id="lector" placeholder="bijv. Gon Homburg">
         </div>
       </div>
+      <div class="row">
+        <div class="field" data-owner="medewerker" style="flex-direction:row;align-items:center;gap:8px;padding-top:20px">
+          <input type="checkbox" id="cantorij" style="width:auto">
+          <label for="cantorij" style="text-transform:none;letter-spacing:0;font-size:14px">Cantorij zingt mee</label>
+        </div>
+        <div class="field" data-owner="medewerker">
+          <label>Kinderkerk <span class="opt">optioneel</span></label>
+          <input type="text" id="kinderkerk" placeholder="bijv. ja">
+        </div>
+      </div>
+      <div class="vl-grid" data-owner="medewerker">
+        <div class="vl-card" id="card-vlv">
+          <img src="assets/logo-vlv.svg" alt="Vrijburg laat voorgaan">
+          <div class="vl-card-head">
+            <input type="checkbox" id="vlv_chk" onchange="onVlToggle('vlv')">
+            <label for="vlv_chk"><strong>VLV</strong>Vrijburg laat voorgaan</label>
+          </div>
+          <input type="text" class="vl-detail" id="vlv" placeholder="Toelichting (optioneel)" oninput="onVlDetail('vlv')">
+        </div>
+        <div class="vl-card" id="card-vlh">
+          <img src="assets/logo-vlh.svg" alt="Vrijburg laat horen">
+          <div class="vl-card-head">
+            <input type="checkbox" id="vlh_chk" onchange="onVlToggle('vlh')">
+            <label for="vlh_chk"><strong>VLH</strong>Vrijburg laat horen</label>
+          </div>
+          <input type="text" class="vl-detail" id="vlh" placeholder="Toelichting (optioneel)" oninput="onVlDetail('vlh')">
+        </div>
+        <div class="vl-card" id="card-vlz">
+          <img src="assets/logo-vlz.svg" alt="Vrijburg laat zien">
+          <div class="vl-card-head">
+            <input type="checkbox" id="vlz_chk" onchange="onVlToggle('vlz')">
+            <label for="vlz_chk"><strong>VLZ</strong>Vrijburg laat zien</label>
+          </div>
+          <input type="text" class="vl-detail" id="vlz" placeholder="Toelichting (optioneel)" oninput="onVlDetail('vlz')">
+        </div>
+      </div>
+      <div class="row">
+        <div class="field" data-owner="medewerker" style="flex-direction:row;align-items:center;gap:8px;padding-top:4px">
+          <input type="checkbox" id="avondmaal_chk" style="width:auto" onchange="onAvondmaalToggle()">
+          <label for="avondmaal_chk" style="text-transform:none;letter-spacing:0;font-size:14px">Avondmaal</label>
+          <input type="text" id="avondmaal" placeholder="Toelichting (optioneel)" style="flex:1" oninput="scheduleDraftSave()">
+        </div>
+      </div>
+      <div class="row">
+        <div class="field" data-owner="medewerker" style="grid-column: 1/-1">
+          <label>Overige bijzonderheden <span class="opt">locatie, opmerkingen</span></label>
+          <textarea id="bijzonderheden" rows="2" placeholder="bijv. Locatie: Thomaskerk"></textarea>
+        </div>
+      </div>
+      <p style="font-size:12px;color:#aaa;margin-top:8px">
+        Namen en VLV/VLH/VLZ komen uit de <a href="https://docs.google.com/spreadsheets/d/1imjMr9ELUHGV9331mYIoTOUc-DizOysV/edit" target="_blank" rel="noopener">dienstplanning</a>.
+      </p>
     </div>
   </div>
 
   <!-- 2. THEMA & INTRO -->
-  <div class="section">
+  <div class="section" id="section-thema" data-section="thema">
     <div class="section-header">2. Thema &amp; beschrijving</div>
     <div class="section-body">
       <div class="row">
@@ -313,16 +574,16 @@
   </div>
 
   <!-- 3. OPENING -->
-  <div class="section">
+  <div class="section" id="section-opening" data-section="opening">
     <div class="section-header">3. Opening van de dienst</div>
     <div class="section-body">
       <div class="row">
-        <div class="field">
-          <label>Orgelspel opening <span class="opt">optioneel</span></label>
+        <div class="field field-mine" data-owner="organist">
+          <label>Orgelspel opening <span class="opt">organist</span></label>
           <input type="text" id="orgelspel_opening" placeholder="bijv. Präludium in C-dur BWV 545, J.S. Bach">
         </div>
-        <div class="field">
-          <label>Lichtlied</label>
+        <div class="field field-mine" data-owner="voorganger">
+          <label>Lichtlied <span class="opt">voorganger</span></label>
           <input type="text" id="lichtlied" placeholder="bijv. Lied 217: 1 en 3  of  'Licht dat wil ingaan…'">
         </div>
       </div>
@@ -330,7 +591,7 @@
   </div>
 
   <!-- 4. ORDE VAN DIENST -->
-  <div class="section">
+  <div class="section" id="section-orde" data-section="orde">
     <div class="section-header">4. Orde van dienst <span style="font-weight:400;font-size:12px;color:#888">– in volgorde zoals de dominee die aanlevert</span></div>
     <div class="section-body">
       <div class="orde-list" id="orde-list"></div>
@@ -348,16 +609,16 @@
   </div>
 
   <!-- 5. SLOT -->
-  <div class="section">
+  <div class="section" id="section-slot" data-section="slot">
     <div class="section-header">5. Afsluiting</div>
     <div class="section-body">
       <div class="row">
-        <div class="field">
-          <label>Slotlied</label>
+        <div class="field field-mine" data-owner="voorganger">
+          <label>Slotlied <span class="opt">voorganger</span></label>
           <input type="text" id="slotlied" placeholder="bijv. Lied 675">
         </div>
-        <div class="field">
-          <label>Orgelspel slot <span class="opt">optioneel</span></label>
+        <div class="field field-mine" data-owner="organist">
+          <label>Orgelspel slot <span class="opt">organist</span></label>
           <input type="text" id="orgelspel_slot" placeholder="bijv. Fuge in C-dur BWV 545, J.S. Bach">
         </div>
       </div>
@@ -365,7 +626,7 @@
   </div>
 
   <!-- 6. COLLECTE & BLOEMEN -->
-  <div class="section">
+  <div class="section" id="section-collecte" data-section="collecte">
     <div class="section-header">6. Collecte &amp; bloemen</div>
     <div class="section-body">
       <div class="row" style="margin-bottom:16px">
@@ -431,9 +692,13 @@
   </div>
 
   <!-- 7. AGENDA -->
-  <div class="section">
+  <div class="section" id="section-agenda" data-section="agenda">
     <div class="section-header">7. Agenda</div>
     <div class="section-body">
+      <div style="margin-bottom:12px">
+        <button class="btn-secondary" onclick="importAgenda()" id="btn-import-agenda">↻ Importeer van vrijburg.nl</button>
+        <span style="font-size:12px;color:#aaa;margin-left:8px">Haalt activiteiten van de komende 2 weken op</span>
+      </div>
       <div class="field" style="margin-bottom:16px">
         <label>Activiteiten komende week <span class="opt">– voor activiteiten die binnenkort plaatsvinden</span></label>
         <textarea id="agenda_kort" rows="4" placeholder="bijv. Donderdag 2 juli 12:30 uur – Vrijburglunch in de Moddermanzaal…"></textarea>
@@ -448,8 +713,15 @@
 </main>
 
 <div class="generate-bar">
-  <button class="btn-generate" onclick="generateDocx()">⬇ Download liturgie (.docx)</button>
-  <span class="generate-hint">Het document is direct klaar om te printen</span>
+  <button class="btn-generate" id="btn-download" onclick="generateDocx()">⬇ Download liturgie (.docx)</button>
+  <div class="toolbar">
+    <button class="btn-secondary" id="btn-email-voorganger" onclick="emailRol('voorganger')">✉ Link naar voorganger</button>
+    <button class="btn-secondary" id="btn-email-organist" onclick="emailRol('organist')">✉ Link naar organist</button>
+    <button class="btn-secondary" onclick="copyShareLink()">🔗 Kopieer link</button>
+    <button class="btn-secondary" id="btn-klaar" onclick="copyShareLink()">✓ Ik ben klaar – kopieer link terug</button>
+    <button class="btn-secondary" onclick="clearDraft()">Wis concept</button>
+  </div>
+  <span class="generate-hint" id="generate-hint">Het document is direct klaar om te printen</span>
   <span id="status-msg"></span>
 </div>
 
@@ -461,6 +733,7 @@
 // COLLECTES DATA (2026-2027)
 // ============================================================
 const COLLECTES = []; // Filled from collectes.json below
+const DIENSTPLANNING = []; // Filled from dienstplanning.json
 
 // ============================================================
 // VASTE TEKSTEN
@@ -502,6 +775,166 @@ const NL_MAANDEN = ['januari','februari','maart','april','mei','juni','juli','au
 const NL_MAANDEN_CAP = ['Januari','Februari','Maart','April','Mei','Juni','Juli','Augustus','September','Oktober','November','December'];
 const NL_DAGEN = ['zondag','maandag','dinsdag','woensdag','donderdag','vrijdag','zaterdag'];
 
+const BIJBEL_VERSIE = 'bb'; // bb = BasisBijbel (vrij), hsv = Herziene Statenvertaling
+const STORAGE_KEY = 'vrijburg-liturgie-draft';
+const VRIJBURG_EVENTS_API = 'https://www.vrijburg.nl/wp-json/wp/v2/evenementen';
+
+const VL_LABELS = {
+  vlv: 'Vrijburg laat voorgaan',
+  vlh: 'Vrijburg laat horen',
+  vlz: 'Vrijburg laat zien',
+};
+
+function setVlField(name, value) {
+  const chk = document.getElementById(name + '_chk');
+  const detail = document.getElementById(name);
+  const card = document.getElementById('card-' + name);
+  if (!value) {
+    chk.checked = false;
+    detail.value = '';
+    card.classList.remove('active');
+    return;
+  }
+  chk.checked = true;
+  card.classList.add('active');
+  detail.value = (value === 'ja') ? '' : value;
+}
+
+function getVlField(name) {
+  if (!document.getElementById(name + '_chk').checked) return '';
+  const d = document.getElementById(name).value.trim();
+  return d || 'ja';
+}
+
+function onVlToggle(name) {
+  const chk = document.getElementById(name + '_chk');
+  const card = document.getElementById('card-' + name);
+  card.classList.toggle('active', chk.checked);
+  if (!chk.checked) document.getElementById(name).value = '';
+  scheduleDraftSave();
+}
+
+function onVlDetail(name) {
+  const chk = document.getElementById(name + '_chk');
+  const card = document.getElementById('card-' + name);
+  const hasText = document.getElementById(name).value.trim();
+  if (hasText && !chk.checked) chk.checked = true;
+  card.classList.toggle('active', chk.checked);
+  scheduleDraftSave();
+}
+
+function setAvondmaal(value) {
+  const chk = document.getElementById('avondmaal_chk');
+  const field = document.getElementById('avondmaal');
+  if (!value) { chk.checked = false; field.value = ''; return; }
+  chk.checked = true;
+  field.value = (value === 'ja' || value === 'x') ? '' : value;
+}
+
+function getAvondmaal() {
+  if (!document.getElementById('avondmaal_chk').checked) return '';
+  const d = document.getElementById('avondmaal').value.trim();
+  return d || 'ja';
+}
+
+function onAvondmaalToggle() {
+  if (!document.getElementById('avondmaal_chk').checked) {
+    document.getElementById('avondmaal').value = '';
+  }
+  scheduleDraftSave();
+}
+
+// ============================================================
+// WORKFLOW / ROLLEN
+// ============================================================
+let huidigeRol = 'medewerker';
+
+const ROL_CONFIG = {
+  voorganger: {
+    label: 'Voorganger',
+    primary: ['thema', 'opening', 'orde', 'slot'],
+    hint: 'Vul thema, orde van dienst (liederen, lezingen) en lichtlied/slotlied in. Predikant, organist en lector staan al in de dienstplanning. Klik op <strong>Ik ben klaar</strong> om de link terug te sturen.',
+    emailAan: 'voorganger',
+  },
+  organist: {
+    label: 'Organist',
+    primary: ['opening', 'orde', 'slot'],
+    hint: 'Vul orgelspel (opening en slot) en muziek in de orde van dienst in. Liederen en lezingen zijn door de voorganger aangeleverd — die kunt u ter referentie bekijken. Klik op <strong>Ik ben klaar</strong> als u klaar bent.',
+    emailAan: 'organist',
+  },
+  medewerker: {
+    label: 'Bureaumedewerker',
+    primary: ['dienst', 'collecte', 'agenda'],
+    hint: 'Zet datum — predikant, organist, lector, cantorij en kinderkerk worden ingevuld vanuit de dienstplanning. Controleer agenda en collecte. Stuur links naar voorganger en organist. Download de liturgie als alles binnen is.',
+    emailAan: null,
+  },
+  compleet: {
+    label: 'Alles bekijken',
+    primary: ['dienst', 'thema', 'opening', 'orde', 'slot', 'collecte', 'agenda'],
+    hint: 'Volledig overzicht van alle onderdelen. Controleer of alles is ingevuld en download de liturgie als .docx.',
+    emailAan: null,
+  },
+};
+
+function setRol(rol) {
+  huidigeRol = rol;
+  document.querySelectorAll('.role-card').forEach(c => {
+    c.classList.toggle('active', c.dataset.role === rol);
+  });
+  applyRolUI();
+  scheduleDraftSave();
+}
+
+function applyRolUI() {
+  const cfg = ROL_CONFIG[huidigeRol];
+  const toonAlles = document.getElementById('toon-alles').checked;
+  const hint = document.getElementById('workflow-hint');
+  hint.innerHTML = cfg.hint;
+
+  document.querySelectorAll('[data-section]').forEach(sec => {
+    const name = sec.dataset.section;
+    const isPrimary = cfg.primary.includes(name);
+    sec.classList.remove('primary', 'secondary', 'collapsed', 'hidden');
+
+    if (huidigeRol === 'compleet' || toonAlles) {
+      if (isPrimary) sec.classList.add('primary');
+    } else if (isPrimary) {
+      sec.classList.add('primary');
+    } else {
+      sec.classList.add('secondary', 'collapsed');
+    }
+  });
+
+  // Veld-highlight binnen gedeelde secties (opening, slot)
+  document.querySelectorAll('[data-owner]').forEach(field => {
+    const owner = field.dataset.owner;
+    const isMine = owner === 'all' ||
+      owner === huidigeRol ||
+      huidigeRol === 'medewerker' ||
+      huidigeRol === 'compleet' ||
+      toonAlles;
+    field.classList.toggle('field-mine', isMine);
+    field.classList.toggle('field-other', !isMine);
+  });
+
+  // Actieknoppen per rol
+  const isSamenvoeger = huidigeRol === 'medewerker' || huidigeRol === 'compleet';
+  document.getElementById('btn-download').style.display = isSamenvoeger ? '' : 'none';
+  document.getElementById('btn-email-voorganger').style.display = huidigeRol === 'medewerker' ? '' : 'none';
+  document.getElementById('btn-email-organist').style.display = huidigeRol === 'medewerker' ? '' : 'none';
+  document.getElementById('btn-klaar').style.display = (huidigeRol === 'voorganger' || huidigeRol === 'organist') ? '' : 'none';
+  document.getElementById('generate-hint').textContent = isSamenvoeger
+    ? 'Download wanneer alle onderdelen zijn ingevuld'
+    : 'Stuur de link terug als uw onderdeel klaar is';
+}
+
+function setupSectionToggles() {
+  document.querySelector('main').addEventListener('click', e => {
+    const header = e.target.closest('.section.secondary .section-header');
+    if (header) header.closest('.section').classList.toggle('collapsed');
+  });
+}
+
 // ============================================================
 // ORDE VAN DIENST – DYNAMISCHE LIJST
 // ============================================================
@@ -541,15 +974,21 @@ function renderOrde() {
     };
     const div = document.createElement('div');
     div.className = 'orde-item';
+    const fetchBtn = item.type === 'lezing'
+      ? `<button class="btn-fetch" onclick="fetchBibleText('${item.id}')" title="Haal bijbeltekst op via BijbelAPI">Tekst ophalen</button>`
+      : '';
     div.innerHTML = `
       <select onchange="updateOrdeType('${item.id}', this.value)">
         ${['lied','lezing','inleiding','muziek','overig'].map(t =>
           `<option value="${t}"${t===item.type?' selected':''}>${labels[t]}</option>`
         ).join('')}
       </select>
-      <textarea placeholder="${placeholders[item.type]||''}"
-                onchange="updateOrdeContent('${item.id}', this.value)"
-                oninput="updateOrdeContent('${item.id}', this.value)">${item.content}</textarea>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <textarea placeholder="${placeholders[item.type]||''}"
+                  onchange="updateOrdeContent('${item.id}', this.value)"
+                  oninput="updateOrdeContent('${item.id}', this.value)">${item.content}</textarea>
+        ${fetchBtn}
+      </div>
       <div style="display:flex;flex-direction:column;gap:4px">
         <button class="btn-icon" onclick="moveOrde('${item.id}',-1)" title="Omhoog">↑</button>
         <button class="btn-icon" onclick="moveOrde('${item.id}',1)" title="Omlaag">↓</button>
@@ -558,6 +997,7 @@ function renderOrde() {
     `;
     list.appendChild(div);
   });
+  scheduleDraftSave();
 }
 
 function updateOrdeType(id, type) {
@@ -568,6 +1008,293 @@ function updateOrdeType(id, type) {
 function updateOrdeContent(id, content) {
   const item = ordeItems.find(i => i.id == id);
   if (item) item.content = content;
+  scheduleDraftSave();
+}
+
+// ============================================================
+// BIJBELTEKST OPHALEN
+// ============================================================
+function normalizeBibleRef(text) {
+  const firstLine = text.split('\n')[0].trim()
+    .replace(/^lezing:\s*/i, '')
+    .replace(/^psalm\s+/i, 'Psalm ')
+    .replace(/,\s*(\d)/, ':$1'); // Nederlands formaat: "Johannes 20, 26" → "Johannes 20:26"
+  return firstLine;
+}
+
+async function fetchBibleText(id) {
+  const item = ordeItems.find(i => i.id == id);
+  if (!item) return;
+
+  const ref = normalizeBibleRef(item.content);
+  if (!ref) {
+    setStatus('Vul eerst een bijbelreferentie in (eerste regel)', 'err');
+    return;
+  }
+
+  const btn = document.querySelector(`[onclick="fetchBibleText('${id}')"]`);
+  if (btn) { btn.disabled = true; btn.textContent = 'Bezig…'; }
+
+  try {
+    const url = `https://www.bijbelapi.com/api/parse/reference/${encodeURIComponent(ref)}?version=${BIJBEL_VERSIE}`;
+    const res = await fetch(url);
+    const data = await res.json();
+
+    if (!data.parsed || !data.verses?.length) {
+      throw new Error(data.error || 'Referentie niet herkend');
+    }
+
+    const tekst = data.verses.map(v => `${v.verse} ${v.text}`).join('\n');
+    item.content = ref + '\n\n' + tekst;
+    renderOrde();
+    setStatus('✓ Bijbeltekst opgehaald', 'ok');
+  } catch (err) {
+    setStatus('Bijbeltekst ophalen mislukt: ' + err.message, 'err');
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = 'Tekst ophalen'; }
+  }
+}
+
+// ============================================================
+// AGENDA IMPORT
+// ============================================================
+async function importAgenda() {
+  const btn = document.getElementById('btn-import-agenda');
+  btn.disabled = true;
+  btn.textContent = 'Bezig met importeren…';
+
+  try {
+    const res = await fetch(`${VRIJBURG_EVENTS_API}?per_page=100&orderby=date&order=asc`);
+    if (!res.ok) throw new Error('API niet bereikbaar');
+    const events = await res.json();
+
+    const now = new Date();
+    now.setHours(0, 0, 0, 0);
+    const inTwoWeeks = new Date(now);
+    inTwoWeeks.setDate(inTwoWeeks.getDate() + 14);
+    const inSixWeeks = new Date(now);
+    inSixWeeks.setDate(inSixWeeks.getDate() + 42);
+
+    const kort = [], ver = [];
+
+    events.forEach(ev => {
+      const startStr = ev.acf?.start;
+      if (!startStr) return;
+      const start = new Date(startStr.replace(' ', 'T'));
+      if (start < now) return;
+
+      const title = ev.title.rendered.replace(/<[^>]+>/g, '').replace(/&#8217;/g, "'").replace(/&#8216;/g, "'");
+      const loc = ev.acf.locatie ? ` – ${ev.acf.locatie}` : '';
+      const line = formatAgendaRegel(start) + ' – ' + title + loc;
+
+      if (start <= inTwoWeeks) kort.push({ start, line });
+      else if (start <= inSixWeeks) ver.push({ start, line });
+    });
+
+    kort.sort((a, b) => a.start - b.start);
+    ver.sort((a, b) => a.start - b.start);
+
+    if (kort.length) document.getElementById('agenda_kort').value = kort.map(e => e.line).join('\n');
+    if (ver.length) document.getElementById('agenda_ver').value = ver.map(e => e.line).join('\n');
+
+    scheduleDraftSave();
+    setStatus(`✓ ${kort.length + ver.length} activiteiten geïmporteerd`, 'ok');
+  } catch (err) {
+    setStatus('Agenda importeren mislukt: ' + err.message, 'err');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '↻ Importeer van vrijburg.nl';
+  }
+}
+
+function formatAgendaRegel(d) {
+  const dag = NL_DAGEN[d.getDay()];
+  const dagCap = dag.charAt(0).toUpperCase() + dag.slice(1);
+  const uur = d.getHours().toString().padStart(2, '0') + ':' + d.getMinutes().toString().padStart(2, '0');
+  return `${dagCap} ${d.getDate()} ${NL_MAANDEN[d.getMonth()]} ${d.getFullYear()} ${uur} uur`;
+}
+
+// ============================================================
+// DELEN VIA URL + MAILTO
+// ============================================================
+function getFormState() {
+  return {
+    rol: huidigeRol,
+    datum: document.getElementById('datum').value,
+    aanvangstijd: document.getElementById('aanvangstijd').value,
+    bijzondere_dienst: document.getElementById('bijzondere_dienst').value,
+    cantorij: document.getElementById('cantorij').checked,
+    kinderkerk: document.getElementById('kinderkerk').value,
+    vlv: getVlField('vlv'),
+    vlh: getVlField('vlh'),
+    vlz: getVlField('vlz'),
+    avondmaal: getAvondmaal(),
+    bijzonderheden: document.getElementById('bijzonderheden').value,
+    voorganger: document.getElementById('voorganger').value,
+    organist: document.getElementById('organist').value,
+    lector: document.getElementById('lector').value,
+    thema: document.getElementById('thema').value,
+    intro: document.getElementById('intro').value,
+    foto_credit: document.getElementById('foto_credit').value,
+    orgelspel_opening: document.getElementById('orgelspel_opening').value,
+    lichtlied: document.getElementById('lichtlied').value,
+    slotlied: document.getElementById('slotlied').value,
+    orgelspel_slot: document.getElementById('orgelspel_slot').value,
+    bloemen: document.getElementById('bloemen').value,
+    c1_thema: document.getElementById('c1_thema').value,
+    c1_naam: document.getElementById('c1_naam').value,
+    c1_tekst: document.getElementById('c1_tekst').value,
+    c1_rekening: document.getElementById('c1_rekening').value,
+    c2_type: document.getElementById('c2_type').value,
+    c2_tekst: document.getElementById('c2_tekst').value,
+    c2_rekening: document.getElementById('c2_rekening').value,
+    agenda_kort: document.getElementById('agenda_kort').value,
+    agenda_ver: document.getElementById('agenda_ver').value,
+    orde: ordeItems,
+  };
+}
+
+function migrateLegacyBijzonderheden(text) {
+  const rest = [];
+  text.split('\n').forEach(line => {
+    const l = line.trim();
+    if (l.startsWith('Vrijburg laat voorgaan:')) setVlField('vlv', l.split(':').slice(1).join(':').trim() || 'ja');
+    else if (l.startsWith('Vrijburg laat horen:')) setVlField('vlh', l.split(':').slice(1).join(':').trim() || 'ja');
+    else if (l.startsWith('Vrijburg laat zien:')) setVlField('vlz', l.split(':').slice(1).join(':').trim() || 'ja');
+    else if (l.startsWith('Avondmaal:')) setAvondmaal(l.split(':').slice(1).join(':').trim() || 'ja');
+    else if (l) rest.push(l);
+  });
+  document.getElementById('bijzonderheden').value = rest.join('\n');
+}
+
+function applyPlanningVl(planning) {
+  setVlField('vlv', planning.vlv || '');
+  setVlField('vlh', planning.vlh || '');
+  setVlField('vlz', planning.vlz || '');
+  setAvondmaal(planning.avondmaal || '');
+  document.getElementById('bijzonderheden').value = planning.bijzonderheden || '';
+}
+
+function applyFormState(state) {
+  if (!state) return;
+  const fields = ['datum','aanvangstijd','bijzondere_dienst','kinderkerk','bijzonderheden',
+    'voorganger','organist','lector','thema','intro','foto_credit',
+    'orgelspel_opening','lichtlied','slotlied','orgelspel_slot','bloemen',
+    'c1_thema','c1_naam','c1_tekst','c1_rekening','c2_type','c2_tekst','c2_rekening',
+    'agenda_kort','agenda_ver','avondmaal'];
+  fields.forEach(id => {
+    if (state[id] !== undefined) document.getElementById(id).value = state[id];
+  });
+  if (state.cantorij !== undefined) document.getElementById('cantorij').checked = !!state.cantorij;
+  setVlField('vlv', state.vlv || '');
+  setVlField('vlh', state.vlh || '');
+  setVlField('vlz', state.vlz || '');
+  setAvondmaal(state.avondmaal || '');
+  // Migratie: oude bijzonderheden met VL-tekst
+  if (state.bijzonderheden && !state.vlv && !state.vlh && !state.vlz) {
+    migrateLegacyBijzonderheden(state.bijzonderheden);
+  }
+  if (state.orde?.length) {
+    ordeItems = state.orde;
+    renderOrde();
+  }
+  if (state.rol) setRol(state.rol);
+  else applyRolUI();
+  if (state.datum) onDatumChange();
+  else if (state.c2_type) onC2TypeChange();
+}
+
+function getShareUrl(rol) {
+  const state = getFormState();
+  if (rol) state.rol = rol;
+  const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(state))));
+  const url = new URL(location.href.split('?')[0]);
+  url.searchParams.set('v', encoded);
+  if (rol) url.searchParams.set('rol', rol);
+  return url.toString();
+}
+
+function loadFromUrl() {
+  const params = new URLSearchParams(location.search);
+  const v = params.get('v');
+  if (!v) return false;
+  try {
+    const state = JSON.parse(decodeURIComponent(escape(atob(v))));
+    applyFormState(state);
+    const rolParam = params.get('rol');
+    if (rolParam && ROL_CONFIG[rolParam]) setRol(rolParam);
+    return true;
+  } catch (e) {
+    console.warn('Kon gedeelde link niet laden:', e);
+    return false;
+  }
+}
+
+function copyShareLink() {
+  const url = getShareUrl();
+  navigator.clipboard.writeText(url).then(() => {
+    setStatus('✓ Link gekopieerd naar klembord', 'ok');
+  }).catch(() => {
+    prompt('Kopieer deze link:', url);
+  });
+}
+
+function emailRol(rol) {
+  const url = getShareUrl(rol);
+  const datum = document.getElementById('datum').value;
+  const datumTekst = datum ? formatDatum(datum) : 'komende dienst';
+  const namen = { voorganger: 'voorganger', organist: 'organist' };
+  const taken = {
+    voorganger: 'thema, orde van dienst (liederen en lezingen) en lichtlied/slotlied',
+    organist: 'orgelspel en muziek in de dienst',
+  };
+  const subject = encodeURIComponent(`Liturgie Vrijburg – ${datumTekst} (${namen[rol]})`);
+  const body = encodeURIComponent(
+    `Beste ${namen[rol]},\n\n` +
+    `Via onderstaande link kunt u uw onderdeel invullen voor de dienst op ${datumTekst}:\n` +
+    `${taken[rol]}.\n\n` +
+    `${url}\n\n` +
+    `U hoeft niet alles in te vullen — alleen uw eigen onderdeel. ` +
+    `Klik op "Ik ben klaar" om de link terug te sturen.\n\n` +
+    `Met vriendelijke groet,\nVrijburg Amsterdam`
+  );
+  window.location.href = `mailto:?subject=${subject}&body=${body}`;
+}
+
+// ============================================================
+// CONCEPT OPSLAAN (localStorage)
+// ============================================================
+let draftTimer = null;
+
+function scheduleDraftSave() {
+  clearTimeout(draftTimer);
+  draftTimer = setTimeout(saveDraft, 500);
+}
+
+function saveDraft() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(getFormState()));
+  } catch (e) { /* quota exceeded */ }
+}
+
+function loadDraft() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch (e) { /* corrupt */ }
+  return null;
+}
+
+function clearDraft() {
+  localStorage.removeItem(STORAGE_KEY);
+  setStatus('Concept gewist', 'ok');
+}
+
+function setupAutoSave() {
+  document.querySelectorAll('input, textarea, select').forEach(el => {
+    el.addEventListener('input', scheduleDraftSave);
+    el.addEventListener('change', scheduleDraftSave);
+  });
 }
 
 // ============================================================
@@ -580,6 +1307,30 @@ function onDatumChange() {
   const dag = d.getDate();
   const maand = NL_MAANDEN_CAP[d.getMonth()];
 
+  // Dienstplanning (predikant, organist, lector, cantorij, etc.)
+  const planning = DIENSTPLANNING.find(p => p.datum === val);
+  const planningNotice = document.getElementById('planning-notice');
+  if (planning) {
+    document.getElementById('voorganger').value = planning.predikant || '';
+    document.getElementById('organist').value = planning.organist || '';
+    document.getElementById('lector').value = planning.lector || '';
+    document.getElementById('aanvangstijd').value = planning.aanvangstijd || '';
+    document.getElementById('bijzondere_dienst').value = planning.bijzondere_dienst || '';
+    document.getElementById('cantorij').checked = !!planning.cantorij;
+    document.getElementById('kinderkerk').value = planning.kinderkerk || '';
+    applyPlanningVl(planning);
+    planningNotice.style.display = 'block';
+    planningNotice.style.background = '#e8f5e9';
+    planningNotice.style.color = '#2e7d32';
+    planningNotice.textContent = `✓ Dienstplanning ingevuld voor ${formatDatum(val)}`;
+  } else {
+    planningNotice.style.display = 'block';
+    planningNotice.style.background = '#fff3e0';
+    planningNotice.style.color = '#e65100';
+    planningNotice.textContent = `⚠ Geen dienstplanning voor ${formatDatum(val)} — vul namen handmatig in`;
+  }
+
+  // Collecte
   const entry = COLLECTES.find(c => c.dag === dag && c.maand === maand);
   if (entry) {
     document.getElementById('c1_thema').value = entry.thema || '';
@@ -636,6 +1387,15 @@ function generateDocx() {
   const szSm = 20; // 10pt
 
   const datum    = document.getElementById('datum').value;
+  const aanvangstijd = document.getElementById('aanvangstijd').value.trim();
+  const bijzondereDienst = document.getElementById('bijzondere_dienst').value.trim();
+  const cantorij = document.getElementById('cantorij').checked;
+  const kinderkerk = document.getElementById('kinderkerk').value.trim();
+  const vlv = getVlField('vlv');
+  const vlh = getVlField('vlh');
+  const vlz = getVlField('vlz');
+  const avondmaal = getAvondmaal();
+  const bijzonderheden = document.getElementById('bijzonderheden').value.trim();
   const voorganger = document.getElementById('voorganger').value.trim();
   const organist   = document.getElementById('organist').value.trim();
   const lector     = document.getElementById('lector').value.trim();
@@ -658,6 +1418,9 @@ function generateDocx() {
   const agendaVer  = document.getElementById('agenda_ver').value.trim();
 
   const datumDisplay = formatDatum(datum);
+  const datumTitel = bijzondereDienst
+    ? `Dienst ${datumDisplay}${aanvangstijd ? ' om ' + aanvangstijd.replace('.', ':') + ' uur' : ''} – ${bijzondereDienst}`
+    : `Dienst ${datumDisplay}${aanvangstijd ? ' om ' + aanvangstijd.replace('.', ':') + ' uur' : ''}`;
 
   // Helper: maak een simpele alinea
   function p(text, opts = {}) {
@@ -742,7 +1505,7 @@ function generateDocx() {
   const children = [];
 
   // HEADER
-  children.push(p('Dienst ' + datumDisplay, { bold: true, sz: 26, after: 40 }));
+  children.push(p(datumTitel, { bold: true, sz: 26, after: 40 }));
   if (thema) children.push(p(thema, { bold: true, sz: 24, after: 40 }));
   if (intro) children.push(...multiline(intro, { after: 60 }));
   if (foto) children.push(p(foto, { italic: true, after: 60 }));
@@ -752,6 +1515,18 @@ function generateDocx() {
   if (voorganger) children.push(p('Voorganger:\t' + voorganger, { para: { tabStops: [{ type: TabStopType.LEFT, position: 2000 }] } }));
   if (organist)   children.push(p('Organist:\t' + organist,   { para: { tabStops: [{ type: TabStopType.LEFT, position: 2000 }] } }));
   if (lector)     children.push(p('Lector:\t' + lector,       { para: { tabStops: [{ type: TabStopType.LEFT, position: 2000 }] } }));
+  if (cantorij)   children.push(p('Cantorij:\tja',             { para: { tabStops: [{ type: TabStopType.LEFT, position: 2000 }] } }));
+  if (kinderkerk) children.push(p('Kinderkerk:\t' + kinderkerk, { para: { tabStops: [{ type: TabStopType.LEFT, position: 2000 }] } }));
+  [['vlv', vlv], ['vlh', vlh], ['vlz', vlz]].forEach(([key, val]) => {
+    if (!val) return;
+    const suffix = val === 'ja' ? '' : (val === '?' ? ' (gepland)' : ': ' + val);
+    children.push(p(VL_LABELS[key] + suffix, { sz: szSm, italic: true }));
+  });
+  if (avondmaal) {
+    const am = avondmaal === 'ja' ? 'Avondmaal' : 'Avondmaal: ' + avondmaal;
+    children.push(p(am, { sz: szSm }));
+  }
+  if (bijzonderheden) children.push(...multiline(bijzonderheden, { sz: szSm }));
   children.push(empty());
 
   children.push(p('De kerkdienst wordt opgenomen en uitgezonden via www.vrijburg.nl en'));
@@ -902,24 +1677,40 @@ function setStatus(msg, type) {
 }
 
 // ============================================================
-// LAAD COLLECTES DATA
+// LAAD DATA + INIT
 // ============================================================
-fetch('./collectes.json')
-  .then(r => r.json())
-  .then(data => {
-    COLLECTES.push(...data);
-    // Controleer of datum al ingevuld is
-    if (document.getElementById('datum').value) onDatumChange();
-  })
-  .catch(() => {
-    // Fallback: collectes inline (zie collectes.json in de repo)
-    console.warn('collectes.json niet gevonden – vul collecte handmatig in');
-  });
+Promise.all([
+  fetch('./collectes.json').then(r => r.json()).catch(() => []),
+  fetch('./dienstplanning.json').then(r => r.json()).catch(() => []),
+]).then(([collectes, planning]) => {
+  COLLECTES.push(...collectes);
+  DIENSTPLANNING.push(...planning);
+  initApp();
+}).catch(() => initApp());
 
-// Init: voeg een paar standaard orde-items toe als voorbeeld
-addOrde('lied', '');
-addOrde('lezing', '');
-addOrde('lied', '');
+function initApp() {
+  setupAutoSave();
+  setupSectionToggles();
+
+  if (!loadFromUrl()) {
+    const draft = loadDraft();
+    if (draft) {
+      applyFormState(draft);
+      setStatus('Concept hersteld uit vorige sessie', 'ok');
+    } else {
+      setRol('medewerker');
+    }
+  }
+
+  if (!ordeItems.length) {
+    addOrde('lied', '');
+    addOrde('lezing', '');
+    addOrde('lied', '');
+  }
+
+  if (document.getElementById('datum').value) onDatumChange();
+  applyRolUI();
+}
 </script>
 
 </body>
