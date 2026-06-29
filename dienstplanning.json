@@ -8,6 +8,10 @@
     "cantorij": false,
     "kinderkerk": "",
     "lector": "Gon",
+    "vlv": "",
+    "vlh": "",
+    "vlz": "",
+    "avondmaal": "",
     "bijzonderheden": ""
   },
   {
@@ -19,6 +23,10 @@
     "cantorij": false,
     "kinderkerk": "",
     "lector": "Hiltje",
+    "vlv": "",
+    "vlh": "",
+    "vlz": "",
+    "avondmaal": "",
     "bijzonderheden": ""
   },
   {
@@ -30,6 +38,10 @@
     "cantorij": false,
     "kinderkerk": "",
     "lector": "Joan",
+    "vlv": "",
+    "vlh": "",
+    "vlz": "",
+    "avondmaal": "",
     "bijzonderheden": ""
   },
   {
@@ -41,6 +53,10 @@
     "cantorij": true,
     "kinderkerk": "",
     "lector": "Herman",
+    "vlv": "",
+    "vlh": "",
+    "vlz": "",
+    "avondmaal": "",
     "bijzonderheden": ""
   },
   {
@@ -52,6 +68,10 @@
     "cantorij": false,
     "kinderkerk": "ja",
     "lector": "Joost vd Schee",
+    "vlv": "",
+    "vlh": "",
+    "vlz": "",
+    "avondmaal": "",
     "bijzonderheden": ""
   },
   {
@@ -63,6 +83,10 @@
     "cantorij": false,
     "kinderkerk": "",
     "lector": "Ruud",
+    "vlv": "",
+    "vlh": "",
+    "vlz": "",
+    "avondmaal": "",
     "bijzonderheden": ""
   },
   {
@@ -74,6 +98,10 @@
     "cantorij": false,
     "kinderkerk": "",
     "lector": "Jet",
+    "vlv": "",
+    "vlh": "",
+    "vlz": "",
+    "avondmaal": "",
     "bijzonderheden": ""
   },
   {
@@ -85,7 +113,11 @@
     "cantorij": true,
     "kinderkerk": "",
     "lector": "Carolien",
-    "bijzonderheden": "Avondmaal: x"
+    "vlv": "",
+    "vlh": "",
+    "vlz": "",
+    "avondmaal": "x",
+    "bijzonderheden": ""
   },
   {
     "datum": "2026-03-01",
@@ -96,6 +128,10 @@
     "cantorij": false,
     "kinderkerk": "ja",
     "lector": "Gon",
+    "vlv": "",
+    "vlh": "",
+    "vlz": "",
+    "avondmaal": "",
     "bijzonderheden": ""
   },
   {
@@ -107,6 +143,10 @@
     "cantorij": false,
     "kinderkerk": "",
     "lector": "Conna",
+    "vlv": "",
+    "vlh": "",
+    "vlz": "",
+    "avondmaal": "",
     "bijzonderheden": ""
   },
   {
@@ -118,6 +158,10 @@
     "cantorij": false,
     "kinderkerk": "",
     "lector": "Wiep",
+    "vlv": "",
+    "vlh": "",
+    "vlz": "",
+    "avondmaal": "",
     "bijzonderheden": ""
   },
   {
@@ -129,6 +173,10 @@
     "cantorij": false,
     "kinderkerk": "",
     "lector": "Gert",
+    "vlv": "",
+    "vlh": "",
+    "vlz": "",
+    "avondmaal": "",
     "bijzonderheden": ""
   },
   {
@@ -140,6 +188,10 @@
     "cantorij": false,
     "kinderkerk": "ja",
     "lector": "Ernst",
+    "vlv": "",
+    "vlh": "",
+    "vlz": "",
+    "avondmaal": "",
     "bijzonderheden": ""
   },
   {
@@ -151,7 +203,11 @@
     "cantorij": true,
     "kinderkerk": "",
     "lector": "Herman",
-    "bijzonderheden": "Avondmaal: x"
+    "vlv": "",
+    "vlh": "",
+    "vlz": "",
+    "avondmaal": "x",
+    "bijzonderheden": ""
   },
   {
     "datum": "2026-04-03",
@@ -162,6 +218,10 @@
     "cantorij": false,
     "kinderkerk": "",
     "lector": "",
+    "vlv": "",
+    "vlh": "",
+    "vlz": "",
+    "avondmaal": "",
     "bijzonderheden": ""
   },
   {
@@ -173,6 +233,10 @@
     "cantorij": true,
     "kinderkerk": "ja",
     "lector": "Joost vd Schee",
+    "vlv": "",
+    "vlh": "",
+    "vlz": "",
+    "avondmaal": "",
     "bijzonderheden": ""
   },
   {
@@ -184,6 +248,10 @@
     "cantorij": false,
     "kinderkerk": "",
     "lector": "Gon",
+    "vlv": "",
+    "vlh": "",
+    "vlz": "",
+    "avondmaal": "",
     "bijzonderheden": ""
   },
   {
@@ -195,6 +263,10 @@
     "cantorij": false,
     "kinderkerk": "",
     "lector": "Joan",
+    "vlv": "",
+    "vlh": "",
+    "vlz": "",
+    "avondmaal": "",
     "bijzonderheden": ""
   },
   {
@@ -206,6 +278,10 @@
     "cantorij": false,
     "kinderkerk": "",
     "lector": "Jet",
+    "vlv": "",
+    "vlh": "",
+    "vlz": "",
+    "avondmaal": "",
     "bijzonderheden": ""
   },
   {
@@ -217,6 +293,10 @@
     "cantorij": false,
     "kinderkerk": "ja",
     "lector": "Conna",
+    "vlv": "",
+    "vlh": "",
+    "vlz": "",
+    "avondmaal": "",
     "bijzonderheden": ""
   },
   {
@@ -228,6 +308,10 @@
     "cantorij": false,
     "kinderkerk": "",
     "lector": "Wiep",
+    "vlv": "",
+    "vlh": "",
+    "vlz": "",
+    "avondmaal": "",
     "bijzonderheden": ""
   },
   {
@@ -239,6 +323,10 @@
     "cantorij": false,
     "kinderkerk": "",
     "lector": "Gert",
+    "vlv": "",
+    "vlh": "",
+    "vlz": "",
+    "avondmaal": "",
     "bijzonderheden": ""
   },
   {
@@ -250,6 +338,10 @@
     "cantorij": true,
     "kinderkerk": "ja",
     "lector": "Carolien",
+    "vlv": "",
+    "vlh": "",
+    "vlz": "",
+    "avondmaal": "",
     "bijzonderheden": ""
   },
   {
@@ -261,6 +353,10 @@
     "cantorij": false,
     "kinderkerk": "",
     "lector": "Hiltje",
+    "vlv": "",
+    "vlh": "",
+    "vlz": "",
+    "avondmaal": "",
     "bijzonderheden": ""
   },
   {
@@ -272,6 +368,10 @@
     "cantorij": false,
     "kinderkerk": "",
     "lector": "Ruud",
+    "vlv": "",
+    "vlh": "",
+    "vlz": "",
+    "avondmaal": "",
     "bijzonderheden": ""
   },
   {
@@ -283,6 +383,10 @@
     "cantorij": false,
     "kinderkerk": "",
     "lector": "Joan",
+    "vlv": "",
+    "vlh": "",
+    "vlz": "",
+    "avondmaal": "",
     "bijzonderheden": ""
   },
   {
@@ -294,7 +398,11 @@
     "cantorij": false,
     "kinderkerk": "",
     "lector": "Gon",
-    "bijzonderheden": "Vrijburg laat voorgaan: VLV?"
+    "vlv": "?",
+    "vlh": "",
+    "vlz": "",
+    "avondmaal": "",
+    "bijzonderheden": ""
   },
   {
     "datum": "2026-06-28",
@@ -305,7 +413,11 @@
     "cantorij": true,
     "kinderkerk": "ja",
     "lector": "Ernst",
-    "bijzonderheden": "Avondmaal: x"
+    "vlv": "",
+    "vlh": "",
+    "vlz": "",
+    "avondmaal": "x",
+    "bijzonderheden": ""
   },
   {
     "datum": "2026-07-05",
@@ -316,6 +428,10 @@
     "cantorij": false,
     "kinderkerk": "",
     "lector": "",
+    "vlv": "",
+    "vlh": "",
+    "vlz": "",
+    "avondmaal": "",
     "bijzonderheden": "Locatie: Thomaskerk"
   },
   {
@@ -327,6 +443,10 @@
     "cantorij": false,
     "kinderkerk": "",
     "lector": "Joan",
+    "vlv": "",
+    "vlh": "",
+    "vlz": "",
+    "avondmaal": "",
     "bijzonderheden": "Locatie: Thomaskerk"
   },
   {
@@ -338,6 +458,10 @@
     "cantorij": false,
     "kinderkerk": "",
     "lector": "",
+    "vlv": "",
+    "vlh": "",
+    "vlz": "",
+    "avondmaal": "",
     "bijzonderheden": "Locatie: Willem de Zwijger"
   },
   {
@@ -349,6 +473,10 @@
     "cantorij": false,
     "kinderkerk": "",
     "lector": "Wiep",
+    "vlv": "",
+    "vlh": "",
+    "vlz": "",
+    "avondmaal": "",
     "bijzonderheden": "Locatie: Willem de Zwijger"
   },
   {
@@ -360,6 +488,10 @@
     "cantorij": false,
     "kinderkerk": "",
     "lector": "",
+    "vlv": "",
+    "vlh": "",
+    "vlz": "",
+    "avondmaal": "",
     "bijzonderheden": "Locatie: Oranjekerk"
   },
   {
@@ -371,6 +503,10 @@
     "cantorij": false,
     "kinderkerk": "",
     "lector": "Herman",
+    "vlv": "",
+    "vlh": "",
+    "vlz": "",
+    "avondmaal": "",
     "bijzonderheden": ""
   },
   {
@@ -382,6 +518,10 @@
     "cantorij": false,
     "kinderkerk": "",
     "lector": "Conna",
+    "vlv": "",
+    "vlh": "",
+    "vlz": "",
+    "avondmaal": "",
     "bijzonderheden": ""
   },
   {
@@ -393,6 +533,10 @@
     "cantorij": false,
     "kinderkerk": "",
     "lector": "Gon",
+    "vlv": "",
+    "vlh": "",
+    "vlz": "",
+    "avondmaal": "",
     "bijzonderheden": ""
   },
   {
@@ -404,6 +548,10 @@
     "cantorij": false,
     "kinderkerk": "",
     "lector": "Gert",
+    "vlv": "",
+    "vlh": "",
+    "vlz": "",
+    "avondmaal": "",
     "bijzonderheden": ""
   },
   {
@@ -415,6 +563,10 @@
     "cantorij": true,
     "kinderkerk": "ja",
     "lector": "Joost",
+    "vlv": "",
+    "vlh": "",
+    "vlz": "",
+    "avondmaal": "",
     "bijzonderheden": ""
   },
   {
@@ -426,6 +578,10 @@
     "cantorij": false,
     "kinderkerk": "",
     "lector": "Ruud",
+    "vlv": "",
+    "vlh": "",
+    "vlz": "",
+    "avondmaal": "",
     "bijzonderheden": ""
   },
   {
@@ -437,6 +593,10 @@
     "cantorij": false,
     "kinderkerk": "",
     "lector": "Jet",
+    "vlv": "",
+    "vlh": "",
+    "vlz": "",
+    "avondmaal": "",
     "bijzonderheden": ""
   },
   {
@@ -448,7 +608,11 @@
     "cantorij": false,
     "kinderkerk": "",
     "lector": "Hiltje",
-    "bijzonderheden": "Vrijburg laat voorgaan: VLV?"
+    "vlv": "?",
+    "vlh": "",
+    "vlz": "",
+    "avondmaal": "",
+    "bijzonderheden": ""
   },
   {
     "datum": "2026-10-04",
@@ -459,6 +623,10 @@
     "cantorij": false,
     "kinderkerk": "ja",
     "lector": "",
+    "vlv": "",
+    "vlh": "",
+    "vlz": "",
+    "avondmaal": "",
     "bijzonderheden": ""
   },
   {
@@ -470,6 +638,10 @@
     "cantorij": false,
     "kinderkerk": "",
     "lector": "",
+    "vlv": "",
+    "vlh": "",
+    "vlz": "",
+    "avondmaal": "",
     "bijzonderheden": ""
   },
   {
@@ -481,6 +653,10 @@
     "cantorij": false,
     "kinderkerk": "",
     "lector": "",
+    "vlv": "",
+    "vlh": "",
+    "vlz": "",
+    "avondmaal": "",
     "bijzonderheden": ""
   },
   {
@@ -492,7 +668,11 @@
     "cantorij": false,
     "kinderkerk": "",
     "lector": "",
-    "bijzonderheden": "Vrijburg laat voorgaan: VLH"
+    "vlv": "",
+    "vlh": "ja",
+    "vlz": "",
+    "avondmaal": "",
+    "bijzonderheden": ""
   },
   {
     "datum": "2026-11-01",
@@ -503,6 +683,10 @@
     "cantorij": false,
     "kinderkerk": "ja",
     "lector": "",
+    "vlv": "",
+    "vlh": "",
+    "vlz": "",
+    "avondmaal": "",
     "bijzonderheden": ""
   },
   {
@@ -514,6 +698,10 @@
     "cantorij": false,
     "kinderkerk": "",
     "lector": "",
+    "vlv": "",
+    "vlh": "",
+    "vlz": "",
+    "avondmaal": "",
     "bijzonderheden": ""
   },
   {
@@ -525,6 +713,10 @@
     "cantorij": false,
     "kinderkerk": "",
     "lector": "",
+    "vlv": "",
+    "vlh": "",
+    "vlz": "",
+    "avondmaal": "",
     "bijzonderheden": ""
   },
   {
@@ -536,6 +728,10 @@
     "cantorij": true,
     "kinderkerk": "",
     "lector": "",
+    "vlv": "",
+    "vlh": "",
+    "vlz": "",
+    "avondmaal": "",
     "bijzonderheden": ""
   },
   {
@@ -547,6 +743,10 @@
     "cantorij": false,
     "kinderkerk": "",
     "lector": "",
+    "vlv": "",
+    "vlh": "",
+    "vlz": "",
+    "avondmaal": "",
     "bijzonderheden": ""
   },
   {
@@ -558,6 +758,10 @@
     "cantorij": false,
     "kinderkerk": "",
     "lector": "",
+    "vlv": "",
+    "vlh": "",
+    "vlz": "",
+    "avondmaal": "",
     "bijzonderheden": ""
   },
   {
@@ -569,7 +773,11 @@
     "cantorij": false,
     "kinderkerk": "",
     "lector": "",
-    "bijzonderheden": "Vrijburg laat voorgaan: VLV?"
+    "vlv": "?",
+    "vlh": "",
+    "vlz": "",
+    "avondmaal": "",
+    "bijzonderheden": ""
   },
   {
     "datum": "2026-12-20",
@@ -580,6 +788,10 @@
     "cantorij": false,
     "kinderkerk": "",
     "lector": "",
+    "vlv": "",
+    "vlh": "",
+    "vlz": "",
+    "avondmaal": "",
     "bijzonderheden": ""
   },
   {
@@ -591,6 +803,10 @@
     "cantorij": true,
     "kinderkerk": "",
     "lector": "",
+    "vlv": "",
+    "vlh": "",
+    "vlz": "",
+    "avondmaal": "",
     "bijzonderheden": ""
   },
   {
@@ -602,6 +818,10 @@
     "cantorij": true,
     "kinderkerk": "",
     "lector": "",
+    "vlv": "",
+    "vlh": "",
+    "vlz": "",
+    "avondmaal": "",
     "bijzonderheden": ""
   },
   {
@@ -613,6 +833,10 @@
     "cantorij": false,
     "kinderkerk": "ja",
     "lector": "",
+    "vlv": "",
+    "vlh": "",
+    "vlz": "",
+    "avondmaal": "",
     "bijzonderheden": ""
   },
   {
@@ -624,6 +848,10 @@
     "cantorij": false,
     "kinderkerk": "",
     "lector": "",
+    "vlv": "",
+    "vlh": "",
+    "vlz": "",
+    "avondmaal": "",
     "bijzonderheden": ""
   }
 ]

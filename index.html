@@ -360,6 +360,58 @@
 
     .field-mine label { color: var(--purple); }
     .field-other label { opacity: 0.65; }
+
+    .vl-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .vl-card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 12px;
+      background: #fafcff;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .vl-card.active {
+      border-color: #2eb8e6;
+      box-shadow: 0 0 0 3px rgba(46,184,230,0.12);
+    }
+    .vl-card img {
+      height: 40px;
+      width: auto;
+      max-width: 100%;
+      object-fit: contain;
+      object-position: left center;
+    }
+    .vl-card-head {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .vl-card-head input { width: auto; flex-shrink: 0; }
+    .vl-card-head label {
+      text-transform: none;
+      letter-spacing: 0;
+      font-size: 13px;
+      color: var(--text);
+      line-height: 1.3;
+    }
+    .vl-card-head label strong {
+      display: block;
+      color: #1a8fb5;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+    .vl-detail {
+      font-size: 13px;
+      padding: 6px 8px;
+    }
   </style>
 </head>
 <body>
@@ -451,10 +503,43 @@
           <input type="text" id="kinderkerk" placeholder="bijv. ja">
         </div>
       </div>
+      <div class="vl-grid" data-owner="medewerker">
+        <div class="vl-card" id="card-vlv">
+          <img src="assets/logo-vlv.svg" alt="Vrijburg laat voorgaan">
+          <div class="vl-card-head">
+            <input type="checkbox" id="vlv_chk" onchange="onVlToggle('vlv')">
+            <label for="vlv_chk"><strong>VLV</strong>Vrijburg laat voorgaan</label>
+          </div>
+          <input type="text" class="vl-detail" id="vlv" placeholder="Toelichting (optioneel)" oninput="onVlDetail('vlv')">
+        </div>
+        <div class="vl-card" id="card-vlh">
+          <img src="assets/logo-vlh.svg" alt="Vrijburg laat horen">
+          <div class="vl-card-head">
+            <input type="checkbox" id="vlh_chk" onchange="onVlToggle('vlh')">
+            <label for="vlh_chk"><strong>VLH</strong>Vrijburg laat horen</label>
+          </div>
+          <input type="text" class="vl-detail" id="vlh" placeholder="Toelichting (optioneel)" oninput="onVlDetail('vlh')">
+        </div>
+        <div class="vl-card" id="card-vlz">
+          <img src="assets/logo-vlz.svg" alt="Vrijburg laat zien">
+          <div class="vl-card-head">
+            <input type="checkbox" id="vlz_chk" onchange="onVlToggle('vlz')">
+            <label for="vlz_chk"><strong>VLZ</strong>Vrijburg laat zien</label>
+          </div>
+          <input type="text" class="vl-detail" id="vlz" placeholder="Toelichting (optioneel)" oninput="onVlDetail('vlz')">
+        </div>
+      </div>
+      <div class="row">
+        <div class="field" data-owner="medewerker" style="flex-direction:row;align-items:center;gap:8px;padding-top:4px">
+          <input type="checkbox" id="avondmaal_chk" style="width:auto" onchange="onAvondmaalToggle()">
+          <label for="avondmaal_chk" style="text-transform:none;letter-spacing:0;font-size:14px">Avondmaal</label>
+          <input type="text" id="avondmaal" placeholder="Toelichting (optioneel)" style="flex:1" oninput="scheduleDraftSave()">
+        </div>
+      </div>
       <div class="row">
         <div class="field" data-owner="medewerker" style="grid-column: 1/-1">
-          <label>Bijzonderheden <span class="opt">Vrijburg laat horen/zien/voorgaan, avondmaal</span></label>
-          <textarea id="bijzonderheden" rows="2" placeholder="Wordt ingevuld vanuit dienstplanning…"></textarea>
+          <label>Overige bijzonderheden <span class="opt">locatie, opmerkingen</span></label>
+          <textarea id="bijzonderheden" rows="2" placeholder="bijv. Locatie: Thomaskerk"></textarea>
         </div>
       </div>
       <p style="font-size:12px;color:#aaa;margin-top:8px">
@@ -693,6 +778,71 @@ const NL_DAGEN = ['zondag','maandag','dinsdag','woensdag','donderdag','vrijdag',
 const BIJBEL_VERSIE = 'bb'; // bb = BasisBijbel (vrij), hsv = Herziene Statenvertaling
 const STORAGE_KEY = 'vrijburg-liturgie-draft';
 const VRIJBURG_EVENTS_API = 'https://www.vrijburg.nl/wp-json/wp/v2/evenementen';
+
+const VL_LABELS = {
+  vlv: 'Vrijburg laat voorgaan',
+  vlh: 'Vrijburg laat horen',
+  vlz: 'Vrijburg laat zien',
+};
+
+function setVlField(name, value) {
+  const chk = document.getElementById(name + '_chk');
+  const detail = document.getElementById(name);
+  const card = document.getElementById('card-' + name);
+  if (!value) {
+    chk.checked = false;
+    detail.value = '';
+    card.classList.remove('active');
+    return;
+  }
+  chk.checked = true;
+  card.classList.add('active');
+  detail.value = (value === 'ja') ? '' : value;
+}
+
+function getVlField(name) {
+  if (!document.getElementById(name + '_chk').checked) return '';
+  const d = document.getElementById(name).value.trim();
+  return d || 'ja';
+}
+
+function onVlToggle(name) {
+  const chk = document.getElementById(name + '_chk');
+  const card = document.getElementById('card-' + name);
+  card.classList.toggle('active', chk.checked);
+  if (!chk.checked) document.getElementById(name).value = '';
+  scheduleDraftSave();
+}
+
+function onVlDetail(name) {
+  const chk = document.getElementById(name + '_chk');
+  const card = document.getElementById('card-' + name);
+  const hasText = document.getElementById(name).value.trim();
+  if (hasText && !chk.checked) chk.checked = true;
+  card.classList.toggle('active', chk.checked);
+  scheduleDraftSave();
+}
+
+function setAvondmaal(value) {
+  const chk = document.getElementById('avondmaal_chk');
+  const field = document.getElementById('avondmaal');
+  if (!value) { chk.checked = false; field.value = ''; return; }
+  chk.checked = true;
+  field.value = (value === 'ja' || value === 'x') ? '' : value;
+}
+
+function getAvondmaal() {
+  if (!document.getElementById('avondmaal_chk').checked) return '';
+  const d = document.getElementById('avondmaal').value.trim();
+  return d || 'ja';
+}
+
+function onAvondmaalToggle() {
+  if (!document.getElementById('avondmaal_chk').checked) {
+    document.getElementById('avondmaal').value = '';
+  }
+  scheduleDraftSave();
+}
 
 // ============================================================
 // WORKFLOW / ROLLEN
@@ -975,6 +1125,10 @@ function getFormState() {
     bijzondere_dienst: document.getElementById('bijzondere_dienst').value,
     cantorij: document.getElementById('cantorij').checked,
     kinderkerk: document.getElementById('kinderkerk').value,
+    vlv: getVlField('vlv'),
+    vlh: getVlField('vlh'),
+    vlz: getVlField('vlz'),
+    avondmaal: getAvondmaal(),
     bijzonderheden: document.getElementById('bijzonderheden').value,
     voorganger: document.getElementById('voorganger').value,
     organist: document.getElementById('organist').value,
@@ -1000,17 +1154,46 @@ function getFormState() {
   };
 }
 
+function migrateLegacyBijzonderheden(text) {
+  const rest = [];
+  text.split('\n').forEach(line => {
+    const l = line.trim();
+    if (l.startsWith('Vrijburg laat voorgaan:')) setVlField('vlv', l.split(':').slice(1).join(':').trim() || 'ja');
+    else if (l.startsWith('Vrijburg laat horen:')) setVlField('vlh', l.split(':').slice(1).join(':').trim() || 'ja');
+    else if (l.startsWith('Vrijburg laat zien:')) setVlField('vlz', l.split(':').slice(1).join(':').trim() || 'ja');
+    else if (l.startsWith('Avondmaal:')) setAvondmaal(l.split(':').slice(1).join(':').trim() || 'ja');
+    else if (l) rest.push(l);
+  });
+  document.getElementById('bijzonderheden').value = rest.join('\n');
+}
+
+function applyPlanningVl(planning) {
+  setVlField('vlv', planning.vlv || '');
+  setVlField('vlh', planning.vlh || '');
+  setVlField('vlz', planning.vlz || '');
+  setAvondmaal(planning.avondmaal || '');
+  document.getElementById('bijzonderheden').value = planning.bijzonderheden || '';
+}
+
 function applyFormState(state) {
   if (!state) return;
   const fields = ['datum','aanvangstijd','bijzondere_dienst','kinderkerk','bijzonderheden',
     'voorganger','organist','lector','thema','intro','foto_credit',
     'orgelspel_opening','lichtlied','slotlied','orgelspel_slot','bloemen',
     'c1_thema','c1_naam','c1_tekst','c1_rekening','c2_type','c2_tekst','c2_rekening',
-    'agenda_kort','agenda_ver'];
+    'agenda_kort','agenda_ver','avondmaal'];
   fields.forEach(id => {
     if (state[id] !== undefined) document.getElementById(id).value = state[id];
   });
   if (state.cantorij !== undefined) document.getElementById('cantorij').checked = !!state.cantorij;
+  setVlField('vlv', state.vlv || '');
+  setVlField('vlh', state.vlh || '');
+  setVlField('vlz', state.vlz || '');
+  setAvondmaal(state.avondmaal || '');
+  // Migratie: oude bijzonderheden met VL-tekst
+  if (state.bijzonderheden && !state.vlv && !state.vlh && !state.vlz) {
+    migrateLegacyBijzonderheden(state.bijzonderheden);
+  }
   if (state.orde?.length) {
     ordeItems = state.orde;
     renderOrde();
@@ -1135,7 +1318,7 @@ function onDatumChange() {
     document.getElementById('bijzondere_dienst').value = planning.bijzondere_dienst || '';
     document.getElementById('cantorij').checked = !!planning.cantorij;
     document.getElementById('kinderkerk').value = planning.kinderkerk || '';
-    document.getElementById('bijzonderheden').value = planning.bijzonderheden || '';
+    applyPlanningVl(planning);
     planningNotice.style.display = 'block';
     planningNotice.style.background = '#e8f5e9';
     planningNotice.style.color = '#2e7d32';
@@ -1208,6 +1391,10 @@ function generateDocx() {
   const bijzondereDienst = document.getElementById('bijzondere_dienst').value.trim();
   const cantorij = document.getElementById('cantorij').checked;
   const kinderkerk = document.getElementById('kinderkerk').value.trim();
+  const vlv = getVlField('vlv');
+  const vlh = getVlField('vlh');
+  const vlz = getVlField('vlz');
+  const avondmaal = getAvondmaal();
   const bijzonderheden = document.getElementById('bijzonderheden').value.trim();
   const voorganger = document.getElementById('voorganger').value.trim();
   const organist   = document.getElementById('organist').value.trim();
@@ -1330,6 +1517,15 @@ function generateDocx() {
   if (lector)     children.push(p('Lector:\t' + lector,       { para: { tabStops: [{ type: TabStopType.LEFT, position: 2000 }] } }));
   if (cantorij)   children.push(p('Cantorij:\tja',             { para: { tabStops: [{ type: TabStopType.LEFT, position: 2000 }] } }));
   if (kinderkerk) children.push(p('Kinderkerk:\t' + kinderkerk, { para: { tabStops: [{ type: TabStopType.LEFT, position: 2000 }] } }));
+  [['vlv', vlv], ['vlh', vlh], ['vlz', vlz]].forEach(([key, val]) => {
+    if (!val) return;
+    const suffix = val === 'ja' ? '' : (val === '?' ? ' (gepland)' : ': ' + val);
+    children.push(p(VL_LABELS[key] + suffix, { sz: szSm, italic: true }));
+  });
+  if (avondmaal) {
+    const am = avondmaal === 'ja' ? 'Avondmaal' : 'Avondmaal: ' + avondmaal;
+    children.push(p(am, { sz: szSm }));
+  }
   if (bijzonderheden) children.push(...multiline(bijzonderheden, { sz: szSm }));
   children.push(empty());
 

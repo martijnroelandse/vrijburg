@@ -108,14 +108,34 @@ Bij het kiezen van een datum worden automatisch ingevuld:
 - Predikant → voorganger
 - Organist, lector (door bureaumedewerker beheerd)
 - Cantorij, kinderkerk
+- **VLV / VLH / VLZ** — bijzondere dienstvormen (zie hieronder)
 - Afwijkende aanvangstijd, bijzondere dienst (feestdag)
-- Bijzonderheden (Vrijburg laat horen/zien/voorgaan, avondmaal)
+- Locatie en overige opmerkingen
 
-**Bijwerken:** exporteer het spreadsheet als CSV en converteer naar `dienstplanning.json`:
+### VLV, VLH en VLZ
+
+Drie bijzondere dienstvormen van Vrijburg (logo's in `assets/`):
+
+| Afkorting | Naam | Inhoud |
+|---|---|---|
+| **VLV** | Vrijburg laat voorgaan | Iemand anders dan de predikant leidt (deel van) de dienst |
+| **VLH** | Vrijburg laat horen | Muzikale dienst — concert, cantorij, orgel |
+| **VLZ** | Vrijburg laat zien | Visuele dienst — film, tentoonstelling, performance |
+
+In het spreadsheet staan deze in kolommen `VLV`, `VLH`, `VLZ`. Een `?` betekent: gepland maar nog niet definitief.
+
+**Bijwerken (voorkeur — live Google Sheet):**
 ```bash
 curl -sL "https://docs.google.com/spreadsheets/d/1imjMr9ELUHGV9331mYIoTOUc-DizOysV/export?format=csv" -o dienstplanning.csv
-# Converteer met scripts/update-dienstplanning.py
+python3 scripts/update-dienstplanning.py dienstplanning.csv
 ```
+
+**Of vanuit meegeleverde CSV (bijv. `dienstplanning-2026.csv`):**
+```bash
+python3 scripts/update-dienstplanning.py dienstplanning-2026.csv
+```
+
+Het 2026-template gebruikt verkorte kolomnamen (`KK`, `VLV`, `VLH`, `VLZ`); het script herkent zowel het oude als het nieuwe formaat.
 
 ---
 

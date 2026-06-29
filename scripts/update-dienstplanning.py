@@ -10,7 +10,7 @@ from pathlib import Path
 
 CSV_URL = (
     "https://docs.google.com/spreadsheets/d/"
-    "1imjMr9ELUHGV9331mYIoTOUc-DizOysV/export?format=csv"
+    "1imjMr9ELUHGV9331mYIoTOUc-DizOysV/edit?usp=sharing"
 )
 
 LOC_CODES = {
@@ -18,6 +18,8 @@ LOC_CODES = {
     "zw": "Willem de Zwijger",
     "or": "Oranjekerk",
 }
+
+VL_TYPES = ("VLV", "VLH", "VLZ")
 
 
 def clean(v):
@@ -51,6 +53,44 @@ def parse_aanvangstijd(raw):
     return v, []
 
 
+def parse_vl_value(raw):
+    """Zet spreadsheet-waarde om naar VLV/VLH/VLZ veld."""
+    v = clean(raw)
+    if not v:
+        return None, ""
+    upper = v.upper()
+    for code in VL_TYPES:
+        if upper == code:
+            return code.lower(), "ja"
+        if upper == f"{code}?":
+            return code.lower(), "?"
+    # Waarde staat in verkeerde kolom (bijv. VLH in VLV-kolom)
+    for code in VL_TYPES:
+        if upper.startswith(code):
+            return code.lower(), v
+    return None, v
+
+
+def assign_vl_fields(row):
+    """Lees VLV, VLH, VLZ kolommen; corrigeer verkeerd geplaatste codes."""
+    vl = {"vlv": "", "vlh": "", "vlz": ""}
+    columns = [
+        ("vlv", ("VLV", "V.L.Voorgaan")),
+        ("vlh", ("VLH", "V.L.Horen ♫♫ ")),
+        ("vlz", ("VLZ", "V.L.Zien")),
+    ]
+    for target, keys in columns:
+        raw = get_col(row, *keys)
+        if not raw:
+            continue
+        code, value = parse_vl_value(raw)
+        if code:
+            vl[code] = value or "ja"
+        else:
+            vl[target] = raw
+    return vl
+
+
 def convert(csv_path: Path) -> list:
     rows = []
     with csv_path.open(encoding="utf-8-sig") as f:
@@ -65,18 +105,10 @@ def convert(csv_path: Path) -> list:
                 kk = "ja"
 
             aanvangstijd, extra = parse_aanvangstijd(r.get("Afwijkende aanvangstijd"))
+            vl = assign_vl_fields(r)
 
             bijz = list(extra)
-            for label, keys in [
-                ("Vrijburg laat voorgaan", ("VLV", "V.L.Voorgaan")),
-                ("Vrijburg laat horen", ("VLH", "V.L.Horen ♫♫ ")),
-                ("Vrijburg laat zien", ("VLZ", "V.L.Zien")),
-                ("Avondmaal", ("Avondmaal",)),
-            ]:
-                v = get_col(r, *keys)
-                if v:
-                    bijz.append(f"{label}: {v}" if label != "Avondmaal" else f"Avondmaal: {v}")
-
+            avondmaal = get_col(r, "Avondmaal")
             opm = get_col(r, "Opmerkingen")
             if opm:
                 bijz.append(opm)
@@ -90,6 +122,10 @@ def convert(csv_path: Path) -> list:
                 "cantorij": flag(get_col(r, "Cantorij ♫♫ ")),
                 "kinderkerk": kk,
                 "lector": get_col(r, "Lector"),
+                "vlv": vl["vlv"],
+                "vlh": vl["vlh"],
+                "vlz": vl["vlz"],
+                "avondmaal": avondmaal,
                 "bijzonderheden": "\n".join(bijz),
             })
     return rows
@@ -101,9 +137,7 @@ def main():
     csv_path = Path(sys.argv[1]) if len(sys.argv) > 1 else root / "dienstplanning.csv"
 
     if not csv_path.exists():
-        print(f"Gebruik: curl -sL '{CSV_URL}' -o dienstplanning.csv")
-        print("        python3 scripts/update-dienstplanning.py dienstplanning.csv")
-        print("   of:  python3 scripts/update-dienstplanning.py dienstplanning-2026.csv")
+        print(f"Gebruik: python3 scripts/update-dienstplanning.py dienstplanning-2026.csv")
         sys.exit(1)
 
     rows = convert(csv_path)
