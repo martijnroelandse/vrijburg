@@ -29,7 +29,7 @@ De liturgie wordt door **meerdere mensen** aangeleverd. In de app kiest ieder bo
 |---|---|
 | **Voorganger** | Thema, beschrijving, orde van dienst (liederen, lezingen, inleiding), lichtlied en slotlied |
 | **Organist** | Orgelspeel (opening en slot), muziek in de orde van dienst |
-| **Bureaumedewerker** | Datum en namen, collecte, bloemen, agenda; stuurt links naar voorganger en organist |
+| **Bureaumedewerker** | Datum, predikant/organist/lector/cantorij/kinderkerk (uit dienstplanning), collecte, bloemen, agenda |
 | **Alles bekijken** | Volledig overzicht en download van de .docx |
 
 ### Hoe het samenkomt
@@ -47,10 +47,11 @@ Geen enkel veld is verplicht — ieder vult alleen zijn eigen onderdeel in. De g
 ## Bestandsstructuur
 
 ```
-├── index.html        # Volledige app (HTML + CSS + JS in één bestand)
-├── collectes.json    # Collectes 2026-2027 (55 entries, per datum)
-├── README.md         # Gebruikersdocumentatie
-└── HANDOVER.md       # Dit bestand
+├── index.html           # Volledige app (HTML + CSS + JS in één bestand)
+├── collectes.json       # Collectes 2026-2027 (55 entries, per datum)
+├── dienstplanning.json  # Dienstplanning (predikant, organist, lector, cantorij, etc.)
+├── README.md            # Gebruikersdocumentatie
+└── HANDOVER.md          # Dit bestand
 ```
 
 ---
@@ -97,6 +98,23 @@ Elk object:
 
 `type` is de **tweede** collecte. De eerste collecte is altijd de genoemde organisatie.  
 Op datum-match wordt de eerste collecte auto-ingevuld; de tweede collecte wisselt automatisch (als eerste = gemeente → tweede = diaconie, en omgekeerd).
+
+### Dienstplanning (dienstplanning.json)
+
+Bron: [Google Spreadsheet dienstplanning](https://docs.google.com/spreadsheets/d/1imjMr9ELUHGV9331mYIoTOUc-DizOysV/edit)
+
+Bij het kiezen van een datum worden automatisch ingevuld:
+- Predikant → voorganger
+- Organist, lector (door bureaumedewerker beheerd)
+- Cantorij, kinderkerk
+- Afwijkende aanvangstijd, bijzondere dienst (feestdag)
+- Bijzonderheden (Vrijburg laat horen/zien/voorgaan, avondmaal)
+
+**Bijwerken:** exporteer het spreadsheet als CSV en converteer naar `dienstplanning.json`:
+```bash
+curl -sL "https://docs.google.com/spreadsheets/d/1imjMr9ELUHGV9331mYIoTOUc-DizOysV/export?format=csv" -o dienstplanning.csv
+# Converteer met scripts/update-dienstplanning.py
+```
 
 ---
 

@@ -11,7 +11,8 @@ Webformulier waarmee medewerkers (of dominees zelf) de wekelijkse liturgie kunne
 
 ### Typische workflow
 
-1. **Bureaumedewerker** zet datum, stuurt link naar voorganger en organist
+1. **Bureaumedewerker** zet datum → predikant, organist, lector en cantorij worden ingevuld vanuit de dienstplanning
+2. **Bureaumedewerker** stuurt link naar voorganger en organist
 2. **Voorganger** vult thema en orde van dienst in, stuurt link terug
 3. **Organist** vult orgelspel en muziek in, stuurt link terug
 4. **Bureaumedewerker** controleert agenda en collecte, downloadt de liturgie
@@ -31,6 +32,7 @@ Zie `HANDOVER.md` voor technische details.
 |---|---|
 | `index.html` | De volledige applicatie (HTML + CSS + JS) |
 | `collectes.json` | Collectes 2026-2027, per datum, met beschrijving en rekeningnummer |
+| `dienstplanning.json` | Dienstplanning: predikant, organist, lector, cantorij, kinderkerk per datum |
 | `HANDOVER.md` | Technische documentatie en doorontwikkelingsprioriteiten |
 | `README.md` | Dit bestand |
 

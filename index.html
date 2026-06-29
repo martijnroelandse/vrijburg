@@ -412,26 +412,54 @@
   <div class="section" id="section-dienst" data-section="dienst">
     <div class="section-header">1. Dienst</div>
     <div class="section-body">
+      <div id="planning-notice" class="collecte-auto-notice" style="display:none"></div>
       <div class="row">
         <div class="field" data-owner="all">
           <label>Datum</label>
           <input type="date" id="datum" onchange="onDatumChange()">
         </div>
-        <div class="field" data-owner="voorganger">
-          <label>Voorganger</label>
-          <input type="text" id="voorganger" placeholder="bijv. ds. Rachelle van Andel">
+        <div class="field" data-owner="medewerker">
+          <label>Afwijkende aanvangstijd <span class="opt">optioneel</span></label>
+          <input type="text" id="aanvangstijd" placeholder="bijv. 14.30 of 19.30">
+        </div>
+        <div class="field" data-owner="medewerker">
+          <label>Bijzondere dienst <span class="opt">uit dienstplanning</span></label>
+          <input type="text" id="bijzondere_dienst" placeholder="bijv. Pasen, Pinksteren, Kerstavond">
         </div>
       </div>
       <div class="row">
         <div class="field" data-owner="medewerker">
-          <label>Organist</label>
+          <label>Voorganger / predikant <span class="opt">uit dienstplanning</span></label>
+          <input type="text" id="voorganger" placeholder="bijv. ds. Rachelle van Andel">
+        </div>
+        <div class="field" data-owner="medewerker">
+          <label>Organist <span class="opt">uit dienstplanning</span></label>
           <input type="text" id="organist" placeholder="bijv. Jan Pieter Lanooy">
         </div>
         <div class="field" data-owner="medewerker">
-          <label>Lector</label>
+          <label>Lector <span class="opt">bureaumedewerker vult in</span></label>
           <input type="text" id="lector" placeholder="bijv. Gon Homburg">
         </div>
       </div>
+      <div class="row">
+        <div class="field" data-owner="medewerker" style="flex-direction:row;align-items:center;gap:8px;padding-top:20px">
+          <input type="checkbox" id="cantorij" style="width:auto">
+          <label for="cantorij" style="text-transform:none;letter-spacing:0;font-size:14px">Cantorij zingt mee</label>
+        </div>
+        <div class="field" data-owner="medewerker">
+          <label>Kinderkerk <span class="opt">optioneel</span></label>
+          <input type="text" id="kinderkerk" placeholder="bijv. ja">
+        </div>
+      </div>
+      <div class="row">
+        <div class="field" data-owner="medewerker" style="grid-column: 1/-1">
+          <label>Bijzonderheden <span class="opt">Vrijburg laat horen/zien/voorgaan, avondmaal</span></label>
+          <textarea id="bijzonderheden" rows="2" placeholder="Wordt ingevuld vanuit dienstplanning…"></textarea>
+        </div>
+      </div>
+      <p style="font-size:12px;color:#aaa;margin-top:8px">
+        Namen komen uit de <a href="https://docs.google.com/spreadsheets/d/1imjMr9ELUHGV9331mYIoTOUc-DizOysV/edit" target="_blank" rel="noopener">dienstplanning</a> (predikant, organist, lector, cantorij, kinderkerk).
+      </p>
     </div>
   </div>
 
@@ -620,6 +648,7 @@
 // COLLECTES DATA (2026-2027)
 // ============================================================
 const COLLECTES = []; // Filled from collectes.json below
+const DIENSTPLANNING = []; // Filled from dienstplanning.json
 
 // ============================================================
 // VASTE TEKSTEN
@@ -673,8 +702,8 @@ let huidigeRol = 'medewerker';
 const ROL_CONFIG = {
   voorganger: {
     label: 'Voorganger',
-    primary: ['dienst', 'thema', 'opening', 'orde', 'slot'],
-    hint: 'Vul thema, orde van dienst (liederen, lezingen) en lichtlied/slotlied in. Orgelspeel en agenda laat u leeg — die vullen anderen in. Klik daarna op <strong>Ik ben klaar</strong> om de link terug te sturen.',
+    primary: ['thema', 'opening', 'orde', 'slot'],
+    hint: 'Vul thema, orde van dienst (liederen, lezingen) en lichtlied/slotlied in. Predikant, organist en lector staan al in de dienstplanning. Klik op <strong>Ik ben klaar</strong> om de link terug te sturen.',
     emailAan: 'voorganger',
   },
   organist: {
@@ -686,7 +715,7 @@ const ROL_CONFIG = {
   medewerker: {
     label: 'Bureaumedewerker',
     primary: ['dienst', 'collecte', 'agenda'],
-    hint: 'Stel de dienst in (datum, namen), controleer collecte en agenda. Stuur links naar voorganger en organist om hun onderdelen in te laten vullen. Als alles binnen is: kies <strong>Alles bekijken</strong> en download de liturgie.',
+    hint: 'Zet datum — predikant, organist, lector, cantorij en kinderkerk worden ingevuld vanuit de dienstplanning. Controleer agenda en collecte. Stuur links naar voorganger en organist. Download de liturgie als alles binnen is.',
     emailAan: null,
   },
   compleet: {
@@ -942,6 +971,11 @@ function getFormState() {
   return {
     rol: huidigeRol,
     datum: document.getElementById('datum').value,
+    aanvangstijd: document.getElementById('aanvangstijd').value,
+    bijzondere_dienst: document.getElementById('bijzondere_dienst').value,
+    cantorij: document.getElementById('cantorij').checked,
+    kinderkerk: document.getElementById('kinderkerk').value,
+    bijzonderheden: document.getElementById('bijzonderheden').value,
     voorganger: document.getElementById('voorganger').value,
     organist: document.getElementById('organist').value,
     lector: document.getElementById('lector').value,
@@ -968,13 +1002,15 @@ function getFormState() {
 
 function applyFormState(state) {
   if (!state) return;
-  const fields = ['datum','voorganger','organist','lector','thema','intro','foto_credit',
+  const fields = ['datum','aanvangstijd','bijzondere_dienst','kinderkerk','bijzonderheden',
+    'voorganger','organist','lector','thema','intro','foto_credit',
     'orgelspel_opening','lichtlied','slotlied','orgelspel_slot','bloemen',
     'c1_thema','c1_naam','c1_tekst','c1_rekening','c2_type','c2_tekst','c2_rekening',
     'agenda_kort','agenda_ver'];
   fields.forEach(id => {
     if (state[id] !== undefined) document.getElementById(id).value = state[id];
   });
+  if (state.cantorij !== undefined) document.getElementById('cantorij').checked = !!state.cantorij;
   if (state.orde?.length) {
     ordeItems = state.orde;
     renderOrde();
@@ -1088,6 +1124,30 @@ function onDatumChange() {
   const dag = d.getDate();
   const maand = NL_MAANDEN_CAP[d.getMonth()];
 
+  // Dienstplanning (predikant, organist, lector, cantorij, etc.)
+  const planning = DIENSTPLANNING.find(p => p.datum === val);
+  const planningNotice = document.getElementById('planning-notice');
+  if (planning) {
+    document.getElementById('voorganger').value = planning.predikant || '';
+    document.getElementById('organist').value = planning.organist || '';
+    document.getElementById('lector').value = planning.lector || '';
+    document.getElementById('aanvangstijd').value = planning.aanvangstijd || '';
+    document.getElementById('bijzondere_dienst').value = planning.bijzondere_dienst || '';
+    document.getElementById('cantorij').checked = !!planning.cantorij;
+    document.getElementById('kinderkerk').value = planning.kinderkerk || '';
+    document.getElementById('bijzonderheden').value = planning.bijzonderheden || '';
+    planningNotice.style.display = 'block';
+    planningNotice.style.background = '#e8f5e9';
+    planningNotice.style.color = '#2e7d32';
+    planningNotice.textContent = `✓ Dienstplanning ingevuld voor ${formatDatum(val)}`;
+  } else {
+    planningNotice.style.display = 'block';
+    planningNotice.style.background = '#fff3e0';
+    planningNotice.style.color = '#e65100';
+    planningNotice.textContent = `⚠ Geen dienstplanning voor ${formatDatum(val)} — vul namen handmatig in`;
+  }
+
+  // Collecte
   const entry = COLLECTES.find(c => c.dag === dag && c.maand === maand);
   if (entry) {
     document.getElementById('c1_thema').value = entry.thema || '';
@@ -1144,6 +1204,11 @@ function generateDocx() {
   const szSm = 20; // 10pt
 
   const datum    = document.getElementById('datum').value;
+  const aanvangstijd = document.getElementById('aanvangstijd').value.trim();
+  const bijzondereDienst = document.getElementById('bijzondere_dienst').value.trim();
+  const cantorij = document.getElementById('cantorij').checked;
+  const kinderkerk = document.getElementById('kinderkerk').value.trim();
+  const bijzonderheden = document.getElementById('bijzonderheden').value.trim();
   const voorganger = document.getElementById('voorganger').value.trim();
   const organist   = document.getElementById('organist').value.trim();
   const lector     = document.getElementById('lector').value.trim();
@@ -1166,6 +1231,9 @@ function generateDocx() {
   const agendaVer  = document.getElementById('agenda_ver').value.trim();
 
   const datumDisplay = formatDatum(datum);
+  const datumTitel = bijzondereDienst
+    ? `Dienst ${datumDisplay}${aanvangstijd ? ' om ' + aanvangstijd.replace('.', ':') + ' uur' : ''} – ${bijzondereDienst}`
+    : `Dienst ${datumDisplay}${aanvangstijd ? ' om ' + aanvangstijd.replace('.', ':') + ' uur' : ''}`;
 
   // Helper: maak een simpele alinea
   function p(text, opts = {}) {
@@ -1250,7 +1318,7 @@ function generateDocx() {
   const children = [];
 
   // HEADER
-  children.push(p('Dienst ' + datumDisplay, { bold: true, sz: 26, after: 40 }));
+  children.push(p(datumTitel, { bold: true, sz: 26, after: 40 }));
   if (thema) children.push(p(thema, { bold: true, sz: 24, after: 40 }));
   if (intro) children.push(...multiline(intro, { after: 60 }));
   if (foto) children.push(p(foto, { italic: true, after: 60 }));
@@ -1260,6 +1328,9 @@ function generateDocx() {
   if (voorganger) children.push(p('Voorganger:\t' + voorganger, { para: { tabStops: [{ type: TabStopType.LEFT, position: 2000 }] } }));
   if (organist)   children.push(p('Organist:\t' + organist,   { para: { tabStops: [{ type: TabStopType.LEFT, position: 2000 }] } }));
   if (lector)     children.push(p('Lector:\t' + lector,       { para: { tabStops: [{ type: TabStopType.LEFT, position: 2000 }] } }));
+  if (cantorij)   children.push(p('Cantorij:\tja',             { para: { tabStops: [{ type: TabStopType.LEFT, position: 2000 }] } }));
+  if (kinderkerk) children.push(p('Kinderkerk:\t' + kinderkerk, { para: { tabStops: [{ type: TabStopType.LEFT, position: 2000 }] } }));
+  if (bijzonderheden) children.push(...multiline(bijzonderheden, { sz: szSm }));
   children.push(empty());
 
   children.push(p('De kerkdienst wordt opgenomen en uitgezonden via www.vrijburg.nl en'));
@@ -1410,18 +1481,16 @@ function setStatus(msg, type) {
 }
 
 // ============================================================
-// LAAD COLLECTES DATA + INIT
+// LAAD DATA + INIT
 // ============================================================
-fetch('./collectes.json')
-  .then(r => r.json())
-  .then(data => {
-    COLLECTES.push(...data);
-    initApp();
-  })
-  .catch(() => {
-    console.warn('collectes.json niet gevonden – vul collecte handmatig in');
-    initApp();
-  });
+Promise.all([
+  fetch('./collectes.json').then(r => r.json()).catch(() => []),
+  fetch('./dienstplanning.json').then(r => r.json()).catch(() => []),
+]).then(([collectes, planning]) => {
+  COLLECTES.push(...collectes);
+  DIENSTPLANNING.push(...planning);
+  initApp();
+}).catch(() => initApp());
 
 function initApp() {
   setupAutoSave();
