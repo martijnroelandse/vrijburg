@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vrijburg – Liturgie Generator</title>
+  <style>
+    :root {
+      --purple: #5a2d82;
+      --purple-light: #f3eef9;
+      --purple-mid: #d4bfea;
+      --border: #ddd;
+      --text: #222;
+      --muted: #666;
+      --radius: 6px;
+      --shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      font-size: 15px;
+      color: var(--text);
+      background: #f8f6fb;
+      min-height: 100vh;
+    }
+
+    header {
+      background: var(--purple);
+      color: white;
+      padding: 20px 32px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+
+    header h1 { font-size: 20px; font-weight: 600; }
+    header p { font-size: 13px; opacity: 0.85; margin-top: 2px; }
+
+    .logo {
+      width: 44px; height: 44px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; font-weight: bold; color: white;
+      flex-shrink: 0;
+    }
+
+    main {
+      max-width: 860px;
+      margin: 32px auto;
+      padding: 0 16px 64px;
+    }
+
+    .section {
+      background: white;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+
+    .section-header {
+      background: var(--purple-light);
+      border-bottom: 1px solid var(--purple-mid);
+      padding: 12px 20px;
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--purple);
+      letter-spacing: 0.3px;
+    }
+
+    .section-body { padding: 20px; }
+
+    .row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .row:last-child { margin-bottom: 0; }
+
+    .field { display: flex; flex-direction: column; gap: 5px; }
+
+    label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    label span.opt {
+      font-weight: 400;
+      text-transform: none;
+      letter-spacing: 0;
+      color: #aaa;
+      font-size: 11px;
+    }
+
+    input[type=text], input[type=date], textarea, select {
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 8px 10px;
+      font-size: 14px;
+      font-family: inherit;
+      color: var(--text);
+      width: 100%;
+      transition: border-color 0.15s;
+    }
+
+    input:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: var(--purple);
+      box-shadow: 0 0 0 3px rgba(90,45,130,0.1);
+    }
+
+    textarea { resize: vertical; min-height: 80px; }
+
+    .auto-badge {
+      display: inline-block;
+      background: #e8f5e9;
+      color: #2e7d32;
+      font-size: 10px;
+      font-weight: 600;
+      padding: 1px 6px;
+      border-radius: 10px;
+      margin-left: 6px;
+      vertical-align: middle;
+    }
+
+    /* Orde van dienst */
+    .orde-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+
+    .orde-item {
+      display: grid;
+      grid-template-columns: 130px 1fr auto auto;
+      gap: 8px;
+      align-items: start;
+      background: var(--purple-light);
+      border: 1px solid var(--purple-mid);
+      border-radius: 4px;
+      padding: 10px;
+    }
+
+    .orde-item select { font-size: 13px; }
+
+    .orde-item textarea {
+      font-size: 13px;
+      min-height: 50px;
+    }
+
+    .btn-icon {
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      width: 30px; height: 30px;
+      cursor: pointer;
+      font-size: 14px;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--muted);
+      flex-shrink: 0;
+    }
+
+    .btn-icon:hover { background: #f0f0f0; }
+    .btn-icon.del:hover { background: #ffeaea; border-color: #ffaaaa; color: #c00; }
+
+    .orde-add-row { display: flex; gap: 8px; flex-wrap: wrap; }
+
+    .btn-add {
+      background: white;
+      border: 1px dashed var(--purple);
+      border-radius: 4px;
+      padding: 6px 14px;
+      color: var(--purple);
+      font-size: 13px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.15s;
+    }
+
+    .btn-add:hover { background: var(--purple-light); }
+
+    /* Collecte */
+    .collecte-auto-notice {
+      font-size: 12px;
+      color: #2e7d32;
+      margin-bottom: 12px;
+      background: #e8f5e9;
+      padding: 6px 10px;
+      border-radius: 4px;
+    }
+
+    .collecte-block {
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 14px;
+      margin-bottom: 14px;
+      background: #fafafa;
+    }
+
+    .collecte-block h4 {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: var(--purple);
+    }
+
+    /* Generate button */
+    .generate-bar {
+      position: sticky;
+      bottom: 0;
+      background: white;
+      border-top: 1px solid var(--border);
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      box-shadow: 0 -2px 8px rgba(0,0,0,0.06);
+    }
+
+    .btn-generate {
+      background: var(--purple);
+      color: white;
+      border: none;
+      border-radius: var(--radius);
+      padding: 12px 28px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .btn-generate:hover { background: #461f6b; }
+    .btn-generate:disabled { background: #aaa; cursor: not-allowed; }
+
+    .generate-hint { font-size: 13px; color: var(--muted); }
+
+    .status-msg {
+      font-size: 13px;
+      padding: 4px 10px;
+      border-radius: 4px;
+    }
+    .status-msg.ok { background: #e8f5e9; color: #2e7d32; }
+    .status-msg.err { background: #ffeaea; color: #c00; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">V</div>
+  <div>
+    <h1>Vrijburg – Liturgie Generator</h1>
+    <p>Vul de dienstgegevens in en download de kant-en-klare liturgie als Word-document</p>
+  </div>
+</header>
+
+<main>
+
+  <!-- 1. DIENST INFO -->
+  <div class="section">
+    <div class="section-header">1. Dienst</div>
+    <div class="section-body">
+      <div class="row">
+        <div class="field">
+          <label>Datum</label>
+          <input type="date" id="datum" onchange="onDatumChange()">
+        </div>
+        <div class="field">
+          <label>Voorganger</label>
+          <input type="text" id="voorganger" placeholder="bijv. ds. Rachelle van Andel">
+        </div>
+      </div>
+      <div class="row">
+        <div class="field">
+          <label>Organist</label>
+          <input type="text" id="organist" placeholder="bijv. Jan Pieter Lanooy">
+        </div>
+        <div class="field">
+          <label>Lector</label>
+          <input type="text" id="lector" placeholder="bijv. Gon Homburg">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. THEMA & INTRO -->
+  <div class="section">
+    <div class="section-header">2. Thema &amp; beschrijving</div>
+    <div class="section-body">
+      <div class="row">
+        <div class="field" style="grid-column: 1/-1">
+          <label>Thema <span class="opt">– bovenkop van de dienst</span></label>
+          <input type="text" id="thema" placeholder="bijv. Liefde en wonden">
+        </div>
+      </div>
+      <div class="row">
+        <div class="field" style="grid-column: 1/-1">
+          <label>Beschrijving / intro <span class="opt">– tekst voor de website en nieuwsbrief</span></label>
+          <textarea id="intro" rows="5" placeholder="De tekst die de dominee aanlevert als omschrijving van de dienst…"></textarea>
+        </div>
+      </div>
+      <div class="row">
+        <div class="field">
+          <label>Foto credit <span class="opt">optioneel</span></label>
+          <input type="text" id="foto_credit" placeholder="bijv. Foto ammoniet: Petra Galama">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. OPENING -->
+  <div class="section">
+    <div class="section-header">3. Opening van de dienst</div>
+    <div class="section-body">
+      <div class="row">
+        <div class="field">
+          <label>Orgelspel opening <span class="opt">optioneel</span></label>
+          <input type="text" id="orgelspel_opening" placeholder="bijv. Präludium in C-dur BWV 545, J.S. Bach">
+        </div>
+        <div class="field">
+          <label>Lichtlied</label>
+          <input type="text" id="lichtlied" placeholder="bijv. Lied 217: 1 en 3  of  'Licht dat wil ingaan…'">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. ORDE VAN DIENST -->
+  <div class="section">
+    <div class="section-header">4. Orde van dienst <span style="font-weight:400;font-size:12px;color:#888">– in volgorde zoals de dominee die aanlevert</span></div>
+    <div class="section-body">
+      <div class="orde-list" id="orde-list"></div>
+      <div class="orde-add-row">
+        <button class="btn-add" onclick="addOrde('lied')">+ Lied</button>
+        <button class="btn-add" onclick="addOrde('lezing')">+ Lezing</button>
+        <button class="btn-add" onclick="addOrde('inleiding')">+ Inleiding</button>
+        <button class="btn-add" onclick="addOrde('muziek')">+ Muziek</button>
+        <button class="btn-add" onclick="addOrde('overig')">+ Overig</button>
+      </div>
+      <p style="font-size:12px;color:#aaa;margin-top:10px;">
+        Tip: voor een lied voer je bijv. in "Lied 652: 1, 3 en 5". Voor lezingen de bijbelreferentie + eventueel de volledige tekst eronder.
+      </p>
+    </div>
+  </div>
+
+  <!-- 5. SLOT -->
+  <div class="section">
+    <div class="section-header">5. Afsluiting</div>
+    <div class="section-body">
+      <div class="row">
+        <div class="field">
+          <label>Slotlied</label>
+          <input type="text" id="slotlied" placeholder="bijv. Lied 675">
+        </div>
+        <div class="field">
+          <label>Orgelspel slot <span class="opt">optioneel</span></label>
+          <input type="text" id="orgelspel_slot" placeholder="bijv. Fuge in C-dur BWV 545, J.S. Bach">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. COLLECTE & BLOEMEN -->
+  <div class="section">
+    <div class="section-header">6. Collecte &amp; bloemen</div>
+    <div class="section-body">
+      <div class="row" style="margin-bottom:16px">
+        <div class="field" style="grid-column: 1/-1">
+          <label>Bloemen gaan naar</label>
+          <input type="text" id="bloemen" placeholder="bijv. mw. Joke K. Bruhl">
+        </div>
+      </div>
+
+      <div id="collecte-notice" class="collecte-auto-notice" style="display:none"></div>
+
+      <div class="collecte-block">
+        <h4>Eerste collecte</h4>
+        <div class="row">
+          <div class="field">
+            <label>Collectethema</label>
+            <input type="text" id="c1_thema" placeholder="bijv. Vluchtelingen">
+          </div>
+          <div class="field">
+            <label>Naam organisatie</label>
+            <input type="text" id="c1_naam" placeholder="bijv. Stichting NAOMI">
+          </div>
+        </div>
+        <div class="row">
+          <div class="field" style="grid-column: 1/-1">
+            <label>Beschrijving</label>
+            <textarea id="c1_tekst" rows="4"></textarea>
+          </div>
+        </div>
+        <div class="row">
+          <div class="field" style="grid-column: 1/-1">
+            <label>Rekeningnummer</label>
+            <input type="text" id="c1_rekening">
+          </div>
+        </div>
+      </div>
+
+      <div class="collecte-block">
+        <h4>Tweede collecte <span class="auto-badge">automatisch</span></h4>
+        <div class="row">
+          <div class="field">
+            <label>Type</label>
+            <select id="c2_type" onchange="onC2TypeChange()">
+              <option value="diaconie">Diaconie</option>
+              <option value="gemeente">Gemeente</option>
+            </select>
+          </div>
+        </div>
+        <div class="row">
+          <div class="field" style="grid-column: 1/-1">
+            <label>Beschrijving</label>
+            <textarea id="c2_tekst" rows="3"></textarea>
+          </div>
+        </div>
+        <div class="row">
+          <div class="field" style="grid-column: 1/-1">
+            <label>Rekeningnummer</label>
+            <input type="text" id="c2_rekening">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7. AGENDA -->
+  <div class="section">
+    <div class="section-header">7. Agenda</div>
+    <div class="section-body">
+      <div class="field" style="margin-bottom:16px">
+        <label>Activiteiten komende week <span class="opt">– voor activiteiten die binnenkort plaatsvinden</span></label>
+        <textarea id="agenda_kort" rows="4" placeholder="bijv. Donderdag 2 juli 12:30 uur – Vrijburglunch in de Moddermanzaal…"></textarea>
+      </div>
+      <div class="field">
+        <label>Aankondigingen verder weg <span class="opt">optioneel</span></label>
+        <textarea id="agenda_ver" rows="4" placeholder="bijv. Zondag 13 juli 10:30 uur – kerkdienst met ds. …"></textarea>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<div class="generate-bar">
+  <button class="btn-generate" onclick="generateDocx()">⬇ Download liturgie (.docx)</button>
+  <span class="generate-hint">Het document is direct klaar om te printen</span>
+  <span id="status-msg"></span>
+</div>
+
+<!-- Libraries -->
+<script src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.js"></script>
+
+<script>
+// ============================================================
+// COLLECTES DATA (2026-2027)
+// ============================================================
+const COLLECTES = []; // Filled from collectes.json below
+
+// ============================================================
+// VASTE TEKSTEN
+// ============================================================
+const BEMOEDIGING_LINES = [
+  { wie: 'voorganger', tekst: 'Ons samenzijn dragen we op aan God,' },
+  { wie: 'gemeente',   tekst: 'die liefde is en grond van ons bestaan.' },
+  { wie: 'voorganger', tekst: 'Die ons stelt in het licht en ons roept om dienstbaar te zijn.' },
+  { wie: 'gemeente',   tekst: 'Die ons vrijheid geeft en ons vertrouwen vraagt.' },
+];
+
+const GROET_LINES = [
+  { wie: 'voorganger', tekst: 'Vrede zij u.' },
+  { wie: 'gemeente',   tekst: 'De wereld zij vrede.' },
+];
+
+const ONZE_VADER = [
+  'Onze Vader, die in de hemel zijt,',
+  'Uw naam worde geheiligd, Uw Koninkrijk kome,',
+  'Uw wil geschiede op aarde zoals in de hemel.',
+  'Geef ons heden ons dagelijks brood.',
+  'En vergeef ons onze schuld',
+  'zoals ook wij onze schuldenaars vergeven.',
+  'En leid ons niet in verzoeking, maar verlos ons van het kwade.',
+  'Want van U is het koninkrijk en de kracht',
+  'en de heerlijkheid in eeuwigheid.\tAmen.',
+];
+
+const DIACONIE_TEKST = 'De diaconie zet zich in voor de samenleving.\nZij ondersteunt mensen die in financiële moeilijkheden zijn gekomen. De diaconie ondersteunt voorts projecten in Amsterdam en ver daarbuiten.';
+const DIACONIE_REK = 'NL 56 INGB 0004 6269 79 o.v.v. 1730';
+const GEMEENTE_TEKST = 'In het bijzonder voor het in stand houden van de kerkdiensten en voor ons kerkgebouw is uw bijdrage onmisbaar.';
+const GEMEENTE_REK = 'NL 51 INGB 0008 3745 67 t.n.v. St. Vrijzinnig Centrum Vrijburg, o.v.v. 1720';
+
+const QR_TEKST = 'Voor digitaal collecteren maken wij gebruik van een algemene QR-code. Deze kunt u niet met uw eigen bank-app lezen maar wel met een algemene QR-code reader (bv Lens op Android of Camera op iPhone). U kunt ook in uw internetapplicatie naar vrijburg.nl/collecte1 en vrijburg.nl/collecte{type} gaan. In alle gevallen wordt u dan doorverwezen naar de ING Betaalverzoekpagina van Vrijburg.';
+
+const FOOTER = 'Voorgangers van Vrijburg zijn ds. Rachelle van Andel en ds. Rosaliene Israël.\n\nAlgemeen\nVrijburg is een vrijzinnige christelijke geloofsgemeenschap, gevormd door Remonstranten en Vrijzinnige Protestanten.\nVrijheid, verdraagzaamheid, verantwoordelijkheid en ruimte voor ieders persoonlijk geloof zijn belangrijke uitgangspunten die terugkomen in kerkdiensten, gespreksgroepen en overige activiteiten.\nVoor de verschillende Nieuwsbrieven kunt u zich aanmelden via onze website: www.vrijburg.nl.';
+
+const NL_MAANDEN = ['januari','februari','maart','april','mei','juni','juli','augustus','september','oktober','november','december'];
+const NL_MAANDEN_CAP = ['Januari','Februari','Maart','April','Mei','Juni','Juli','Augustus','September','Oktober','November','December'];
+const NL_DAGEN = ['zondag','maandag','dinsdag','woensdag','donderdag','vrijdag','zaterdag'];
+
+// ============================================================
+// ORDE VAN DIENST – DYNAMISCHE LIJST
+// ============================================================
+let ordeItems = [];
+
+function addOrde(type, content = '') {
+  const id = Date.now() + Math.random();
+  ordeItems.push({ id, type, content });
+  renderOrde();
+}
+
+function removeOrde(id) {
+  ordeItems = ordeItems.filter(i => i.id !== id);
+  renderOrde();
+}
+
+function moveOrde(id, dir) {
+  const idx = ordeItems.findIndex(i => i.id === id);
+  if (dir === -1 && idx === 0) return;
+  if (dir === 1 && idx === ordeItems.length - 1) return;
+  const other = idx + dir;
+  [ordeItems[idx], ordeItems[other]] = [ordeItems[other], ordeItems[idx]];
+  renderOrde();
+}
+
+function renderOrde() {
+  const list = document.getElementById('orde-list');
+  list.innerHTML = '';
+  ordeItems.forEach((item, idx) => {
+    const labels = { lied: 'Lied', lezing: 'Lezing', inleiding: 'Inleiding', muziek: 'Muziek', overig: 'Overig' };
+    const placeholders = {
+      lied:      'bijv. Lied 652: 1, 3 en 5\nof: Lied 773: Van grond en vuur (eventueel met liedtekst)',
+      lezing:    'bijv. Genesis 4, 1-16\n\nEventueel de volledige tekst eronder…',
+      inleiding: 'Optionele inleidingstekst…',
+      muziek:    'bijv. Improvisatie',
+      overig:    '',
+    };
+    const div = document.createElement('div');
+    div.className = 'orde-item';
+    div.innerHTML = `
+      <select onchange="updateOrdeType('${item.id}', this.value)">
+        ${['lied','lezing','inleiding','muziek','overig'].map(t =>
+          `<option value="${t}"${t===item.type?' selected':''}>${labels[t]}</option>`
+        ).join('')}
+      </select>
+      <textarea placeholder="${placeholders[item.type]||''}"
+                onchange="updateOrdeContent('${item.id}', this.value)"
+                oninput="updateOrdeContent('${item.id}', this.value)">${item.content}</textarea>
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <button class="btn-icon" onclick="moveOrde('${item.id}',-1)" title="Omhoog">↑</button>
+        <button class="btn-icon" onclick="moveOrde('${item.id}',1)" title="Omlaag">↓</button>
+      </div>
+      <button class="btn-icon del" onclick="removeOrde('${item.id}')" title="Verwijder">✕</button>
+    `;
+    list.appendChild(div);
+  });
+}
+
+function updateOrdeType(id, type) {
+  const item = ordeItems.find(i => i.id == id);
+  if (item) { item.type = type; renderOrde(); }
+}
+
+function updateOrdeContent(id, content) {
+  const item = ordeItems.find(i => i.id == id);
+  if (item) item.content = content;
+}
+
+// ============================================================
+// COLLECTE LOGICA
+// ============================================================
+function onDatumChange() {
+  const val = document.getElementById('datum').value;
+  if (!val) return;
+  const d = new Date(val + 'T12:00:00');
+  const dag = d.getDate();
+  const maand = NL_MAANDEN_CAP[d.getMonth()];
+
+  const entry = COLLECTES.find(c => c.dag === dag && c.maand === maand);
+  if (entry) {
+    document.getElementById('c1_thema').value = entry.thema || '';
+    document.getElementById('c1_naam').value = entry.naam || '';
+    document.getElementById('c1_tekst').value = entry.tekst || '';
+    document.getElementById('c1_rekening').value = entry.rekening || '';
+    document.getElementById('c2_type').value = entry.type === 'gemeente' ? 'diaconie' : 'gemeente';
+    onC2TypeChange();
+    const notice = document.getElementById('collecte-notice');
+    notice.style.display = 'block';
+    notice.textContent = `✓ Collecte automatisch ingevuld op basis van ${dag} ${maand.toLowerCase()}`;
+  } else {
+    const notice = document.getElementById('collecte-notice');
+    notice.style.display = 'block';
+    notice.textContent = `⚠ Geen collecte gevonden voor ${dag} ${maand.toLowerCase()} – vul handmatig in`;
+    notice.style.background = '#fff3e0';
+    notice.style.color = '#e65100';
+  }
+}
+
+function onC2TypeChange() {
+  const type = document.getElementById('c2_type').value;
+  if (type === 'diaconie') {
+    document.getElementById('c2_tekst').value = DIACONIE_TEKST;
+    document.getElementById('c2_rekening').value = DIACONIE_REK;
+  } else {
+    document.getElementById('c2_tekst').value = GEMEENTE_TEKST;
+    document.getElementById('c2_rekening').value = GEMEENTE_REK;
+  }
+}
+
+// Init tweede collecte
+onC2TypeChange();
+
+// ============================================================
+// DATUMFORMATTERING
+// ============================================================
+function formatDatum(val) {
+  if (!val) return '';
+  const d = new Date(val + 'T12:00:00');
+  const dag = NL_DAGEN[d.getDay()];
+  return `${dag} ${d.getDate()} ${NL_MAANDEN[d.getMonth()]} ${d.getFullYear()}`;
+}
+
+// ============================================================
+// DOCX GENERATOR
+// ============================================================
+function generateDocx() {
+  const { Document, Paragraph, TextRun, AlignmentType, TabStopType, TabStopPosition,
+          UnderlineType, convertInchesToTwip, PageBreak } = docx;
+
+  const font = 'Calibri';
+  const sz = 22; // 11pt in half-points
+  const szSm = 20; // 10pt
+
+  const datum    = document.getElementById('datum').value;
+  const voorganger = document.getElementById('voorganger').value.trim();
+  const organist   = document.getElementById('organist').value.trim();
+  const lector     = document.getElementById('lector').value.trim();
+  const thema      = document.getElementById('thema').value.trim();
+  const intro      = document.getElementById('intro').value.trim();
+  const foto       = document.getElementById('foto_credit').value.trim();
+  const orgelOpen  = document.getElementById('orgelspel_opening').value.trim();
+  const lichtlied  = document.getElementById('lichtlied').value.trim();
+  const slotlied   = document.getElementById('slotlied').value.trim();
+  const orgelSlot  = document.getElementById('orgelspel_slot').value.trim();
+  const bloemen    = document.getElementById('bloemen').value.trim();
+  const c1Thema    = document.getElementById('c1_thema').value.trim();
+  const c1Naam     = document.getElementById('c1_naam').value.trim();
+  const c1Tekst    = document.getElementById('c1_tekst').value.trim();
+  const c1Rek      = document.getElementById('c1_rekening').value.trim();
+  const c2Type     = document.getElementById('c2_type').value;
+  const c2Tekst    = document.getElementById('c2_tekst').value.trim();
+  const c2Rek      = document.getElementById('c2_rekening').value.trim();
+  const agendaKort = document.getElementById('agenda_kort').value.trim();
+  const agendaVer  = document.getElementById('agenda_ver').value.trim();
+
+  const datumDisplay = formatDatum(datum);
+
+  // Helper: maak een simpele alinea
+  function p(text, opts = {}) {
+    const runs = [];
+    if (Array.isArray(text)) {
+      text.forEach(t => runs.push(new TextRun({ text: t.t, font, size: t.sz || sz, bold: !!t.bold, italics: !!t.italic, break: t.break || 0 })));
+    } else {
+      runs.push(new TextRun({ text: String(text), font, size: opts.sz || sz, bold: !!opts.bold, italics: !!opts.italic }));
+    }
+    return new Paragraph({
+      children: runs,
+      spacing: { before: opts.before || 0, after: opts.after !== undefined ? opts.after : 80 },
+      alignment: opts.align || AlignmentType.LEFT,
+      indent: opts.indent ? { left: convertInchesToTwip(opts.indent) } : undefined,
+      ...opts.para
+    });
+  }
+
+  // Helper: lege regel
+  function empty() { return p(''); }
+
+  // Helper: sectietitel (vetgedrukt)
+  function sectie(text) {
+    return p(text, { bold: true, before: 120, after: 60 });
+  }
+
+  // Helper: meerdere regels tekst als alinea's
+  function multiline(text, opts = {}) {
+    if (!text) return [];
+    return text.split('\n').map(line => p(line.trim(), opts));
+  }
+
+  // Helper: bemoediging/groet met tab voor uitlijning
+  function beurtzang(lines) {
+    return lines.map(line => new Paragraph({
+      children: [
+        new TextRun({ text: '\t', font, size: sz }),
+        new TextRun({ text: line.wie + ':', font, size: sz, bold: true }),
+        new TextRun({ text: '\t', font, size: sz }),
+        new TextRun({ text: line.tekst, font, size: sz }),
+      ],
+      spacing: { before: 0, after: 60 },
+      tabStops: [
+        { type: TabStopType.LEFT, position: 720 },   // 0.5 inch
+        { type: TabStopType.LEFT, position: 2160 },  // 1.5 inch
+      ]
+    }));
+  }
+
+  // Orde van dienst regels
+  function renderOrdeItems() {
+    const paragraphs = [];
+    ordeItems.forEach(item => {
+      const lines = item.content.split('\n').filter(l => l.trim());
+      if (item.type === 'lied') {
+        // Eerste regel = lied-aanduiding (vet), rest = liedtekst
+        if (lines.length > 0) {
+          paragraphs.push(p(lines[0], { bold: true, before: 60 }));
+          lines.slice(1).forEach(l => paragraphs.push(p(l, { indent: 0.3, sz: szSm })));
+        }
+      } else if (item.type === 'lezing') {
+        if (lines.length > 0) {
+          paragraphs.push(p('Lezing: ' + lines[0], { bold: false, before: 60 }));
+          // Bijbeltekst als die meegegeven is
+          lines.slice(1).forEach(l => paragraphs.push(p(l, { italic: true, sz: szSm })));
+        }
+      } else if (item.type === 'inleiding') {
+        paragraphs.push(p('Inleiding', { before: 60 }));
+        lines.forEach(l => paragraphs.push(p(l, { indent: 0.3, sz: szSm })));
+      } else if (item.type === 'muziek') {
+        const tekst = lines[0] ? 'Muziek: ' + lines[0] : 'Muziek';
+        paragraphs.push(p(tekst, { before: 60 }));
+      } else {
+        // overig
+        lines.forEach(l => paragraphs.push(p(l, { before: 60 })));
+      }
+    });
+    return paragraphs;
+  }
+
+  // ---- Bouw het document ----
+  const children = [];
+
+  // HEADER
+  children.push(p('Dienst ' + datumDisplay, { bold: true, sz: 26, after: 40 }));
+  if (thema) children.push(p(thema, { bold: true, sz: 24, after: 40 }));
+  if (intro) children.push(...multiline(intro, { after: 60 }));
+  if (foto) children.push(p(foto, { italic: true, after: 60 }));
+  children.push(empty());
+
+  // Rollen
+  if (voorganger) children.push(p('Voorganger:\t' + voorganger, { para: { tabStops: [{ type: TabStopType.LEFT, position: 2000 }] } }));
+  if (organist)   children.push(p('Organist:\t' + organist,   { para: { tabStops: [{ type: TabStopType.LEFT, position: 2000 }] } }));
+  if (lector)     children.push(p('Lector:\t' + lector,       { para: { tabStops: [{ type: TabStopType.LEFT, position: 2000 }] } }));
+  children.push(empty());
+
+  children.push(p('De kerkdienst wordt opgenomen en uitgezonden via www.vrijburg.nl en'));
+  children.push(p('via www.kerkdienstgemist.nl'));
+  children.push(empty());
+
+  // OPENING
+  children.push(sectie('Opening van de dienst'));
+  if (orgelOpen) children.push(p('Orgelspel: ' + orgelOpen));
+  else            children.push(p('Orgelspel'));
+  children.push(p('Luiden van de klokken'));
+  children.push(p('Welkom en korte mededelingen'));
+  children.push(p('Aansteken van de kaars en Stilte'));
+  children.push(empty());
+  children.push(p('De gemeente gaat staan'));
+  children.push(p(lichtlied || 'Lichtlied: Licht dat wil ingaan tegen donkere nachten'));
+  children.push(empty());
+
+  // BEMOEDIGING
+  children.push(p('Bemoediging:', { bold: true }));
+  children.push(...beurtzang(BEMOEDIGING_LINES));
+  children.push(empty());
+
+  // GROET
+  children.push(p('Groet:', { bold: true }));
+  children.push(...beurtzang(GROET_LINES));
+  children.push(empty());
+  children.push(p('De gemeente gaat zitten'));
+  children.push(p('Gebed'));
+  children.push(empty());
+
+  // ORDE VAN DIENST
+  children.push(...renderOrdeItems());
+  children.push(empty());
+
+  // OVERDENKING
+  children.push(p('Overdenking'));
+  children.push(p('Stilte'));
+  children.push(p('Muziek'));
+  children.push(empty());
+
+  // VOORBEDEN
+  children.push(p('Voorbeden'));
+  children.push(p('Stil gebed, afgesloten met Onze Vader:'));
+  ONZE_VADER.forEach(regel => children.push(p(regel, { indent: 0.5 })));
+  children.push(empty());
+
+  // MEDEDELINGEN & COLLECTEN
+  children.push(sectie('Mededelingen en collecten'));
+  if (bloemen) children.push(p('De bloemen in deze dienst gaan naar ' + bloemen + '.'));
+  children.push(empty());
+
+  if (c1Thema) children.push(p('Collectethema: ' + c1Thema));
+  children.push(empty());
+
+  children.push(p('Eerste collecte: ' + c1Naam, { bold: true }));
+  if (c1Tekst) children.push(...multiline(c1Tekst));
+  if (c1Rek)   children.push(p('Rekening: ' + c1Rek));
+  children.push(empty());
+
+  const c2Naam = c2Type === 'diaconie' ? 'onze diaconie' : 'onze gemeente';
+  children.push(p('Tweede collecte: ' + c2Naam, { bold: true }));
+  if (c2Tekst) children.push(...multiline(c2Tekst));
+  if (c2Rek)   children.push(p('Rekening: ' + c2Rek + '.'));
+  children.push(empty());
+
+  const qrType = c2Type === 'diaconie' ? 'diaconie' : 'gemeente';
+  children.push(p(QR_TEKST.replace('{type}', qrType), { sz: szSm }));
+  children.push(empty());
+  children.push(new Paragraph({
+    children: [
+      new TextRun({ text: 'vrijburg.nl/collecte 1', font, size: szSm }),
+      new TextRun({ text: '\t\t\t', font, size: szSm }),
+      new TextRun({ text: `vrijburg.nl/collecte${qrType}`, font, size: szSm }),
+    ],
+    spacing: { after: 80 }
+  }));
+  children.push(empty());
+
+  // SLOT
+  children.push(p('De gemeente gaat staan'));
+  children.push(p(slotlied ? 'Slotlied ' + slotlied : 'Slotlied'));
+  children.push(p('Uitzending en zegen'));
+  if (orgelSlot) children.push(p('Orgelspel: ' + orgelSlot));
+  else            children.push(p('Orgelspel'));
+  children.push(p('Na de dienst is er gelegenheid met elkaar koffie of thee te drinken'));
+  children.push(empty());
+
+  // AGENDA
+  children.push(sectie('Agenda'));
+  children.push(p('[Aankondiging van evenementen in Vrijburg. Zie voor meer informatie altijd de website van Vrijburg en/of het meest recente (digitale) Maandblad]', { italic: true, sz: szSm }));
+
+  const agendaGezamenlijk = [agendaKort, agendaVer].filter(Boolean).join('\n\n');
+  if (agendaGezamenlijk) {
+    children.push(...multiline(agendaGezamenlijk));
+  }
+  children.push(empty());
+
+  // SEPARATOR + FOOTER
+  children.push(p('='.repeat(62), { sz: 18 }));
+  children.push(...multiline(FOOTER, { sz: szSm }));
+
+  // ---- Maak document ----
+  const doc = new Document({
+    styles: {
+      default: {
+        document: {
+          run: { font: 'Calibri', size: sz }
+        }
+      }
+    },
+    sections: [{
+      properties: {
+        page: {
+          margin: {
+            top: convertInchesToTwip(1),
+            right: convertInchesToTwip(1.2),
+            bottom: convertInchesToTwip(1),
+            left: convertInchesToTwip(1.2),
+          }
+        }
+      },
+      children
+    }]
+  });
+
+  // Download
+  const datumSlug = datum || 'liturgie';
+  const filename = `liturgie-${datumSlug}.docx`;
+
+  docx.Packer.toBlob(doc).then(blob => {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = filename; a.click();
+    URL.revokeObjectURL(url);
+    setStatus('✓ ' + filename + ' gedownload', 'ok');
+  }).catch(err => {
+    console.error(err);
+    setStatus('Fout bij genereren: ' + err.message, 'err');
+  });
+}
+
+function setStatus(msg, type) {
+  const el = document.getElementById('status-msg');
+  el.textContent = msg;
+  el.className = 'status-msg ' + type;
+  setTimeout(() => { el.textContent = ''; el.className = ''; }, 5000);
+}
+
+// ============================================================
+// LAAD COLLECTES DATA
+// ============================================================
+fetch('./collectes.json')
+  .then(r => r.json())
+  .then(data => {
+    COLLECTES.push(...data);
+    // Controleer of datum al ingevuld is
+    if (document.getElementById('datum').value) onDatumChange();
+  })
+  .catch(() => {
+    // Fallback: collectes inline (zie collectes.json in de repo)
+    console.warn('collectes.json niet gevonden – vul collecte handmatig in');
+  });
+
+// Init: voeg een paar standaard orde-items toe als voorbeeld
+addOrde('lied', '');
+addOrde('lezing', '');
+addOrde('lied', '');
+</script>
+
+</body>
+</html>
