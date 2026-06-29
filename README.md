@@ -31,6 +31,7 @@ Zie `HANDOVER.md` voor technische details.
 | Bestand | Beschrijving |
 |---|---|
 | `index.html` | De volledige applicatie (HTML + CSS + JS) |
+| `info.html` | Uitleg, credits en privacy (incl. link naar vrijburg.nl/privacy) |
 | `collectes.json` | Collectes 2026-2027, per datum, met beschrijving en rekeningnummer |
 | `dienstplanning.json` | Dienstplanning 2026: predikant, organist, lector, cantorij, kinderkerk per datum |
 | `dienstplanning-2026.csv` | Bronbestand voor dienstplanning (export uit Google Sheet) |

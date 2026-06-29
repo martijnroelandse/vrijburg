@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Uitleg &amp; privacy – Vrijburg Liturgie Generator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --brand: #00a8db;
+      --brand-dark: #007aa3;
+      --brand-light: #e8f7fc;
+      --brand-mid: #99ddf0;
+      --border: #ddd;
+      --text: #222;
+      --muted: #666;
+      --radius: 6px;
+      --shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Roboto', 'Segoe UI', Arial, sans-serif;
+      font-size: 15px;
+      line-height: 1.55;
+      color: var(--text);
+      background: #f4fbfe;
+      min-height: 100vh;
+    }
+    header {
+      background: var(--brand);
+      color: white;
+      padding: 16px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+      box-shadow: 0 2px 8px rgba(0,122,163,0.25);
+    }
+    .header-left { display: flex; align-items: center; gap: 20px; }
+    .header-logo img { height: 52px; width: auto; display: block; }
+    header h1 { font-size: 20px; font-weight: 500; }
+    header p { font-size: 12px; opacity: 0.9; margin-top: 3px; font-weight: 300; }
+    .header-nav a {
+      color: white;
+      text-decoration: none;
+      font-size: 14px;
+      padding: 8px 14px;
+      border: 1px solid rgba(255,255,255,0.5);
+      border-radius: 4px;
+    }
+    .header-nav a:hover { background: rgba(255,255,255,0.15); }
+    main {
+      max-width: 720px;
+      margin: 32px auto;
+      padding: 0 16px 48px;
+    }
+    .card {
+      background: white;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+    .card-header {
+      background: var(--brand-light);
+      border-bottom: 1px solid var(--brand-mid);
+      padding: 12px 20px;
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--brand-dark);
+    }
+    .card-body { padding: 20px 24px; }
+    .card-body h3 {
+      font-size: 15px;
+      color: var(--brand-dark);
+      margin: 20px 0 8px;
+    }
+    .card-body h3:first-child { margin-top: 0; }
+    .card-body p, .card-body li { margin-bottom: 10px; color: var(--text); }
+    .card-body ul { padding-left: 1.25rem; margin-bottom: 12px; }
+    .card-body a { color: var(--brand-dark); }
+    .muted { color: var(--muted); font-size: 14px; }
+    table.credits {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+      margin-top: 8px;
+    }
+    table.credits th, table.credits td {
+      text-align: left;
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    table.credits th { color: var(--muted); font-weight: 600; font-size: 12px; text-transform: uppercase; }
+    footer {
+      text-align: center;
+      padding: 24px 16px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+    footer a { color: var(--brand-dark); }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <a href="https://www.vrijburg.nl" target="_blank" rel="noopener" class="header-logo">
+      <img src="assets/logo-vrijburg.png" alt="Vrijburg">
+    </a>
+    <div>
+      <h1>Liturgie Generator</h1>
+      <p>Uitleg, credits &amp; privacy</p>
+    </div>
+  </div>
+  <nav class="header-nav">
+    <a href="index.html">← Terug naar de generator</a>
+  </nav>
+</header>
+
+<main>
+
+  <div class="card">
+    <div class="card-header">Over deze tool</div>
+    <div class="card-body">
+      <p>
+        De Liturgie Generator helpt medewerkers en voorgangers van Vrijburg Amsterdam bij het
+        samenstellen van de wekelijkse kerkdienst-liturgie als Word-document (.docx).
+      </p>
+      <p>De tool draait volledig in uw browser. Er is geen aparte server of database.</p>
+      <h3>Wie vult wat in?</h3>
+      <ul>
+        <li><strong>Bureaumedewerker</strong> — datum, dienstplanning, collecte, agenda</li>
+        <li><strong>Voorganger</strong> — thema, orde van dienst, liederen, lezingen, communicatie</li>
+        <li><strong>Organist</strong> — orgelspel en muziek</li>
+      </ul>
+      <p class="muted">
+        Via een gedeelde link (verkort met TinyURL) komen de onderdelen bij elkaar.
+        De voorganger stuurt het resultaat naar <a href="mailto:bureau@vrijburg.nl">bureau@vrijburg.nl</a>.
+      </p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">Credits &amp; externe diensten</div>
+    <div class="card-body">
+      <table class="credits">
+        <thead>
+          <tr><th>Onderdeel</th><th>Bron</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Hosting</td><td><a href="https://pages.github.com/" target="_blank" rel="noopener">GitHub Pages</a></td></tr>
+          <tr><td>Word-document</td><td><a href="https://docx.js.org/" target="_blank" rel="noopener">docx.js</a></td></tr>
+          <tr><td>Bijbelteksten</td><td><a href="https://www.bijbelapi.com/" target="_blank" rel="noopener">BijbelAPI</a> (BasisBijbel)</td></tr>
+          <tr><td>Agenda</td><td><a href="https://www.vrijburg.nl" target="_blank" rel="noopener">vrijburg.nl</a> (WordPress API)</td></tr>
+          <tr><td>Dienstplanning &amp; collectes</td><td>Statische bestanden in deze repository</td></tr>
+          <tr><td>Gedeelde links</td><td><a href="https://tinyurl.com/" target="_blank" rel="noopener">TinyURL</a> (verkorte URL)</td></tr>
+          <tr><td>Liedteksten</td><td><a href="https://liedboek.liedbundels.nu/" target="_blank" rel="noopener">Liedboek Online</a> (handmatig, met Vrijburg-licentie)</td></tr>
+          <tr><td>Lettertype</td><td>Roboto (Google Fonts), Calibri in .docx</td></tr>
+        </tbody>
+      </table>
+      <p class="muted" style="margin-top:14px">
+        Ontwikkeld voor Vrijburg Amsterdam. Broncode:
+        <a href="https://github.com/martijnroelandse/vrijburg" target="_blank" rel="noopener">github.com/martijnroelandse/vrijburg</a>
+      </p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">Privacy bij gebruik van deze tool</div>
+    <div class="card-body">
+      <p>
+        Deze pagina beschrijft de privacy bij het gebruik van de <strong>Liturgie Generator</strong>.
+        Voor de algemene privacyverklaring van Vrijburg als organisatie, zie
+        <a href="https://www.vrijburg.nl/privacy/" target="_blank" rel="noopener">vrijburg.nl/privacy</a>.
+      </p>
+
+      <h3>Welke gegevens verwerkt deze tool?</h3>
+      <p>Alleen wat u zelf invult: namen, thema, orde van dienst, collecte, agenda, foto’s, enzovoort.</p>
+      <ul>
+        <li><strong>In uw browser</strong> — concepten worden lokaal bewaard (<code>localStorage</code> op uw eigen apparaat).</li>
+        <li><strong>Gedeelde links</strong> — ingevulde tekst wordt gecodeerd in de URL. Wie de link heeft, kan die gegevens lezen. Deel links alleen met betrokkenen.</li>
+        <li><strong>Foto’s</strong> — worden niet in gedeelde links gezet (te groot). Wel in het gedownloade .docx en in uw lokaal concept.</li>
+      </ul>
+
+      <h3>Externe diensten</h3>
+      <p>Bij gebruik van bepaalde knoppen raadpleegt uw browser externe sites:</p>
+      <ul>
+        <li>BijbelAPI — bijbelreferentie voor tekstophaling</li>
+        <li>vrijburg.nl — agenda-import</li>
+        <li>TinyURL — verkorten van gedeelde links</li>
+        <li>Liedboek Online — opent in een nieuw venster (eigen inlog Vrijburg)</li>
+      </ul>
+      <p class="muted">Deze diensten hebben eigen privacyvoorwaarden. Er worden geen wachtwoorden in deze tool opgeslagen.</p>
+
+      <h3>Cookies</h3>
+      <p>De Liturgie Generator zelf plaatst geen cookies. GitHub Pages en Google Fonts (lettertype) kunnen wel verkeer loggen volgens hun eigen beleid.</p>
+
+      <h3>Gegevens wissen</h3>
+      <ul>
+        <li>Concept in de browser: knop <strong>Wis concept</strong> in de generator</li>
+        <li>Browsergegevens: wis sitegegevens voor deze pagina in uw browserinstellingen</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">Privacyverklaring Vrijburg</div>
+    <div class="card-body">
+      <p>
+        Vrijburg verwerkt persoonsgegevens in het kader van lidmaatschap, nieuwsbrieven, betalingen en
+        dienstverlening. Hieronder een verkorte weergave; de volledige tekst staat op
+        <a href="https://www.vrijburg.nl/privacy/" target="_blank" rel="noopener">vrijburg.nl/privacy</a>.
+      </p>
+
+      <h3>Contact</h3>
+      <p>
+        Herman Gorterstraat 31, 1077 WE Amsterdam<br>
+        Telefoon: (020) 671 42 77<br>
+        E-mail: <a href="mailto:administratie@vrijburg.nl">administratie@vrijburg.nl</a>
+      </p>
+      <p>
+        Voor wijziging van uw persoonsgegevens: Brigitte Kristel via bovenstaande gegevens.<br>
+        Vragen over de website: <a href="mailto:webmaster@vrijburg.nl">webmaster@vrijburg.nl</a>
+      </p>
+
+      <h3>Persoonsgegevens die Vrijburg verwerkt</h3>
+      <ul>
+        <li>Voor- en achternaam, geboortedatum, adresgegevens</li>
+        <li>Telefoonnummer en e-mailadres</li>
+        <li>Lidmaatschapsgegevens (doop-, belijdenis- of vriendschapslid)</li>
+      </ul>
+
+      <h3>Doelen</h3>
+      <ul>
+        <li>Afhandeling van betalingen</li>
+        <li>Verzending van nieuwsbrief en maandblad</li>
+        <li>Contact voor dienstverlening</li>
+      </ul>
+
+      <h3>Uw rechten</h3>
+      <p>
+        U heeft recht op inzage, correctie, verwijdering en gegevensoverdraagbaarheid.
+        Verzoeken kunt u sturen naar <a href="mailto:info@vrijburg.nl">info@vrijburg.nl</a>.
+        Klachten bij de <a href="https://autoriteitpersoonsgegevens.nl/" target="_blank" rel="noopener">Autoriteit Persoonsgegevens</a> zijn mogelijk.
+      </p>
+
+      <h3>Beveiliging</h3>
+      <p>
+        Vrijburg neemt passende maatregelen om misbruik en onbevoegde toegang tegen te gaan.
+        Bij zorgen: <a href="mailto:administratie@vrijburg.nl">administratie@vrijburg.nl</a> of
+        <a href="mailto:webmaster@vrijburg.nl">webmaster@vrijburg.nl</a>.
+      </p>
+
+      <p class="muted">
+        Bron: <a href="https://www.vrijburg.nl/privacy/" target="_blank" rel="noopener">Privacyverklaring Vrijburg</a>
+        (samenvatting; bij verschil prevaleert de officiële pagina).
+      </p>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <p>
+    <a href="index.html">Liturgie Generator</a> ·
+    <a href="https://www.vrijburg.nl" target="_blank" rel="noopener">vrijburg.nl</a> ·
+    <a href="https://www.vrijburg.nl/privacy/" target="_blank" rel="noopener">Privacy</a>
+  </p>
+</footer>
+
+</body>
+</html>
