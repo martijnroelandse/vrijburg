@@ -25,6 +25,7 @@ Het gegenereerde document bevat alle vaste teksten (Bemoediging, Groet, Onze Vad
 |---|---|
 | `index.html` | De volledige applicatie (HTML + CSS + JS) |
 | `collectes.json` | Collectes 2026-2027, per datum, met beschrijving en rekeningnummer |
+| `HANDOVER.md` | Technische documentatie en doorontwikkelingsprioriteiten |
 | `README.md` | Dit bestand |
 
 ## Collectes bijwerken
@@ -53,6 +54,11 @@ De vaste teksten (Bemoediging, Groet, Onze Vader, QR-code tekst, footer) staan b
 
 ## Toekomstige uitbreidingen
 
-- Agenda automatisch ophalen van vrijburg.nl
-- Bijbelteksten automatisch invullen via een bijbel-API
-- Emailformulier waarmee de medewerker de link rechtstreeks naar de dominee stuurt
+Zie `HANDOVER.md` voor de volledige lijst. Recent toegevoegd:
+
+- Bijbelteksten automatisch ophalen bij lezingen (via BijbelAPI)
+- Deelbare link en mailto-knop voor dominees
+- Agenda importeren van vrijburg.nl
+- Concept opslaan in de browser (localStorage)
+
+Nog open: collectes 2027-2028, liedboek lookup, bijzondere diensten.
