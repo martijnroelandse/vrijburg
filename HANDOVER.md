@@ -21,6 +21,29 @@ De medewerker (Gon Homburg of Hiltje Wuite-Harmsma) vertaalt dit naar de volledi
 
 ---
 
+## Workflow: wie vult wat in?
+
+De liturgie wordt door **meerdere mensen** aangeleverd. In de app kiest ieder bovenaan zijn/haar rol:
+
+| Rol | Verantwoordelijk voor |
+|---|---|
+| **Voorganger** | Thema, beschrijving, orde van dienst (liederen, lezingen, inleiding), lichtlied en slotlied |
+| **Organist** | Orgelspeel (opening en slot), muziek in de orde van dienst |
+| **Bureaumedewerker** | Datum en namen, collecte, bloemen, agenda; stuurt links naar voorganger en organist |
+| **Alles bekijken** | Volledig overzicht en download van de .docx |
+
+### Hoe het samenkomt
+
+1. Bureaumedewerker zet datum en stuurt link naar **voorganger** (`?rol=voorganger`)
+2. Voorganger vult zijn/haar onderdeel in → klikt **Ik ben klaar** → stuurt link terug
+3. Bureaumedewerker stuurt link naar **organist** (`?rol=organist`)
+4. Organist vult muziek in → stuurt link terug
+5. Bureaumedewerker controleert agenda en collecte, kiest **Alles bekijken**, downloadt .docx
+
+Geen enkel veld is verplicht — ieder vult alleen zijn eigen onderdeel in. De gedeelde link bevat alle reeds ingevulde gegevens; bij terugsturen worden nieuwe invoer samengevoegd.
+
+---
+
 ## Bestandsstructuur
 
 ```

@@ -4,13 +4,19 @@ Webformulier waarmee medewerkers (of dominees zelf) de wekelijkse liturgie kunne
 
 ## Hoe werkt het?
 
-1. Open `index.html` in een browser (of via de GitHub Pages URL)
-2. Vul de dienstgegevens in: datum, voorganger, organist, lector
-3. Voeg liederen en lezingen toe in de juiste volgorde
-4. Collecte wordt automatisch ingevuld op basis van de datum
-5. Klik **Download liturgie (.docx)**
+1. Open de app via GitHub Pages
+2. Kies bovenaan uw rol (voorganger, organist, bureaumedewerker)
+3. Vul alleen uw eigen onderdeel in — niet alles hoeft tegelijk
+4. Deel de link met anderen; uiteindelijk komt alles samen in één .docx
 
-Het gegenereerde document bevat alle vaste teksten (Bemoediging, Groet, Onze Vader, footer) automatisch.
+### Typische workflow
+
+1. **Bureaumedewerker** zet datum, stuurt link naar voorganger en organist
+2. **Voorganger** vult thema en orde van dienst in, stuurt link terug
+3. **Organist** vult orgelspel en muziek in, stuurt link terug
+4. **Bureaumedewerker** controleert agenda en collecte, downloadt de liturgie
+
+Zie `HANDOVER.md` voor technische details.
 
 ## GitHub Pages deployment
 
