@@ -420,6 +420,59 @@
       font-size: 13px;
       padding: 6px 8px;
     }
+
+    .foto-upload-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      align-items: flex-start;
+    }
+    .foto-preview-wrap {
+      width: 160px;
+      flex-shrink: 0;
+    }
+    .foto-preview {
+      width: 160px;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      background: #f5f5f5;
+      display: none;
+    }
+    .foto-preview.visible { display: block; }
+    .foto-placeholder {
+      width: 160px;
+      height: 120px;
+      border: 1px dashed var(--border);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      color: #aaa;
+      text-align: center;
+      padding: 8px;
+    }
+    .foto-placeholder.hidden { display: none; }
+    .foto-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+    .btn-small {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 5px 10px;
+      font-size: 12px;
+      cursor: pointer;
+      color: var(--muted);
+    }
+    .btn-small:hover { border-color: var(--brand); color: var(--brand); }
+
+    .comm-hint {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 6px;
+      line-height: 1.4;
+    }
   </style>
 </head>
 <body>
@@ -558,9 +611,9 @@
     </div>
   </div>
 
-  <!-- 2. THEMA & INTRO -->
+  <!-- 2. THEMA & COMMUNICATIE -->
   <div class="section" id="section-thema" data-section="thema">
-    <div class="section-header">2. Thema &amp; beschrijving</div>
+    <div class="section-header">2. Thema, foto &amp; communicatie</div>
     <div class="section-body">
       <div class="row">
         <div class="field" style="grid-column: 1/-1">
@@ -570,14 +623,47 @@
       </div>
       <div class="row">
         <div class="field" style="grid-column: 1/-1">
-          <label>Beschrijving / intro <span class="opt">– tekst voor de website en nieuwsbrief</span></label>
-          <textarea id="intro" rows="5" placeholder="De tekst die de dominee aanlevert als omschrijving van de dienst…"></textarea>
+          <label>Beschrijving liturgie <span class="opt">– op de voorkant van het .docx</span></label>
+          <textarea id="intro" rows="4" placeholder="Korte omschrijving van de dienst voor op de voorkant van de liturgie…"></textarea>
+        </div>
+      </div>
+      <div class="row">
+        <div class="field" style="grid-column: 1/-1">
+          <label>Foto <span class="opt">– voor op de voorkant van de liturgie</span></label>
+          <div class="foto-upload-row">
+            <div class="foto-preview-wrap">
+              <img id="foto-preview" class="foto-preview" alt="Voorbeeld foto">
+              <div id="foto-placeholder" class="foto-placeholder">Nog geen foto</div>
+            </div>
+            <div style="flex:1;min-width:200px">
+              <input type="file" id="foto_file" accept="image/jpeg,image/png,image/webp" onchange="onFotoUpload(event)">
+              <div class="foto-actions">
+                <button type="button" class="btn-small" onclick="clearFoto()">Foto verwijderen</button>
+              </div>
+              <p class="comm-hint">De foto wordt in het Word-document geplaatst (niet via gedeelde link). Voor de website upload je de afbeelding apart in het CMS.</p>
+            </div>
+          </div>
         </div>
       </div>
       <div class="row">
         <div class="field">
           <label>Foto credit <span class="opt">optioneel</span></label>
           <input type="text" id="foto_credit" placeholder="bijv. Foto ammoniet: Petra Galama">
+        </div>
+      </div>
+      <div class="row">
+        <div class="field" style="grid-column: 1/-1">
+          <label>Nieuwsbrief <span class="opt">– kort stukje voor de wekelijkse email</span></label>
+          <textarea id="nieuwsbrief" rows="4" placeholder="Tekst over de komende dienst en het thema, voor in de nieuwsbrief…"></textarea>
+          <button type="button" class="btn-small" style="margin-top:8px" onclick="copyField('nieuwsbrief', 'Nieuwsbrieftekst gekopieerd')">Kopieer voor nieuwsbrief</button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="field" style="grid-column: 1/-1">
+          <label>Overdenking emaillijst <span class="opt">– tekst voor abonnees na de dienst</span></label>
+          <textarea id="overdenking_email" rows="6" placeholder="De overdenking of een samenvatting om naar de emaillijst te sturen…"></textarea>
+          <button type="button" class="btn-small" style="margin-top:8px" onclick="copyField('overdenking_email', 'Overdenking gekopieerd')">Kopieer voor emaillijst</button>
+          <p class="comm-hint">Dit veld is bedoeld voor de email na afloop. In de liturgie zelf blijft het vaste blok Overdenking → Stilte → Muziek staan.</p>
         </div>
       </div>
     </div>
@@ -863,7 +949,7 @@ const ROL_CONFIG = {
   voorganger: {
     label: 'Voorganger',
     primary: ['thema', 'opening', 'orde', 'slot'],
-    hint: 'Vul thema, orde van dienst (liederen, lezingen) en lichtlied/slotlied in. Predikant, organist en lector staan al in de dienstplanning. Klik op <strong>Ik ben klaar</strong> om de link terug te sturen.',
+    hint: 'Vul thema, beschrijving, foto, nieuwsbrief en overdenking in. Vul de orde van dienst in (liederen, lezingen) en lichtlied/slotlied. Klik op <strong>Ik ben klaar</strong> om de link terug te sturen.',
     emailAan: 'voorganger',
   },
   organist: {
@@ -949,6 +1035,68 @@ function setupSectionToggles() {
 // ORDE VAN DIENST – DYNAMISCHE LIJST
 // ============================================================
 let ordeItems = [];
+let fotoDataUrl = ''; // base64 data URL voor foto in .docx
+
+function onFotoUpload(event) {
+  const file = event.target.files?.[0];
+  if (!file) return;
+  if (file.size > 4 * 1024 * 1024) {
+    setStatus('Foto is te groot (max 4 MB)', 'err');
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const img = new Image();
+    img.onload = () => {
+      const maxW = 900;
+      const scale = img.width > maxW ? maxW / img.width : 1;
+      const w = Math.round(img.width * scale);
+      const h = Math.round(img.height * scale);
+      const canvas = document.createElement('canvas');
+      canvas.width = w;
+      canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      fotoDataUrl = canvas.toDataURL('image/jpeg', 0.85);
+      updateFotoPreview();
+      scheduleDraftSave();
+      setStatus('✓ Foto toegevoegd', 'ok');
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function updateFotoPreview() {
+  const preview = document.getElementById('foto-preview');
+  const placeholder = document.getElementById('foto-placeholder');
+  if (fotoDataUrl) {
+    preview.src = fotoDataUrl;
+    preview.classList.add('visible');
+    placeholder.classList.add('hidden');
+  } else {
+    preview.src = '';
+    preview.classList.remove('visible');
+    placeholder.classList.remove('hidden');
+  }
+}
+
+function clearFoto() {
+  fotoDataUrl = '';
+  document.getElementById('foto_file').value = '';
+  updateFotoPreview();
+  scheduleDraftSave();
+}
+
+function copyField(id, okMsg) {
+  const text = document.getElementById(id).value.trim();
+  if (!text) {
+    setStatus('Geen tekst om te kopiëren', 'err');
+    return;
+  }
+  navigator.clipboard.writeText(text).then(() => {
+    setStatus('✓ ' + okMsg, 'ok');
+  }).catch(() => prompt('Kopieer deze tekst:', text));
+}
 
 function addOrde(type, content = '') {
   const id = Date.now() + Math.random();
@@ -1145,7 +1293,10 @@ function getFormState() {
     lector: document.getElementById('lector').value,
     thema: document.getElementById('thema').value,
     intro: document.getElementById('intro').value,
+    nieuwsbrief: document.getElementById('nieuwsbrief').value,
+    overdenking_email: document.getElementById('overdenking_email').value,
     foto_credit: document.getElementById('foto_credit').value,
+    foto_data: fotoDataUrl,
     orgelspel_opening: document.getElementById('orgelspel_opening').value,
     lichtlied: document.getElementById('lichtlied').value,
     slotlied: document.getElementById('slotlied').value,
@@ -1188,13 +1339,18 @@ function applyPlanningVl(planning) {
 function applyFormState(state) {
   if (!state) return;
   const fields = ['datum','aanvangstijd','bijzondere_dienst','kinderkerk','bijzonderheden',
-    'voorganger','organist','lector','thema','intro','foto_credit',
+    'voorganger','organist','lector','thema','intro','nieuwsbrief','overdenking_email','foto_credit',
     'orgelspel_opening','lichtlied','slotlied','orgelspel_slot','bloemen',
     'c1_thema','c1_naam','c1_tekst','c1_rekening','c2_type','c2_tekst','c2_rekening',
     'agenda_kort','agenda_ver','avondmaal'];
   fields.forEach(id => {
     if (state[id] !== undefined) document.getElementById(id).value = state[id];
   });
+  if ('foto_data' in state) {
+    fotoDataUrl = state.foto_data || '';
+    updateFotoPreview();
+    if (!fotoDataUrl) document.getElementById('foto_file').value = '';
+  }
   if (state.cantorij !== undefined) document.getElementById('cantorij').checked = !!state.cantorij;
   setVlField('vlv', state.vlv || '');
   setVlField('vlh', state.vlh || '');
@@ -1217,6 +1373,8 @@ function applyFormState(state) {
 function getShareUrl(rol) {
   const state = getFormState();
   if (rol) state.rol = rol;
+  // Foto niet meenemen in URL (te groot) — blijft in lokaal concept
+  delete state.foto_data;
   const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(state))));
   const url = new URL(location.href.split('?')[0]);
   url.searchParams.set('v', encoded);
@@ -1255,7 +1413,7 @@ function emailRol(rol) {
   const datumTekst = datum ? formatDatum(datum) : 'komende dienst';
   const namen = { voorganger: 'voorganger', organist: 'organist' };
   const taken = {
-    voorganger: 'thema, orde van dienst (liederen en lezingen) en lichtlied/slotlied',
+    voorganger: 'thema, foto, nieuwsbrief, overdenking, orde van dienst (liederen en lezingen) en lichtlied/slotlied',
     organist: 'orgelspel en muziek in de dienst',
   };
   const subject = encodeURIComponent(`Liturgie Vrijburg – ${datumTekst} (${namen[rol]})`);
@@ -1388,7 +1546,42 @@ function formatDatum(val) {
 // ============================================================
 // DOCX GENERATOR
 // ============================================================
+function buildFotoParagraph(dataUrl) {
+  const { Paragraph, ImageRun } = docx;
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => {
+      try {
+        const binary = atob(dataUrl.split(',')[1]);
+        const bytes = new Uint8Array(binary.length);
+        for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+        const maxW = 420;
+        const scale = img.width > maxW ? maxW / img.width : 1;
+        const width = Math.round(img.width * scale);
+        const height = Math.round(img.height * scale);
+        const type = dataUrl.startsWith('data:image/png') ? 'png' : 'jpg';
+        resolve(new Paragraph({
+          children: [new ImageRun({ data: bytes, transformation: { width, height }, type })],
+          spacing: { after: 80 },
+        }));
+      } catch (e) {
+        console.warn('Foto kon niet in document:', e);
+        resolve(null);
+      }
+    };
+    img.onerror = () => resolve(null);
+    img.src = dataUrl;
+  });
+}
+
 function generateDocx() {
+  generateDocxAsync().catch(err => {
+    console.error(err);
+    setStatus('Fout bij genereren: ' + err.message, 'err');
+  });
+}
+
+async function generateDocxAsync() {
   const { Document, Paragraph, TextRun, AlignmentType, TabStopType, TabStopPosition,
           UnderlineType, convertInchesToTwip, PageBreak } = docx;
 
@@ -1517,6 +1710,10 @@ function generateDocx() {
   // HEADER
   children.push(p(datumTitel, { bold: true, sz: 26, after: 40 }));
   if (thema) children.push(p(thema, { bold: true, sz: 24, after: 40 }));
+  if (fotoDataUrl) {
+    const fotoPara = await buildFotoParagraph(fotoDataUrl);
+    if (fotoPara) children.push(fotoPara);
+  }
   if (intro) children.push(...multiline(intro, { after: 60 }));
   if (foto) children.push(p(foto, { italic: true, after: 60 }));
   children.push(empty());
@@ -1673,9 +1870,6 @@ function generateDocx() {
     a.href = url; a.download = filename; a.click();
     URL.revokeObjectURL(url);
     setStatus('✓ ' + filename + ' gedownload', 'ok');
-  }).catch(err => {
-    console.error(err);
-    setStatus('Fout bij genereren: ' + err.message, 'err');
   });
 }
 

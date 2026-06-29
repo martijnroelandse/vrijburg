@@ -27,7 +27,7 @@ De liturgie wordt door **meerdere mensen** aangeleverd. In de app kiest ieder bo
 
 | Rol | Verantwoordelijk voor |
 |---|---|
-| **Voorganger** | Thema, beschrijving, orde van dienst (liederen, lezingen, inleiding), lichtlied en slotlied |
+| **Voorganger** | Thema, beschrijving liturgie, foto, nieuwsbrief, overdenking emaillijst, orde van dienst (liederen, lezingen, inleiding), lichtlied en slotlied |
 | **Organist** | Orgelspeel (opening en slot), muziek in de orde van dienst |
 | **Bureaumedewerker** | Datum, predikant/organist/lector/cantorij/kinderkerk (uit dienstplanning), collecte, bloemen, agenda |
 | **Alles bekijken** | Volledig overzicht en download van de .docx |
@@ -62,7 +62,7 @@ Geen enkel veld is verplicht — ieder vult alleen zijn eigen onderdeel in. De g
 
 Secties:
 1. **Dienst** — datum, voorganger, organist, lector
-2. **Thema & beschrijving** — thema, intro-tekst (voor website/nieuwsbrief), foto credit
+2. **Thema, foto & communicatie** — thema, beschrijving liturgie (voorkant .docx), foto-upload (in .docx), foto credit, nieuwsbrief (kopieerknop), overdenking emaillijst (kopieerknop)
 3. **Opening** — lichtlied, orgelspel opening
 4. **Orde van dienst** — dynamische lijst: lied / lezing / inleiding / muziek / overig, in volgorde rangschikken met ↑↓
 5. **Afsluiting** — slotlied, orgelspel slot
@@ -159,7 +159,8 @@ Via WordPress REST API: `https://www.vrijburg.nl/wp-json/wp/v2/evenementen` (cus
 
 - **Opslaan als concept** ✅ *geïmplementeerd* — localStorage zodat een half-ingevuld formulier bewaard blijft bij sluiten
 - **Liedboek lookup** — gegeven een lied-nummer, de eerste regel ophalen als titel-suggestie
-- **Foto upload** — de dominee stuurt soms een foto mee; die kan nu niet in het .docx (Word-beperking via docx.js is complex), maar een placeholder-blok toevoegen is eenvoudig
+- **Foto upload** ✅ *geïmplementeerd* — JPEG/PNG/WebP upload, verkleind tot max. 900px, ingebed in het .docx op de voorkant. Niet mee in gedeelde links (te groot); wel bewaard in localStorage-concept. Voor de website moet de afbeelding apart in het CMS worden geüpload.
+- **Nieuwsbrief & overdenking emaillijst** ✅ *geïmplementeerd* — aparte tekstvelden met kopieerknop; niet in het .docx (bedoeld voor email na afloop)
 - **Digitale versie** — naast het .docx ook een HTML-versie genereren voor op de website
 - **Meerdere diensten per week** — soms zijn er bijzondere diensten (Kerstavond, Pasen) met een afwijkende structuur
 

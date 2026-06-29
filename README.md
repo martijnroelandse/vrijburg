@@ -13,7 +13,7 @@ Webformulier waarmee medewerkers (of dominees zelf) de wekelijkse liturgie kunne
 
 1. **Bureaumedewerker** zet datum → predikant, organist, lector en cantorij worden ingevuld vanuit de dienstplanning
 2. **Bureaumedewerker** stuurt link naar voorganger en organist
-2. **Voorganger** vult thema en orde van dienst in, stuurt link terug
+2. **Voorganger** vult thema, foto, nieuwsbrief, overdenking en orde van dienst in, stuurt link terug
 3. **Organist** vult orgelspel en muziek in, stuurt link terug
 4. **Bureaumedewerker** controleert agenda en collecte, downloadt de liturgie
 
@@ -69,5 +69,7 @@ Zie `HANDOVER.md` voor de volledige lijst. Recent toegevoegd:
 - Deelbare link en mailto-knop voor dominees
 - Agenda importeren van vrijburg.nl
 - Concept opslaan in de browser (localStorage)
+- Foto upload voor op de voorkant van de liturgie (.docx)
+- Nieuwsbrief- en overdenking-tekstvelden met kopieerknop voor email
 
 Nog open: collectes 2027-2028, liedboek lookup, bijzondere diensten.
