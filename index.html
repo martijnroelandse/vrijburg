@@ -827,7 +827,7 @@
 </div>
 
 <!-- Libraries -->
-<script src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.js"></script>
 
 <script>
 // ============================================================
@@ -1130,6 +1130,32 @@ function emailOverdenkingNaarBureau() {
   window.location.href = `mailto:bureau@vrijburg.nl?subject=${subject}&body=${body}`;
 }
 
+function copyShareLink() {
+  copyShareLinkText(getShareUrl());
+}
+
+async function copyShareLinkText(url) {
+  try {
+    await navigator.clipboard.writeText(url);
+    setStatus('✓ Link gekopieerd naar klembord', 'ok');
+    return true;
+  } catch {
+    prompt('Kopieer deze link:', url);
+    return false;
+  }
+}
+
+function openMailto({ to = '', subject, body }) {
+  const href = to
+    ? `mailto:${encodeURIComponent(to)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
+    : `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  window.location.href = href;
+}
+
+const MAIL_LINK_HINT =
+  'De gedeelde link staat op uw klembord. Plak die hier (Ctrl+V / Cmd+V) — ' +
+  'uw mailprogramma maakt er meestal automatisch een klikbare link van.';
+
 function terugNaarBureau() {
   const url = getShareUrl();
   const datum = document.getElementById('datum').value;
@@ -1141,42 +1167,44 @@ function terugNaarBureau() {
 
   if (heeftFoto) downloadFoto(true);
 
-  let body =
-    `Beste,\n\n` +
-    `Hierbij mijn ingevulde onderdeel voor de liturgie op ${datumTekst} (${rolLabel}).\n\n` +
-    `Gedeelde link (open in de Liturgie Generator):\n${url}\n`;
+  copyShareLinkText(url).then(copied => {
+    let body =
+      `Beste,\n\n` +
+      `Hierbij mijn ingevulde onderdeel voor de liturgie op ${datumTekst} (${rolLabel}).\n\n` +
+      (copied ? MAIL_LINK_HINT : 'Plak de gedeelde link hier:\n') + '\n';
 
-  if (heeftFoto) {
-    body +=
-      `\n` +
-      `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
-      `⚠ BIJLAGE NODIG: FOTO\n` +
-      `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n` +
-      `Ik heb een foto geüpload. Die zit niet in de link hierboven.\n\n` +
-      `Stappen:\n` +
-      `1. Het bestand "${fotoBestand}" is zojuist naar uw Downloads-map gedownload.\n` +
-      `2. Voeg dit bestand toe als bijlage aan deze e-mail (paperclip 📎 in uw mailprogramma).\n` +
-      `3. Het bureau kan de foto op vrijburg.nl plaatsen.\n\n` +
-      `De foto staat ook in het Word-document (.docx) als het bureau dat downloadt.\n`;
-  }
+    if (heeftFoto) {
+      body +=
+        `\n` +
+        `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+        `⚠ BIJLAGE NODIG: FOTO\n` +
+        `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n` +
+        `Ik heb een foto geüpload. Die zit niet in de link.\n\n` +
+        `Stappen:\n` +
+        `1. Het bestand "${fotoBestand}" is zojuist naar uw Downloads-map gedownload.\n` +
+        `2. Voeg dit bestand toe als bijlage aan deze e-mail (paperclip in uw mailprogramma).\n` +
+        `3. Het bureau kan de foto op vrijburg.nl plaatsen.\n\n` +
+        `De foto staat ook in het Word-document (.docx) als het bureau dat downloadt.\n`;
+    }
 
-  if (overdenking && huidigeRol === 'voorganger') {
-    body += `\n--- Overdenking (voor emaillijst) ---\n${overdenking}\n`;
-  }
+    if (overdenking && huidigeRol === 'voorganger') {
+      body += `\n--- Overdenking (voor emaillijst) ---\n${overdenking}\n`;
+    }
 
-  body += `\nMet vriendelijke groet`;
+    body += `\nMet vriendelijke groet`;
 
-  const subject = encodeURIComponent(`Liturgie Vrijburg – ${datumTekst} – ${rolLabel}`);
-  const openMail = () => {
-    window.location.href = `mailto:bureau@vrijburg.nl?subject=${subject}&body=${encodeURIComponent(body)}`;
-  };
+    openMailto({
+      to: 'bureau@vrijburg.nl',
+      subject: `Liturgie Vrijburg – ${datumTekst} – ${rolLabel}`,
+      body,
+    });
 
-  if (heeftFoto) {
-    setStatus('✓ Foto gedownload — voeg als bijlage toe in uw e-mail', 'ok');
-    setTimeout(openMail, 400);
-  } else {
-    openMail();
-  }
+    if (heeftFoto) {
+      setStatus('✓ Link gekopieerd + foto gedownload — plak link en voeg foto als bijlage toe', 'ok');
+    } else if (copied) {
+      setStatus('✓ Link gekopieerd — plak in uw e-mail', 'ok');
+    }
+  });
 }
 
 function copyField(id, okMsg) {
@@ -1490,16 +1518,7 @@ function loadFromUrl() {
   }
 }
 
-function copyShareLink() {
-  const url = getShareUrl();
-  navigator.clipboard.writeText(url).then(() => {
-    setStatus('✓ Link gekopieerd naar klembord', 'ok');
-  }).catch(() => {
-    prompt('Kopieer deze link:', url);
-  });
-}
-
-function emailRol(rol) {
+async function emailRol(rol) {
   const url = getShareUrl(rol);
   const datum = document.getElementById('datum').value;
   const datumTekst = datum ? formatDatum(datum) : 'komende dienst';
@@ -1508,17 +1527,19 @@ function emailRol(rol) {
     voorganger: 'thema, foto, nieuwsbrief, overdenking, orde van dienst (liederen en lezingen) en lichtlied/slotlied',
     organist: 'orgelspel en muziek in de dienst',
   };
-  const subject = encodeURIComponent(`Liturgie Vrijburg – ${datumTekst} (${namen[rol]})`);
-  const body = encodeURIComponent(
+  const copied = await copyShareLinkText(url);
+  const body =
     `Beste ${namen[rol]},\n\n` +
-    `Via onderstaande link kunt u uw onderdeel invullen voor de dienst op ${datumTekst}:\n` +
+    `Via de gedeelde link kunt u uw onderdeel invullen voor de dienst op ${datumTekst}:\n` +
     `${taken[rol]}.\n\n` +
-    `${url}\n\n` +
+    (copied ? MAIL_LINK_HINT : 'Plak de gedeelde link hier:\n') + '\n\n' +
     `U hoeft niet alles in te vullen — alleen uw eigen onderdeel. ` +
     `Klik op "Ik ben klaar" om uw ingevulde gegevens naar bureau@vrijburg.nl te sturen.\n\n` +
-    `Met vriendelijke groet,\nVrijburg Amsterdam`
-  );
-  window.location.href = `mailto:?subject=${subject}&body=${body}`;
+    `Met vriendelijke groet,\nVrijburg Amsterdam`;
+  openMailto({
+    subject: `Liturgie Vrijburg – ${datumTekst} (${namen[rol]})`,
+    body,
+  });
 }
 
 // ============================================================
@@ -1667,6 +1688,10 @@ function buildFotoParagraph(dataUrl) {
 }
 
 function generateDocx() {
+  if (typeof docx === 'undefined' || !docx.Document) {
+    setStatus('Word-bibliotheek niet geladen — vernieuw de pagina', 'err');
+    return;
+  }
   generateDocxAsync().catch(err => {
     console.error(err);
     setStatus('Fout bij genereren: ' + err.message, 'err');
