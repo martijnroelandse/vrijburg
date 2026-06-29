@@ -473,6 +473,19 @@
       margin-top: 6px;
       line-height: 1.4;
     }
+    .wp-settings {
+      margin-top: 12px;
+      padding: 12px;
+      background: #f8f9fa;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 13px;
+    }
+    .wp-settings summary { cursor: pointer; font-weight: 500; color: var(--brand); }
+    .wp-settings .field { margin-top: 10px; }
+    .wp-settings input { width: 100%; max-width: 320px; }
+    #wp-upload-result { font-size: 12px; margin-top: 8px; word-break: break-all; }
+    #wp-upload-result a { color: var(--brand); }
   </style>
 </head>
 <body>
@@ -639,13 +652,30 @@
               <input type="file" id="foto_file" accept="image/jpeg,image/png,image/webp" onchange="onFotoUpload(event)">
               <div class="foto-actions">
                 <button type="button" class="btn-small" onclick="downloadFoto()">Download foto</button>
+                <button type="button" class="btn-small" id="btn-wp-upload" onclick="uploadFotoNaarWordPress()" style="display:none">Upload naar WordPress</button>
+                <a class="btn-small" id="btn-wp-media" href="https://www.vrijburg.nl/wp-admin/media-new.php" target="_blank" rel="noopener" style="display:none;text-decoration:none">Open WordPress Media</a>
                 <button type="button" class="btn-small" onclick="clearFoto()">Foto verwijderen</button>
               </div>
               <p class="comm-hint">
                 <strong>Liturgie (.docx):</strong> de foto wordt automatisch op de voorkant geplaatst.<br>
-                <strong>Website (vrijburg.nl):</strong> download de foto en upload die handmatig in WordPress — de app kan niet naar GitHub uploaden (statische site, geen server).<br>
-                <strong>Gedeelde link:</strong> de foto reist niet mee (te groot); bewaar lokaal of stuur het .docx / gedownloade foto naar het bureau.
+                <strong>Website (vrijburg.nl):</strong> het bureau kan de foto uploaden naar WordPress (knop hieronder, eenmalig inlog instellen).<br>
+                <strong>E-mail naar bureau:</strong> bij &ldquo;Ik ben klaar&rdquo; wordt de foto gedownload — voeg die handmatig toe als bijlage (paperclip in uw mailprogramma).
               </p>
+              <details class="wp-settings" id="wp-settings">
+                <summary>WordPress-upload instellen (eenmalig, bureaumedewerker)</summary>
+                <p class="comm-hint">Met een <a href="https://make.wordpress.org/core/2020/11/05/application-passwords-integration-guide/" target="_blank" rel="noopener">Application Password</a> kan de foto direct naar de mediabibliotheek op vrijburg.nl. Wordt alleen in uw browser opgeslagen.</p>
+                <div class="field">
+                  <label>WordPress gebruikersnaam</label>
+                  <input type="text" id="wp_user" placeholder="bijv. bureau" autocomplete="username">
+                </div>
+                <div class="field">
+                  <label>Application Password</label>
+                  <input type="password" id="wp_app_password" placeholder="xxxx xxxx xxxx xxxx xxxx xxxx" autocomplete="current-password">
+                </div>
+                <button type="button" class="btn-small" onclick="saveWpSettings()">Opslaan</button>
+                <button type="button" class="btn-small" onclick="clearWpSettings()">Wissen</button>
+                <div id="wp-upload-result"></div>
+              </details>
             </div>
           </div>
         </div>
@@ -879,6 +909,9 @@ const NL_DAGEN = ['zondag','maandag','dinsdag','woensdag','donderdag','vrijdag',
 const BIJBEL_VERSIE = 'bb'; // bb = BasisBijbel (vrij), hsv = Herziene Statenvertaling
 const STORAGE_KEY = 'vrijburg-liturgie-draft';
 const VRIJBURG_EVENTS_API = 'https://www.vrijburg.nl/wp-json/wp/v2/evenementen';
+const VRIJBURG_WP_MEDIA_API = 'https://www.vrijburg.nl/wp-json/wp/v2/media';
+const WP_STORAGE_USER = 'vrijburg_wp_user';
+const WP_STORAGE_PASS = 'vrijburg_wp_app_password';
 
 const VL_LABELS = {
   vlv: 'Vrijburg laat voorgaan',
@@ -1027,6 +1060,22 @@ function applyRolUI() {
   document.getElementById('generate-hint').textContent = isSamenvoeger
     ? 'Download wanneer alle onderdelen zijn ingevuld'
     : 'Stuur uw ingevulde gegevens naar bureau@vrijburg.nl als u klaar bent';
+  updateFotoWpButtons();
+}
+
+function hasWpCredentials() {
+  return !!(localStorage.getItem(WP_STORAGE_USER) && localStorage.getItem(WP_STORAGE_PASS));
+}
+
+function updateFotoWpButtons() {
+  const isSamenvoeger = huidigeRol === 'medewerker' || huidigeRol === 'compleet';
+  const wpSettings = document.getElementById('wp-settings');
+  const btnUpload = document.getElementById('btn-wp-upload');
+  const btnMedia = document.getElementById('btn-wp-media');
+  if (wpSettings) wpSettings.style.display = isSamenvoeger ? '' : 'none';
+  const showWp = fotoDataUrl && (isSamenvoeger || hasWpCredentials());
+  if (btnUpload) btnUpload.style.display = showWp && hasWpCredentials() ? '' : 'none';
+  if (btnMedia) btnMedia.style.display = isSamenvoeger && fotoDataUrl ? '' : 'none';
 }
 
 function setupSectionToggles() {
@@ -1063,6 +1112,7 @@ function onFotoUpload(event) {
       canvas.getContext('2d').drawImage(img, 0, 0, w, h);
       fotoDataUrl = canvas.toDataURL('image/jpeg', 0.85);
       updateFotoPreview();
+      updateFotoWpButtons();
       scheduleDraftSave();
       setStatus('✓ Foto toegevoegd', 'ok');
     };
@@ -1083,27 +1133,127 @@ function updateFotoPreview() {
     preview.classList.remove('visible');
     placeholder.classList.remove('hidden');
   }
+  updateFotoWpButtons();
+}
+
+function getFotoFilename() {
+  const datum = document.getElementById('datum').value;
+  return datum ? `liturgie-foto-${datum}.jpg` : 'liturgie-foto.jpg';
+}
+
+function dataUrlToBlob(dataUrl) {
+  const [header, b64] = dataUrl.split(',');
+  const mime = header.match(/:(.*?);/)[1];
+  const binary = atob(b64);
+  const arr = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) arr[i] = binary.charCodeAt(i);
+  return new Blob([arr], { type: mime });
+}
+
+function saveWpSettings() {
+  const user = document.getElementById('wp_user').value.trim();
+  const pass = document.getElementById('wp_app_password').value.trim().replace(/\s/g, '');
+  if (!user || !pass) {
+    setStatus('Vul gebruikersnaam en Application Password in', 'err');
+    return;
+  }
+  localStorage.setItem(WP_STORAGE_USER, user);
+  localStorage.setItem(WP_STORAGE_PASS, pass);
+  document.getElementById('wp_app_password').value = '••••••••••••';
+  updateFotoWpButtons();
+  setStatus('✓ WordPress-inlog opgeslagen in deze browser', 'ok');
+}
+
+function clearWpSettings() {
+  localStorage.removeItem(WP_STORAGE_USER);
+  localStorage.removeItem(WP_STORAGE_PASS);
+  document.getElementById('wp_user').value = '';
+  document.getElementById('wp_app_password').value = '';
+  document.getElementById('wp-upload-result').textContent = '';
+  updateFotoWpButtons();
+  setStatus('WordPress-inlog gewist', 'ok');
+}
+
+function loadWpSettings() {
+  const user = localStorage.getItem(WP_STORAGE_USER);
+  if (user) document.getElementById('wp_user').value = user;
+  if (hasWpCredentials()) document.getElementById('wp_app_password').value = '••••••••••••';
+}
+
+async function uploadFotoNaarWordPress() {
+  if (!fotoDataUrl) {
+    setStatus('Geen foto om te uploaden', 'err');
+    return;
+  }
+  const user = localStorage.getItem(WP_STORAGE_USER);
+  const pass = localStorage.getItem(WP_STORAGE_PASS);
+  if (!user || !pass) {
+    setStatus('Stel eerst WordPress-inlog in (uitklap onder foto)', 'err');
+    document.getElementById('wp-settings').open = true;
+    return;
+  }
+
+  const datum = document.getElementById('datum').value;
+  const thema = document.getElementById('thema').value.trim();
+  const credit = document.getElementById('foto_credit').value.trim();
+  const filename = getFotoFilename();
+  const title = thema
+    ? `Liturgie ${datum ? formatDatum(datum) : ''} – ${thema}`.trim()
+    : `Liturgie foto ${datum ? formatDatum(datum) : ''}`.trim();
+
+  setStatus('Foto uploaden naar WordPress…', '');
+  const resultEl = document.getElementById('wp-upload-result');
+
+  try {
+    const fd = new FormData();
+    fd.append('file', dataUrlToBlob(fotoDataUrl), filename);
+    fd.append('title', title);
+    if (credit) fd.append('alt_text', credit);
+    if (credit) fd.append('caption', credit);
+
+    const res = await fetch(VRIJBURG_WP_MEDIA_API, {
+      method: 'POST',
+      headers: { Authorization: 'Basic ' + btoa(user + ':' + pass) },
+      body: fd,
+    });
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.message || `HTTP ${res.status}`);
+    }
+
+    const data = await res.json();
+    resultEl.innerHTML = `✓ Geüpload: <a href="${data.source_url}" target="_blank" rel="noopener">${data.source_url}</a>`;
+    setStatus('✓ Foto staat in WordPress mediabibliotheek', 'ok');
+  } catch (e) {
+    const isCors = e.message === 'Failed to fetch' || e.name === 'TypeError';
+    resultEl.textContent = isCors
+      ? 'Upload geblokkeerd (CORS). Vraag de websitebeheerder om CORS in te schakelen — zie HANDOVER.md. Gebruik intussen "Open WordPress Media".'
+      : 'Upload mislukt: ' + e.message;
+    setStatus('WordPress-upload mislukt', 'err');
+    console.warn('WordPress upload:', e);
+  }
 }
 
 function clearFoto() {
   fotoDataUrl = '';
   document.getElementById('foto_file').value = '';
+  document.getElementById('wp-upload-result').textContent = '';
   updateFotoPreview();
   scheduleDraftSave();
 }
 
-function downloadFoto() {
+function downloadFoto(silent) {
   if (!fotoDataUrl) {
-    setStatus('Geen foto om te downloaden', 'err');
-    return;
+    if (!silent) setStatus('Geen foto om te downloaden', 'err');
+    return false;
   }
-  const datum = document.getElementById('datum').value;
-  const naam = datum ? `liturgie-foto-${datum}.jpg` : 'liturgie-foto.jpg';
   const a = document.createElement('a');
   a.href = fotoDataUrl;
-  a.download = naam;
+  a.download = getFotoFilename();
   a.click();
-  setStatus('✓ Foto gedownload', 'ok');
+  if (!silent) setStatus('✓ Foto gedownload', 'ok');
+  return true;
 }
 
 function emailOverdenkingNaarBureau() {
@@ -1132,17 +1282,28 @@ function terugNaarBureau() {
   const datumTekst = datum ? formatDatum(datum) : 'komende dienst';
   const rolLabel = ROL_CONFIG[huidigeRol]?.label || 'medewerker';
   const overdenking = document.getElementById('overdenking_email').value.trim();
+  const fotoBestand = getFotoFilename();
+  const heeftFoto = !!fotoDataUrl;
+
+  if (heeftFoto) downloadFoto(true);
 
   let body =
     `Beste,\n\n` +
     `Hierbij mijn ingevulde onderdeel voor de liturgie op ${datumTekst} (${rolLabel}).\n\n` +
     `Gedeelde link (open in de Liturgie Generator):\n${url}\n`;
 
-  if (fotoDataUrl) {
+  if (heeftFoto) {
     body +=
-      `\nLet op: ik heb een foto geüpload. Die zit niet in de link — ` +
-      `download de foto in de app (knop "Download foto") of uit het Word-document, ` +
-      `of vraag mij om de foto als bijlage.\n`;
+      `\n` +
+      `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+      `⚠ BIJLAGE NODIG: FOTO\n` +
+      `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n` +
+      `Ik heb een foto geüpload. Die zit niet in de link hierboven.\n\n` +
+      `Stappen:\n` +
+      `1. Het bestand "${fotoBestand}" is zojuist naar uw Downloads-map gedownload.\n` +
+      `2. Voeg dit bestand toe als bijlage aan deze e-mail (paperclip 📎 in uw mailprogramma).\n` +
+      `3. Het bureau kan de foto op vrijburg.nl plaatsen (WordPress mediabibliotheek).\n\n` +
+      `De foto staat ook in het Word-document (.docx) als het bureau dat downloadt.\n`;
   }
 
   if (overdenking && huidigeRol === 'voorganger') {
@@ -1152,7 +1313,16 @@ function terugNaarBureau() {
   body += `\nMet vriendelijke groet`;
 
   const subject = encodeURIComponent(`Liturgie Vrijburg – ${datumTekst} – ${rolLabel}`);
-  window.location.href = `mailto:bureau@vrijburg.nl?subject=${subject}&body=${encodeURIComponent(body)}`;
+  const openMail = () => {
+    window.location.href = `mailto:bureau@vrijburg.nl?subject=${subject}&body=${encodeURIComponent(body)}`;
+  };
+
+  if (heeftFoto) {
+    setStatus('✓ Foto gedownload — voeg als bijlage toe in uw e-mail', 'ok');
+    setTimeout(openMail, 400);
+  } else {
+    openMail();
+  }
 }
 
 function copyField(id, okMsg) {
@@ -1963,6 +2133,7 @@ Promise.all([
 function initApp() {
   setupAutoSave();
   setupSectionToggles();
+  loadWpSettings();
 
   if (!loadFromUrl()) {
     const draft = loadDraft();
