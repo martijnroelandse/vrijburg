@@ -152,37 +152,6 @@ Knop "Stuur link naar dominee" opent een pre-ingevulde mailto:-link. Formulierst
 **3. Agenda-import van vrijburg.nl** ✅ *geïmplementeerd*  
 Via WordPress REST API: `https://www.vrijburg.nl/wp-json/wp/v2/evenementen` (custom post type met ACF-velden `start` en `locatie`).
 
-### WordPress foto-upload (optioneel)
-
-De app kan foto's direct naar de WordPress mediabibliotheek uploaden via `POST /wp-json/wp/v2/media`.
-
-**Eenmalig instellen (bureaumedewerker):**
-1. In WordPress: Gebruikers → Profiel → **Application Passwords** → nieuw wachtwoord aanmaken
-2. In de Liturgie Generator: uitklap "WordPress-upload instellen" → gebruikersnaam + Application Password opslaan (alleen in deze browser)
-
-**CORS op vrijburg.nl (websitebeheerder):**  
-Upload vanaf GitHub Pages vereist dat WordPress cross-origin POST toestaat. Voeg in `functions.php` of een mu-plugin toe:
-
-```php
-add_action('rest_api_init', function () {
-    add_filter('rest_pre_serve_request', function ($value) {
-        $allowed = [
-            'https://martijnroelandse.github.io',
-            'http://localhost:8000',
-        ];
-        $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
-        if (in_array($origin, $allowed, true)) {
-            header('Access-Control-Allow-Origin: ' . $origin);
-            header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
-            header('Access-Control-Allow-Headers: Authorization, Content-Disposition, Content-Type');
-        }
-        return $value;
-    }, 15);
-}, 15);
-```
-
-Zonder CORS: gebruik **Open WordPress Media** of download de foto en upload handmatig.
-
 **Voorganger → bureau:** bij "Ik ben klaar" wordt de foto automatisch gedownload; de e-mail bevat instructies om het bestand als bijlage toe te voegen (mailto kan geen bijlagen automatisch meesturen).
 
 **4. Collectes seizoen 2027-2028 bijwerken**  
@@ -192,8 +161,9 @@ Zonder CORS: gebruik **Open WordPress Media** of download de foto en upload hand
 
 - **Opslaan als concept** ✅ *geïmplementeerd* — localStorage zodat een half-ingevuld formulier bewaard blijft bij sluiten
 - **Liedboek lookup** — gegeven een lied-nummer, de eerste regel ophalen als titel-suggestie
-- **Foto upload** ✅ *geïmplementeerd* — in .docx op voorkant; optioneel direct naar WordPress mediabibliotheek (Application Password + CORS). Bij "Ik ben klaar": auto-download + instructie bijlage in e-mail.
+- **Foto upload** ✅ *geïmplementeerd* — in .docx op voorkant; download voor website. Bij "Ik ben klaar": auto-download + instructie bijlage in e-mail.
 - **Nieuwsbrief & overdenking** ✅ *geïmplementeerd* — nieuwsbrief met kopieerknop; overdenking via mailto naar `bureau@vrijburg.nl` (niet in .docx)
+- **WordPress foto-upload** — direct uploaden naar mediabibliotheek op vrijburg.nl; vereist afstemming met webmaster (Application Password + CORS)
 - **Digitale versie** — naast het .docx ook een HTML-versie genereren voor op de website
 - **Meerdere diensten per week** — soms zijn er bijzondere diensten (Kerstavond, Pasen) met een afwijkende structuur
 

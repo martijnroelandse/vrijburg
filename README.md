@@ -71,6 +71,6 @@ Zie `HANDOVER.md` voor de volledige lijst. Recent toegevoegd:
 - Concept opslaan in de browser (localStorage)
 - Nieuwsbrief-tekstveld met kopieerknop
 - Overdenking naar bureau@vrijburg.nl (mailto)
-- Foto in liturgie (.docx) + optionele upload naar WordPress
+- Foto in liturgie (.docx) + download voor website
 
 Nog open: collectes 2027-2028, liedboek lookup, bijzondere diensten.
