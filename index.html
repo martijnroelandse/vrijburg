@@ -827,6 +827,7 @@
 </div>
 
 <!-- Libraries -->
+<script src="https://cdn.jsdelivr.net/npm/lz-string@1.5.0/libs/lz-string.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.js"></script>
 
 <script>
@@ -1130,18 +1131,48 @@ function emailOverdenkingNaarBureau() {
   window.location.href = `mailto:bureau@vrijburg.nl?subject=${subject}&body=${body}`;
 }
 
-function copyShareLink() {
-  copyShareLinkText(getShareUrl());
+function encodeShareState(state) {
+  return LZString.compressToEncodedURIComponent(JSON.stringify(state));
 }
 
-async function copyShareLinkText(url) {
+function decodeShareState(encoded, legacy) {
+  if (legacy) {
+    return JSON.parse(decodeURIComponent(escape(atob(encoded))));
+  }
+  const json = LZString.decompressFromEncodedURIComponent(encoded);
+  if (!json) throw new Error('Kon link niet uitpakken');
+  return JSON.parse(json);
+}
+
+const SHARE_LINK_LABEL = 'Open Liturgie Generator';
+
+const MAIL_LINK_HINT =
+  'De klikbare link staat op uw klembord.\n\n' +
+  'Plak die op de regel hieronder (Cmd+V / Ctrl+V):\n\n' +
+  `→ ${SHARE_LINK_LABEL}\n\n` +
+  'U krijgt dan een korte klikbare tekst in plaats van een lange URL die afbreekt. ' +
+  'Werkt plakken niet? Selecteer de tekst, kies Link invoegen (Cmd+K) en plak de link in het URL-veld.';
+
+async function copyShareLinkRich(url, label = SHARE_LINK_LABEL) {
+  const safeUrl = url.replace(/"/g, '&quot;');
+  const html = `<a href="${safeUrl}">${label}</a>`;
+  try {
+    if (navigator.clipboard?.write) {
+      await navigator.clipboard.write([
+        new ClipboardItem({
+          'text/html': new Blob([html], { type: 'text/html' }),
+          'text/plain': new Blob([url], { type: 'text/plain' }),
+        }),
+      ]);
+      return 'rich';
+    }
+  } catch (_) { /* fallback */ }
   try {
     await navigator.clipboard.writeText(url);
-    setStatus('✓ Link gekopieerd naar klembord', 'ok');
-    return true;
+    return 'plain';
   } catch {
     prompt('Kopieer deze link:', url);
-    return false;
+    return 'prompt';
   }
 }
 
@@ -1151,10 +1182,6 @@ function openMailto({ to = '', subject, body }) {
     : `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   window.location.href = href;
 }
-
-const MAIL_LINK_HINT =
-  'De gedeelde link staat op uw klembord. Plak die hier (Ctrl+V / Cmd+V) — ' +
-  'uw mailprogramma maakt er meestal automatisch een klikbare link van.';
 
 function terugNaarBureau() {
   const url = getShareUrl();
@@ -1167,11 +1194,11 @@ function terugNaarBureau() {
 
   if (heeftFoto) downloadFoto(true);
 
-  copyShareLinkText(url).then(copied => {
+  copyShareLinkRich(url).then(mode => {
     let body =
       `Beste,\n\n` +
       `Hierbij mijn ingevulde onderdeel voor de liturgie op ${datumTekst} (${rolLabel}).\n\n` +
-      (copied ? MAIL_LINK_HINT : 'Plak de gedeelde link hier:\n') + '\n';
+      MAIL_LINK_HINT + '\n';
 
     if (heeftFoto) {
       body +=
@@ -1199,11 +1226,10 @@ function terugNaarBureau() {
       body,
     });
 
-    if (heeftFoto) {
-      setStatus('✓ Link gekopieerd + foto gedownload — plak link en voeg foto als bijlage toe', 'ok');
-    } else if (copied) {
-      setStatus('✓ Link gekopieerd — plak in uw e-mail', 'ok');
-    }
+    const msg = mode === 'rich'
+      ? (heeftFoto ? '✓ Klikbare link gekopieerd + foto gedownload — plak in uw mail' : '✓ Klikbare link gekopieerd — plak in uw mail')
+      : (heeftFoto ? '✓ Link gekopieerd + foto gedownload — gebruik Link invoegen (Cmd+K)' : '✓ Link gekopieerd — gebruik Link invoegen (Cmd+K)');
+    setStatus(msg, 'ok');
   });
 }
 
@@ -1495,19 +1521,20 @@ function getShareUrl(rol) {
   if (rol) state.rol = rol;
   // Foto niet meenemen in URL (te groot) — blijft in lokaal concept
   delete state.foto_data;
-  const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(state))));
+  const encoded = encodeShareState(state);
   const url = new URL(location.href.split('?')[0]);
-  url.searchParams.set('v', encoded);
+  url.searchParams.set('z', encoded);
   if (rol) url.searchParams.set('rol', rol);
   return url.toString();
 }
 
 function loadFromUrl() {
   const params = new URLSearchParams(location.search);
+  const z = params.get('z');
   const v = params.get('v');
-  if (!v) return false;
+  if (!z && !v) return false;
   try {
-    const state = JSON.parse(decodeURIComponent(escape(atob(v))));
+    const state = decodeShareState(z || v, !!v && !z);
     applyFormState(state);
     const rolParam = params.get('rol');
     if (rolParam && ROL_CONFIG[rolParam]) setRol(rolParam);
@@ -1516,6 +1543,12 @@ function loadFromUrl() {
     console.warn('Kon gedeelde link niet laden:', e);
     return false;
   }
+}
+
+async function copyShareLink() {
+  const url = getShareUrl();
+  const mode = await copyShareLinkRich(url);
+  setStatus(mode === 'rich' ? '✓ Klikbare link gekopieerd' : '✓ Link gekopieerd', 'ok');
 }
 
 async function emailRol(rol) {
@@ -1527,12 +1560,12 @@ async function emailRol(rol) {
     voorganger: 'thema, foto, nieuwsbrief, overdenking, orde van dienst (liederen en lezingen) en lichtlied/slotlied',
     organist: 'orgelspel en muziek in de dienst',
   };
-  const copied = await copyShareLinkText(url);
+  await copyShareLinkRich(url);
   const body =
     `Beste ${namen[rol]},\n\n` +
     `Via de gedeelde link kunt u uw onderdeel invullen voor de dienst op ${datumTekst}:\n` +
     `${taken[rol]}.\n\n` +
-    (copied ? MAIL_LINK_HINT : 'Plak de gedeelde link hier:\n') + '\n\n' +
+    MAIL_LINK_HINT + '\n\n' +
     `U hoeft niet alles in te vullen — alleen uw eigen onderdeel. ` +
     `Klik op "Ik ben klaar" om uw ingevulde gegevens naar bureau@vrijburg.nl te sturen.\n\n` +
     `Met vriendelijke groet,\nVrijburg Amsterdam`;
@@ -1540,6 +1573,7 @@ async function emailRol(rol) {
     subject: `Liturgie Vrijburg – ${datumTekst} (${namen[rol]})`,
     body,
   });
+  setStatus('✓ Klikbare link gekopieerd — plak in uw e-mail', 'ok');
 }
 
 // ============================================================
