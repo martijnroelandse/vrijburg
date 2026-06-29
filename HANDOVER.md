@@ -101,7 +101,8 @@ Op datum-match wordt de eerste collecte auto-ingevuld; de tweede collecte wissel
 
 ### Dienstplanning (dienstplanning.json)
 
-Bron: [Google Spreadsheet dienstplanning](https://docs.google.com/spreadsheets/d/1imjMr9ELUHGV9331mYIoTOUc-DizOysV/edit)
+Bron (meest actueel): [Google Spreadsheet dienstplanning](https://docs.google.com/spreadsheets/d/1imjMr9ELUHGV9331mYIoTOUc-DizOysV/edit)  
+Statische fallback in repo: `dienstplanning-2026.csv` → `dienstplanning.json`
 
 Bij het kiezen van een datum worden automatisch ingevuld:
 - Predikant → voorganger
