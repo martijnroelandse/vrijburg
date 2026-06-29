@@ -160,7 +160,7 @@ Via WordPress REST API: `https://www.vrijburg.nl/wp-json/wp/v2/evenementen` (cus
 ### Lage prioriteit / nice-to-have
 
 - **Opslaan als concept** ✅ *geïmplementeerd* — localStorage zodat een half-ingevuld formulier bewaard blijft bij sluiten
-- **Liedboek lookup** — gegeven een lied-nummer, de eerste regel ophalen als titel-suggestie
+- **Liedboek Online** — knop opent [liedboek.liedbundels.nu](https://liedboek.liedbundels.nu) en herkent het liednummer. Automatisch downloaden kan niet: inlog + licentie, geen open API. Workflow: zoek op nummer → download liturgie-tekst → plak in formulier. Voor echte koppeling: API-aanvraag bij Kok Boekencentrum / Liedbundels Online.
 - **Foto upload** ✅ *geïmplementeerd* — in .docx op voorkant; download voor website. Bij "Ik ben klaar": auto-download + instructie bijlage in e-mail.
 - **Nieuwsbrief & overdenking** ✅ *geïmplementeerd* — nieuwsbrief met kopieerknop; overdenking via mailto naar `bureau@vrijburg.nl` (niet in .docx)
 - **WordPress foto-upload** — direct uploaden naar mediabibliotheek op vrijburg.nl; vereist afstemming met webmaster (Application Password + CORS)
