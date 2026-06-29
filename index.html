@@ -1145,13 +1145,37 @@ function decodeShareState(encoded, legacy) {
 }
 
 const SHARE_LINK_LABEL = 'Open Liturgie Generator';
+const TINYURL_API = 'https://tinyurl.com/api-create.php';
 
-const MAIL_LINK_HINT =
-  'De klikbare link staat op uw klembord.\n\n' +
-  'Plak die op de regel hieronder (Cmd+V / Ctrl+V):\n\n' +
-  `→ ${SHARE_LINK_LABEL}\n\n` +
-  'U krijgt dan een korte klikbare tekst in plaats van een lange URL die afbreekt. ' +
-  'Werkt plakken niet? Selecteer de tekst, kies Link invoegen (Cmd+K) en plak de link in het URL-veld.';
+async function shortenShareUrl(longUrl) {
+  const cacheKey = 'vrijburg-short-' + longUrl.length + longUrl.slice(-48);
+  try {
+    const cached = sessionStorage.getItem(cacheKey);
+    if (cached) return cached;
+  } catch (_) { /* private mode */ }
+
+  try {
+    const res = await fetch(`${TINYURL_API}?url=${encodeURIComponent(longUrl)}`);
+    const short = (await res.text()).trim();
+    if (short.startsWith('http') && !/^error/i.test(short)) {
+      try { sessionStorage.setItem(cacheKey, short); } catch (_) {}
+      return short;
+    }
+  } catch (e) {
+    console.warn('Link verkorten mislukt:', e);
+  }
+  return longUrl;
+}
+
+async function prepareShareLink(rol) {
+  const long = getShareUrl(rol);
+  const short = await shortenShareUrl(long);
+  return { long, short };
+}
+
+function mailLinkBlock(shortUrl) {
+  return `Via onderstaande link opent u de Liturgie Generator:\n\n${shortUrl}\n`;
+}
 
 async function copyShareLinkRich(url, label = SHARE_LINK_LABEL) {
   const safeUrl = url.replace(/"/g, '&quot;');
@@ -1184,7 +1208,6 @@ function openMailto({ to = '', subject, body }) {
 }
 
 function terugNaarBureau() {
-  const url = getShareUrl();
   const datum = document.getElementById('datum').value;
   const datumTekst = datum ? formatDatum(datum) : 'komende dienst';
   const rolLabel = ROL_CONFIG[huidigeRol]?.label || 'medewerker';
@@ -1193,12 +1216,14 @@ function terugNaarBureau() {
   const heeftFoto = !!fotoDataUrl;
 
   if (heeftFoto) downloadFoto(true);
+  setStatus('Link verkorten…', '');
 
-  copyShareLinkRich(url).then(mode => {
+  prepareShareLink().then(async ({ short }) => {
+    await copyShareLinkRich(short);
     let body =
       `Beste,\n\n` +
       `Hierbij mijn ingevulde onderdeel voor de liturgie op ${datumTekst} (${rolLabel}).\n\n` +
-      MAIL_LINK_HINT + '\n';
+      mailLinkBlock(short);
 
     if (heeftFoto) {
       body +=
@@ -1226,10 +1251,13 @@ function terugNaarBureau() {
       body,
     });
 
-    const msg = mode === 'rich'
-      ? (heeftFoto ? '✓ Klikbare link gekopieerd + foto gedownload — plak in uw mail' : '✓ Klikbare link gekopieerd — plak in uw mail')
-      : (heeftFoto ? '✓ Link gekopieerd + foto gedownload — gebruik Link invoegen (Cmd+K)' : '✓ Link gekopieerd — gebruik Link invoegen (Cmd+K)');
+    const msg = heeftFoto
+      ? '✓ Korte link in mail + klembord — voeg foto als bijlage toe'
+      : '✓ Korte link in mail en op klembord';
     setStatus(msg, 'ok');
+  }).catch(err => {
+    console.error(err);
+    setStatus('Kon link niet voorbereiden', 'err');
   });
 }
 
@@ -1546,13 +1574,13 @@ function loadFromUrl() {
 }
 
 async function copyShareLink() {
-  const url = getShareUrl();
-  const mode = await copyShareLinkRich(url);
-  setStatus(mode === 'rich' ? '✓ Klikbare link gekopieerd' : '✓ Link gekopieerd', 'ok');
+  setStatus('Link verkorten…', '');
+  const { short } = await prepareShareLink();
+  const mode = await copyShareLinkRich(short);
+  setStatus(mode === 'rich' ? '✓ Korte link gekopieerd' : '✓ Link gekopieerd', 'ok');
 }
 
 async function emailRol(rol) {
-  const url = getShareUrl(rol);
   const datum = document.getElementById('datum').value;
   const datumTekst = datum ? formatDatum(datum) : 'komende dienst';
   const namen = { voorganger: 'voorganger', organist: 'organist' };
@@ -1560,12 +1588,14 @@ async function emailRol(rol) {
     voorganger: 'thema, foto, nieuwsbrief, overdenking, orde van dienst (liederen en lezingen) en lichtlied/slotlied',
     organist: 'orgelspel en muziek in de dienst',
   };
-  await copyShareLinkRich(url);
+  setStatus('Link verkorten…', '');
+  const { short } = await prepareShareLink(rol);
+  await copyShareLinkRich(short);
   const body =
     `Beste ${namen[rol]},\n\n` +
-    `Via de gedeelde link kunt u uw onderdeel invullen voor de dienst op ${datumTekst}:\n` +
+    `Via onderstaande link kunt u uw onderdeel invullen voor de dienst op ${datumTekst}:\n` +
     `${taken[rol]}.\n\n` +
-    MAIL_LINK_HINT + '\n\n' +
+    mailLinkBlock(short) + '\n' +
     `U hoeft niet alles in te vullen — alleen uw eigen onderdeel. ` +
     `Klik op "Ik ben klaar" om uw ingevulde gegevens naar bureau@vrijburg.nl te sturen.\n\n` +
     `Met vriendelijke groet,\nVrijburg Amsterdam`;
@@ -1573,7 +1603,7 @@ async function emailRol(rol) {
     subject: `Liturgie Vrijburg – ${datumTekst} (${namen[rol]})`,
     body,
   });
-  setStatus('✓ Klikbare link gekopieerd — plak in uw e-mail', 'ok');
+  setStatus('✓ Korte link in mail en op klembord', 'ok');
 }
 
 // ============================================================
@@ -1702,7 +1732,7 @@ function buildFotoParagraph(dataUrl) {
         const binary = atob(dataUrl.split(',')[1]);
         const bytes = new Uint8Array(binary.length);
         for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
-        const maxW = 420;
+        const maxW = 180;
         const scale = img.width > maxW ? maxW / img.width : 1;
         const width = Math.round(img.width * scale);
         const height = Math.round(img.height * scale);
@@ -1772,9 +1802,6 @@ async function generateDocxAsync() {
   const agendaVer  = document.getElementById('agenda_ver').value.trim();
 
   const datumDisplay = formatDatum(datum);
-  const datumTitel = bijzondereDienst
-    ? `Dienst ${datumDisplay}${aanvangstijd ? ' om ' + aanvangstijd.replace('.', ':') + ' uur' : ''} – ${bijzondereDienst}`
-    : `Dienst ${datumDisplay}${aanvangstijd ? ' om ' + aanvangstijd.replace('.', ':') + ' uur' : ''}`;
 
   // Helper: maak een simpele alinea
   function p(text, opts = {}) {
@@ -1858,23 +1885,34 @@ async function generateDocxAsync() {
   // ---- Bouw het document ----
   const children = [];
 
-  // HEADER
-  children.push(p(datumTitel, { bold: true, sz: 26, after: 40 }));
-  if (thema) children.push(p(thema, { bold: true, sz: 24, after: 40 }));
+  // HEADER — pagina 1 (conform handmatige liturgie)
+  children.push(p(`Dienst ${datumDisplay}`, { sz: 32, after: 0 }));
+
+  const dienstExtra = [];
+  if (kinderkerk) dienstExtra.push('kinderkerk');
+  if (cantorij) dienstExtra.push('Cantorij');
+  if (dienstExtra.length) {
+    children.push(p('met ' + dienstExtra.join(' en '), { sz: 32, after: 40 }));
+  } else if (bijzondereDienst) {
+    children.push(p(bijzondereDienst, { sz: 32, after: 40 }));
+  }
+
+  if (thema) children.push(p(thema, { sz: 24, after: 40 }));
+  if (foto) children.push(p(foto, { italic: true, after: 40 }));
   if (fotoDataUrl) {
     const fotoPara = await buildFotoParagraph(fotoDataUrl);
     if (fotoPara) children.push(fotoPara);
   }
   if (intro) children.push(...multiline(intro, { after: 60 }));
-  if (foto) children.push(p(foto, { italic: true, after: 60 }));
-  children.push(empty());
 
-  // Rollen
-  if (voorganger) children.push(p('Voorganger:\t' + voorganger, { para: { tabStops: [{ type: TabStopType.LEFT, position: 2000 }] } }));
-  if (organist)   children.push(p('Organist:\t' + organist,   { para: { tabStops: [{ type: TabStopType.LEFT, position: 2000 }] } }));
-  if (lector)     children.push(p('Lector:\t' + lector,       { para: { tabStops: [{ type: TabStopType.LEFT, position: 2000 }] } }));
-  if (cantorij)   children.push(p('Cantorij:\tja',             { para: { tabStops: [{ type: TabStopType.LEFT, position: 2000 }] } }));
-  if (kinderkerk) children.push(p('Kinderkerk:\t' + kinderkerk, { para: { tabStops: [{ type: TabStopType.LEFT, position: 2000 }] } }));
+  const voorgangerLabel = /\s+en\s+/i.test(voorganger) ? 'Voorgangers' : 'Voorganger';
+  if (voorganger) children.push(p(`${voorgangerLabel}: ${voorganger}`));
+  if (organist) children.push(p(`Organist: ${organist}`));
+  if (lector) children.push(p(`Lector: ${lector}`));
+  if (cantorij) children.push(p('Cantorij'));
+  if (kinderkerk && !dienstExtra.includes('kinderkerk')) {
+    children.push(p(`Kinderkerk: ${kinderkerk}`));
+  }
   [['vlv', vlv], ['vlh', vlh], ['vlz', vlz]].forEach(([key, val]) => {
     if (!val) return;
     const suffix = val === 'ja' ? '' : (val === '?' ? ' (gepland)' : ': ' + val);
@@ -1895,8 +1933,7 @@ async function generateDocxAsync() {
   children.push(sectie('Opening van de dienst'));
   if (orgelOpen) children.push(p('Orgelspel: ' + orgelOpen));
   else            children.push(p('Orgelspel'));
-  children.push(p('Luiden van de klokken'));
-  children.push(p('Welkom en korte mededelingen'));
+  children.push(p('Luiden van de klokken, welkom en korte mededelingen'));
   children.push(p('Aansteken van de kaars en Stilte'));
   children.push(empty());
   children.push(p('De gemeente gaat staan'));
