@@ -420,6 +420,59 @@
       font-size: 13px;
       padding: 6px 8px;
     }
+
+    .foto-upload-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      align-items: flex-start;
+    }
+    .foto-preview-wrap {
+      width: 160px;
+      flex-shrink: 0;
+    }
+    .foto-preview {
+      width: 160px;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      background: #f5f5f5;
+      display: none;
+    }
+    .foto-preview.visible { display: block; }
+    .foto-placeholder {
+      width: 160px;
+      height: 120px;
+      border: 1px dashed var(--border);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      color: #aaa;
+      text-align: center;
+      padding: 8px;
+    }
+    .foto-placeholder.hidden { display: none; }
+    .foto-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+    .btn-small {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 5px 10px;
+      font-size: 12px;
+      cursor: pointer;
+      color: var(--muted);
+    }
+    .btn-small:hover { border-color: var(--brand); color: var(--brand); }
+
+    .comm-hint {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 6px;
+      line-height: 1.4;
+    }
   </style>
 </head>
 <body>
@@ -558,9 +611,9 @@
     </div>
   </div>
 
-  <!-- 2. THEMA & INTRO -->
+  <!-- 2. THEMA & COMMUNICATIE -->
   <div class="section" id="section-thema" data-section="thema">
-    <div class="section-header">2. Thema &amp; beschrijving</div>
+    <div class="section-header">2. Thema, foto &amp; communicatie</div>
     <div class="section-body">
       <div class="row">
         <div class="field" style="grid-column: 1/-1">
@@ -570,14 +623,52 @@
       </div>
       <div class="row">
         <div class="field" style="grid-column: 1/-1">
-          <label>Beschrijving / intro <span class="opt">– tekst voor de website en nieuwsbrief</span></label>
-          <textarea id="intro" rows="5" placeholder="De tekst die de dominee aanlevert als omschrijving van de dienst…"></textarea>
+          <label>Beschrijving liturgie <span class="opt">– op de voorkant van het .docx</span></label>
+          <textarea id="intro" rows="4" placeholder="Korte omschrijving van de dienst voor op de voorkant van de liturgie…"></textarea>
+        </div>
+      </div>
+      <div class="row">
+        <div class="field" style="grid-column: 1/-1">
+          <label>Foto <span class="opt">– voor op de voorkant van de liturgie</span></label>
+          <div class="foto-upload-row">
+            <div class="foto-preview-wrap">
+              <img id="foto-preview" class="foto-preview" alt="Voorbeeld foto">
+              <div id="foto-placeholder" class="foto-placeholder">Nog geen foto</div>
+            </div>
+            <div style="flex:1;min-width:200px">
+              <input type="file" id="foto_file" accept="image/jpeg,image/png,image/webp" onchange="onFotoUpload(event)">
+              <div class="foto-actions">
+                <button type="button" class="btn-small" onclick="downloadFoto()">Download foto</button>
+                <button type="button" class="btn-small" onclick="clearFoto()">Foto verwijderen</button>
+              </div>
+              <p class="comm-hint">
+                <strong>Liturgie (.docx):</strong> de foto wordt automatisch op de voorkant geplaatst.<br>
+                <strong>Website (vrijburg.nl):</strong> download de foto en upload handmatig in WordPress (komt later mogelijk automatisch, in overleg met webmaster).<br>
+                <strong>E-mail naar bureau:</strong> bij &ldquo;Ik ben klaar&rdquo; wordt de foto gedownload — voeg die handmatig toe als bijlage (paperclip in uw mailprogramma).
+              </p>
+            </div>
+          </div>
         </div>
       </div>
       <div class="row">
         <div class="field">
           <label>Foto credit <span class="opt">optioneel</span></label>
           <input type="text" id="foto_credit" placeholder="bijv. Foto ammoniet: Petra Galama">
+        </div>
+      </div>
+      <div class="row">
+        <div class="field" style="grid-column: 1/-1">
+          <label>Nieuwsbrief <span class="opt">– kort stukje voor de wekelijkse email</span></label>
+          <textarea id="nieuwsbrief" rows="4" placeholder="Tekst over de komende dienst en het thema, voor in de nieuwsbrief…"></textarea>
+          <button type="button" class="btn-small" style="margin-top:8px" onclick="copyField('nieuwsbrief', 'Nieuwsbrieftekst gekopieerd')">Kopieer voor nieuwsbrief</button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="field" style="grid-column: 1/-1">
+          <label>Overdenking <span class="opt">– voor bureau@vrijburg.nl (emaillijst na de dienst)</span></label>
+          <textarea id="overdenking_email" rows="6" placeholder="Schrijf hier de overdenking. Stuur deze naar het bureau — zij plaatsen het op de emaillijst…"></textarea>
+          <button type="button" class="btn-small" style="margin-top:8px" onclick="emailOverdenkingNaarBureau()">✉ Stuur naar bureau@vrijburg.nl</button>
+          <p class="comm-hint">Dit veld komt niet in het Word-document. In de liturgie blijft het vaste blok Overdenking → Stilte → Muziek staan.</p>
         </div>
       </div>
     </div>
@@ -728,7 +819,7 @@
     <button class="btn-secondary" id="btn-email-voorganger" onclick="emailRol('voorganger')">✉ Link naar voorganger</button>
     <button class="btn-secondary" id="btn-email-organist" onclick="emailRol('organist')">✉ Link naar organist</button>
     <button class="btn-secondary" onclick="copyShareLink()">🔗 Kopieer link</button>
-    <button class="btn-secondary" id="btn-klaar" onclick="copyShareLink()">✓ Ik ben klaar – kopieer link terug</button>
+    <button class="btn-secondary" id="btn-klaar" onclick="terugNaarBureau()">✓ Ik ben klaar – stuur naar bureau</button>
     <button class="btn-secondary" onclick="clearDraft()">Wis concept</button>
   </div>
   <span class="generate-hint" id="generate-hint">Het document is direct klaar om te printen</span>
@@ -863,7 +954,7 @@ const ROL_CONFIG = {
   voorganger: {
     label: 'Voorganger',
     primary: ['thema', 'opening', 'orde', 'slot'],
-    hint: 'Vul thema, orde van dienst (liederen, lezingen) en lichtlied/slotlied in. Predikant, organist en lector staan al in de dienstplanning. Klik op <strong>Ik ben klaar</strong> om de link terug te sturen.',
+    hint: 'Vul thema, beschrijving, foto, nieuwsbrief en overdenking in. Vul de orde van dienst in (liederen, lezingen) en lichtlied/slotlied. Klik op <strong>Ik ben klaar</strong> om alles naar bureau@vrijburg.nl te sturen.',
     emailAan: 'voorganger',
   },
   organist: {
@@ -935,7 +1026,7 @@ function applyRolUI() {
   document.getElementById('btn-klaar').style.display = (huidigeRol === 'voorganger' || huidigeRol === 'organist') ? '' : 'none';
   document.getElementById('generate-hint').textContent = isSamenvoeger
     ? 'Download wanneer alle onderdelen zijn ingevuld'
-    : 'Stuur de link terug als uw onderdeel klaar is';
+    : 'Stuur uw ingevulde gegevens naar bureau@vrijburg.nl als u klaar bent';
 }
 
 function setupSectionToggles() {
@@ -949,6 +1040,155 @@ function setupSectionToggles() {
 // ORDE VAN DIENST – DYNAMISCHE LIJST
 // ============================================================
 let ordeItems = [];
+let fotoDataUrl = ''; // base64 data URL voor foto in .docx
+
+function onFotoUpload(event) {
+  const file = event.target.files?.[0];
+  if (!file) return;
+  if (file.size > 4 * 1024 * 1024) {
+    setStatus('Foto is te groot (max 4 MB)', 'err');
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const img = new Image();
+    img.onload = () => {
+      const maxW = 900;
+      const scale = img.width > maxW ? maxW / img.width : 1;
+      const w = Math.round(img.width * scale);
+      const h = Math.round(img.height * scale);
+      const canvas = document.createElement('canvas');
+      canvas.width = w;
+      canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      fotoDataUrl = canvas.toDataURL('image/jpeg', 0.85);
+      updateFotoPreview();
+      scheduleDraftSave();
+      setStatus('✓ Foto toegevoegd', 'ok');
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function updateFotoPreview() {
+  const preview = document.getElementById('foto-preview');
+  const placeholder = document.getElementById('foto-placeholder');
+  if (fotoDataUrl) {
+    preview.src = fotoDataUrl;
+    preview.classList.add('visible');
+    placeholder.classList.add('hidden');
+  } else {
+    preview.src = '';
+    preview.classList.remove('visible');
+    placeholder.classList.remove('hidden');
+  }
+}
+
+function getFotoFilename() {
+  const datum = document.getElementById('datum').value;
+  return datum ? `liturgie-foto-${datum}.jpg` : 'liturgie-foto.jpg';
+}
+
+function clearFoto() {
+  fotoDataUrl = '';
+  document.getElementById('foto_file').value = '';
+  updateFotoPreview();
+  scheduleDraftSave();
+}
+
+function downloadFoto(silent) {
+  if (!fotoDataUrl) {
+    if (!silent) setStatus('Geen foto om te downloaden', 'err');
+    return false;
+  }
+  const a = document.createElement('a');
+  a.href = fotoDataUrl;
+  a.download = getFotoFilename();
+  a.click();
+  if (!silent) setStatus('✓ Foto gedownload', 'ok');
+  return true;
+}
+
+function emailOverdenkingNaarBureau() {
+  const text = document.getElementById('overdenking_email').value.trim();
+  if (!text) {
+    setStatus('Vul eerst de overdenking in', 'err');
+    return;
+  }
+  const datum = document.getElementById('datum').value;
+  const datumTekst = datum ? formatDatum(datum) : 'komende dienst';
+  const thema = document.getElementById('thema').value.trim();
+  const subject = encodeURIComponent(`Overdenking emaillijst – Vrijburg ${datumTekst}`);
+  const body = encodeURIComponent(
+    `Beste,\n\n` +
+    `Hierbij de overdenking voor de emaillijst na de dienst op ${datumTekst}` +
+    (thema ? ` (${thema})` : '') + `:\n\n` +
+    `${text}\n\n` +
+    `Met vriendelijke groet`
+  );
+  window.location.href = `mailto:bureau@vrijburg.nl?subject=${subject}&body=${body}`;
+}
+
+function terugNaarBureau() {
+  const url = getShareUrl();
+  const datum = document.getElementById('datum').value;
+  const datumTekst = datum ? formatDatum(datum) : 'komende dienst';
+  const rolLabel = ROL_CONFIG[huidigeRol]?.label || 'medewerker';
+  const overdenking = document.getElementById('overdenking_email').value.trim();
+  const fotoBestand = getFotoFilename();
+  const heeftFoto = !!fotoDataUrl;
+
+  if (heeftFoto) downloadFoto(true);
+
+  let body =
+    `Beste,\n\n` +
+    `Hierbij mijn ingevulde onderdeel voor de liturgie op ${datumTekst} (${rolLabel}).\n\n` +
+    `Gedeelde link (open in de Liturgie Generator):\n${url}\n`;
+
+  if (heeftFoto) {
+    body +=
+      `\n` +
+      `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+      `⚠ BIJLAGE NODIG: FOTO\n` +
+      `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n` +
+      `Ik heb een foto geüpload. Die zit niet in de link hierboven.\n\n` +
+      `Stappen:\n` +
+      `1. Het bestand "${fotoBestand}" is zojuist naar uw Downloads-map gedownload.\n` +
+      `2. Voeg dit bestand toe als bijlage aan deze e-mail (paperclip 📎 in uw mailprogramma).\n` +
+      `3. Het bureau kan de foto op vrijburg.nl plaatsen.\n\n` +
+      `De foto staat ook in het Word-document (.docx) als het bureau dat downloadt.\n`;
+  }
+
+  if (overdenking && huidigeRol === 'voorganger') {
+    body += `\n--- Overdenking (voor emaillijst) ---\n${overdenking}\n`;
+  }
+
+  body += `\nMet vriendelijke groet`;
+
+  const subject = encodeURIComponent(`Liturgie Vrijburg – ${datumTekst} – ${rolLabel}`);
+  const openMail = () => {
+    window.location.href = `mailto:bureau@vrijburg.nl?subject=${subject}&body=${encodeURIComponent(body)}`;
+  };
+
+  if (heeftFoto) {
+    setStatus('✓ Foto gedownload — voeg als bijlage toe in uw e-mail', 'ok');
+    setTimeout(openMail, 400);
+  } else {
+    openMail();
+  }
+}
+
+function copyField(id, okMsg) {
+  const text = document.getElementById(id).value.trim();
+  if (!text) {
+    setStatus('Geen tekst om te kopiëren', 'err');
+    return;
+  }
+  navigator.clipboard.writeText(text).then(() => {
+    setStatus('✓ ' + okMsg, 'ok');
+  }).catch(() => prompt('Kopieer deze tekst:', text));
+}
 
 function addOrde(type, content = '') {
   const id = Date.now() + Math.random();
@@ -1145,7 +1385,10 @@ function getFormState() {
     lector: document.getElementById('lector').value,
     thema: document.getElementById('thema').value,
     intro: document.getElementById('intro').value,
+    nieuwsbrief: document.getElementById('nieuwsbrief').value,
+    overdenking_email: document.getElementById('overdenking_email').value,
     foto_credit: document.getElementById('foto_credit').value,
+    foto_data: fotoDataUrl,
     orgelspel_opening: document.getElementById('orgelspel_opening').value,
     lichtlied: document.getElementById('lichtlied').value,
     slotlied: document.getElementById('slotlied').value,
@@ -1188,13 +1431,18 @@ function applyPlanningVl(planning) {
 function applyFormState(state) {
   if (!state) return;
   const fields = ['datum','aanvangstijd','bijzondere_dienst','kinderkerk','bijzonderheden',
-    'voorganger','organist','lector','thema','intro','foto_credit',
+    'voorganger','organist','lector','thema','intro','nieuwsbrief','overdenking_email','foto_credit',
     'orgelspel_opening','lichtlied','slotlied','orgelspel_slot','bloemen',
     'c1_thema','c1_naam','c1_tekst','c1_rekening','c2_type','c2_tekst','c2_rekening',
     'agenda_kort','agenda_ver','avondmaal'];
   fields.forEach(id => {
     if (state[id] !== undefined) document.getElementById(id).value = state[id];
   });
+  if ('foto_data' in state) {
+    fotoDataUrl = state.foto_data || '';
+    updateFotoPreview();
+    if (!fotoDataUrl) document.getElementById('foto_file').value = '';
+  }
   if (state.cantorij !== undefined) document.getElementById('cantorij').checked = !!state.cantorij;
   setVlField('vlv', state.vlv || '');
   setVlField('vlh', state.vlh || '');
@@ -1217,6 +1465,8 @@ function applyFormState(state) {
 function getShareUrl(rol) {
   const state = getFormState();
   if (rol) state.rol = rol;
+  // Foto niet meenemen in URL (te groot) — blijft in lokaal concept
+  delete state.foto_data;
   const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(state))));
   const url = new URL(location.href.split('?')[0]);
   url.searchParams.set('v', encoded);
@@ -1255,7 +1505,7 @@ function emailRol(rol) {
   const datumTekst = datum ? formatDatum(datum) : 'komende dienst';
   const namen = { voorganger: 'voorganger', organist: 'organist' };
   const taken = {
-    voorganger: 'thema, orde van dienst (liederen en lezingen) en lichtlied/slotlied',
+    voorganger: 'thema, foto, nieuwsbrief, overdenking, orde van dienst (liederen en lezingen) en lichtlied/slotlied',
     organist: 'orgelspel en muziek in de dienst',
   };
   const subject = encodeURIComponent(`Liturgie Vrijburg – ${datumTekst} (${namen[rol]})`);
@@ -1265,7 +1515,7 @@ function emailRol(rol) {
     `${taken[rol]}.\n\n` +
     `${url}\n\n` +
     `U hoeft niet alles in te vullen — alleen uw eigen onderdeel. ` +
-    `Klik op "Ik ben klaar" om de link terug te sturen.\n\n` +
+    `Klik op "Ik ben klaar" om uw ingevulde gegevens naar bureau@vrijburg.nl te sturen.\n\n` +
     `Met vriendelijke groet,\nVrijburg Amsterdam`
   );
   window.location.href = `mailto:?subject=${subject}&body=${body}`;
@@ -1388,7 +1638,42 @@ function formatDatum(val) {
 // ============================================================
 // DOCX GENERATOR
 // ============================================================
+function buildFotoParagraph(dataUrl) {
+  const { Paragraph, ImageRun } = docx;
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => {
+      try {
+        const binary = atob(dataUrl.split(',')[1]);
+        const bytes = new Uint8Array(binary.length);
+        for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+        const maxW = 420;
+        const scale = img.width > maxW ? maxW / img.width : 1;
+        const width = Math.round(img.width * scale);
+        const height = Math.round(img.height * scale);
+        const type = dataUrl.startsWith('data:image/png') ? 'png' : 'jpg';
+        resolve(new Paragraph({
+          children: [new ImageRun({ data: bytes, transformation: { width, height }, type })],
+          spacing: { after: 80 },
+        }));
+      } catch (e) {
+        console.warn('Foto kon niet in document:', e);
+        resolve(null);
+      }
+    };
+    img.onerror = () => resolve(null);
+    img.src = dataUrl;
+  });
+}
+
 function generateDocx() {
+  generateDocxAsync().catch(err => {
+    console.error(err);
+    setStatus('Fout bij genereren: ' + err.message, 'err');
+  });
+}
+
+async function generateDocxAsync() {
   const { Document, Paragraph, TextRun, AlignmentType, TabStopType, TabStopPosition,
           UnderlineType, convertInchesToTwip, PageBreak } = docx;
 
@@ -1517,6 +1802,10 @@ function generateDocx() {
   // HEADER
   children.push(p(datumTitel, { bold: true, sz: 26, after: 40 }));
   if (thema) children.push(p(thema, { bold: true, sz: 24, after: 40 }));
+  if (fotoDataUrl) {
+    const fotoPara = await buildFotoParagraph(fotoDataUrl);
+    if (fotoPara) children.push(fotoPara);
+  }
   if (intro) children.push(...multiline(intro, { after: 60 }));
   if (foto) children.push(p(foto, { italic: true, after: 60 }));
   children.push(empty());
@@ -1673,9 +1962,6 @@ function generateDocx() {
     a.href = url; a.download = filename; a.click();
     URL.revokeObjectURL(url);
     setStatus('✓ ' + filename + ' gedownload', 'ok');
-  }).catch(err => {
-    console.error(err);
-    setStatus('Fout bij genereren: ' + err.message, 'err');
   });
 }
 

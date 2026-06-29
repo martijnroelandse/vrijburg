@@ -27,7 +27,7 @@ De liturgie wordt door **meerdere mensen** aangeleverd. In de app kiest ieder bo
 
 | Rol | Verantwoordelijk voor |
 |---|---|
-| **Voorganger** | Thema, beschrijving, orde van dienst (liederen, lezingen, inleiding), lichtlied en slotlied |
+| **Voorganger** | Thema, beschrijving liturgie, foto, nieuwsbrief, overdenking (naar bureau), orde van dienst (liederen, lezingen, inleiding), lichtlied en slotlied |
 | **Organist** | Orgelspeel (opening en slot), muziek in de orde van dienst |
 | **Bureaumedewerker** | Datum, predikant/organist/lector/cantorij/kinderkerk (uit dienstplanning), collecte, bloemen, agenda |
 | **Alles bekijken** | Volledig overzicht en download van de .docx |
@@ -62,7 +62,7 @@ Geen enkel veld is verplicht — ieder vult alleen zijn eigen onderdeel in. De g
 
 Secties:
 1. **Dienst** — datum, voorganger, organist, lector
-2. **Thema & beschrijving** — thema, intro-tekst (voor website/nieuwsbrief), foto credit
+2. **Thema, foto & communicatie** — thema, beschrijving liturgie (voorkant .docx), foto-upload (in .docx + download voor website), foto credit, nieuwsbrief (kopieerknop), overdenking (mailto naar bureau@vrijburg.nl)
 3. **Opening** — lichtlied, orgelspel opening
 4. **Orde van dienst** — dynamische lijst: lied / lezing / inleiding / muziek / overig, in volgorde rangschikken met ↑↓
 5. **Afsluiting** — slotlied, orgelspel slot
@@ -152,6 +152,8 @@ Knop "Stuur link naar dominee" opent een pre-ingevulde mailto:-link. Formulierst
 **3. Agenda-import van vrijburg.nl** ✅ *geïmplementeerd*  
 Via WordPress REST API: `https://www.vrijburg.nl/wp-json/wp/v2/evenementen` (custom post type met ACF-velden `start` en `locatie`).
 
+**Voorganger → bureau:** bij "Ik ben klaar" wordt de foto automatisch gedownload; de e-mail bevat instructies om het bestand als bijlage toe te voegen (mailto kan geen bijlagen automatisch meesturen).
+
 **4. Collectes seizoen 2027-2028 bijwerken**  
 `collectes.json` dekt 2026-2027. Voor volgend seizoen: vervang of breid het bestand uit. Overweeg een simpel beheerscherm of gewoon het JSON-bestand handmatig bijwerken.
 
@@ -159,7 +161,9 @@ Via WordPress REST API: `https://www.vrijburg.nl/wp-json/wp/v2/evenementen` (cus
 
 - **Opslaan als concept** ✅ *geïmplementeerd* — localStorage zodat een half-ingevuld formulier bewaard blijft bij sluiten
 - **Liedboek lookup** — gegeven een lied-nummer, de eerste regel ophalen als titel-suggestie
-- **Foto upload** — de dominee stuurt soms een foto mee; die kan nu niet in het .docx (Word-beperking via docx.js is complex), maar een placeholder-blok toevoegen is eenvoudig
+- **Foto upload** ✅ *geïmplementeerd* — in .docx op voorkant; download voor website. Bij "Ik ben klaar": auto-download + instructie bijlage in e-mail.
+- **Nieuwsbrief & overdenking** ✅ *geïmplementeerd* — nieuwsbrief met kopieerknop; overdenking via mailto naar `bureau@vrijburg.nl` (niet in .docx)
+- **WordPress foto-upload** — direct uploaden naar mediabibliotheek op vrijburg.nl; vereist afstemming met webmaster (Application Password + CORS)
 - **Digitale versie** — naast het .docx ook een HTML-versie genereren voor op de website
 - **Meerdere diensten per week** — soms zijn er bijzondere diensten (Kerstavond, Pasen) met een afwijkende structuur
 
