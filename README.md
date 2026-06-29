@@ -69,7 +69,8 @@ Zie `HANDOVER.md` voor de volledige lijst. Recent toegevoegd:
 - Deelbare link en mailto-knop voor dominees
 - Agenda importeren van vrijburg.nl
 - Concept opslaan in de browser (localStorage)
-- Foto upload voor op de voorkant van de liturgie (.docx)
-- Nieuwsbrief- en overdenking-tekstvelden met kopieerknop voor email
+- Nieuwsbrief-tekstveld met kopieerknop
+- Overdenking naar bureau@vrijburg.nl (mailto)
+- Foto upload voor liturgie (.docx) + download voor website
 
 Nog open: collectes 2027-2028, liedboek lookup, bijzondere diensten.

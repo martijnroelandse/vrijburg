@@ -638,9 +638,14 @@
             <div style="flex:1;min-width:200px">
               <input type="file" id="foto_file" accept="image/jpeg,image/png,image/webp" onchange="onFotoUpload(event)">
               <div class="foto-actions">
+                <button type="button" class="btn-small" onclick="downloadFoto()">Download foto</button>
                 <button type="button" class="btn-small" onclick="clearFoto()">Foto verwijderen</button>
               </div>
-              <p class="comm-hint">De foto wordt in het Word-document geplaatst (niet via gedeelde link). Voor de website upload je de afbeelding apart in het CMS.</p>
+              <p class="comm-hint">
+                <strong>Liturgie (.docx):</strong> de foto wordt automatisch op de voorkant geplaatst.<br>
+                <strong>Website (vrijburg.nl):</strong> download de foto en upload die handmatig in WordPress — de app kan niet naar GitHub uploaden (statische site, geen server).<br>
+                <strong>Gedeelde link:</strong> de foto reist niet mee (te groot); bewaar lokaal of stuur het .docx / gedownloade foto naar het bureau.
+              </p>
             </div>
           </div>
         </div>
@@ -660,10 +665,10 @@
       </div>
       <div class="row">
         <div class="field" style="grid-column: 1/-1">
-          <label>Overdenking emaillijst <span class="opt">– tekst voor abonnees na de dienst</span></label>
-          <textarea id="overdenking_email" rows="6" placeholder="De overdenking of een samenvatting om naar de emaillijst te sturen…"></textarea>
-          <button type="button" class="btn-small" style="margin-top:8px" onclick="copyField('overdenking_email', 'Overdenking gekopieerd')">Kopieer voor emaillijst</button>
-          <p class="comm-hint">Dit veld is bedoeld voor de email na afloop. In de liturgie zelf blijft het vaste blok Overdenking → Stilte → Muziek staan.</p>
+          <label>Overdenking <span class="opt">– voor bureau@vrijburg.nl (emaillijst na de dienst)</span></label>
+          <textarea id="overdenking_email" rows="6" placeholder="Schrijf hier de overdenking. Stuur deze naar het bureau — zij plaatsen het op de emaillijst…"></textarea>
+          <button type="button" class="btn-small" style="margin-top:8px" onclick="emailOverdenkingNaarBureau()">✉ Stuur naar bureau@vrijburg.nl</button>
+          <p class="comm-hint">Dit veld komt niet in het Word-document. In de liturgie blijft het vaste blok Overdenking → Stilte → Muziek staan.</p>
         </div>
       </div>
     </div>
@@ -814,7 +819,7 @@
     <button class="btn-secondary" id="btn-email-voorganger" onclick="emailRol('voorganger')">✉ Link naar voorganger</button>
     <button class="btn-secondary" id="btn-email-organist" onclick="emailRol('organist')">✉ Link naar organist</button>
     <button class="btn-secondary" onclick="copyShareLink()">🔗 Kopieer link</button>
-    <button class="btn-secondary" id="btn-klaar" onclick="copyShareLink()">✓ Ik ben klaar – kopieer link terug</button>
+    <button class="btn-secondary" id="btn-klaar" onclick="terugNaarBureau()">✓ Ik ben klaar – stuur naar bureau</button>
     <button class="btn-secondary" onclick="clearDraft()">Wis concept</button>
   </div>
   <span class="generate-hint" id="generate-hint">Het document is direct klaar om te printen</span>
@@ -949,7 +954,7 @@ const ROL_CONFIG = {
   voorganger: {
     label: 'Voorganger',
     primary: ['thema', 'opening', 'orde', 'slot'],
-    hint: 'Vul thema, beschrijving, foto, nieuwsbrief en overdenking in. Vul de orde van dienst in (liederen, lezingen) en lichtlied/slotlied. Klik op <strong>Ik ben klaar</strong> om de link terug te sturen.',
+    hint: 'Vul thema, beschrijving, foto, nieuwsbrief en overdenking in. Vul de orde van dienst in (liederen, lezingen) en lichtlied/slotlied. Klik op <strong>Ik ben klaar</strong> om alles naar bureau@vrijburg.nl te sturen.',
     emailAan: 'voorganger',
   },
   organist: {
@@ -1021,7 +1026,7 @@ function applyRolUI() {
   document.getElementById('btn-klaar').style.display = (huidigeRol === 'voorganger' || huidigeRol === 'organist') ? '' : 'none';
   document.getElementById('generate-hint').textContent = isSamenvoeger
     ? 'Download wanneer alle onderdelen zijn ingevuld'
-    : 'Stuur de link terug als uw onderdeel klaar is';
+    : 'Stuur uw ingevulde gegevens naar bureau@vrijburg.nl als u klaar bent';
 }
 
 function setupSectionToggles() {
@@ -1085,6 +1090,69 @@ function clearFoto() {
   document.getElementById('foto_file').value = '';
   updateFotoPreview();
   scheduleDraftSave();
+}
+
+function downloadFoto() {
+  if (!fotoDataUrl) {
+    setStatus('Geen foto om te downloaden', 'err');
+    return;
+  }
+  const datum = document.getElementById('datum').value;
+  const naam = datum ? `liturgie-foto-${datum}.jpg` : 'liturgie-foto.jpg';
+  const a = document.createElement('a');
+  a.href = fotoDataUrl;
+  a.download = naam;
+  a.click();
+  setStatus('✓ Foto gedownload', 'ok');
+}
+
+function emailOverdenkingNaarBureau() {
+  const text = document.getElementById('overdenking_email').value.trim();
+  if (!text) {
+    setStatus('Vul eerst de overdenking in', 'err');
+    return;
+  }
+  const datum = document.getElementById('datum').value;
+  const datumTekst = datum ? formatDatum(datum) : 'komende dienst';
+  const thema = document.getElementById('thema').value.trim();
+  const subject = encodeURIComponent(`Overdenking emaillijst – Vrijburg ${datumTekst}`);
+  const body = encodeURIComponent(
+    `Beste,\n\n` +
+    `Hierbij de overdenking voor de emaillijst na de dienst op ${datumTekst}` +
+    (thema ? ` (${thema})` : '') + `:\n\n` +
+    `${text}\n\n` +
+    `Met vriendelijke groet`
+  );
+  window.location.href = `mailto:bureau@vrijburg.nl?subject=${subject}&body=${body}`;
+}
+
+function terugNaarBureau() {
+  const url = getShareUrl();
+  const datum = document.getElementById('datum').value;
+  const datumTekst = datum ? formatDatum(datum) : 'komende dienst';
+  const rolLabel = ROL_CONFIG[huidigeRol]?.label || 'medewerker';
+  const overdenking = document.getElementById('overdenking_email').value.trim();
+
+  let body =
+    `Beste,\n\n` +
+    `Hierbij mijn ingevulde onderdeel voor de liturgie op ${datumTekst} (${rolLabel}).\n\n` +
+    `Gedeelde link (open in de Liturgie Generator):\n${url}\n`;
+
+  if (fotoDataUrl) {
+    body +=
+      `\nLet op: ik heb een foto geüpload. Die zit niet in de link — ` +
+      `download de foto in de app (knop "Download foto") of uit het Word-document, ` +
+      `of vraag mij om de foto als bijlage.\n`;
+  }
+
+  if (overdenking && huidigeRol === 'voorganger') {
+    body += `\n--- Overdenking (voor emaillijst) ---\n${overdenking}\n`;
+  }
+
+  body += `\nMet vriendelijke groet`;
+
+  const subject = encodeURIComponent(`Liturgie Vrijburg – ${datumTekst} – ${rolLabel}`);
+  window.location.href = `mailto:bureau@vrijburg.nl?subject=${subject}&body=${encodeURIComponent(body)}`;
 }
 
 function copyField(id, okMsg) {
@@ -1423,7 +1491,7 @@ function emailRol(rol) {
     `${taken[rol]}.\n\n` +
     `${url}\n\n` +
     `U hoeft niet alles in te vullen — alleen uw eigen onderdeel. ` +
-    `Klik op "Ik ben klaar" om de link terug te sturen.\n\n` +
+    `Klik op "Ik ben klaar" om uw ingevulde gegevens naar bureau@vrijburg.nl te sturen.\n\n` +
     `Met vriendelijke groet,\nVrijburg Amsterdam`
   );
   window.location.href = `mailto:?subject=${subject}&body=${body}`;
