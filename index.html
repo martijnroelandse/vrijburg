@@ -692,7 +692,11 @@
         <div class="field" style="grid-column: 1/-1">
           <label>Nieuwsbrief <span class="opt">– kort stukje voor de wekelijkse email</span></label>
           <textarea id="nieuwsbrief" rows="4" placeholder="Tekst over de komende dienst en het thema, voor in de nieuwsbrief…"></textarea>
-          <button type="button" class="btn-small" style="margin-top:8px" onclick="copyField('nieuwsbrief', 'Nieuwsbrieftekst gekopieerd')">Kopieer voor nieuwsbrief</button>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px">
+            <button type="button" class="btn-small" onclick="copyField('nieuwsbrief', 'Nieuwsbrieftekst gekopieerd')">Kopieer voor nieuwsbrief</button>
+            <button type="button" class="btn-small" onclick="copyMailchimpCards()">Kopieer voor Mailchimp cards</button>
+          </div>
+          <p class="comm-hint">Mailchimp-copy is platte tekst met losse card/box-blokken (geen HTML), zodat je per blok makkelijk kunt nabewerken.</p>
         </div>
       </div>
       <div class="row">
@@ -1312,6 +1316,66 @@ function copyField(id, okMsg) {
   navigator.clipboard.writeText(text).then(() => {
     setStatus('✓ ' + okMsg, 'ok');
   }).catch(() => prompt('Kopieer deze tekst:', text));
+}
+
+function collectMailchimpCardsText() {
+  const datum = document.getElementById('datum').value;
+  const datumTekst = datum ? formatDatum(datum) : 'komende zondag';
+  const thema = document.getElementById('thema').value.trim();
+  const intro = document.getElementById('intro').value.trim();
+  const nieuwsbrief = document.getElementById('nieuwsbrief').value.trim();
+  const voorganger = document.getElementById('voorganger').value.trim();
+  const organist = document.getElementById('organist').value.trim();
+  const agendaKort = document.getElementById('agenda_kort').value.trim();
+  const agendaVer = document.getElementById('agenda_ver').value.trim();
+
+  const onderdelen = [];
+  onderdelen.push('MAILCHIMP CARDS (plak ieder blok in een aparte box/card)\n');
+
+  onderdelen.push(
+    '[CARD 1] KOP',
+    `Titel: Dienst op ${datumTekst}`,
+    thema ? `Subtitel: Thema: ${thema}` : 'Subtitel:',
+    ''
+  );
+
+  onderdelen.push(
+    '[CARD 2] INTRO / NIEUWSBRIEF',
+    nieuwsbrief || intro || 'Tekst: (nog invullen)',
+    ''
+  );
+
+  const details = [];
+  if (voorganger) details.push(`Voorganger: ${voorganger}`);
+  if (organist) details.push(`Organist: ${organist}`);
+  onderdelen.push('[CARD 3] PRAKTISCH');
+  onderdelen.push(details.length ? details.join('\n') : 'Praktisch: (nog invullen)');
+  onderdelen.push('');
+
+  onderdelen.push('[CARD 4] AGENDA');
+  if (agendaKort) {
+    onderdelen.push('Komende week:');
+    onderdelen.push(agendaKort);
+    onderdelen.push('');
+  }
+  if (agendaVer) {
+    onderdelen.push('Verder weg:');
+    onderdelen.push(agendaVer);
+    onderdelen.push('');
+  }
+  if (!agendaKort && !agendaVer) {
+    onderdelen.push('Agenda: (nog invullen)');
+    onderdelen.push('');
+  }
+
+  return onderdelen.join('\n').replace(/\n{3,}/g, '\n\n').trim();
+}
+
+function copyMailchimpCards() {
+  const text = collectMailchimpCardsText();
+  navigator.clipboard.writeText(text).then(() => {
+    setStatus('✓ Mailchimp cards als platte tekst gekopieerd', 'ok');
+  }).catch(() => prompt('Kopieer deze Mailchimp cards:', text));
 }
 
 function addOrde(type, content = '') {
