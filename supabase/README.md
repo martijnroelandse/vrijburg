@@ -2,7 +2,22 @@
 
 Gedeelde backend voor **liturgie-app** en **nieuwsbrief-app**.
 
-## Eenmalig opzetten
+## Project (Liturgie)
+
+| | |
+|---|---|
+| Project | Liturgie |
+| Region | `eu-west-3` (Parijs) |
+| URL | `https://iabrbkirzsolwnuknbel.supabase.co` |
+| Ref | `iabrbkirzsolwnuknbel` |
+
+Anon/publishable key: **Project Settings → API** (niet de `service_role`).
+
+## Status
+
+Migratie `diensten_schema` is toegepast op het remote project (tabel + bucket + view).
+
+## Eenmalig opzetten (als je opnieuw begint)
 
 1. Open je project in [Supabase Dashboard](https://supabase.com/dashboard)
 2. Ga naar **SQL Editor** → **New query**
@@ -11,17 +26,7 @@ Gedeelde backend voor **liturgie-app** en **nieuwsbrief-app**.
 5. Controleer:
    - **Table Editor** → tabel `diensten`
    - **Storage** → bucket `dienst-fotos`
-   - **Table Editor** → view `diensten_nieuwsbrief` (optioneel)
-
-## Projectkeys (voor de frontend)
-
-In **Project Settings → API**:
-
-| Key | Gebruik |
-|---|---|
-| Project URL | `https://xxxx.supabase.co` |
-| `anon` `public` key | Mag in de frontend (GitHub Pages) |
-| `service_role` key | **Nooit** in de frontend |
+   - View `diensten_nieuwsbrief`
 
 ## Datamodel (kort)
 

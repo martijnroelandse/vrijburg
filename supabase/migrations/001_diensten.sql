@@ -44,6 +44,7 @@ comment on column public.diensten.data is
 create or replace function public.set_updated_at()
 returns trigger
 language plpgsql
+set search_path = public
 as $$
 begin
   new.updated_at = now();
@@ -129,7 +130,9 @@ create policy "dienst_fotos_anon_update"
 -- ------------------------------------------------------------
 -- 4. Handige view voor nieuwsbrief (platte kernvelden)
 -- ------------------------------------------------------------
-create or replace view public.diensten_nieuwsbrief as
+create or replace view public.diensten_nieuwsbrief
+with (security_invoker = true)
+as
 select
   id,
   short_id,
@@ -153,3 +156,4 @@ select
 from public.diensten;
 
 grant select on public.diensten_nieuwsbrief to anon, authenticated;
+grant select, insert, update on public.diensten to anon, authenticated;
