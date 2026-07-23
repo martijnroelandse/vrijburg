@@ -171,36 +171,39 @@
   <div class="card" id="handleiding">
     <div class="card-header">Korte handleiding</div>
     <div class="card-body">
-      <p>De liturgie wordt door meerdere mensen ingevuld. Via een gedeelde link bouwt iedereen voort op hetzelfde concept.</p>
+      <p>De liturgie wordt door meerdere mensen ingevuld. Iedereen werkt aan hetzelfde concept via een korte gedeelde link (<code>?id=…</code>), die in de cloud wordt bewaard.</p>
 
       <ol class="steps">
         <li>
           <strong>Bureaumedewerker</strong> — kies <em>Bureaumedewerker</em>, zet de datum en controleer dienstplanning, collecte en agenda.
         </li>
         <li>
-          Stuur een link naar de <strong>voorganger</strong> (<em>Link naar voorganger</em>). De link bevat alles wat tot dan toe is ingevuld.
+          Klik <strong>☁ Opslaan</strong> of <em>Link naar voorganger</em>. De app bewaart alles in de cloud en maakt een korte link met <code>?id=…</code>.
         </li>
         <li>
-          <strong>Voorganger</strong> — open de link, kies <em>Voorganger</em>, vul thema, orde van dienst, liederen, lezingen, communicatie en eventueel foto/nieuwsbrief/overdenking in. Klik op <strong>Ik ben klaar</strong> om naar <a href="mailto:bureau@vrijburg.nl">bureau@vrijburg.nl</a> te sturen.
+          <strong>Voorganger</strong> — open die link, vul thema, orde van dienst, liederen, lezingen, communicatie en eventueel foto/nieuwsbrief/overdenking in. Klik op <strong>Ik ben klaar</strong> om naar <a href="mailto:bureau@vrijburg.nl">bureau@vrijburg.nl</a> te sturen (opnieuw met dezelfde cloud-link).
         </li>
         <li>
-          Het bureau stuurt de <strong>bijgewerkte link</strong> door naar de <strong>organist</strong> (<em>Link naar organist</em>). Gebruik steeds de nieuwste link — zo komen alle onderdelen bij elkaar.
+          Het bureau stuurt dezelfde link (of de bijgewerkte mail) door naar de <strong>organist</strong> (<em>Link naar organist</em>). Iedereen opent dus hetzelfde <code>?id=…</code>.
         </li>
         <li>
           <strong>Organist</strong> — vul orgelspel en muziek in. Klik op <strong>Ik ben klaar</strong> als u klaar bent.
         </li>
         <li>
-          <strong>Bureaumedewerker</strong> — open de laatste link, controleer alles en download de liturgie als <strong>.docx</strong>.
+          <strong>Bureaumedewerker</strong> — open dezelfde link, controleer alles en download de liturgie als <strong>.docx</strong>.
         </li>
       </ol>
 
       <h3>Handige tips</h3>
       <ul>
-        <li><strong>Volgorde voorganger/organist</strong> — inhoudelijk maakt de volgorde niet uit; wel belangrijk dat elke volgende persoon de link gebruikt die na de vorige stap is bijgewerkt.</li>
+        <li><strong>Cloud-link</strong> — onderin ziet u <code>☁ id=…</code> als er een cloud-concept actief is. Deel altijd die link, niet de kale generator-URL.</li>
+        <li><strong>Kale URL</strong> (zonder <code>id</code>) — start met een leeg formulier. Handig voor een nieuwe dienst.</li>
+        <li><strong>Wis concept</strong> — wist alle velden, het lokale concept én de cloud-koppeling in de URL (formulier wordt leeg).</li>
+        <li><strong>Volgorde voorganger/organist</strong> — inhoudelijk maakt de volgorde niet uit; wel belangrijk dat iedereen dezelfde cloud-link gebruikt.</li>
         <li><strong>Lezingen</strong> — bij een bijbelreferentie haalt de tool de tekst op via BijbelAPI.</li>
         <li><strong>Liederen</strong> — gebruik de knop bij een liednummer om Liedboek Online te openen (eigen inlog Vrijburg).</li>
-        <li><strong>Foto</strong> — zit niet in de gedeelde link. Bij <em>Ik ben klaar</em> wordt de foto gedownload; voeg die handmatig toe als e-mailbijlage. In het .docx staat de foto wel.</li>
-        <li><strong>Concept</strong> — uw browser bewaart tussentijds een concept. Met <em>Wis concept</em> wist u dat lokaal.</li>
+        <li><strong>Foto</strong> — wordt mee opgeslagen in de cloud bij Opslaan / delen. Staat ook in het .docx.</li>
+        <li><strong>Lokaal concept</strong> — bij een refresh in dezelfde tab kan de browser een tussentijds concept herstellen. Een nieuwe tab of kale link blijft leeg.</li>
       </ul>
     </div>
   </div>
@@ -212,7 +215,10 @@
         De Liturgie Generator helpt medewerkers en voorgangers van Vrijburg Amsterdam bij het
         samenstellen van de wekelijkse kerkdienst-liturgie als Word-document (.docx).
       </p>
-      <p>De tool draait volledig in uw browser. Er is geen aparte server of database.</p>
+      <p>
+        De interface draait in uw browser (GitHub Pages). Concepten worden gedeeld via korte links
+        en opgeslagen in de cloud (Supabase), zodat voorganger, organist en bureau aan dezelfde dienst werken.
+      </p>
       <h3>Wie vult wat in?</h3>
       <ul>
         <li><strong>Bureaumedewerker</strong> — datum, dienstplanning, collecte, agenda</li>
@@ -220,7 +226,7 @@
         <li><strong>Organist</strong> — orgelspel en muziek</li>
       </ul>
       <p class="muted">
-        Via een gedeelde link (verkort met TinyURL) komen de onderdelen bij elkaar.
+        Via een gedeelde cloud-link (<code>?id=…</code>) komen de onderdelen bij elkaar.
         De voorganger stuurt het resultaat naar <a href="mailto:bureau@vrijburg.nl">bureau@vrijburg.nl</a>.
       </p>
     </div>
@@ -235,11 +241,11 @@
         </thead>
         <tbody>
           <tr><td>Hosting</td><td><a href="https://pages.github.com/" target="_blank" rel="noopener">GitHub Pages</a></td></tr>
+          <tr><td>Cloud-opslag</td><td><a href="https://supabase.com/" target="_blank" rel="noopener">Supabase</a> (diensten + foto’s)</td></tr>
           <tr><td>Word-document</td><td><a href="https://docx.js.org/" target="_blank" rel="noopener">docx.js</a></td></tr>
           <tr><td>Bijbelteksten</td><td><a href="https://www.bijbelapi.com/" target="_blank" rel="noopener">BijbelAPI</a> (BasisBijbel)</td></tr>
           <tr><td>Agenda</td><td><a href="https://www.vrijburg.nl" target="_blank" rel="noopener">vrijburg.nl</a> (WordPress API)</td></tr>
           <tr><td>Dienstplanning &amp; collectes</td><td>Statische bestanden in deze repository</td></tr>
-          <tr><td>Gedeelde links</td><td><a href="https://tinyurl.com/" target="_blank" rel="noopener">TinyURL</a> (verkorte URL)</td></tr>
           <tr><td>Liedteksten</td><td><a href="https://liedboek.liedbundels.nu/" target="_blank" rel="noopener">Liedboek Online</a> (handmatig, met Vrijburg-licentie)</td></tr>
           <tr><td>Lettertype</td><td>Roboto (Google Fonts), Calibri in .docx</td></tr>
         </tbody>
@@ -263,17 +269,18 @@
       <h3>Welke gegevens verwerkt deze tool?</h3>
       <p>Alleen wat u zelf invult: namen, thema, orde van dienst, collecte, agenda, foto’s, enzovoort.</p>
       <ul>
-        <li><strong>In uw browser</strong> — concepten worden lokaal bewaard (<code>localStorage</code> op uw eigen apparaat).</li>
-        <li><strong>Gedeelde links</strong> — ingevulde tekst wordt gecodeerd in de URL. Wie de link heeft, kan die gegevens lezen. Deel links alleen met betrokkenen.</li>
-        <li><strong>Foto’s</strong> — worden niet in gedeelde links gezet (te groot). Wel in het gedownloade .docx en in uw lokaal concept.</li>
+        <li><strong>In de cloud (Supabase)</strong> — bij Opslaan / delen wordt het concept bewaard onder een korte <code>id</code>. Wie de link heeft, kan die gegevens openen. Deel links alleen met betrokkenen.</li>
+        <li><strong>In uw browser</strong> — tussentijds kan een lokaal concept worden bewaard (<code>localStorage</code>), vooral voor herstel na een refresh.</li>
+        <li><strong>Foto’s</strong> — bij cloud-opslag mee in Supabase Storage; ook in het gedownloade .docx.</li>
+        <li><strong>Oude lange links</strong> (<code>?z=…</code>) — kunnen nog werken als fallback; daarin staat tekst gecodeerd in de URL.</li>
       </ul>
 
       <h3>Externe diensten</h3>
       <p>Bij gebruik van bepaalde knoppen raadpleegt uw browser externe sites:</p>
       <ul>
+        <li>Supabase — opslaan en laden van concepten en foto’s</li>
         <li>BijbelAPI — bijbelreferentie voor tekstophaling</li>
         <li>vrijburg.nl — agenda-import</li>
-        <li>TinyURL — verkorten van gedeelde links</li>
         <li>Liedboek Online — opent in een nieuw venster (eigen inlog Vrijburg)</li>
       </ul>
       <p class="muted">Deze diensten hebben eigen privacyvoorwaarden. Er worden geen wachtwoorden in deze tool opgeslagen.</p>
@@ -283,8 +290,9 @@
 
       <h3>Gegevens wissen</h3>
       <ul>
-        <li>Concept in de browser: knop <strong>Wis concept</strong> in de generator</li>
+        <li>Formulier + lokaal concept + cloud-koppeling in de URL: knop <strong>Wis concept</strong></li>
         <li>Browsergegevens: wis sitegegevens voor deze pagina in uw browserinstellingen</li>
+        <li>Cloud-records in Supabase: via het Supabase-dashboard (beheerder)</li>
       </ul>
     </div>
   </div>
