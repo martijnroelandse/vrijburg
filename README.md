@@ -70,6 +70,7 @@ Zie `HANDOVER.md` voor de volledige lijst. Recent toegevoegd:
 - Agenda importeren van vrijburg.nl
 - Concept opslaan in de browser (localStorage)
 - Nieuwsbrief-tekstveld met kopieerknop
+- Mailchimp cards-copy als platte tekst (zonder HTML, per card/box)
 - Overdenking naar bureau@vrijburg.nl (mailto)
 - Foto in liturgie (.docx) + download voor website
 

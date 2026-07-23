@@ -692,7 +692,11 @@
         <div class="field" style="grid-column: 1/-1">
           <label>Nieuwsbrief <span class="opt">– kort stukje voor de wekelijkse email</span></label>
           <textarea id="nieuwsbrief" rows="4" placeholder="Tekst over de komende dienst en het thema, voor in de nieuwsbrief…"></textarea>
-          <button type="button" class="btn-small" style="margin-top:8px" onclick="copyField('nieuwsbrief', 'Nieuwsbrieftekst gekopieerd')">Kopieer voor nieuwsbrief</button>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px">
+            <button type="button" class="btn-small" onclick="copyField('nieuwsbrief', 'Nieuwsbrieftekst gekopieerd')">Kopieer voor nieuwsbrief</button>
+            <button type="button" class="btn-small" onclick="copyMailchimpCards()">Kopieer voor Mailchimp cards</button>
+          </div>
+          <p class="comm-hint">Mailchimp-copy is platte tekst met losse card/box-blokken (geen HTML), zodat je per blok makkelijk kunt nabewerken.</p>
         </div>
       </div>
       <div class="row">
@@ -1314,6 +1318,66 @@ function copyField(id, okMsg) {
   }).catch(() => prompt('Kopieer deze tekst:', text));
 }
 
+function collectMailchimpCardsText() {
+  const datum = document.getElementById('datum').value;
+  const datumTekst = datum ? formatDatum(datum) : 'komende zondag';
+  const thema = document.getElementById('thema').value.trim();
+  const intro = document.getElementById('intro').value.trim();
+  const nieuwsbrief = document.getElementById('nieuwsbrief').value.trim();
+  const voorganger = document.getElementById('voorganger').value.trim();
+  const organist = document.getElementById('organist').value.trim();
+  const agendaKort = document.getElementById('agenda_kort').value.trim();
+  const agendaVer = document.getElementById('agenda_ver').value.trim();
+
+  const onderdelen = [];
+  onderdelen.push('MAILCHIMP CARDS (plak ieder blok in een aparte box/card)\n');
+
+  onderdelen.push(
+    '[CARD 1] KOP',
+    `Titel: Dienst op ${datumTekst}`,
+    thema ? `Subtitel: Thema: ${thema}` : 'Subtitel:',
+    ''
+  );
+
+  onderdelen.push(
+    '[CARD 2] INTRO / NIEUWSBRIEF',
+    nieuwsbrief || intro || 'Tekst: (nog invullen)',
+    ''
+  );
+
+  const details = [];
+  if (voorganger) details.push(`Voorganger: ${voorganger}`);
+  if (organist) details.push(`Organist: ${organist}`);
+  onderdelen.push('[CARD 3] PRAKTISCH');
+  onderdelen.push(details.length ? details.join('\n') : 'Praktisch: (nog invullen)');
+  onderdelen.push('');
+
+  onderdelen.push('[CARD 4] AGENDA');
+  if (agendaKort) {
+    onderdelen.push('Komende week:');
+    onderdelen.push(agendaKort);
+    onderdelen.push('');
+  }
+  if (agendaVer) {
+    onderdelen.push('Verder weg:');
+    onderdelen.push(agendaVer);
+    onderdelen.push('');
+  }
+  if (!agendaKort && !agendaVer) {
+    onderdelen.push('Agenda: (nog invullen)');
+    onderdelen.push('');
+  }
+
+  return onderdelen.join('\n').replace(/\n{3,}/g, '\n\n').trim();
+}
+
+function copyMailchimpCards() {
+  const text = collectMailchimpCardsText();
+  navigator.clipboard.writeText(text).then(() => {
+    setStatus('✓ Mailchimp cards als platte tekst gekopieerd', 'ok');
+  }).catch(() => prompt('Kopieer deze Mailchimp cards:', text));
+}
+
 function addOrde(type, content = '') {
   const id = Date.now() + Math.random();
   ordeItems.push({ id, type, content });
@@ -1819,7 +1883,7 @@ function buildFotoParagraph(dataUrl) {
         const type = dataUrl.startsWith('data:image/png') ? 'png' : 'jpg';
         resolve(new Paragraph({
           children: [new ImageRun({ data: bytes, transformation: { width, height }, type })],
-          spacing: { after: 80 },
+          spacing: { before: 0, after: 0, line: 240, lineRule: 'auto' },
         }));
       } catch (e) {
         console.warn('Foto kon niet in document:', e);
@@ -1843,12 +1907,14 @@ function generateDocx() {
 }
 
 async function generateDocxAsync() {
-  const { Document, Paragraph, TextRun, AlignmentType, TabStopType, TabStopPosition,
-          UnderlineType, convertInchesToTwip, PageBreak } = docx;
+  const { Document, Paragraph, TextRun, AlignmentType, convertInchesToTwip } = docx;
 
   const font = 'Calibri';
-  const sz = 22; // 11pt in half-points
-  const szSm = 20; // 10pt
+  const szBody = 32;   // 16pt — standaard liturgietekst (handmatige liturgie)
+  const szTitle = 48;  // 24pt — diensttitel
+  const szSub = 40;    // 20pt — thema / intro
+  const szSmall = 24;  // 12pt — fotocredit, voetnoten
+  const spacingTight = { before: 0, after: 0, line: 240, lineRule: 'auto' };
 
   const datum    = document.getElementById('datum').value;
   const aanvangstijd = document.getElementById('aanvangstijd').value.trim();
@@ -1883,29 +1949,52 @@ async function generateDocxAsync() {
 
   const datumDisplay = formatDatum(datum);
 
+  function paragraphOpts(opts = {}) {
+    return {
+      spacing: {
+        ...spacingTight,
+        before: opts.before ?? 0,
+        after: opts.after ?? 0,
+      },
+      alignment: opts.align || AlignmentType.LEFT,
+      indent: opts.indent ? { left: convertInchesToTwip(opts.indent) } : undefined,
+      ...opts.para,
+    };
+  }
+
+  function textRun(text, opts = {}) {
+    return new TextRun({
+      text: String(text),
+      font,
+      size: opts.sz || szBody,
+      bold: !!opts.bold,
+      italics: !!opts.italic,
+      break: opts.break || 0,
+    });
+  }
+
   // Helper: maak een simpele alinea
   function p(text, opts = {}) {
     const runs = [];
     if (Array.isArray(text)) {
-      text.forEach(t => runs.push(new TextRun({ text: t.t, font, size: t.sz || sz, bold: !!t.bold, italics: !!t.italic, break: t.break || 0 })));
+      text.forEach(t => runs.push(textRun(t.t, { sz: t.sz, bold: t.bold, italic: t.italic, break: t.break })));
     } else {
-      runs.push(new TextRun({ text: String(text), font, size: opts.sz || sz, bold: !!opts.bold, italics: !!opts.italic }));
+      runs.push(textRun(text, { sz: opts.sz, bold: opts.bold, italic: opts.italic }));
     }
+    return new Paragraph({ children: runs, ...paragraphOpts(opts) });
+  }
+
+  // Helper: alinea met meerdere runs
+  function pr(runs, opts = {}) {
     return new Paragraph({
-      children: runs,
-      spacing: { before: opts.before || 0, after: opts.after !== undefined ? opts.after : 80 },
-      alignment: opts.align || AlignmentType.LEFT,
-      indent: opts.indent ? { left: convertInchesToTwip(opts.indent) } : undefined,
-      ...opts.para
+      children: runs.map(r => textRun(r.t, { sz: r.sz, bold: r.bold, italic: r.italic })),
+      ...paragraphOpts(opts),
     });
   }
 
-  // Helper: lege regel
-  function empty() { return p(''); }
-
   // Helper: sectietitel (vetgedrukt)
   function sectie(text) {
-    return p(text, { bold: true, before: 120, after: 60 });
+    return p(text, { bold: true });
   }
 
   // Helper: meerdere regels tekst als alinea's
@@ -1914,21 +2003,33 @@ async function generateDocxAsync() {
     return text.split('\n').map(line => p(line.trim(), opts));
   }
 
-  // Helper: bemoediging/groet met tab voor uitlijning
+  function formatLiedLyricLine(line) {
+    const trimmed = line.trim();
+    if (!trimmed) return null;
+    if (/^refr\.?:?$/i.test(trimmed)) {
+      return pr([{ t: trimmed, italic: true }]);
+    }
+    const verse = trimmed.match(/^(\d+)\s+(.*)$/);
+    if (verse) {
+      return pr([{ t: verse[1] + ' ', bold: true }, { t: verse[2] }]);
+    }
+    return p(trimmed);
+  }
+
+  function pOrgelspel(text) {
+    const idx = text.indexOf(':');
+    if (idx > 0) {
+      return pr([
+        { t: text.slice(0, idx + 1), bold: true },
+        { t: text.slice(idx + 1), italic: true },
+      ]);
+    }
+    return p(text, { bold: true });
+  }
+
+  // Helper: bemoediging/groet (geen vet op labels, conform handmatige liturgie)
   function beurtzang(lines) {
-    return lines.map(line => new Paragraph({
-      children: [
-        new TextRun({ text: '\t', font, size: sz }),
-        new TextRun({ text: line.wie + ':', font, size: sz, bold: true }),
-        new TextRun({ text: '\t', font, size: sz }),
-        new TextRun({ text: line.tekst, font, size: sz }),
-      ],
-      spacing: { before: 0, after: 60 },
-      tabStops: [
-        { type: TabStopType.LEFT, position: 720 },   // 0.5 inch
-        { type: TabStopType.LEFT, position: 2160 },  // 1.5 inch
-      ]
-    }));
+    return lines.map(line => p(`${line.wie}: ${line.tekst}`));
   }
 
   // Orde van dienst regels
@@ -1937,26 +2038,30 @@ async function generateDocxAsync() {
     ordeItems.forEach(item => {
       const lines = item.content.split('\n').filter(l => l.trim());
       if (item.type === 'lied') {
-        // Eerste regel = lied-aanduiding (vet), rest = liedtekst
         if (lines.length > 0) {
-          paragraphs.push(p(lines[0], { bold: true, before: 60 }));
-          lines.slice(1).forEach(l => paragraphs.push(p(l, { indent: 0.3, sz: szSm })));
+          paragraphs.push(p(lines[0], { bold: true }));
+          lines.slice(1).forEach(l => {
+            const para = formatLiedLyricLine(l);
+            if (para) paragraphs.push(para);
+          });
         }
       } else if (item.type === 'lezing') {
         if (lines.length > 0) {
-          paragraphs.push(p('Lezing: ' + lines[0], { bold: false, before: 60 }));
-          // Bijbeltekst als die meegegeven is
-          lines.slice(1).forEach(l => paragraphs.push(p(l, { italic: true, sz: szSm })));
+          paragraphs.push(p('Lezing: ' + lines[0], { bold: true }));
+          lines.slice(1).forEach(l => paragraphs.push(p(l, { italic: true })));
         }
       } else if (item.type === 'inleiding') {
-        paragraphs.push(p('Inleiding', { before: 60 }));
-        lines.forEach(l => paragraphs.push(p(l, { indent: 0.3, sz: szSm })));
+        if (lines.length > 0) {
+          paragraphs.push(p(lines[0], { bold: true }));
+          lines.slice(1).forEach(l => paragraphs.push(p(l)));
+        } else {
+          paragraphs.push(p('Inleiding', { bold: true }));
+        }
       } else if (item.type === 'muziek') {
         const tekst = lines[0] ? 'Muziek: ' + lines[0] : 'Muziek';
-        paragraphs.push(p(tekst, { before: 60 }));
+        paragraphs.push(p(tekst, { bold: true }));
       } else {
-        // overig
-        lines.forEach(l => paragraphs.push(p(l, { before: 60 })));
+        lines.forEach(l => paragraphs.push(p(l, { bold: true })));
       }
     });
     return paragraphs;
@@ -1966,29 +2071,29 @@ async function generateDocxAsync() {
   const children = [];
 
   // HEADER — pagina 1 (conform handmatige liturgie)
-  children.push(p(`Dienst ${datumDisplay}`, { sz: 32, after: 0 }));
+  children.push(p(`Dienst ${datumDisplay}`, { sz: szTitle, align: AlignmentType.CENTER }));
 
   const dienstExtra = [];
   if (kinderkerk) dienstExtra.push('kinderkerk');
   if (cantorij) dienstExtra.push('Cantorij');
   if (dienstExtra.length) {
-    children.push(p('met ' + dienstExtra.join(' en '), { sz: 32, after: 40 }));
+    children.push(p('met ' + dienstExtra.join(' en '), { align: AlignmentType.CENTER }));
   } else if (bijzondereDienst) {
-    children.push(p(bijzondereDienst, { sz: 32, after: 40 }));
+    children.push(p(bijzondereDienst, { align: AlignmentType.CENTER }));
   }
 
-  if (thema) children.push(p(thema, { sz: 24, after: 40 }));
-  if (foto) children.push(p(foto, { italic: true, after: 40 }));
+  if (thema) children.push(p(thema, { sz: szSub, align: AlignmentType.CENTER }));
+  if (intro) children.push(...multiline(intro, { sz: szSub, italic: true, align: AlignmentType.CENTER }));
+  if (foto) children.push(p('         ' + foto, { sz: szSmall, italic: true }));
   if (fotoDataUrl) {
     const fotoPara = await buildFotoParagraph(fotoDataUrl);
     if (fotoPara) children.push(fotoPara);
   }
-  if (intro) children.push(...multiline(intro, { after: 60 }));
 
   const voorgangerLabel = /\s+en\s+/i.test(voorganger) ? 'Voorgangers' : 'Voorganger';
   if (voorganger) children.push(p(`${voorgangerLabel}: ${voorganger}`));
   if (organist) children.push(p(`Organist: ${organist}`));
-  if (lector) children.push(p(`Lector: ${lector}`));
+  if (lector) children.push(p(`Lector${/\s+en\s+/i.test(lector) ? 'en' : ''}: ${lector}`));
   if (cantorij) children.push(p('Cantorij'));
   if (kinderkerk && !dienstExtra.includes('kinderkerk')) {
     children.push(p(`Kinderkerk: ${kinderkerk}`));
@@ -1996,120 +2101,102 @@ async function generateDocxAsync() {
   [['vlv', vlv], ['vlh', vlh], ['vlz', vlz]].forEach(([key, val]) => {
     if (!val) return;
     const suffix = val === 'ja' ? '' : (val === '?' ? ' (gepland)' : ': ' + val);
-    children.push(p(VL_LABELS[key] + suffix, { sz: szSm, italic: true }));
+    children.push(p(VL_LABELS[key] + suffix, { italic: true }));
   });
   if (avondmaal) {
     const am = avondmaal === 'ja' ? 'Avondmaal' : 'Avondmaal: ' + avondmaal;
-    children.push(p(am, { sz: szSm }));
+    children.push(p(am));
   }
-  if (bijzonderheden) children.push(...multiline(bijzonderheden, { sz: szSm }));
-  children.push(empty());
+  if (bijzonderheden) children.push(...multiline(bijzonderheden));
 
-  children.push(p('De kerkdienst wordt opgenomen en uitgezonden via www.vrijburg.nl en'));
-  children.push(p('via www.kerkdienstgemist.nl'));
-  children.push(empty());
+  children.push(p('De kerkdienst wordt opgenomen en uitgezonden via www.vrijburg.nl en', { italic: true }));
+  children.push(p('via www.kerkdienstgemist.nl', { italic: true }));
 
   // OPENING
   children.push(sectie('Opening van de dienst'));
-  if (orgelOpen) children.push(p('Orgelspel: ' + orgelOpen));
-  else            children.push(p('Orgelspel'));
-  children.push(p('Luiden van de klokken, welkom en korte mededelingen'));
-  children.push(p('Aansteken van de kaars en Stilte'));
-  children.push(empty());
-  children.push(p('De gemeente gaat staan'));
-  children.push(p(lichtlied || 'Lichtlied: Licht dat wil ingaan tegen donkere nachten'));
-  children.push(empty());
+  if (orgelOpen) children.push(pOrgelspel('Orgelspel: ' + orgelOpen));
+  else            children.push(p('Orgelspel', { bold: true }));
+  children.push(p('Luiden van de klokken, welkom en korte mededelingen', { bold: true }));
+  children.push(p('Aansteken van de kaars en Stilte', { bold: true }));
+  children.push(p('De gemeente gaat staan', { italic: true }));
+  children.push(p(lichtlied || 'Lichtlied: Licht dat wil ingaan tegen donkere nachten', { bold: true }));
 
   // BEMOEDIGING
-  children.push(p('Bemoediging:', { bold: true }));
+  children.push(p('Bemoediging', { bold: true }));
   children.push(...beurtzang(BEMOEDIGING_LINES));
-  children.push(empty());
 
   // GROET
   children.push(p('Groet:', { bold: true }));
   children.push(...beurtzang(GROET_LINES));
-  children.push(empty());
-  children.push(p('De gemeente gaat zitten'));
-  children.push(p('Gebed'));
-  children.push(empty());
+  children.push(p('De gemeente gaat zitten', { italic: true }));
+  children.push(p('Gebed', { bold: true }));
 
   // ORDE VAN DIENST
   children.push(...renderOrdeItems());
-  children.push(empty());
 
   // OVERDENKING
-  children.push(p('Overdenking'));
-  children.push(p('Stilte'));
-  children.push(p('Muziek'));
-  children.push(empty());
+  children.push(p('Overdenking', { bold: true }));
+  children.push(p('Stilte', { bold: true }));
+  children.push(p('Muziek', { bold: true }));
 
   // VOORBEDEN
-  children.push(p('Voorbeden'));
+  children.push(p('Voorbeden', { bold: true }));
   children.push(p('Stil gebed, afgesloten met Onze Vader:'));
   ONZE_VADER.forEach(regel => children.push(p(regel, { indent: 0.5 })));
-  children.push(empty());
 
   // MEDEDELINGEN & COLLECTEN
   children.push(sectie('Mededelingen en collecten'));
   if (bloemen) children.push(p('De bloemen in deze dienst gaan naar ' + bloemen + '.'));
-  children.push(empty());
 
-  if (c1Thema) children.push(p('Collectethema: ' + c1Thema));
-  children.push(empty());
+  if (c1Thema) children.push(p('Collectethema: ' + c1Thema, { bold: true }));
 
   children.push(p('Eerste collecte: ' + c1Naam, { bold: true }));
   if (c1Tekst) children.push(...multiline(c1Tekst));
   if (c1Rek)   children.push(p('Rekening: ' + c1Rek));
-  children.push(empty());
 
   const c2Naam = c2Type === 'diaconie' ? 'onze diaconie' : 'onze gemeente';
   children.push(p('Tweede collecte: ' + c2Naam, { bold: true }));
   if (c2Tekst) children.push(...multiline(c2Tekst));
   if (c2Rek)   children.push(p('Rekening: ' + c2Rek + '.'));
-  children.push(empty());
 
   const qrType = c2Type === 'diaconie' ? 'diaconie' : 'gemeente';
-  children.push(p(QR_TEKST.replace('{type}', qrType), { sz: szSm }));
-  children.push(empty());
+  children.push(p(QR_TEKST.replace('{type}', qrType), { sz: szSmall }));
   children.push(new Paragraph({
     children: [
-      new TextRun({ text: 'vrijburg.nl/collecte 1', font, size: szSm }),
-      new TextRun({ text: '\t\t\t', font, size: szSm }),
-      new TextRun({ text: `vrijburg.nl/collecte${qrType}`, font, size: szSm }),
+      textRun('vrijburg.nl/collecte 1', { sz: szSmall }),
+      textRun('\t\t\t', { sz: szSmall }),
+      textRun(`vrijburg.nl/collecte${qrType}`, { sz: szSmall }),
     ],
-    spacing: { after: 80 }
+    ...paragraphOpts(),
   }));
-  children.push(empty());
 
   // SLOT
-  children.push(p('De gemeente gaat staan'));
-  children.push(p(slotlied ? 'Slotlied ' + slotlied : 'Slotlied'));
-  children.push(p('Uitzending en zegen'));
-  if (orgelSlot) children.push(p('Orgelspel: ' + orgelSlot));
-  else            children.push(p('Orgelspel'));
+  children.push(p('De gemeente gaat staan', { italic: true }));
+  children.push(p(slotlied ? 'Slotlied ' + slotlied : 'Slotlied', { bold: true }));
+  children.push(p('Uitzending en zegen', { bold: true }));
+  if (orgelSlot) children.push(pOrgelspel('Orgelspel: ' + orgelSlot));
+  else            children.push(p('Orgelspel', { bold: true }));
   children.push(p('Na de dienst is er gelegenheid met elkaar koffie of thee te drinken'));
-  children.push(empty());
 
   // AGENDA
   children.push(sectie('Agenda'));
-  children.push(p('[Aankondiging van evenementen in Vrijburg. Zie voor meer informatie altijd de website van Vrijburg en/of het meest recente (digitale) Maandblad]', { italic: true, sz: szSm }));
+  children.push(p('[Aankondiging van evenementen in Vrijburg. Zie voor meer informatie altijd de website van Vrijburg en/of het meest recente (digitale) Maandblad]', { italic: true, sz: szSmall }));
 
   const agendaGezamenlijk = [agendaKort, agendaVer].filter(Boolean).join('\n\n');
   if (agendaGezamenlijk) {
     children.push(...multiline(agendaGezamenlijk));
   }
-  children.push(empty());
 
   // SEPARATOR + FOOTER
   children.push(p('='.repeat(62), { sz: 18 }));
-  children.push(...multiline(FOOTER, { sz: szSm }));
+  children.push(...multiline(FOOTER, { sz: szSmall }));
 
   // ---- Maak document ----
   const doc = new Document({
     styles: {
       default: {
         document: {
-          run: { font: 'Calibri', size: sz }
+          run: { font: 'Calibri', size: szBody }
         }
       }
     },
@@ -2117,10 +2204,10 @@ async function generateDocxAsync() {
       properties: {
         page: {
           margin: {
-            top: convertInchesToTwip(1),
-            right: convertInchesToTwip(1.2),
-            bottom: convertInchesToTwip(1),
-            left: convertInchesToTwip(1.2),
+            top: 851,
+            right: 1021,
+            bottom: 851,
+            left: 964,
           }
         }
       },
