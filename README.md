@@ -67,6 +67,7 @@ Zie `HANDOVER.md` voor de volledige lijst. Recent toegevoegd:
 
 - Bijbelteksten automatisch ophalen bij lezingen (via BijbelAPI)
 - Deelbare link en mailto-knop voor dominees
+- Cloud-opslag via Supabase (`?id=...`) met knop Opslaan
 - Agenda importeren van vrijburg.nl
 - Concept opslaan in de browser (localStorage)
 - Nieuwsbrief-tekstveld met kopieerknop
