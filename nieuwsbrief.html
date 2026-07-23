@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nieuwsbrief / Mailchimp – Vrijburg</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --brand: #00a8db;
+      --brand-dark: #007aa3;
+      --brand-light: #e8f7fc;
+      --brand-mid: #99ddf0;
+      --border: #ddd;
+      --text: #222;
+      --muted: #666;
+      --radius: 6px;
+      --shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Roboto', 'Segoe UI', Arial, sans-serif;
+      font-size: 15px;
+      line-height: 1.5;
+      color: var(--text);
+      background: #f4fbfe;
+      min-height: 100vh;
+      padding-bottom: 100px;
+    }
+    header {
+      background: var(--brand);
+      color: white;
+      padding: 16px 32px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      box-shadow: 0 2px 8px rgba(0,122,163,0.25);
+    }
+    .header-logo img { height: 52px; width: auto; display: block; }
+    header h1 { font-size: 20px; font-weight: 500; }
+    header p { font-size: 12px; opacity: 0.9; margin-top: 3px; font-weight: 300; }
+    header a { color: inherit; }
+    main { max-width: 820px; margin: 24px auto; padding: 0 16px; }
+    .panel {
+      background: white;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      margin-bottom: 16px;
+      overflow: hidden;
+    }
+    .panel-h {
+      background: var(--brand-light);
+      border-bottom: 1px solid var(--brand-mid);
+      padding: 12px 18px;
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--brand-dark);
+    }
+    .panel-b { padding: 16px 18px; }
+    .row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+    input[type="text"] {
+      flex: 1;
+      min-width: 180px;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      font: inherit;
+    }
+    input[type="text"]:focus {
+      outline: none;
+      border-color: var(--brand);
+      box-shadow: 0 0 0 3px rgba(0,168,219,0.15);
+    }
+    .btn {
+      border: none;
+      border-radius: 4px;
+      padding: 10px 14px;
+      font: inherit;
+      font-weight: 500;
+      cursor: pointer;
+      background: var(--brand);
+      color: white;
+    }
+    .btn:hover { background: var(--brand-dark); }
+    .btn-sec {
+      background: white;
+      color: var(--brand-dark);
+      border: 1px solid var(--brand-mid);
+    }
+    .btn-sec:hover { background: var(--brand-light); }
+    .btn-small {
+      padding: 6px 10px;
+      font-size: 13px;
+      background: white;
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .btn-small:hover { border-color: var(--brand); color: var(--brand); }
+    .hint { font-size: 13px; color: var(--muted); margin-top: 10px; line-height: 1.45; }
+    .meta { font-size: 13px; color: var(--muted); margin-bottom: 12px; }
+    .meta strong { color: var(--text); }
+    .status { font-size: 13px; margin-left: 8px; }
+    .status.ok { color: #2e7d32; }
+    .status.err { color: #c62828; }
+    .toolbar { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+    .card-block {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 12px;
+      overflow: hidden;
+      background: #fafcfd;
+    }
+    .card-block-h {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      background: white;
+      border-bottom: 1px solid var(--border);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--brand-dark);
+    }
+    .card-block pre {
+      white-space: pre-wrap;
+      word-break: break-word;
+      padding: 12px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 13px;
+      line-height: 1.45;
+      color: var(--text);
+      margin: 0;
+    }
+    .empty {
+      padding: 28px 16px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 14px;
+    }
+    .foto-thumb {
+      max-width: 220px;
+      max-height: 140px;
+      border-radius: 4px;
+      display: block;
+      margin-top: 8px;
+    }
+    .bar {
+      position: fixed;
+      left: 0; right: 0; bottom: 0;
+      background: white;
+      border-top: 1px solid var(--border);
+      padding: 12px 16px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.06);
+    }
+    .bar-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+  </style>
+</head>
+<body>
+
+<header>
+  <a href="https://www.vrijburg.nl" target="_blank" rel="noopener" class="header-logo">
+    <img src="assets/logo-vrijburg.png" alt="Vrijburg">
+  </a>
+  <div>
+    <h1>Nieuwsbrief / Mailchimp</h1>
+    <p>
+      Zelfde dienst als de liturgie ·
+      <a href="index.html" id="link-liturgie">← Liturgie Generator</a> ·
+      <a href="info.html">Uitleg &amp; privacy</a>
+    </p>
+  </div>
+</header>
+
+<main>
+  <div class="panel">
+    <div class="panel-h">Dienst openen</div>
+    <div class="panel-b">
+      <div class="row">
+        <input type="text" id="short-id" placeholder="short_id uit de liturgie-link (bijv. a1b2c3d4)" autocomplete="off">
+        <button type="button" class="btn" onclick="openDienst()">Open</button>
+        <button type="button" class="btn-sec" onclick="reloadDienst()">Vernieuwen</button>
+        <span id="status-msg" class="status"></span>
+      </div>
+      <p class="hint">
+        Open dezelfde <code>?id=…</code> als in de Liturgie Generator. Plak elk blok hieronder in een aparte Mailchimp box/card (platte tekst, geen HTML).
+      </p>
+    </div>
+  </div>
+
+  <div class="panel" id="preview-panel">
+    <div class="panel-h">Mailchimp cards</div>
+    <div class="panel-b">
+      <div id="dienst-meta" class="meta" style="display:none"></div>
+      <div class="toolbar" id="card-toolbar" style="display:none">
+        <button type="button" class="btn-sec" onclick="copyAllCards()">Kopieer alle cards</button>
+      </div>
+      <div id="cards"></div>
+      <div id="empty-state" class="empty">Nog geen dienst geladen. Vul een id in of open een link met <code>?id=…</code>.</div>
+    </div>
+  </div>
+</main>
+
+<div class="bar">
+  <span class="hint" id="bar-hint" style="margin:0">Nieuwsbriefmaker · niet de liturgie-app</span>
+  <div class="bar-actions">
+    <a class="btn-sec" id="bar-liturgie" href="index.html" style="text-decoration:none;display:inline-block">Open in liturgie</a>
+    <button type="button" class="btn" onclick="copyAllCards()">Kopieer alle cards</button>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.8/dist/umd/supabase.min.js"></script>
+<script>
+const SUPABASE_URL = 'https://iabrbkirzsolwnuknbel.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlhYnJia2lyenNvbHdudWtuYmVsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ3OTU4MDIsImV4cCI6MjEwMDM3MTgwMn0.ojjiiwwAwb3eITwThJPXGgOk_XynghQUNZ_snDDe6iQ';
+const SUPABASE_FOTO_BUCKET = 'dienst-fotos';
+
+const sb = (() => {
+  const lib = (typeof supabase !== 'undefined') ? supabase : null;
+  const create = lib?.createClient || lib?.default?.createClient;
+  return create ? create(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+})();
+
+const NL_MAANDEN = ['januari','februari','maart','april','mei','juni','juli','augustus','september','oktober','november','december'];
+const NL_DAGEN = ['zondag','maandag','dinsdag','woensdag','donderdag','vrijdag','zaterdag'];
+
+let currentRow = null;
+let currentCards = [];
+
+function setStatus(msg, kind) {
+  const el = document.getElementById('status-msg');
+  el.textContent = msg || '';
+  el.className = 'status' + (kind ? ' ' + kind : '');
+}
+
+function formatDatum(val) {
+  if (!val) return '';
+  const d = new Date(val + 'T12:00:00');
+  return `${NL_DAGEN[d.getDay()]} ${d.getDate()} ${NL_MAANDEN[d.getMonth()]} ${d.getFullYear()}`;
+}
+
+function escapeHtml(s) {
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
+function getFotoPublicUrl(path) {
+  if (!sb || !path) return '';
+  const { data } = sb.storage.from(SUPABASE_FOTO_BUCKET).getPublicUrl(path);
+  return data?.publicUrl || '';
+}
+
+function buildCardsFromDienst(row) {
+  const data = row.data || {};
+  const datum = row.datum || data.datum || '';
+  const datumTekst = datum ? formatDatum(datum) : 'komende zondag';
+  const thema = (row.thema || data.thema || '').trim();
+  const nieuwsbrief = (data.nieuwsbrief || '').trim();
+  const intro = (data.intro || '').trim();
+  const voorganger = (data.voorganger || '').trim();
+  const organist = (data.organist || '').trim();
+  const aanvangstijd = (data.aanvangstijd || '').trim();
+  const bijzondere = (data.bijzondere_dienst || '').trim();
+  const cantorij = !!data.cantorij;
+  const kinderkerk = (data.kinderkerk || '').trim();
+  const agendaKort = (data.agenda_kort || '').trim();
+  const agendaVer = (data.agenda_ver || '').trim();
+  const c1Thema = (data.c1_thema || '').trim();
+  const c1Naam = (data.c1_naam || '').trim();
+  const c1Tekst = (data.c1_tekst || '').trim();
+  const c2Type = (data.c2_type || '').trim();
+  const c2Tekst = (data.c2_tekst || '').trim();
+  const fotoCredit = (row.foto_credit || data.foto_credit || '').trim();
+  const fotoPath = row.foto_path || '';
+
+  const cards = [];
+
+  // 1. KOP
+  {
+    const lines = [];
+    lines.push(`${bijzondere ? bijzondere + ' · ' : ''}${datumTekst}${aanvangstijd ? ' ' + aanvangstijd : ' 10.30 uur'}`);
+    if (thema) lines.push(`Thema: ${thema}`);
+    if (fotoCredit) lines.push(`Foto: ${fotoCredit}`);
+    cards.push({
+      key: 'kop',
+      title: 'CARD 1 · KOP',
+      body: lines.join('\n'),
+      hint: fotoPath ? 'Upload de foto apart in Mailchimp (zie miniatuur hieronder).' : '',
+      fotoUrl: getFotoPublicUrl(fotoPath),
+    });
+  }
+
+  // 2. INTRO
+  {
+    const tekst = nieuwsbrief || intro;
+    if (tekst) {
+      cards.push({
+        key: 'intro',
+        title: 'CARD 2 · INTRO / NIEUWSBRIEF',
+        body: tekst,
+      });
+    }
+  }
+
+  // 3. PRAKTISCH
+  {
+    const lines = [];
+    if (voorganger) lines.push(`Voorganger: ${voorganger}`);
+    if (organist) lines.push(`Muziek / organist: ${organist}`);
+    if (cantorij) lines.push('Met medewerking van de Cantorij');
+    if (kinderkerk) lines.push(`Kinderkerk: ${kinderkerk}`);
+    lines.push('De dienst is ook (live en na afloop) te volgen via www.vrijburg.nl/kerk-tv');
+    lines.push('Klik hier om naar de online kerk-tv uitzending te gaan');
+    lines.push('https://www.vrijburg.nl/kerk-tv');
+    cards.push({
+      key: 'praktisch',
+      title: 'CARD 3 · PRAKTISCH',
+      body: lines.join('\n'),
+    });
+  }
+
+  // 4. AGENDA
+  {
+    const lines = [];
+    if (agendaKort) {
+      lines.push('Komende week:');
+      lines.push(agendaKort);
+    }
+    if (agendaVer) {
+      if (lines.length) lines.push('');
+      lines.push('Verder weg:');
+      lines.push(agendaVer);
+    }
+    if (lines.length) {
+      lines.push('');
+      lines.push('Zie verder de Agenda op website. Tenzij anders aangegeven is de activiteit in Vrijburg.');
+      cards.push({
+        key: 'agenda',
+        title: 'CARD 4 · AGENDA',
+        body: lines.join('\n'),
+      });
+    }
+  }
+
+  // 5. COLLECTE
+  {
+    const lines = [];
+    if (c1Naam || c1Thema || c1Tekst) {
+      lines.push('Eerste collecte:');
+      if (c1Thema) lines.push(c1Thema);
+      if (c1Naam) lines.push(c1Naam);
+      if (c1Tekst) {
+        // kort houden voor mail: max ~400 chars
+        const kort = c1Tekst.length > 400 ? c1Tekst.slice(0, 397).trim() + '…' : c1Tekst;
+        lines.push(kort);
+      }
+      lines.push('https://www.vrijburg.nl/collecte1');
+    }
+    if (c2Type || c2Tekst) {
+      if (lines.length) lines.push('');
+      lines.push('Tweede collecte:');
+      lines.push(c2Type === 'gemeente' ? 'Gemeente' : 'Diaconie');
+      if (c2Tekst) {
+        const kort = c2Tekst.length > 280 ? c2Tekst.slice(0, 277).trim() + '…' : c2Tekst;
+        lines.push(kort);
+      }
+      lines.push(c2Type === 'gemeente'
+        ? 'https://www.vrijburg.nl/collectegemeente'
+        : 'https://www.vrijburg.nl/collectediaconie');
+    }
+    if (lines.length) {
+      cards.push({
+        key: 'collecte',
+        title: 'CARD 5 · COLLECTE',
+        body: lines.join('\n'),
+      });
+    }
+  }
+
+  return cards;
+}
+
+function allCardsText(cards) {
+  const parts = ['MAILCHIMP CARDS (plak ieder blok in een aparte box/card)', ''];
+  cards.forEach((c, i) => {
+    parts.push(`[${c.title}]`);
+    parts.push(c.body);
+    parts.push('');
+  });
+  return parts.join('\n').replace(/\n{3,}/g, '\n\n').trim();
+}
+
+function renderCards(cards) {
+  currentCards = cards;
+  const wrap = document.getElementById('cards');
+  const empty = document.getElementById('empty-state');
+  const toolbar = document.getElementById('card-toolbar');
+  wrap.innerHTML = '';
+
+  if (!cards.length) {
+    empty.style.display = '';
+    toolbar.style.display = 'none';
+    return;
+  }
+  empty.style.display = 'none';
+  toolbar.style.display = '';
+
+  cards.forEach((c, idx) => {
+    const div = document.createElement('div');
+    div.className = 'card-block';
+    div.innerHTML =
+      `<div class="card-block-h">` +
+        `<span>${escapeHtml(c.title)}</span>` +
+        `<button type="button" class="btn-small" data-idx="${idx}">Kopieer card</button>` +
+      `</div>` +
+      `<pre>${escapeHtml(c.body)}</pre>` +
+      (c.hint ? `<p class="hint" style="padding:0 12px 10px">${escapeHtml(c.hint)}</p>` : '') +
+      (c.fotoUrl ? `<div style="padding:0 12px 12px"><img class="foto-thumb" src="${escapeHtml(c.fotoUrl)}" alt="Dienstfoto"></div>` : '');
+    wrap.appendChild(div);
+  });
+
+  wrap.querySelectorAll('button[data-idx]').forEach(btn => {
+    btn.addEventListener('click', () => copyOneCard(Number(btn.getAttribute('data-idx'))));
+  });
+}
+
+function renderMeta(row) {
+  const el = document.getElementById('dienst-meta');
+  const data = row.data || {};
+  const thema = row.thema || data.thema || '—';
+  const datum = row.datum ? formatDatum(row.datum) : '—';
+  el.style.display = '';
+  el.innerHTML =
+    `<strong>id=${escapeHtml(row.short_id)}</strong> · ${escapeHtml(datum)} · ${escapeHtml(thema)} · status: ${escapeHtml(row.status || 'concept')}`;
+
+  const lit = `index.html?id=${encodeURIComponent(row.short_id)}`;
+  document.getElementById('link-liturgie').href = lit;
+  document.getElementById('bar-liturgie').href = lit;
+}
+
+async function loadDienst(shortId) {
+  if (!sb) throw new Error('Supabase niet geladen');
+  const id = (shortId || '').trim();
+  if (!id) throw new Error('Vul een short_id in');
+
+  setStatus('Laden…', '');
+  const { data, error } = await sb
+    .from('diensten')
+    .select('id, short_id, datum, thema, status, data, foto_path, foto_credit, updated_at')
+    .eq('short_id', id)
+    .maybeSingle();
+  if (error) throw error;
+  if (!data) throw new Error('Dienst niet gevonden');
+
+  currentRow = data;
+  document.getElementById('short-id').value = data.short_id;
+  try {
+    history.replaceState(null, '', `?id=${encodeURIComponent(data.short_id)}`);
+  } catch (_) {}
+
+  renderMeta(data);
+  renderCards(buildCardsFromDienst(data));
+  setStatus('✓ Geladen', 'ok');
+}
+
+function openDienst() {
+  loadDienst(document.getElementById('short-id').value).catch(err => {
+    console.error(err);
+    setStatus(err.message || String(err), 'err');
+  });
+}
+
+function reloadDienst() {
+  const id = currentRow?.short_id || document.getElementById('short-id').value;
+  loadDienst(id).catch(err => {
+    console.error(err);
+    setStatus(err.message || String(err), 'err');
+  });
+}
+
+function copyText(text) {
+  return navigator.clipboard.writeText(text).catch(() => {
+    prompt('Kopieer deze tekst:', text);
+  });
+}
+
+function copyOneCard(idx) {
+  const c = currentCards[idx];
+  if (!c) return;
+  copyText(c.body).then(() => setStatus('✓ Card gekopieerd: ' + c.title, 'ok'));
+}
+
+function copyAllCards() {
+  if (!currentCards.length) {
+    setStatus('Geen cards om te kopiëren', 'err');
+    return;
+  }
+  copyText(allCardsText(currentCards)).then(() =>
+    setStatus('✓ Alle cards gekopieerd', 'ok')
+  );
+}
+
+document.getElementById('short-id').addEventListener('keydown', e => {
+  if (e.key === 'Enter') openDienst();
+});
+
+(function init() {
+  const id = new URLSearchParams(location.search).get('id');
+  if (id) {
+    document.getElementById('short-id').value = id;
+    openDienst();
+  }
+})();
+</script>
+
+</body>
+</html>
