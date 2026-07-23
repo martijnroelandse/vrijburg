@@ -1,0 +1,1765 @@
+X-Antivirus: avg (VPS 26061908)
+X-Antivirus-Status: Clean
+Return-path: <bounce-mc.us5_10844695.5129097-7868a1eb57@mail146.suw161.rsgsv.net>
+Original-recipient: rfc822;martijnroelandse@me.com
+Received: from p00-icloudmta-smtpin-us-central-1n-100-percent-39 by p108-mailgateway-smtp-55d77d8c6f-4sjrm (mailgateway 2624B114)
+	with SMTP id eb48d62d-7c0c-4576-a099-9e835a5d1681 
+	for <martijnroelandse@me.com>; Fri, 19 Jun 2026 18:36:19 GMT
+X-ICLOUD-MAIL-BWL: 1
+X-Apple-MoveToFolder: INBOX 
+X-Apple-Action: WL/INBOX
+X-Apple-UUID: eb48d62d-7c0c-4576-a099-9e835a5d1681
+Received: from mail146.suw161.rsgsv.net (mail146.suw161.rsgsv.net [198.2.175.146])
+	by p00-icloudmta-smtpin-us-central-1n-100-percent-39 (Postfix) with ESMTPS id B8175C000DF
+	for <martijnroelandse@me.com>; Fri, 19 Jun 2026 18:36:14 +0000 (UTC)
+X-ICL-Info: GAtbRVYDBVFFSlVFSgQEUFUKE0oWX1gHVQoPB0UBD1pbS0hGTwUYU0FPRhIcDVQNABcFElVdVUwAClMoSQAOVkFPX0JWBQdQTElfQFUHDlRNGFcSGgUBIhgYDxtJBABMBgwRRk4BGBAGHhUBVl5TFlUfAkoOQl8IFwwUEFZeWkIHGlsaGUJCCx8XFBgdXFcMEQoDNxVVGAEaFEYfHVxZXxgYDxtJBABMBgwRRk4BGBAGHhUBVl5TFlUJEgVFXVcLGUhSQVZDQxVET1dZCkNREQNXCBIMEFIGSA8UHhJSQxASVwgbWF1fBkhFAEZPB1dQQ01eQ09UAVpHSQQWSQFXVhQYVVlPCABaFEgDFU0HGFBFS1BHTgEPU01KUEdPHlJWE0xXR0FWBFdbTF5BQAdVAxc5CxYRXAdWQ1cVAg8BAFNbCxUQC0YYDBANWA==
+X-ICL-Score: 2.33303322422
+Authentication-Results: bimi.icloud.com; bimi=none
+X-ARC-Info: policy=fail; arc=none; r1=-20; r2=0
+Authentication-Results: arc.icloud.com; arc=none
+Authentication-Results: dmarc.icloud.com; dmarc=pass header.from=vrijburg.nl
+X-DMARC-Policy: v=DMARC1; p=quarantine; pct=100; rua=mailto:webmaster@vrijburg.nl; ruf=mailto:webmaster@vrijburg.nl
+X-DMARC-Info: pass=pass; dmarc-policy=quarantine; s=r0; d=r1; pdomain=vrijburg.nl
+Authentication-Results: dkim-verifier.icloud.com; dkim=pass header.d=vrijburg.nl header.i=webmaster@vrijburg.nl header.b=bx6EZC9n
+Received-SPF: pass (spf.icloud.com: domain of bounce-mc.us5_10844695.5129097-7868a1eb57@mail146.suw161.rsgsv.net designates 198.2.175.146 as permitted sender) receiver=spf.icloud.com; client-ip=198.2.175.146; helo=mail146.suw161.rsgsv.net; envelope-from=bounce-mc.us5_10844695.5129097-7868a1eb57@mail146.suw161.rsgsv.net
+Authentication-Results: spf.icloud.com; spf=pass (spf.icloud.com: domain of bounce-mc.us5_10844695.5129097-7868a1eb57@mail146.suw161.rsgsv.net designates 198.2.175.146 as permitted sender) smtp.mailfrom=bounce-mc.us5_10844695.5129097-7868a1eb57@mail146.suw161.rsgsv.net
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vrijburg.nl; s=k3;
+	t=1781894173; x=1782164173; i=webmaster@vrijburg.nl;
+	bh=MasSFR5NEQg7ADghVF1LcRV5dBboxPvJ1lTFRGfaqbU=;
+	h=Subject:From:Reply-To:To:Date:Message-ID:X-MC-User:Feedback-ID:
+	 List-ID:List-Unsubscribe:List-Unsubscribe-Post:Content-Type:
+	 MIME-Version:CC:Date:Subject:From;
+	b=bx6EZC9nrozO4seeVOQ0txJUs4NzDm9b8T6/nQqUpE3q+3naRRqixir19/rLq4paK
+	 knIo8fBTPUNpWl8fxBpIfYu51cjTxfAxN1n201GX8+9nG6B2dns4dIR3pBzaZW7PHN
+	 ofx6rcjJz04dnLn6HY3C1xBhGeQ9BKxsNMH6Doq+WcXm2B7dTvufHH7FBD3xi1tDZe
+	 tpfG1KzAtp7oXY4suUhGnedqiBrNqC6usXQPCHRTBHfdL8R+OGM1+96YC1cUeNnZZY
+	 /t+PW+tjafrsgBSaxfEicBeD/zf/Y9HOO6IYoEpL0Y5IPat09ESRZ6B+L2H13KAJzH
+	 0GRcm6uB74whw==
+Received: from localhost (localhost [127.0.0.1])
+	by mail146.suw161.rsgsv.net (Mailchimp) with ESMTP id 4ghmWd0nlgzLfHt80
+	for <martijnroelandse@me.com>; Fri, 19 Jun 2026 18:36:13 +0000 (UTC)
+Subject: =?utf-8?Q?A.s.=20zondag=3A=20Vrijburg=20laat=20Fernande=20van=20Tets=20voorgaan?=
+From: Vrijburg Amsterdam <webmaster@vrijburg.nl>
+Reply-To: =?utf-8?Q?Vrijburg=20Amsterdam?= <webmaster@vrijburg.nl>
+To: <martijnroelandse@me.com>
+Date: Fri, 19 Jun 2026 18:36:12 +0000
+Message-ID: <f177a264847d7820ba11a4aa3.7868a1eb57.20260619183607.d4f5109f25.58687cab@mail146.suw161.rsgsv.net>
+X-Mailer: Mailchimp Mailer - **CIDd4f5109f257868a1eb57**
+X-Campaign: mailchimpf177a264847d7820ba11a4aa3.d4f5109f25
+X-campaignid: mailchimpf177a264847d7820ba11a4aa3.d4f5109f25
+X-Report-Abuse: Please report abuse for this campaign here: https://mailchimp.com/contact/abuse/?u=f177a264847d7820ba11a4aa3&id=d4f5109f25&e=7868a1eb57
+X-MC-User: f177a264847d7820ba11a4aa3
+Feedback-ID: 10844695:10844695.5129097:us5:mc
+List-ID: f177a264847d7820ba11a4aa3mc list <f177a264847d7820ba11a4aa3.240277.list-id.mcsv.net>
+X-Accounttype: pd
+List-Unsubscribe: <https://vrijburg.us5.list-manage.com/unsubscribe?u=f177a264847d7820ba11a4aa3&id=a70e1c3885&t=h&e=7868a1eb57&c=d4f5109f25>, <mailto:unsubscribe-mc.us5_f177a264847d7820ba11a4aa3.d4f5109f25-7868a1eb57@unsubscribe.mailchimpapp.net?subject=unsubscribe>
+List-Unsubscribe-Post: List-Unsubscribe=One-Click
+Content-Type: multipart/alternative; boundary="_----------=_MCPart_581609836"
+MIME-Version: 1.0
+X-MANTSH: 1TFkXGxwYEQpZRBdlRF9AWkdYaQVcSxEKWU0XZEVETxEKWUkXGnEaEBp3BhseH3E
+ YHRAadwYbHQYaEQpZXhdsbHkRCkNOF2NLWxJNfEtkR3NkUB5dTkJYWFhDTXNjfW9bT19pHXxdE
+ QpYXBcZBBoEHxIFGxoaBB0aBBsTEgQbHBAbHhofGhEKXlkXQktQaRwRCk1cFwcZGh4RCkxaF0Z
+ tTUF/EQpMRhdNaxEKQ1oXGxMSBBgEGx0fBBseHBEKQl4XGxEKQkYXZmcFE317c00Se0wRCkJHF
+ 2xbXW5mbGIYbXhnEQpCXBcbEQpeThcbEQpCSxduYXIfHFhFaWZHYBEKQkkXbmFyHxxYRWlmR2A
+ RCkJFF2lrSXBJHh9PE35/EQpCThduYXIfHFhFaWZHYBEKQkwXbkJ5XFtwXEITZXoRCkJsF2l8G
+ U1nHEVPYFlaEQpCQBdvXV18E0VzU3kaYREKQlgXbWdtYGwZcGEdWHsRCkJ4F2tnGnloSR1LXWx
+ eEQpaWBcbHhEKcGcXenkcGgFkfwFCaXkQGhEKcGgXbhx7UB9tQHlSZ2UQBx0cEQpwaBdpeHp+Q
+ 08dfVlLYBAHHRwRCnBoF2tuU1BPfHhtb0hbEBoRCnBoF2VSHVppRlBCc1hQEAccExEKcH8Xbk0
+ TfExISRpGS20QBx0YEQpwXxdhTklaHVgZeWMFXRAaEQpwfRdhYW0SGB8cQ1oBARAaEQpwZxdpW
+ 3NSGhhnXUAcHxAaEQpwfxdvcF16XGhEU2xlGBAHHRwRCnBfF2dAGh9sbUwYUmF5EBoRCnB9F2k
+ BT01/b1lBfnJnEBoRCnBfF2lHb1MSfGNlRgVTEBoRCnB9F2llcFxgBUMZZkt6EBoRCnBfF2IfW
+ Bxcb1NCYR8ZEBoRCnB9F21AHX5zZGwfbxxCEBoRCnBfF2IbWlNufkV/QEAFEBoRCnB9F2B8Zkh
+ 6e3JoQ29tEBoRCnBfF2l6GAV6UENyYB9LEAcZGhEKcH0XZxJjG3pbU1l8YWcQGhEKcF8XY01aU
+ nJ5Ylp+TFIQGhEKcH0XblsdT3xkBWd5QgEQGhEKcF8XY1JrbkJfbnIZRxsQBx4SEQpwfRdiXFt
+ OexNdX0N8RBAaEQpwXxdsehh9YGRaG1ttZBAaEQpwfRdoHEBAGH9MbkRBQRAaEQpwXxdkG01rY
+ W8TehJ/chAaEQpwfRdtXG1nAUZSHAV4UBAaEQpwfxdtQ2VkGGZITWF/GhAHGxoYEQpwXxdrRU4
+ FHGBsUENaARAHEhwRCnB9F2tFTgUcYGxQQ1oBEAcSHBEKcH8XZ0lDemAScFIBYmgQBxIfEQpwX
+ xdkfE1hRWRBX1pbThAHEh4RCnB9F2R8TWFFZEFfWltOEAcSHhEKcF8XZWRgaGVJTVtaAW8QBxM
+ fEQpwfRd6SRoafU5zSQEdRRAHHBwRCnBfF2Z/THJHcmlfbgFAEBoRCnB9F21PQVsFbF5DfW1kE
+ BoRCnB9F2VsE3pCUEFaSXoSEBoRCnBsF21FZkJLHGZkaRpFEBoRCm1+FxoRClhNF0sR
+X-Proofpoint-GUID: Iaq8gVaNmYNz4wdhrrrigYIWEqeuC7Vw
+X-Authority-Info: v=2.4 cv=ZYoQ98VA c=1 sm=1 tr=0 ts=6a358c1f b=1
+ cx=c_apl:c_pps a=GaH+VaU6gNpNsbgKDM53YA==:117 a=GaH+VaU6gNpNsbgKDM53YA==:17
+ a=FelO9ux0wxsA:10 a=_Yaxip1i1oYA:10 a=5KLPUuaC_9wA:10 a=EODM5y-5NdwA:10
+ a=9DvhAHx2yrWFMPxQWpQA:9 a=5obicqMlAAAA:8 a=pGLkceISAAAA:8 a=xOd6jRPJAAAA:8
+ a=JmhL_RV-AAAA:8 a=_Q7Yd8VS6CTQZRkxNbYA:9 a=lqcHg5cX4UMA:10 a=QEXdDO2ut3YA:10
+ a=3g80flMcAAAA:8 a=IoeQSOh0AAAA:8 a=7mQTu3lUAAAA:8 a=BMm3dKm5AAAA:8
+ a=lJjz8N4HAAAA:8 a=SSmOFEACAAAA:8 a=DmIq51vtAAAA:8 a=449LNJWCMXey7VJrRncA:9
+ a=0TB9Pm9auHlTEmf_:21 a=gKO2Hq4RSVkA:10 a=_W_S_7VecoQA:10
+ a=Ru97nHiPDtp4odn3vKgu:22 a=3urWGuTZa-U-TZ_dHwj2:22 a=zHLE2jnfhNzAW3bdPdKa:22
+ a=_8hIsfcHj5p18W2rccZg:22 a=S36jo6Fu-THethb9GBYi:22 cc=prm
+X-Proofpoint-ORIG-GUID: Iaq8gVaNmYNz4wdhrrrigYIWEqeuC7Vw
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjE5MDE3OCBTYWx0ZWRfXwo9SllJQJWwx
+ ZIAFM5JJGos6NYkgxFts4OcOkm1dl77n3jlOg/XHf6Lll5R3ALWurTGKDUxHEPioEcQHPKFs2HY
+ fGvcM7M7RMyv/mzoRZpuQggzlEL937QFeuD1F5ttse0jHkuahb/dsj0btU82On9HKtVyEGzwLtO
+ klAKjJWx8U/cOByvlnGCwnI8ItC0KjodyW+RyF0T0kvESrUGVj5gFz1VfGhs3cTDx2QWgZzmpH3
+ NiAkpi+Dnb0+wfE4sGz+ruEcAlN6QtwT/Vy3VV/p/eREs5Yu4/MQiUAL7qBhFU2s0G2jn0iqFIC
+ AxDhWGiWG/niDsEvMr4s/c2kbfN8gLnhiO6VfbeyjBF0nkKNUScOUqq/q38Sagnf67G8p+RK9+a
+ B0jkqsTDhvdrbuwMYnkVLwgfv74oXedzgcCx8ScJEKj1qKTCpuxwumKmR3YmmY/A7xtUXEnn
+X-JNJ: AAAAAAABQluK6p/Dg3hE0UyvAltSwiOXHPPb9qJ5C5zW1Nhx2C5ERcyoyl5kxqbfubF3g1TRaXVyCZLzFIDMFpSmBiU5JFm4raD0tnZ1EE/0D7OszclO7ASjE3qIcPX6S4sNUKIwbO6lfTja0t8xBk2VRvXxWrr9hEk+qhn1me3K54m6sP4M10VgWlE3mGk2pghjhzr2IVjTku0hc72pMQP1c9NjpfZSKQUBU2MNAHVvVy5Pyrc7WrfVlPWpbGfA5I90GptI8VKaDwOgOuWoKRrDAwIXvpBxyGFONQ5kTtW+q32dbrphrD8CO4oPny3FfySfgb+sYIqVeENNbC5Ff+fVdPXJJHLWY11rDiwJnrRvGHgm8SmD8GlI5yZNi+BhWxzEmYsZbkGiAasE06sNLOgiRvW/hlByKdzIZqpH/S1iEC3EobsQRPkLPS+8yvLdyofi8C3KvT+ot93L2lU3yBmu1w0PKxdJ1OvvqCVGzk7VVreBSY9PV9gxspWBv458hpR6vrItbM4dn9uihpffC7/qh8dmeI5D+ZZb0Y7oyX86VPKzGCiNH6lEMOpUEw23E13eTYcyLSligs1tErhKz+qTD/nPioG5MHEJg4JX7SkuK1h8k7zh5JcHm1imAyEh/zj3DkfU2d9Hy1Mful7dcEdRKsAZXIxSqm1vGrYRf93goCBIEkj77+FcAnApZFF0k5pVt279j/29Cop1m9LiPsZPdaQiARN9+YrV6+wNv5nvJttNtn+Yb5HoqozmWnphQbqnNtTncdAEoN42C+ufxgH7pEwYgNeTra9w/c5XIk5OSOpgx2BGnSD5QBkgXzteQcsg8FgZpsHuzth8Hb2+gmaVt0Glm6wnfn5FzSA6BGZagsFv70V7FLgmCpjucO4vaRDpZitM2huwP7X7QVqlkd7vpiSEo7iRfB+iS/k51PeT39qCr9dEp9fqm0sZ8ARfs+tqWDwdH+lO4/bfc4YDuS1Yk0Azf8Oyp0lLwp8rvl8Tou4MIMxVIsFINRGpL+18B438jTiYS1Ruvd+PXqKJVPVFKkgm7PeRi7VY4eP02UpTd9cEkr537NUdUdozPH35NWQoTaIB3f/j8vqrg0fck6WsqPP0cBbpP/JNBqWIc+e6p9Xi0Cr28RB8n+hitFyk9Illcx0=
+
+This is a multi-part message in MIME format
+
+--_----------=_MCPart_581609836
+Content-Type: text/plain; charset="utf-8"; format="fixed"
+Content-Transfer-Encoding: quoted-printable
+
+Voorganger is ds. Rachelle van Andel
+
+Kinderkerk Nieuwsbrief
+Is deze e-mail niet goed leesbaar? Bekijk het in uw browser (https://mailc=
+hi.mp/7a5988502d4c/5n2f6kfiau-5129097?e=3D7868a1eb57)
+Het is enige tijd geleden=2C maar hierbij weer een nieuwe kinderkerknieuws=
+brief om iedereen helemaal bij te praten over de volgende dingen:
+* 0-100 dienst aanstaande zondag 9 november
+* Kerst
+* Whatsapp-groep
+* Tieners
+* Data kinderkerk 2021 / 2022
+
+0-100 dienst aanstaande zondag 9 november
+We lezen dit trimester het verhaal van Jona. Inmiddels zijn we met de kind=
+erkerk (en u ook in de kerkzaal) aangekomen in Ninev=C3=A9. Jona heeft dan=
+ toch maar geprofeteerd en zowaar=2C het heeft effect. De hele stad zit in=
+ zak en as en bekeert zich. Met resultaat=2C want de stad wordt niet verwo=
+est. Maar dit is niet het einde van het verhaal. Er is nog een hoofdstuk.=
+ En over Jona 4 gaan we het de volgende keer hebben met de kinderen. Jona=
+ is sensatiebewust op een berg gaan zitten=2C met uitzicht op Ninev=C3=A9=
+=2C in afwachting van de verwoesting van Ninev=C3=A9. Maar er komt geen ve=
+rwoesting. Op 7 november gaan we kijken hoe Jona daarop reageert.
+
+Kerst
+Vorig jaar hebben we met de hulp van jullie allemaal een geweldige kerstfi=
+lm gemaakt. Dit jaar kunnen we (althans daar gaan we van uit) weer gewoon=
+ een buitengewoon kerstspel spelen in de kerk=2C met het podium en alles e=
+rbij. Annemieke heeft recent een mailtje uitgestuurd met de vraag welke ki=
+nderen (uit Vertelgroep en Gespreksgroep) mee willen doen aan het kerstspe=
+l. Dat betekent meedoen aan de eerste en de generale repetitie=2C en tusse=
+ndoor je tekst (niet zo heel lang) leren=2C en natuurlijk meedoen aan het=
+ kerstspel zelf! We hebben al heel wat reacties mogen ontvangen en het bel=
+ooft weer een mooi spektakel te worden.
+
+Mocht je nog niet hebben gereageerd en je wil graag meedoen=2C wil je Anne=
+mieke dan een mailtje sturen (a.vanderveen.avdv@gmail.com (mailto:a.vander=
+veen.avdv@gmail.com?subject=3DKerst) )?
+
+Onze tweede vraag over de kerst heeft te maken met de planning.
+
+De eerste repetitie van het kerstspel is op zondag 12 december tijdens de=
+ kerkdienst. We gaan de rollen verdelen en de teksten van het kerstspel do=
+ornemen.
+
+De tweede repetitie is moeilijk in te plannen: de kerstvakantie begint off=
+icieel pas op 25 december=2C maar dan moeten we de generale repetitie al a=
+chter de rug hebben!
+We willen jullie vragen om door te geven op welke momenten op vrijdag 24 d=
+ecember jullie kinderen al kunnen oefenen: sommige scholen geven de 24e al=
+ vrij=2C sommige hebben altijd de middag voor de vakantie vrij. Hoe zit da=
+t bij jullie:
+- kunnen jullie kinderen vanaf 14.00 in de kerk repeteren?
+- of tussen 15 en 17 uur?
+- of na 16.00 uur?
+- of op een ander moment?
+Willen jullie dit ook laten weten?
+
+Mocht je 1 van de repetities niet kunnen=2C dan mag je nog altijd mee doen=
+ uiteraard!
+Whatsapp-groep
+Om wat sneller en director contact te houden met elkaar zouden we met de o=
+uders van de kinderkerk-kinderen graag een Whatsapp-groep willen maken. We=
+ horen graag of julllie daaraan mee willen doen. Opgeven kan bij Annemieke=
+ (a.vanderveen.avdv@gmail.com (mailto:a.vanderveen.avdv@gmail.com?subject=
+=3DKerst) ).
+
+Tieners
+Sinds afgelopen zomer is Jasper gestart met de tienergroep=2C voor iederee=
+n tussen de 12 en 15 jaar (vanaf de brugklas). De tieners zijn natuurlijk=
+ altijd welkom in de dienst=2C maar op 7 november geldt dit in het in het=
+ bijzonder! Na de dienst gaan we onder het genot van een kop thee en iets=
+ lekkers in gesprek over de dienst: wat was er raar? Wat was er mooi? Waar=
+om doen we de dingen zoals we ze doen? Daarbij schuift een zeer ervaren ge=
+meentelid aan. Mocht dit bevallen=2C dan doen we dit in het vervolg een ke=
+er per maand.
+
+Verder graag jullie mening over het volgende. Ik zou de kelder graag =C3=
+=A9=C3=A9n middag per twee weken na schooltijd open willen stellen voor de=
+ tieners: om bij te kletsen=2C samen huiswerk te maken en te ontspannen. A=
+an het einde van de middag gaan we dan aan de slag om samen de dienst van=
+ 6 februari voor te bereiden. Afsluitend is er dan de gelegenheid om iets=
+ te eten. Ook zal ik in de donkere maanden ervoor zorgen dat een ieder die=
+ dat wil met de auto naar huis gebracht wordt.
+
+Zouden jullie mij kunnen appen of mailen of jullie dit een idee vinden=2C=
+ en zo ja=2C welke middag geschikt zou zijn? (jasperdijkman@xs4all.nl (mai=
+lto:jasperdijkman@xs4all.nl)  / 0641760555)
+
+Data kinderkerk 2021 / 2022
+
+Voor de volledigheid delen we nog een keertje de data voor de kinderkerk d=
+it seizoen. We hopen jullie dan te zien!
+* 7 november 2021=2C
+* 25 december 2021 (kerst)=2C
+* 6 februari 2022=2C
+* 6 maart 2021=2C
+* 10 april 2022 (palmpasen)=2C
+* 17 april 2022 (pasen)=2C
+* 15 mei 2022=2C
+* 5 juni 2022 (pinksteren)=2C
+* 3 juli 2022 (jaarafsluiting).
+
+Mediacommissie Vrijburg (https://us.list-manage.com/17SNHQB22yA?e=3D7868a1eb57&c2id=3Dd575a91cad5d5ad3c6a64ad38aee97e2)
+
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+** (https://us.list-manage.com/U4KssmRWNTB?e=3D7868a1eb57&c2id=3Dd575a91cad5d5ad3c6a64ad38aee97e2)
+** Volg ons op Facebook (https://us.list-manage.com/bYQqCc8rIWe?e=3D7868a1eb57&c2id=3Dd575a91cad5d5ad3c6a64ad38aee97e2)
+** (https://us.list-manage.com/14vNl1o4tQ3?e=3D7868a1eb57&c2id=3Dd575a91cad5d5ad3c6a64ad38aee97e2)
+** Volg ons op Twitter (https://us.list-manage.com/14vf68zca7z?e=3D7868a1eb57&c2id=3Dd575a91cad5d5ad3c6a64ad38aee97e2)
+** (https://us.list-manage.com/tAq18_oKh4O?e=3D7868a1eb57&c2id=3Dd575a91cad5d5ad3c6a64ad38aee97e2)
+** Onze website (https://us.list-manage.com/384fYwUXYcd?e=3D7868a1eb57&c2id=3Dd575a91cad5d5ad3c6a64ad38aee97e2)
+Copyright =C2=A9 2026 Vrijzinnig Centrum Vrijburg Amsterdam=2C All rights=
+ reserved.
+ U heeft eerder aangegeven ge=C3=AFnteresseerd te zijn in nieuws van Vrijb=
+urg en/of de Kinderkerk.
+
+Ons adres:
+Vrijzinnig Centrum Vrijburg Amsterdam
+Diepenbrockstraat 46
+Amsterdam=2C NH 1077 WE
+Netherlands
+Pas ** hier (https://vrijburg.us5.list-manage.com/profile?u=3Df177a264847d=
+7820ba11a4aa3&id=3Da70e1c3885&e=3D7868a1eb57&c=3Dd4f5109f25)
+uw Vrijburg nieuwsbrieven abonnement aan. Wilt u helemaal geen enkele nieu=
+wsbrief meer van Vrijburg ontvangen=2C klik dan ** hier (https://vrijburg.=
+us5.list-manage.com/unsubscribe?u=3Df177a264847d7820ba11a4aa3&id=3Da70e1c3=
+885&t=3Db&e=3D7868a1eb57&c=3Dd4f5109f25)
+--_----------=_MCPart_581609836
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+<!DOCTYPE html><html xmlns=3D"http://www.w3.org/1999/xhtml" xmlns:v=3D"urn=
+:schemas-microsoft-com:vml" xmlns:o=3D"urn:schemas-microsoft-com:office:of=
+fice"><head>
+<!--[if gte mso 15]>
+<xml>
+<o:OfficeDocumentSettings>
+<o:AllowPNG/>
+<o:PixelsPerInch>96</o:PixelsPerInch>
+</o:OfficeDocumentSettings>
+</xml>
+<![endif]-->
+<meta charset=3D"UTF-8" />
+<meta http-equiv=3D"X-UA-Compatible" content=3D"IE=3Dedge" />
+<meta name=3D"viewport" content=3D"width=3Ddevice-width=2C initial-scale=
+=3D1" />
+<title>A.s. zondag: Vrijburg laat Fernande van Tets voorgaan</title>
+<link rel=3D"preconnect" href=3D"https://fonts.googleapis.com" />
+<link rel=3D"preconnect" href=3D"https://fonts.gstatic.com" crossorigin=3D=
+"" />
+<!--[if !mso]><!--><link rel=3D"stylesheet" type=3D"text/css" id=3D"newGo=
+ogleFontsStatic" href=3D"https://fonts.googleapis.com/css?family=3DRoboto:=
+400=2C400i=2C700=2C700i=2C900=2C900i" /><!--<![endif]--><style>img{-ms-in=
+terpolation-mode:bicubic;}
+table=2C td{mso-table-lspace:0pt;mso-table-rspace:0pt;}
+=2EmceStandardButton=2C .mceStandardButton td=2C .mceStandardButton td a{mso=
+-hide:all!important;}
+p=2C a=2C li=2C td=2C blockquote{mso-line-height-rule:exactly;}
+p=2C a=2C li=2C td=2C body=2C table=2C blockquote{-ms-text-size-adjust:100=
+%;-webkit-text-size-adjust:100%;}
+=2EmcnPreviewText{display:none!important;}
+=2EbodyCell{margin:0 auto;padding:0;width:100%;}
+=2EExternalClass=2C .ExternalClass p=2C .ExternalClass td=2C .ExternalClass=
+ div=2C .ExternalClass span=2C .ExternalClass font{line-height:100%;}
+=2EReadMsgBody=2C .ExternalClass{width:100%;}
+a[x-apple-data-detectors]{color:inherit!important;text-decoration:none!im=
+portant;font-size:inherit!important;font-family:inherit!important;font-wei=
+ght:inherit!important;line-height:inherit!important;}
+body{height:100%;margin:0;padding:0;width:100%;background:#ffffff;}
+p{margin:0;padding:0;}
+table{border-collapse:collapse;}
+td=2C p=2C a{word-break:break-word;}
+h1=2C h2=2C h3=2C h4=2C h5=2C h6{display:block;margin:0;padding:0;}
+img=2C a img{border:0;height:auto;outline:none;text-decoration:none;}
+a[href^=3D"tel"]=2C a[href^=3D"sms"]{color:inherit;cursor:default;text-d=
+ecoration:none;}
+=2EmceColumn .mceButtonLink=2C
+            .mceColumn-1 .mceButtonLink=2C
+            .mceColumn-2 .mceButtonLink=2C
+            .mceColumn-3 .mceButtonLink=2C
+            .mceColumn-4 .mceButtonLink{min-width:30px;}
+div[contenteditable=3D"true"]{outline:0;}
+=2EmceImageBorder{display:inline-block;}
+=2EmceImageBorder img{border:0!important;}
+body=2C #bodyTable{background-color:rgb(244=2C 244=2C 244);}
+=2EmceText=2C .mcnTextContent=2C .mceLabel{font-family:Arial=2C "Helvetica N=
+eue"=2C Helvetica=2C sans-serif;}
+=2EmceText=2C .mcnTextContent=2C .mceLabel{color:rgb(0=2C 0=2C 0);}
+=2EmceText h1=2C .mceText p=2C .mceText label=2C .mceText input{margin-botto=
+m:0;}
+=2EmceSpacing-24 .mceInput + .mceErrorMessage{margin-top:-12px;}
+=2EmceSpacing-12 .mceInput + .mceErrorMessage{margin-top:-6px;}
+=2EmceInput{background-color:transparent;border:2px solid rgb(208=2C 208=2C=
+ 208);width:60%;color:rgb(77=2C 77=2C 77);display:block;}
+=2EmceInput[type=3D"radio"]=2C .mceInput[type=3D"checkbox"]{float:left;mar=
+gin-right:12px;display:inline;width:auto!important;}
+=2EmceLabel > .mceInput{margin-bottom:0;margin-top:2px;}
+=2EmceLabel{display:block;}
+=2EmceText p=2C .mcnTextContent p{color:rgb(0=2C 0=2C 0);font-family:Arial=
+=2C "Helvetica Neue"=2C Helvetica=2C sans-serif;font-size:16px;font-weight=
+:normal;line-height:1.5;mso-line-height-alt:150%;text-align:left;letter-sp=
+acing:0;direction:ltr;margin:0;}
+=2EmceText h1=2C .mcnTextContent h1{color:rgb(0=2C 0=2C 0);font-family:"Helv=
+etica Neue"=2C Helvetica=2C Arial=2C Verdana=2C sans-serif;font-size:31px;=
+font-weight:bold;line-height:1.5;mso-line-height-alt:150%;text-align:left;=
+letter-spacing:0;direction:ltr;}
+=2EmceText a=2C .mcnTextContent a{color:rgb(43=2C 170=2C 223);font-style:nor=
+mal;font-weight:normal;text-decoration:underline;direction:ltr;}
+p.mcePastedContent=2C h1.mcePastedContent=2C h2.mcePastedContent=2C h3.mce=
+PastedContent=2C h4.mcePastedContent{text-align:left;}
+#d43 p=2C #d43 h1=2C #d43 h2=2C #d43 h3=2C #d43 h4=2C #d43 ul=2C #d1 p=2C=
+ #d1 h1=2C #d1 h2=2C #d1 h3=2C #d1 h4=2C #d1 ul{text-align:center;}
+@media only screen and (max-width: 480px) {
+body=2C table=2C td=2C p=2C a=2C li=2C blockquote{-webkit-text-size-adjust=
+:none!important;}
+body{width:100%!important;min-width:100%!important;}
+body.mobile-native{-webkit-user-select:none;user-select:none;transition:tr=
+ansform 0.2s ease-in;transform-origin:top center;}
+colgroup{display:none;}
+=2EmceLogo img=2C .mceImage img=2C .mceSocialFollowIcon img{height:auto!impo=
+rtant;}
+=2EmceWidthContainer{max-width:660px!important;}
+=2EmceColumn=2C .mceColumn-2{display:block!important;width:100%!important;}
+=2EmceColumn-forceSpan{display:table-cell!important;width:auto!important;}
+=2EmceColumn-forceSpan .mceButton a{min-width:0!important;}
+=2EmceReverseStack{display:table;width:100%;}
+=2EmceColumn-1{display:table-footer-group;width:100%!important;}
+=2EmceColumn-3{display:table-header-group;width:100%!important;}
+=2EmceColumn-4{display:table-caption;width:100%!important;}
+=2EmceKeepColumns .mceButtonLink{min-width:0;}
+=2EmceBlockContainer=2C .mceSpacing-24{padding-right:16px!important;padding-=
+left:16px!important;}
+=2EmceBlockContainerE2E{padding-right:0;padding-left:0;}
+=2EmceImage=2C .mceLogo{width:100%!important;height:auto!important;}
+=2EmceText img{max-width:100%!important;}
+=2EmceFooterSection .mceText=2C .mceFooterSection .mceText p{font-size:16px!=
+important;line-height:140%!important;}
+=2EmceText p{margin:0;font-size:16px!important;line-height:1.5!important;mso=
+-line-height-alt:150%;}
+=2EmceText h1{font-size:31px!important;line-height:1.5!important;mso-line-he=
+ight-alt:150%;}
+=2EbodyCell{padding-left:16px!important;padding-right:16px!important;}
+=2EmceButtonContainer{width:fit-content!important;max-width:fit-content!impo=
+rtant;}
+=2EmceButtonLink{padding:18px 28px!important;font-size:16px!important;}
+#b1 .mceTextBlockContainer=2C #b12 .mceTextBlockContainer=2C #b24=2C #b25=
+=2C #b26 .mceTextBlockContainer=2C #b39 .mceTextBlockContainer=2C #b120 .m=
+ceTextBlockContainer=2C #b128=2C #b143=2C #b144=2C #b208 .mceTextBlockCont=
+ainer=2C #b300 .mceTextBlockContainer=2C #b347=2C #b353=2C #b354 .mceTextB=
+lockContainer=2C #b389 .mceTextBlockContainer=2C #b391 .mceTextBlockContai=
+ner=2C #b392 .mceTextBlockContainer=2C #b400 .mceTextBlockContainer=2C #b4=
+02=2C #b409{padding:12px 24px!important;}
+#gutterContainerId-1=2C #gutterContainerId-12=2C #gutterContainerId-26=2C=
+ #gutterContainerId-39=2C #gutterContainerId-43=2C #gutterContainerId-120=
+=2C #gutterContainerId-208=2C #gutterContainerId-300=2C #gutterContainerId=
+-354=2C #gutterContainerId-389=2C #gutterContainerId-391=2C #gutterContain=
+erId-392=2C #gutterContainerId-400{padding:0!important;}
+#b4=2C #b16=2C #b33=2C #b35=2C #b207{padding:12px 0!important;}
+#b4 table=2C #b16 table{margin-right:auto!important;float:none!important;}
+#b24 table=2C #b25 table=2C #b128 table=2C #b143 table=2C #b144 table=2C #=
+b347 table=2C #b409 table{float:none!important;margin:0 auto!important;}
+#b24 .mceButtonContainer=2C #b25 .mceButtonContainer=2C #b347 .mceButtonCo=
+ntainer{width:100%!important;max-width:100%!important;}
+#b24 .mceButtonLink=2C #b25 .mceButtonLink=2C #b128 .mceButtonLink=2C #b14=
+3 .mceButtonLink=2C #b144 .mceButtonLink=2C #b347 .mceButtonLink=2C #b409=
+ .mceButtonLink{padding-top:16px!important;padding-bottom:16px!important;f=
+ont-size:16px!important;}
+#b33 table=2C #b35 table=2C #b207 table=2C #b353 table=2C #b390 table=2C #=
+b399 table=2C #b402 table{margin-left:auto!important;margin-right:auto!imp=
+ortant;float:none!important;}
+#b43 .mceTextBlockContainer=2C #b390=2C #b399{padding:12px 16px!important;=
+}
+#b128 .mceButtonContainer{width:50%!important;max-width:50%!important;}
+}
+@media only screen and (max-width: 640px) {
+=2EmceClusterLayout td{padding:4px!important;}
+}</style></head>
+<body>
+<!--
+-->
+<!--[if !gte mso 9]><!----><span class=3D"mcnPreviewText" style=3D"displa=
+y:none; font-size:0px; line-height:0px; max-height:0px; max-width:0px; opa=
+city:0; overflow:hidden; visibility:hidden; mso-hide:all;">Voorganger is d=
+s. Rachelle van Andel</span><!--<![endif]-->
+<!--
+-->
+<div style=3D"display: none; max-height: 0px; overflow: hidden;">=CD=8F=
+ =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=
+=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=
+=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C=
+ =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=
+=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0=
+ =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=
+=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=
+=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87=
+  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87 =
+ =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=
+=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F=
+ =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=
+=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=
+=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C=
+ =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=
+=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0=
+ =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=
+=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=
+=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87=
+  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87 =
+ =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=
+=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F=
+ =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=
+=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=
+=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C=
+ =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=
+=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0=
+ =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=
+=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=
+=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87=
+  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87 =
+ =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=
+=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F=
+ =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=
+=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=
+=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C=
+ =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=
+=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0=
+ =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=
+=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=
+=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87=
+  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87 =
+ =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=
+=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F=
+ =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=
+=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=
+=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C=
+ =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=
+=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0=
+ =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=
+=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=
+=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87=
+  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87 =
+ =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=
+=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F=
+ =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=
+=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=
+=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C=
+ =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=
+=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0=
+ =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=
+=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=
+=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87=
+  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87 =
+ =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=
+=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F=
+ =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=
+=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=
+=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C=
+ =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=
+=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0=
+ =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=
+=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=
+=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87=
+  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87 =
+ =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=
+=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F=
+ =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=
+=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=
+=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C=
+ =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=
+=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0=
+ =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=
+=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=
+=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87=
+  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87 =
+ =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=
+=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F=
+ =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=
+=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=
+=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C=
+ =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=
+=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0=
+ =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=
+=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=
+=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87=
+  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87 =
+ =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=
+=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F=
+ =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=
+=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=
+=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C=
+ =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=
+=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0=
+ =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=
+=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=
+=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87=
+  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87 =
+ =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=
+=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F=
+ =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=
+=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=
+=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C=
+ =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=
+=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0=
+ =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=
+=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=
+=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87=
+  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87 =
+ =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=
+=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F=
+ =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=
+=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=
+=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C=
+ =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=
+=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0=
+ =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=
+=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=
+=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87=
+  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87 =
+ =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=
+=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F=
+ =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=
+=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=
+=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C=
+ =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=
+=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0=
+ =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=
+=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=
+=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87=
+  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87 =
+ =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=
+=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F=
+ =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=
+=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=
+=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C=
+ =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=
+=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0=
+ =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=
+=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=
+=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87=
+  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87 =
+ =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87=C2=
+=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD=
+ =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=
+=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD=
+ =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=
+=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD=
+ =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=
+=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD=
+ =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=
+=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD=
+ =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=
+=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD=
+ =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=
+=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD=
+ =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=
+=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD=
+ =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=
+=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD=
+ =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=
+=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD=
+ =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=
+=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD=
+ =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=
+=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD=
+ =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=
+=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD=
+ =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=
+=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD</div><div styl=
+e=3D"display:none;"><img src=3D"https://us.list-manage.com/JpKf60k1NSPalc7=
+Eug10LB?e=3D7868a1eb57&c2id=3Dd575a91cad5d5ad3c6a64ad38aee97e2" height=3D"1" width=3D"1" st=
+yle=3D"display:none;" alt=3D""></div>
+<center>
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" height=3D"100%" wi=
+dth=3D"100%" id=3D"bodyTable" role=3D"presentation" style=3D"background-co=
+lor: rgb(244=2C 244=2C 244);">
+<tbody><tr>
+<td class=3D"bodyCell" align=3D"center" valign=3D"top">
+<table id=3D"root" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=
+=3D"100%" role=3D"presentation"><tbody data-block-id=3D"3" class=3D"mceWra=
+pper"><tr><td style=3D"background-color:#f4f4f4" valign=3D"top" align=3D"c=
+enter" class=3D"mceSection3"><!--[if (gte mso 9)|(IE)]><table align=3D"ce=
+nter" border=3D"0" cellspacing=3D"0" cellpadding=3D"0" width=3D"660" style=
+=3D"width:660px;"><tr><td><![endif]--><table border=3D"0" cellpadding=3D"=
+0" cellspacing=3D"0" width=3D"100%" style=3D"max-width:660px" role=3D"pres=
+entation"><tbody><tr><td style=3D"background-color:#ffffff" valign=3D"top"=
+ class=3D"mceWrapperInner"><table align=3D"center" border=3D"0" cellpaddin=
+g=3D"0" cellspacing=3D"0" width=3D"100%" role=3D"presentation" data-block-=
+id=3D"2"><tbody><tr class=3D"mceRow"><td style=3D"background-position:cent=
+er;background-repeat:no-repeat;background-size:cover" valign=3D"top"><tabl=
+e border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" role=3D"=
+presentation"><tbody><tr><td style=3D"padding-top:0;padding-bottom:0" vali=
+gn=3D"top" class=3D"mceColumn" id=3D"mceColumnId--15" data-block-id=3D"-15=
+" colspan=3D"12" width=3D"100%"><table border=3D"0" cellpadding=3D"0" cell=
+spacing=3D"0" width=3D"100%" role=3D"presentation"><tbody><tr><td style=3D=
+"padding-top:0;padding-bottom:0;padding-right:0;padding-left:0" valign=3D"=
+top" class=3D"mceGutterContainer" id=3D"gutterContainerId-1"><table border=
+=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" style=3D"border-=
+collapse:separate" role=3D"presentation"><tbody><tr><td style=3D"padding-t=
+op:0;padding-bottom:0;padding-right:0;padding-left:0;border:0;border-radiu=
+s:0" valign=3D"top" id=3D"b1"><table width=3D"100%" style=3D"border:0;back=
+ground-color:transparent;border-radius:0;border-collapse:separate"><tbody>=
+<tr><td style=3D"padding-left:24px;padding-right:24px;padding-top:12px;pad=
+ding-bottom:12px" class=3D"mceTextBlockContainer"><div data-block-id=3D"1"=
+ class=3D"mceText" id=3D"d1" style=3D"width:100%"><p class=3D"last-child">=
+<a href=3D"https://mailchi.mp/7a5988502d4c/5n2f6kfiau-5129097?e=3D7868a1eb57=
+" target=3D"_blank"><span style=3D"font-size: 11px">Is deze e-mail niet go=
+ed leesbaar? Bekijk het in uw browser</span></a></p></div></td></tr></tbod=
+y></table></td></tr></tbody></table></td></tr></tbody></table></td></tr></=
+tbody></table></td></tr></tbody></table></td></tr></tbody></table><!--[if=
+ (gte mso 9)|(IE)]></td></tr></table><![endif]--></td></tr></tbody><tbody=
+ data-block-id=3D"41" class=3D"mceWrapper"><tr><td style=3D"background-col=
+or:#f4f4f4" valign=3D"top" align=3D"center" class=3D"mceSection41"><!--[i=
+f (gte mso 9)|(IE)]><table align=3D"center" border=3D"0" cellspacing=3D"0"=
+ cellpadding=3D"0" width=3D"660" style=3D"width:660px;"><tr><td><![endif]=
+--><table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%"=
+ style=3D"max-width:660px" role=3D"presentation"><tbody><tr><td style=3D"b=
+ackground-color:#ffffff" valign=3D"top" class=3D"mceWrapperInner"><table a=
+lign=3D"center" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"=
+100%" role=3D"presentation" data-block-id=3D"40"><tbody><tr class=3D"mceRo=
+w"><td style=3D"background-position:center;background-repeat:no-repeat;bac=
+kground-size:cover" valign=3D"top"><table border=3D"0" cellpadding=3D"0" c=
+ellspacing=3D"0" width=3D"100%" role=3D"presentation"><tbody><tr><td style=
+=3D"padding-top:0;padding-bottom:0" valign=3D"top" class=3D"mceColumn" id=
+=3D"mceColumnId--17" data-block-id=3D"-17" colspan=3D"12" width=3D"100%"><=
+table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" role=
+=3D"presentation"><tbody><tr><td style=3D"background-color:transparent;pad=
+ding-top:12px;padding-bottom:12px;padding-right:0;padding-left:0;border:0;=
+border-radius:0" valign=3D"top" class=3D"mceImageBlockContainer" align=3D"=
+left" id=3D"b4"><div><!--[if !mso]><!--></div><table align=3D"left" borde=
+r=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" style=3D"border=
+-collapse:separate;margin:0;vertical-align:top;max-width:100%;width:100%;h=
+eight:auto" role=3D"presentation" data-testid=3D"image-4"><tbody><tr><td s=
+tyle=3D"border:0;border-radius:0;margin:0" valign=3D"top"><img alt=3D"" sr=
+c=3D"https://mcusercontent.com/f177a264847d7820ba11a4aa3/images/926c0fe5-b=
+8f7-9fec-48fd-42bec792fb02.jpeg" width=3D"660" height=3D"auto" style=3D"di=
+splay:block;max-width:100%;height:auto;border-radius:0" class=3D"imageDrop=
+Zone mceImage" data-block-id=3D"4" /></td></tr></tbody></table><div><!--<!=
+[endif]--></div><div>
+<!--[if mso]>
+<span class=3D"mceImageBorder" style=3D"border:0;border-width:2px;vertical=
+-align:top;margin:0"><img role=3D"presentation" class=3D"imageDropZone mce=
+Image" src=3D"https://mcusercontent.com/f177a264847d7820ba11a4aa3/images/9=
+26c0fe5-b8f7-9fec-48fd-42bec792fb02.jpeg" alt=3D"" width=3D"660" height=3D=
+"auto" style=3D"display:block;max-width:660px;width:660px;height:auto"/></=
+span>
+<![endif]-->
+</div></td></tr><tr><td style=3D"background-color:transparent;padding-top:=
+12px;padding-bottom:12px;padding-right:24px;padding-left:24px;border:0;bor=
+der-radius:0" valign=3D"top" class=3D"mceImageBlockContainer" align=3D"cen=
+ter" id=3D"b353"><div><!--[if !mso]><!--></div><table align=3D"center" bo=
+rder=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"60%" style=3D"bord=
+er-collapse:separate;margin:0;vertical-align:top;max-width:60%;width:60%;h=
+eight:auto" role=3D"presentation" data-testid=3D"image-353"><tbody><tr><td=
+ style=3D"border:0;border-radius:0;margin:0" valign=3D"top"><img alt=3D""=
+ src=3D"https://mcusercontent.com/f177a264847d7820ba11a4aa3/images/b6920af=
+7-f2b9-2e46-09a2-6ac6f7df6698.png" width=3D"367.2" height=3D"auto" style=
+=3D"display:block;max-width:100%;height:auto;border-radius:0" class=3D"ima=
+geDropZone mceImage" data-block-id=3D"353" /></td></tr></tbody></table><di=
+v><!--<![endif]--></div><div>
+<!--[if mso]>
+<span class=3D"mceImageBorder" style=3D"border:0;border-width:2px;vertical=
+-align:top;margin:0"><img role=3D"presentation" class=3D"imageDropZone mce=
+Image" src=3D"https://mcusercontent.com/f177a264847d7820ba11a4aa3/images/b=
+6920af7-f2b9-2e46-09a2-6ac6f7df6698.png" alt=3D"" width=3D"367.2" height=
+=3D"auto" style=3D"display:block;max-width:367.2px;width:367.2px;height:au=
+to"/></span>
+<![endif]-->
+</div></td></tr><tr><td style=3D"background-color:transparent;padding-top:=
+12px;padding-bottom:12px;padding-right:24px;padding-left:24px;border:0;bor=
+der-radius:0" valign=3D"top" class=3D"mceImageBlockContainer" align=3D"cen=
+ter" id=3D"b402"><div><!--[if !mso]><!--></div><table align=3D"center" bo=
+rder=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"59%" style=3D"bord=
+er-collapse:separate;margin:0;vertical-align:top;max-width:59%;width:59%;h=
+eight:auto" role=3D"presentation" data-testid=3D"image-402"><tbody><tr><td=
+ style=3D"border:0;border-radius:0;margin:0" valign=3D"top"><img alt=3D""=
+ src=3D"https://mcusercontent.com/f177a264847d7820ba11a4aa3/images/4ff93dc=
+6-4a05-cba7-3a6f-95f7831777f9.jpg" width=3D"361.08" height=3D"auto" style=
+=3D"display:block;max-width:100%;height:auto;border-radius:0" class=3D"ima=
+geDropZone mceImage" data-block-id=3D"402" /></td></tr></tbody></table><di=
+v><!--<![endif]--></div><div>
+<!--[if mso]>
+<span class=3D"mceImageBorder" style=3D"border:0;border-width:2px;vertical=
+-align:top;margin:0"><img role=3D"presentation" class=3D"imageDropZone mce=
+Image" src=3D"https://mcusercontent.com/f177a264847d7820ba11a4aa3/images/4=
+ff93dc6-4a05-cba7-3a6f-95f7831777f9.jpg" alt=3D"" width=3D"361.08" height=
+=3D"auto" style=3D"display:block;max-width:361.08px;width:361.08px;height:=
+auto"/></span>
+<![endif]-->
+</div></td></tr><tr><td style=3D"padding-top:0;padding-bottom:0;padding-ri=
+ght:0;padding-left:0" valign=3D"top" class=3D"mceGutterContainer" id=3D"gu=
+tterContainerId-354"><table border=3D"0" cellpadding=3D"0" cellspacing=3D"=
+0" width=3D"100%" style=3D"border-collapse:separate" role=3D"presentation"=
+><tbody><tr><td style=3D"padding-top:0;padding-bottom:0;padding-right:0;pa=
+dding-left:0;border:0;border-radius:0" valign=3D"top" id=3D"b354"><table w=
+idth=3D"100%" style=3D"border:0;background-color:transparent;border-radius=
+:0;border-collapse:separate"><tbody><tr><td style=3D"padding-left:24px;pad=
+ding-right:24px;padding-top:12px;padding-bottom:12px" class=3D"mceTextBloc=
+kContainer"><div data-block-id=3D"354" class=3D"mceText" id=3D"d354" style=
+=3D"width:100%"><p><strong>Zondag 21 juni 10:30 uur: <span style=3D"color:=
+rgb(0=2C 0=2C 0);"><span style=3D"font-size: 12pt"><span style=3D"font-fam=
+ily: Aptos=2C Aptos_EmbeddedFont=2C Aptos_MSFontService=2C Calibri=2C Helv=
+etica=2C sans-serif">Vrijburg laat Fernande van Tets voorgaan </span></spa=
+n></span></strong></p><p><em><span style=3D"color:rgb(0=2C 0=2C 0);"><span=
+ style=3D"font-size: 12pt"><span style=3D"font-family: Aptos=2C Aptos_Embe=
+ddedFont=2C Aptos_MSFontService=2C Calibri=2C Helvetica=2C sans-serif">Die=
+nst rondom wereldvluchtelingendag </span></span></span></em></p><p><br /><=
+/p><p class=3D"mcePastedContent"><span style=3D"color:rgb(0=2C 0=2C 0);"><=
+span style=3D"font-size: 12pt"><span style=3D"font-family: Aptos=2C Aptos_=
+EmbeddedFont=2C Aptos_MSFontService=2C Calibri=2C Helvetica=2C sans-serif"=
+>Zondag spreekt Fernande van Tets de overdenking uit in Vrijburg. Fernande=
+ (1985) werkte vanaf 2011 jarenlang als Midden-Oosten correspondent. Ze de=
+ed uitvoerig verslag van de situatie van (Syrische) vluchtelingen=2C eerst=
+ in de regio en daarna in Europa. Over haar tijd bij de Verenigde Naties t=
+ijdens de oorlog in Syrie schreef ze het boek Vier Seizoenen in Damascus.=
+ Als Midden-Oosten expert is ze regelmatig te gast op de Nederlandse radio=
+ en televisie.</span></span></span></p><p class=3D"mcePastedContent"><br /=
+></p><p class=3D"mcePastedContent"><span style=3D"color:rgb(0=2C 0=2C 0);"=
+><span style=3D"font-size: 12pt"><span style=3D"font-family: Aptos=2C Apto=
+s_EmbeddedFont=2C Aptos_MSFontService=2C Calibri=2C Helvetica=2C sans-seri=
+f">Fernande zal op een persoonlijke manier vertellen over de situatie van=
+ vluchtelingen in Libanon als gevolg van de laatste oorlog met Isra=C3=ABl=
+=2E Ook zal ze praktische handvatten bieden hoe je hier in Nederland vluchte=
+lingen kan helpen met je tijd en kennis.</span></span></span></p><p class=
+=3D"mcePastedContent"><br /></p><p class=3D"mcePastedContent"><span style=
+=3D"color:rgb(0=2C 0=2C 0);"><span style=3D"font-size: 12pt"><span style=
+=3D"font-family: Aptos=2C Aptos_EmbeddedFont=2C Aptos_MSFontService=2C Cal=
+ibri=2C Helvetica=2C sans-serif">In de dienst zullen ook bekend maken wat=
+ de deelnemers van Vrijburg die meelopen met de nacht van de vluchteling h=
+ebben opgehaald. </span></span></span></p><p class=3D"mcePastedContent"><b=
+r /></p><p class=3D"mcePastedContent last-child"><strong><span style=3D"co=
+lor:rgb(0=2C 0=2C 0);"><span style=3D"font-size: 12pt"><span style=3D"font=
+-family: Aptos=2C Aptos_EmbeddedFont=2C Aptos_MSFontService=2C Calibri=2C=
+ Helvetica=2C sans-serif">Kinderen zijn welkom! Er is geen aparte kinderke=
+rk=2C maar kinderen kunnen achter in de kerk plaatsnemen en mogen iets mak=
+en voor kinderen met een vluchtelingachtergrond =C2=A0in het AZC in Nederl=
+and. </span></span></span></strong></p></div></td></tr></tbody></table></t=
+d></tr></tbody></table></td></tr><tr><td style=3D"padding-top:0;padding-bo=
+ttom:0;padding-right:0;padding-left:0" valign=3D"top" class=3D"mceGutterCo=
+ntainer" id=3D"gutterContainerId-300"><table border=3D"0" cellpadding=3D"0=
+" cellspacing=3D"0" width=3D"100%" style=3D"border-collapse:separate" role=
+=3D"presentation"><tbody><tr><td style=3D"padding-top:0;padding-bottom:0;p=
+adding-right:0;padding-left:0;border:0;border-radius:0" valign=3D"top" id=
+=3D"b300"><table width=3D"100%" style=3D"border:0;background-color:transpa=
+rent;border-radius:0;border-collapse:separate"><tbody><tr><td style=3D"pad=
+ding-left:24px;padding-right:24px;padding-top:12px;padding-bottom:12px" cl=
+ass=3D"mceTextBlockContainer"><div data-block-id=3D"300" class=3D"mceText"=
+ id=3D"d300" style=3D"width:100%"><p style=3D"line-height: 0; mso-line-hei=
+ght-alt: 0%;"><br /></p><p class=3D"last-child">Voorganger is ds. Rachelle=
+ van Andel<span style=3D"background-color: transparent">=2C en de muzikale=
+ omlijsting wordt verzorgd door Jan Pieter Lanooy op het orgel. De dienst=
+ is ook (live en na afloop) te volgen via=C2=A0</span><a href=3D"https://u=
+s.list-manage.com/bs9_ZAWxV4W?e=3D7868a1eb57&c2id=3Dd575a91cad5d5ad3c6a64ad38aee97e2" targe=
+t=3D"_blank" style=3D"background-color: transparent;"><span style=3D"backg=
+round-color: transparent">www.vrijburg.nl/kerk-tv</span></a><span style=3D=
+"background-color: transparent">.</span></p></div></td></tr></tbody></tabl=
+e></td></tr></tbody></table></td></tr><tr><td style=3D"background-color:tr=
+ansparent;padding-top:12px;padding-bottom:12px;padding-right:24px;padding-=
+left:24px;border:0;border-radius:0" valign=3D"top" class=3D"mceButtonBlock=
+Container" align=3D"center" id=3D"b347"><div><!--[if !mso]><!--></div><ta=
+ble align=3D"center" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" widt=
+h=3D"100%" style=3D"max-width:564px" role=3D"presentation" data-block-id=
+=3D"347" class=3D"mceButtonContainer"><tbody><tr class=3D"mceStandardButto=
+n"><td style=3D"background-color:#2baadf;border-radius:8px;text-align:cent=
+er" valign=3D"top" class=3D"mceButton"><a href=3D"https://us.list-manage.c=
+om/NZEFkAv_oCW?e=3D7868a1eb57&c2id=3Dd575a91cad5d5ad3c6a64ad38aee97e2" target=3D"_blank" cl=
+ass=3D"mceButtonLink" style=3D"background-color:#2baadf;border-radius:8px;=
+border:1px solid #000000;color:#ffffff;display:block;font-family:Arial=2C=
+ 'Helvetica Neue'=2C Helvetica=2C sans-serif;font-size:16px;font-weight:no=
+rmal;font-style:normal;padding:16px 28px;text-decoration:none;text-align:c=
+enter;direction:ltr;letter-spacing:0px" rel=3D"noreferrer" data-button-lin=
+k-id=3D"347">Klik hier om naar de online kerk-tv uitzending te gaan</a></t=
+d></tr></tbody></table><div><!--<![endif]--></div><table align=3D"center"=
+ border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" style=3D"=
+max-width:564px" role=3D"presentation" data-block-id=3D"347" class=3D"mceB=
+uttonContainer"><tbody><tr>
+<!--[if mso]>
+<td align=3D"center">
+<v:roundrect xmlns:v=3D"urn:schemas-microsoft-com:vml"
+xmlns:w=3D"urn:schemas-microsoft-com:office:word"
+href=3D"https://us.list-manage.com/NZEFkAv_oCW?e=3D7868a1eb57&amp;c2id=3D=
+d575a91cad5d5ad3c6a64ad38aee97e2" data-button-link-id=3D"347"
+style=3D"v-text-anchor:middle; width:564px; height:52.5px;"
+arcsize=3D"1%"
+strokecolor=3D"#000000"
+strokeweight=3D"1px"
+fillcolor=3D"#2baadf">
+<v:stroke dashstyle=3D"solid"/>
+<w:anchorlock />
+<center style=3D"
+color: #ffffff;
+display: block;
+font-family: Arial=2C 'Helvetica Neue'=2C Helvetica=2C sans-serif;
+font-size: 16;
+font-style: normal;
+font-weight: normal;
+letter-spacing: 0px;
+text-decoration: none;
+text-align: center;
+direction: ltr;"
+>
+Klik hier om naar de online kerk-tv uitzending te gaan
+</center>
+</v:roundrect>
+</td>
+<![endif]-->
+</tr></tbody></table></td></tr><tr><td style=3D"padding-top:0;padding-bott=
+om:0;padding-right:0;padding-left:0" valign=3D"top" class=3D"mceGutterCont=
+ainer" id=3D"gutterContainerId-12"><table border=3D"0" cellpadding=3D"0" c=
+ellspacing=3D"0" width=3D"100%" style=3D"border-collapse:separate" role=3D=
+"presentation"><tbody><tr><td style=3D"padding-top:0;padding-bottom:0;padd=
+ing-right:0;padding-left:0;border:0;border-radius:0" valign=3D"top" id=3D"=
+b12"><table width=3D"100%" style=3D"border:0;background-color:#797979;bord=
+er-radius:0;border-collapse:separate"><tbody><tr><td style=3D"padding-left=
+:24px;padding-right:24px;padding-top:12px;padding-bottom:12px" class=3D"mc=
+eTextBlockContainer"><div data-block-id=3D"12" class=3D"mceText" id=3D"d12=
+" style=3D"width:100%"><h1 class=3D"last-child"><strong><span style=3D"col=
+or:#ffffff;">Agenda</span></strong></h1></div></td></tr></tbody></table></=
+td></tr></tbody></table></td></tr><tr><td style=3D"padding-top:0;padding-b=
+ottom:0;padding-right:0;padding-left:0" valign=3D"top" class=3D"mceGutterC=
+ontainer" id=3D"gutterContainerId-392"><table border=3D"0" cellpadding=3D"=
+0" cellspacing=3D"0" width=3D"100%" style=3D"border-collapse:separate" rol=
+e=3D"presentation"><tbody><tr><td style=3D"padding-top:0;padding-bottom:0;=
+padding-right:0;padding-left:0;border:0;border-radius:0" valign=3D"top" id=
+=3D"b392"><table width=3D"100%" style=3D"border:0;background-color:transpa=
+rent;border-radius:0;border-collapse:separate"><tbody><tr><td style=3D"pad=
+ding-left:24px;padding-right:24px;padding-top:12px;padding-bottom:12px" cl=
+ass=3D"mceTextBlockContainer"><div data-block-id=3D"392" class=3D"mceText"=
+ id=3D"d392" style=3D"width:100%"><p class=3D"mcePastedContent last-child"=
+><strong>Zaterdag 20 juni 17.30 uur: sponsorloop Nacht van de Vluchteling<=
+/strong></p></div></td></tr></tbody></table></td></tr></tbody></table></td=
+></tr><tr><td valign=3D"top" class=3D"mceGutterContainer" id=3D"gutterCont=
+ainerId-393"><table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=
+=3D"100%" style=3D"border-collapse:separate" role=3D"presentation"><tbody>=
+<tr><td style=3D"padding-top:12px;padding-bottom:12px;padding-right:0;padd=
+ing-left:0;border:0;border-radius:0" valign=3D"top" class=3D"mceLayoutCont=
+ainer" id=3D"b393"><table align=3D"center" border=3D"0" cellpadding=3D"0"=
+ cellspacing=3D"0" width=3D"100%" role=3D"presentation" data-block-id=3D"3=
+93" id=3D"section_a555272f0b0732c1d50a0f6e9a5dba4c" class=3D"mceLayout"><t=
+body><tr class=3D"mceRow"><td style=3D"background-position:center;backgrou=
+nd-repeat:no-repeat;background-size:cover" valign=3D"top"><table border=3D=
+"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" role=3D"presentatio=
+n"><tbody><tr><td valign=3D"top" class=3D"mceColumn" id=3D"mceColumnId--20=
+" data-block-id=3D"-20" colspan=3D"12" width=3D"100%"><table border=3D"0"=
+ cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" role=3D"presentation">=
+<tbody><tr><td style=3D"border:0;border-radius:0" valign=3D"top" align=3D"=
+center" id=3D"b-12"><table align=3D"center" border=3D"0" cellpadding=3D"0"=
+ cellspacing=3D"0" width=3D"100%" role=3D"presentation" data-block-id=3D"-=
+12"><tbody><tr class=3D"mceRow"><td style=3D"background-position:center;ba=
+ckground-repeat:no-repeat;background-size:cover" valign=3D"top"><table bor=
+der=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" role=3D"prese=
+ntation"><tbody><tr><td valign=3D"top" class=3D"mceColumn" id=3D"mceColumn=
+Id--24" data-block-id=3D"-24" colspan=3D"12" width=3D"100%"><table border=
+=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" role=3D"presenta=
+tion"><tbody><tr><td style=3D"border:0;border-radius:0" valign=3D"top" id=
+=3D"b398"><table align=3D"center" border=3D"0" cellpadding=3D"0" cellspaci=
+ng=3D"0" width=3D"100%" role=3D"presentation" data-block-id=3D"398"><tbody=
+><tr class=3D"mceRow"><td style=3D"background-position:center;background-r=
+epeat:no-repeat;background-size:cover;padding-top:0px;padding-bottom:0px"=
+ valign=3D"top"><table border=3D"0" cellpadding=3D"0" cellspacing=3D"24" w=
+idth=3D"100%" style=3D"table-layout:fixed" role=3D"presentation"><colgroup=
+><col span=3D"1" width=3D"8.333333333333332%" /><col span=3D"1" width=3D"8=
+=2E333333333333332%" /><col span=3D"1" width=3D"8.333333333333332%" /><col s=
+pan=3D"1" width=3D"8.333333333333332%" /><col span=3D"1" width=3D"8.333333=
+333333332%" /><col span=3D"1" width=3D"8.333333333333332%" /><col span=3D"=
+1" width=3D"8.333333333333332%" /><col span=3D"1" width=3D"8.3333333333333=
+32%" /><col span=3D"1" width=3D"8.333333333333332%" /><col span=3D"1" widt=
+h=3D"8.333333333333332%" /><col span=3D"1" width=3D"8.333333333333332%" />=
+<col span=3D"1" width=3D"8.333333333333332%" /></colgroup><tbody><tr><td s=
+tyle=3D"padding-top:0;padding-bottom:0" valign=3D"top" class=3D"mceColumn"=
+ id=3D"mceColumnId-395" data-block-id=3D"395" colspan=3D"6" width=3D"50%">=
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" rol=
+e=3D"presentation"><tbody><tr><td style=3D"background-color:transparent;pa=
+dding-top:12px;padding-bottom:12px;padding-right:16px;padding-left:16px;bo=
+rder:0;border-radius:0" valign=3D"top" class=3D"mceImageBlockContainer" al=
+ign=3D"center" id=3D"b399"><div><!--[if !mso]><!--></div><table align=3D"=
+center" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"86%" sty=
+le=3D"border-collapse:separate;margin:0;vertical-align:top;max-width:86%;w=
+idth:86%;height:auto" role=3D"presentation" data-testid=3D"image-399"><tbo=
+dy><tr><td style=3D"border:0;border-radius:0;margin:0" valign=3D"top"><img=
+ alt=3D"" src=3D"https://mcusercontent.com/f177a264847d7820ba11a4aa3/image=
+s/120ea310-4ecb-4007-cc42-21da5663e6d2.jpg" width=3D"256.28" height=3D"aut=
+o" style=3D"display:block;max-width:100%;height:auto;border-radius:0" clas=
+s=3D"imageDropZone mceImage" data-block-id=3D"399" /></td></tr></tbody></t=
+able><div><!--<![endif]--></div><div>
+<!--[if mso]>
+<span class=3D"mceImageBorder" style=3D"border:0;border-width:2px;vertical=
+-align:top;margin:0"><img role=3D"presentation" class=3D"imageDropZone mce=
+Image" src=3D"https://mcusercontent.com/f177a264847d7820ba11a4aa3/images/1=
+20ea310-4ecb-4007-cc42-21da5663e6d2.jpg" alt=3D"" width=3D"256.28" height=
+=3D"auto" style=3D"display:block;max-width:256.28px;width:256.28px;height:=
+auto"/></span>
+<![endif]-->
+</div></td></tr></tbody></table></td><td style=3D"padding-top:0;padding-bo=
+ttom:0" valign=3D"top" class=3D"mceColumn" id=3D"mceColumnId-397" data-blo=
+ck-id=3D"397" colspan=3D"6" width=3D"50%"><table border=3D"0" cellpadding=
+=3D"0" cellspacing=3D"0" width=3D"100%" role=3D"presentation"><tbody><tr><=
+td style=3D"padding-top:0;padding-bottom:0;padding-right:0;padding-left:0"=
+ valign=3D"top" class=3D"mceGutterContainer" id=3D"gutterContainerId-400">=
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" sty=
+le=3D"border-collapse:separate" role=3D"presentation"><tbody><tr><td style=
+=3D"padding-top:0;padding-bottom:0;padding-right:0;padding-left:0;border:0=
+;border-radius:0" valign=3D"top" id=3D"b400"><table width=3D"100%" style=
+=3D"border:0;background-color:transparent;border-radius:0;border-collapse:=
+separate"><tbody><tr><td style=3D"padding-left:24px;padding-right:24px;pad=
+ding-top:12px;padding-bottom:12px" class=3D"mceTextBlockContainer"><div da=
+ta-block-id=3D"400" class=3D"mceText" id=3D"d400" style=3D"width:100%"><p=
+ style=3D"line-height: 0; mso-line-height-alt: 0%;"><br /></p><p class=3D"=
+mcePastedContent last-child">Ook dit jaar doet een team van Vrijburg mee m=
+et de sponsorloop <a href=3D"https://us.list-manage.com/18vXeRlBHna?e=3D7868a1eb57&c2id=3Dd575a91cad5d5ad3c6a64ad38aee97e2" target=3D"_blank">Nacht van de Vluchtelin=
+g</a>=2C die de Stichting Vluchteling op diverse plaatsen in ons land orga=
+niseert. Op 20 juni om 17:30 uur lopen we samen 10 km door Amsterdam en ho=
+pen we daarmee =E2=82=AC 5000 op te halen. Dit keer voor noodhulp aan vluc=
+htelingen in Somali=C3=AB=2C Burkina Faso=2C Afghanistan=2C Libanon en Oek=
+ra=C3=AFne. Sponsoren kan nog steeds!</p></div></td></tr></tbody></table><=
+/td></tr></tbody></table></td></tr><tr><td style=3D"background-color:trans=
+parent;padding-top:12px;padding-bottom:12px;padding-right:24px;padding-lef=
+t:24px;border:0;border-radius:0" valign=3D"top" class=3D"mceButtonBlockCon=
+tainer" align=3D"center" id=3D"b409"><div><!--[if !mso]><!--></div><table=
+ align=3D"center" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D=
+"presentation" data-block-id=3D"409" class=3D"mceButtonContainer"><tbody><=
+tr class=3D"mceStandardButton"><td style=3D"background-color:#ff7b00;borde=
+r-radius:8px;text-align:center" valign=3D"top" class=3D"mceButton"><a href=
+=3D"https://us.list-manage.com/13Are3DeEZl?e=3D7868a1eb57&c2id=3Dd575a91cad5d5ad3c6a64ad38aee97e2" target=3D"_blank" class=3D"mceButtonLink" style=3D"background-colo=
+r:#ff7b00;border-radius:8px;border:1px solid #000000;color:#ffffff;display=
+:block;font-family:Arial=2C 'Helvetica Neue'=2C Helvetica=2C sans-serif;fo=
+nt-size:16px;font-weight:normal;font-style:normal;padding:16px 28px;text-d=
+ecoration:none;text-align:center;direction:ltr;letter-spacing:0px" rel=3D"=
+noreferrer" data-button-link-id=3D"409">Doneer hier</a></td></tr></tbody><=
+/table><div><!--<![endif]--></div><table align=3D"center" border=3D"0" ce=
+llpadding=3D"0" cellspacing=3D"0" role=3D"presentation" data-block-id=3D"4=
+09" class=3D"mceButtonContainer"><tbody><tr>
+<!--[if mso]>
+<td align=3D"center">
+<v:roundrect xmlns:v=3D"urn:schemas-microsoft-com:vml"
+xmlns:w=3D"urn:schemas-microsoft-com:office:word"
+href=3D"https://us.list-manage.com/13Are3DeEZl?e=3D7868a1eb57&amp;c2id=3D=
+d575a91cad5d5ad3c6a64ad38aee97e2" data-button-link-id=3D"409"
+style=3D"v-text-anchor:middle; width:141.6px; height:52.5px;"
+arcsize=3D"6%"
+strokecolor=3D"#000000"
+strokeweight=3D"1px"
+fillcolor=3D"#ff7b00">
+<v:stroke dashstyle=3D"solid"/>
+<w:anchorlock />
+<center style=3D"
+color: #ffffff;
+display: block;
+font-family: Arial=2C 'Helvetica Neue'=2C Helvetica=2C sans-serif;
+font-size: 16;
+font-style: normal;
+font-weight: normal;
+letter-spacing: 0px;
+text-decoration: none;
+text-align: center;
+direction: ltr;"
+>
+Doneer hier
+</center>
+</v:roundrect>
+</td>
+<![endif]-->
+</tr></tbody></table></td></tr></tbody></table></td></tr></tbody></table><=
+/td></tr></tbody></table></td></tr></tbody></table></td></tr></tbody></tab=
+le></td></tr></tbody></table></td></tr></tbody></table></td></tr></tbody><=
+/table></td></tr></tbody></table></td></tr></tbody></table></td></tr><tr><=
+td style=3D"padding-top:0;padding-bottom:0;padding-right:0;padding-left:0"=
+ valign=3D"top" class=3D"mceGutterContainer" id=3D"gutterContainerId-391">=
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" sty=
+le=3D"border-collapse:separate" role=3D"presentation"><tbody><tr><td style=
+=3D"padding-top:0;padding-bottom:0;padding-right:0;padding-left:0;border:0=
+;border-radius:0" valign=3D"top" id=3D"b391"><table width=3D"100%" style=
+=3D"border:0;background-color:transparent;border-radius:0;border-collapse:=
+separate"><tbody><tr><td style=3D"padding-left:24px;padding-right:24px;pad=
+ding-top:12px;padding-bottom:12px" class=3D"mceTextBlockContainer"><div da=
+ta-block-id=3D"391" class=3D"mceText" id=3D"d391" style=3D"width:100%"><p>=
+<strong>Zondag 28 juni 10:30 uur Kerkdienst </strong></p><p>Seizoensafslui=
+ting met Avondmaal=2C Kinderkerk en Cantorij.</p><p>Voorgangers: Rachelle=
+ van Andel en Rosaliene Isra=C3=ABl.</p><p><br /></p><p><strong>Maandag 22=
+ juni 20:00 uur: Algemene Ledenvergadering</strong></p><p>Stukken vindt u=
+ op <a href=3D"https://us.list-manage.com/19ZB5nmlAyi?e=3D7868a1eb57&c2id=
+=3Dd575a91cad5d5ad3c6a64ad38aee97e2" target=3D"_blank">OneDrive</a> via Stukken ALV =C2=A0en=
+ de statuten vindt u op de <a href=3D"https://us.list-manage.com/zyHMj2VZ_=
+hK?e=3D7868a1eb57&c2id=3Dd575a91cad5d5ad3c6a64ad38aee97e2" target=3D"_blank">website</a>=2C=
+ zoals in de vorige ALV is toegezegd. Tevens liggen de stukken in de kerkz=
+aal.</p><p><br /></p><p><strong>Dinsdag 23 juni11:00 uur=2C laatste Bijbel=
+kring met ds. Klaas Vos</strong></p><p>We gaan door met het boek Exodus in=
+ de vele bijbelvertalingen waarover de kringleden beschikken. Contact: <a=
+ href=3D"mailto:offerhaus@tiscali.nl" target=3D"_blank">Polona Offerhaus</=
+a>=2C 06 306 984 64</p><p><br /></p><p class=3D"last-child"><strong>Fotote=
+ntoonstelling </strong><em><strong>Het woord gekiekt </strong></em><strong=
+>in de Moddermanzaal</strong></p></div></td></tr></tbody></table></td></tr=
+></tbody></table></td></tr><tr><td valign=3D"top" class=3D"mceGutterContai=
+ner" id=3D"gutterContainerId-403"><table border=3D"0" cellpadding=3D"0" ce=
+llspacing=3D"0" width=3D"100%" style=3D"border-collapse:separate" role=3D"=
+presentation"><tbody><tr><td style=3D"padding-top:12px;padding-bottom:12px=
+;padding-right:0;padding-left:0;border:0;border-radius:0" valign=3D"top" c=
+lass=3D"mceLayoutContainer" id=3D"b403"><table align=3D"center" border=3D"=
+0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" role=3D"presentation=
+" data-block-id=3D"403" id=3D"section_be95b1f0de306b5761c940dec6fec6f7" cl=
+ass=3D"mceLayout"><tbody><tr class=3D"mceRow"><td style=3D"background-posi=
+tion:center;background-repeat:no-repeat;background-size:cover" valign=3D"t=
+op"><table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%"=
+ role=3D"presentation"><tbody><tr><td valign=3D"top" class=3D"mceColumn" i=
+d=3D"mceColumnId--21" data-block-id=3D"-21" colspan=3D"12" width=3D"100%">=
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" rol=
+e=3D"presentation"><tbody><tr><td style=3D"border:0;border-radius:0" valig=
+n=3D"top" align=3D"center" id=3D"b-14"><table align=3D"center" border=3D"0=
+" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" role=3D"presentation"=
+ data-block-id=3D"-14"><tbody><tr class=3D"mceRow"><td style=3D"background=
+-position:center;background-repeat:no-repeat;background-size:cover" valign=
+=3D"top"><table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"=
+100%" role=3D"presentation"><tbody><tr><td valign=3D"top" class=3D"mceColu=
+mn" id=3D"mceColumnId--25" data-block-id=3D"-25" colspan=3D"12" width=3D"1=
+00%"><table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%=
+" role=3D"presentation"><tbody><tr><td style=3D"border:0;border-radius:0"=
+ valign=3D"top" id=3D"b408"><table align=3D"center" border=3D"0" cellpaddi=
+ng=3D"0" cellspacing=3D"0" width=3D"100%" role=3D"presentation" data-block=
+-id=3D"408"><tbody><tr class=3D"mceRow"><td style=3D"background-position:c=
+enter;background-repeat:no-repeat;background-size:cover;padding-top:0px;pa=
+dding-bottom:0px" valign=3D"top"><table border=3D"0" cellpadding=3D"0" cel=
+lspacing=3D"24" width=3D"100%" style=3D"table-layout:fixed" role=3D"presen=
+tation"><colgroup><col span=3D"1" width=3D"8.333333333333332%" /><col span=
+=3D"1" width=3D"8.333333333333332%" /><col span=3D"1" width=3D"8.333333333=
+333332%" /><col span=3D"1" width=3D"8.333333333333332%" /><col span=3D"1"=
+ width=3D"8.333333333333332%" /><col span=3D"1" width=3D"8.333333333333332=
+%" /><col span=3D"1" width=3D"8.333333333333332%" /><col span=3D"1" width=
+=3D"8.333333333333332%" /><col span=3D"1" width=3D"8.333333333333332%" /><=
+col span=3D"1" width=3D"8.333333333333332%" /><col span=3D"1" width=3D"8.3=
+33333333333332%" /><col span=3D"1" width=3D"8.333333333333332%" /></colgro=
+up><tbody><tr><td style=3D"padding-top:0;padding-bottom:0" valign=3D"top"=
+ class=3D"mceColumn" id=3D"mceColumnId-405" data-block-id=3D"405" colspan=
+=3D"6" width=3D"50%"><table border=3D"0" cellpadding=3D"0" cellspacing=3D"=
+0" width=3D"100%" role=3D"presentation"><tbody><tr><td style=3D"padding-to=
+p:0;padding-bottom:0;padding-right:0;padding-left:0" valign=3D"top" class=
+=3D"mceGutterContainer" id=3D"gutterContainerId-389"><table border=3D"0" c=
+ellpadding=3D"0" cellspacing=3D"0" width=3D"100%" style=3D"border-collapse=
+:separate" role=3D"presentation"><tbody><tr><td style=3D"padding-top:0;pad=
+ding-bottom:0;padding-right:0;padding-left:0;border:0;border-radius:0" val=
+ign=3D"top" id=3D"b389"><table width=3D"100%" style=3D"border:0;background=
+-color:transparent;border-radius:0;border-collapse:separate"><tbody><tr><t=
+d style=3D"padding-left:24px;padding-right:24px;padding-top:12px;padding-b=
+ottom:12px" class=3D"mceTextBlockContainer"><div data-block-id=3D"389" cla=
+ss=3D"mceText" id=3D"d389" style=3D"width:100%"><p style=3D"line-height: 0=
+; mso-line-height-alt: 0%;"><br /></p><p class=3D"mcePastedContent last-ch=
+ild">De tentoonstelling bestaat uit foto=E2=80=99s van <strong>Andr=C3=A9=
+ Meiresonne</strong> die sinds 2020 op de middenpagina=E2=80=99s van het r=
+emonstrantse magazine <em><strong>AdRem</strong></em> verschenen=2C gecomb=
+ineerd met toegankelijke bijbelteksten. Zo ontstaat een verrassende ontmoe=
+ting tussen woord en beeld=2C bijbelverhaal en dagelijkse werkelijkheid.</=
+p></div></td></tr></tbody></table></td></tr></tbody></table></td></tr></tb=
+ody></table></td><td style=3D"padding-top:0;padding-bottom:0" valign=3D"to=
+p" class=3D"mceColumn" id=3D"mceColumnId-407" data-block-id=3D"407" colspa=
+n=3D"6" width=3D"50%"><table border=3D"0" cellpadding=3D"0" cellspacing=3D=
+"0" width=3D"100%" role=3D"presentation"><tbody><tr><td style=3D"backgroun=
+d-color:transparent;padding-top:12px;padding-bottom:12px;padding-right:16p=
+x;padding-left:16px;border:0;border-radius:0" valign=3D"top" class=3D"mceI=
+mageBlockContainer" align=3D"center" id=3D"b390"><div><!--[if !mso]><!-->=
+</div><table align=3D"center" border=3D"0" cellpadding=3D"0" cellspacing=
+=3D"0" width=3D"100%" style=3D"border-collapse:separate;margin:0;vertical-=
+align:top;max-width:100%;width:100%;height:auto" role=3D"presentation" dat=
+a-testid=3D"image-390"><tbody><tr><td style=3D"border:0;border-radius:0;ma=
+rgin:0" valign=3D"top"><img alt=3D"" src=3D"https://mcusercontent.com/f177=
+a264847d7820ba11a4aa3/images/0043a9b2-f612-cc80-2be3-4bfc9559c81e.jpg" wid=
+th=3D"298" height=3D"auto" style=3D"display:block;max-width:100%;height:au=
+to;border-radius:0" class=3D"imageDropZone mceImage" data-block-id=3D"390"=
+ /></td></tr></tbody></table><div><!--<![endif]--></div><div>
+<!--[if mso]>
+<span class=3D"mceImageBorder" style=3D"border:0;border-width:2px;vertical=
+-align:top;margin:0"><img role=3D"presentation" class=3D"imageDropZone mce=
+Image" src=3D"https://mcusercontent.com/f177a264847d7820ba11a4aa3/images/0=
+043a9b2-f612-cc80-2be3-4bfc9559c81e.jpg" alt=3D"" width=3D"298" height=3D"=
+auto" style=3D"display:block;max-width:298px;width:298px;height:auto"/></s=
+pan>
+<![endif]-->
+</div></td></tr></tbody></table></td></tr></tbody></table></td></tr></tbod=
+y></table></td></tr></tbody></table></td></tr></tbody></table></td></tr></=
+tbody></table></td></tr></tbody></table></td></tr></tbody></table></td></t=
+r></tbody></table></td></tr></tbody></table></td></tr><tr><td style=3D"pad=
+ding-top:0;padding-bottom:0;padding-right:0;padding-left:0" valign=3D"top"=
+ class=3D"mceGutterContainer" id=3D"gutterContainerId-120"><table border=
+=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" style=3D"border-=
+collapse:separate" role=3D"presentation"><tbody><tr><td style=3D"padding-t=
+op:0;padding-bottom:0;padding-right:0;padding-left:0;border:0;border-radiu=
+s:0" valign=3D"top" id=3D"b120"><table width=3D"100%" style=3D"border:0;ba=
+ckground-color:transparent;border-radius:0;border-collapse:separate"><tbod=
+y><tr><td style=3D"padding-left:24px;padding-right:24px;padding-top:12px;p=
+adding-bottom:12px" class=3D"mceTextBlockContainer"><div data-block-id=3D"=
+120" class=3D"mceText" id=3D"d120" style=3D"width:100%"><p class=3D"last-c=
+hild"><em>Zie verder de </em><a href=3D"https://us.list-manage.com/DGidXZM=
+YsP7?e=3D7868a1eb57&c2id=3Dd575a91cad5d5ad3c6a64ad38aee97e2"><em>Agenda</em></a><em> op web=
+site. Tenzij anders aangegeven is de activiteit in Vrijburg</em></p></div>=
+</td></tr></tbody></table></td></tr></tbody></table></td></tr><tr><td styl=
+e=3D"background-color:transparent;padding-top:12px;padding-bottom:12px;pad=
+ding-right:24px;padding-left:24px;border:0;border-radius:0" valign=3D"top"=
+ class=3D"mceButtonBlockContainer" align=3D"center" id=3D"b128"><div><!--[=
+if !mso]><!--></div><table align=3D"center" border=3D"0" cellpadding=3D"0=
+" cellspacing=3D"0" width=3D"100%" style=3D"max-width:282px" role=3D"prese=
+ntation" data-block-id=3D"128" class=3D"mceButtonContainer"><tbody><tr cla=
+ss=3D"mceStandardButton"><td style=3D"background-color:#00a8db;border-radi=
+us:8px;text-align:center" valign=3D"top" class=3D"mceButton"><a href=3D"ht=
+tps://us.list-manage.com/NRInLJWEe53?e=3D7868a1eb57&c2id=3Dd575a91cad5d5ad3c6a64ad38aee97e2=
+" target=3D"_blank" class=3D"mceButtonLink" style=3D"background-color:#00a=
+8db;border-radius:8px;border:1px solid #000000;color:#ffffff;display:block=
+;font-family:Arial=2C 'Helvetica Neue'=2C Helvetica=2C sans-serif;font-siz=
+e:16px;font-weight:normal;font-style:normal;padding:16px 28px;text-decorat=
+ion:none;text-align:center;direction:ltr;letter-spacing:0px" rel=3D"norefe=
+rrer" data-button-link-id=3D"128">Agenda</a></td></tr></tbody></table><div=
+><!--<![endif]--></div><table align=3D"center" border=3D"0" cellpadding=
+=3D"0" cellspacing=3D"0" width=3D"100%" style=3D"max-width:282px" role=3D"=
+presentation" data-block-id=3D"128" class=3D"mceButtonContainer"><tbody><t=
+r>
+<!--[if mso]>
+<td align=3D"center">
+<v:roundrect xmlns:v=3D"urn:schemas-microsoft-com:vml"
+xmlns:w=3D"urn:schemas-microsoft-com:office:word"
+href=3D"https://us.list-manage.com/NRInLJWEe53?e=3D7868a1eb57&amp;c2id=3D=
+d575a91cad5d5ad3c6a64ad38aee97e2" data-button-link-id=3D"128"
+style=3D"v-text-anchor:middle; width:282px; height:52.5px;"
+arcsize=3D"3%"
+strokecolor=3D"#000000"
+strokeweight=3D"1px"
+fillcolor=3D"#00a8db">
+<v:stroke dashstyle=3D"solid"/>
+<w:anchorlock />
+<center style=3D"
+color: #ffffff;
+display: block;
+font-family: Arial=2C 'Helvetica Neue'=2C Helvetica=2C sans-serif;
+font-size: 16;
+font-style: normal;
+font-weight: normal;
+letter-spacing: 0px;
+text-decoration: none;
+text-align: center;
+direction: ltr;"
+>
+Agenda
+</center>
+</v:roundrect>
+</td>
+<![endif]-->
+</tr></tbody></table></td></tr><tr><td style=3D"background-color:transpare=
+nt;padding-top:12px;padding-bottom:12px;padding-right:0;padding-left:0;bor=
+der:0;border-radius:0" valign=3D"top" class=3D"mceImageBlockContainer" ali=
+gn=3D"left" id=3D"b16"><div><!--[if !mso]><!--></div><a href=3D"https://u=
+s.list-manage.com/13qAT_rq2mA?e=3D7868a1eb57&c2id=3Dd575a91cad5d5ad3c6a64ad38aee97e2" style=
+=3D"display:block" target=3D"_blank" data-block-id=3D"16"><table align=3D"=
+left" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" styl=
+e=3D"border-collapse:separate;margin:0;vertical-align:top;max-width:100%;w=
+idth:100%;height:auto" role=3D"presentation" data-testid=3D"image-16"><tbo=
+dy><tr><td style=3D"border:0;border-radius:0;margin:0" valign=3D"top"><img=
+ alt=3D"" src=3D"https://mcusercontent.com/f177a264847d7820ba11a4aa3/image=
+s/0e12da65-6680-d075-a296-dcff7447244f.png" width=3D"660" height=3D"auto"=
+ style=3D"display:block;max-width:100%;height:auto;border-radius:0" class=
+=3D"imageDropZone mceImage" /></td></tr></tbody></table></a><div><!--<![e=
+ndif]--></div><div>
+<!--[if mso]>
+<a href=3D"https://soundcloud.com/vrijburg-amsterdam/sets/top-2022-2023"><=
+span class=3D"mceImageBorder" style=3D"border:0;border-width:2px;vertical-=
+align:top;margin:0"><img role=3D"presentation" class=3D"imageDropZone mceI=
+mage" src=3D"https://mcusercontent.com/f177a264847d7820ba11a4aa3/images/0e=
+12da65-6680-d075-a296-dcff7447244f.png" alt=3D"" width=3D"660" height=3D"a=
+uto" style=3D"display:block;max-width:660px;width:660px;height:auto"/></sp=
+an></a>
+<![endif]-->
+</div></td></tr><tr><td valign=3D"top" class=3D"mceGutterContainer" id=3D"=
+gutterContainerId-219"><table border=3D"0" cellpadding=3D"0" cellspacing=
+=3D"0" width=3D"100%" style=3D"border-collapse:separate" role=3D"presentat=
+ion"><tbody><tr><td style=3D"padding-top:12px;padding-bottom:12px;padding-=
+right:0;padding-left:0;border:0;border-radius:0" valign=3D"top" class=3D"m=
+ceLayoutContainer" id=3D"b219"><table align=3D"center" border=3D"0" cellpa=
+dding=3D"0" cellspacing=3D"0" width=3D"100%" role=3D"presentation" data-bl=
+ock-id=3D"219" id=3D"section_9795f0a030aca01ae918a18bdbdca6c7" class=3D"mc=
+eLayout"><tbody><tr class=3D"mceRow"><td style=3D"background-position:cent=
+er;background-repeat:no-repeat;background-size:cover" valign=3D"top"><tabl=
+e border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" role=3D"=
+presentation"><tbody><tr><td valign=3D"top" class=3D"mceColumn" id=3D"mceC=
+olumnId--19" data-block-id=3D"-19" colspan=3D"12" width=3D"100%"><table bo=
+rder=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" role=3D"pres=
+entation"><tbody><tr><td style=3D"border:0;border-radius:0" valign=3D"top"=
+ align=3D"center" id=3D"b-10"><table align=3D"center" border=3D"0" cellpad=
+ding=3D"0" cellspacing=3D"0" width=3D"100%" role=3D"presentation" data-blo=
+ck-id=3D"-10"><tbody><tr class=3D"mceRow"><td style=3D"background-position=
+:center;background-repeat:no-repeat;background-size:cover" valign=3D"top">=
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" rol=
+e=3D"presentation"><tbody><tr><td valign=3D"top" class=3D"mceColumn" id=3D=
+"mceColumnId--23" data-block-id=3D"-23" colspan=3D"12" width=3D"100%"><tab=
+le border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" role=3D=
+"presentation"><tbody><tr><td style=3D"border:0;border-radius:0" valign=3D=
+"top" id=3D"b224"><table align=3D"center" border=3D"0" cellpadding=3D"0" c=
+ellspacing=3D"0" width=3D"100%" role=3D"presentation" data-block-id=3D"224=
+"><tbody><tr class=3D"mceRow"><td style=3D"background-position:center;back=
+ground-repeat:no-repeat;background-size:cover;padding-top:0px;padding-bott=
+om:0px" valign=3D"top"><table border=3D"0" cellpadding=3D"0" cellspacing=
+=3D"24" width=3D"100%" style=3D"table-layout:fixed" role=3D"presentation">=
+<colgroup><col span=3D"1" width=3D"8.333333333333332%" /><col span=3D"1" w=
+idth=3D"8.333333333333332%" /><col span=3D"1" width=3D"8.333333333333332%"=
+ /><col span=3D"1" width=3D"8.333333333333332%" /><col span=3D"1" width=3D=
+"8.333333333333332%" /><col span=3D"1" width=3D"8.333333333333332%" /><col=
+ span=3D"1" width=3D"8.333333333333332%" /><col span=3D"1" width=3D"8.3333=
+33333333332%" /><col span=3D"1" width=3D"8.333333333333332%" /><col span=
+=3D"1" width=3D"8.333333333333332%" /><col span=3D"1" width=3D"8.333333333=
+333332%" /><col span=3D"1" width=3D"8.333333333333332%" /></colgroup><tbod=
+y><tr><td style=3D"padding-top:0;padding-bottom:0" valign=3D"top" class=3D=
+"mceColumn" id=3D"mceColumnId-221" data-block-id=3D"221" colspan=3D"7" wid=
+th=3D"58.333333333333336%"><table border=3D"0" cellpadding=3D"0" cellspaci=
+ng=3D"0" width=3D"100%" role=3D"presentation"><tbody><tr><td style=3D"padd=
+ing-top:0;padding-bottom:0;padding-right:0;padding-left:0" valign=3D"top"=
+ class=3D"mceGutterContainer" id=3D"gutterContainerId-208"><table border=
+=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" style=3D"border-=
+collapse:separate" role=3D"presentation"><tbody><tr><td style=3D"padding-t=
+op:0;padding-bottom:0;padding-right:0;padding-left:0;border:0;border-radiu=
+s:0" valign=3D"top" id=3D"b208"><table width=3D"100%" style=3D"border:0;ba=
+ckground-color:transparent;border-radius:0;border-collapse:separate"><tbod=
+y><tr><td style=3D"padding-left:24px;padding-right:24px;padding-top:12px;p=
+adding-bottom:12px" class=3D"mceTextBlockContainer"><div data-block-id=3D"=
+208" class=3D"mceText" id=3D"d208" style=3D"width:100%"><p style=3D"line-h=
+eight: 0; mso-line-height-alt: 0%;"><br /></p><p style=3D"line-height: 0;=
+ mso-line-height-alt: 0%;"><br /></p><p style=3D"line-height: 0; mso-line-=
+height-alt: 0%;"><br /></p><p style=3D"line-height: 0; mso-line-height-alt=
+: 0%;"><br /></p><p style=3D"line-height: 0; mso-line-height-alt: 0%;"><br=
+ /></p><p style=3D"line-height: 0; mso-line-height-alt: 0%;"><br /></p><p=
+ style=3D"line-height: 0; mso-line-height-alt: 0%;"><br /></p><h1 class=3D=
+"mcePastedContent" style=3D"padding: 0px; margin: 20px 0px 22px; box-sizin=
+g: border-box; line-height: 1.1; font-variant-ligatures: normal; font-vari=
+ant-caps: normal; letter-spacing: normal; orphans: 2; text-align: start; t=
+ext-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webk=
+it-text-stroke-width: 0px; white-space: normal; background-color: rgb(255=
+=2C 255=2C 255); text-decoration-thickness: initial; text-decoration-style=
+: initial; text-decoration-color: initial; mso-line-height-alt: 110.000000=
+00000001%;"><strong><span style=3D"color:rgb(51=2C 51=2C 51);"><span style=
+=3D"font-size: 36px"><span style=3D"font-family: Roboto=2C sans-serif"><sp=
+an style=3D"background-color: rgb(255=2C 255=2C 255)">Het juiste woord</sp=
+an></span></span></span></strong></h1><p style=3D"line-height: 0; mso-line=
+-height-alt: 0%;"><br /></p><p style=3D"line-height: 0; mso-line-height-al=
+t: 0%;"><br /></p><p class=3D"" style=3D"padding: 0px; margin: 0px 0px 1.1=
+em; box-sizing: border-box; font-variant-ligatures: normal; font-variant-c=
+aps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-al=
+ign: start; text-indent: 0px; text-transform: none; widows: 2; word-spacin=
+g: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-co=
+lor: rgb(255=2C 255=2C 255); text-decoration-thickness: initial; text-deco=
+ration-style: initial; text-decoration-color: initial;"><span style=3D"col=
+or:rgb(51=2C 51=2C 51);"><span style=3D"font-size: 16px"><span style=3D"fo=
+nt-family: Roboto=2C sans-serif"><span style=3D"background-color: rgb(255=
+=2C 255=2C 255)">Miniatuur 394</span></span></span></span></p><p class=3D"=
+last-child" style=3D"padding: 0px; margin: 0px 0px 1.1em; box-sizing: bord=
+er-box; font-variant-ligatures: normal; font-variant-caps: normal; font-we=
+ight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-ind=
+ent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text=
+-stroke-width: 0px; white-space: normal; background-color: rgb(255=2C 255=
+=2C 255); text-decoration-thickness: initial; text-decoration-style: initi=
+al; text-decoration-color: initial;"><span style=3D"color:rgb(51=2C 51=2C=
+ 51);"><span style=3D"font-size: 16px"><span style=3D"font-family: Roboto=
+=2C sans-serif"><span style=3D"background-color: rgb(255=2C 255=2C 255)">G=
+eschreven door Herman Vinckers<br />Voorgelezen door Sanne van Deursen</sp=
+an></span></span></span></p></div></td></tr></tbody></table></td></tr></tb=
+ody></table></td></tr></tbody></table></td><td style=3D"padding-top:0;padd=
+ing-bottom:0" valign=3D"top" class=3D"mceColumn" id=3D"mceColumnId-223" da=
+ta-block-id=3D"223" colspan=3D"5" width=3D"41.66666666666667%"><table bord=
+er=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" role=3D"presen=
+tation"><tbody><tr><td style=3D"background-color:transparent;padding-top:1=
+2px;padding-bottom:12px;padding-right:0;padding-left:0;border:0;border-rad=
+ius:0" valign=3D"top" class=3D"mceImageBlockContainer" align=3D"center" id=
+=3D"b207"><div><!--[if !mso]><!--></div><table align=3D"center" border=3D=
+"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" style=3D"border-col=
+lapse:separate;margin:0;vertical-align:top;max-width:100%;width:100%;heigh=
+t:auto" role=3D"presentation" data-testid=3D"image-207"><tbody><tr><td sty=
+le=3D"border-width:1px;border-style:solid;border-color:#000000;border-radi=
+us:0;margin:0" valign=3D"top"><img alt=3D"" src=3D"https://mcusercontent.c=
+om/f177a264847d7820ba11a4aa3/images/5cbb5077-ffb5-91bb-8860-5f96d2a411ef.j=
+peg" width=3D"273" height=3D"auto" style=3D"display:block;max-width:100%;h=
+eight:auto;border-radius:0" class=3D"imageDropZone mceImage" data-block-id=
+=3D"207" /></td></tr></tbody></table><div><!--<![endif]--></div><div>
+<!--[if mso]>
+<span class=3D"mceImageBorder" style=3D"border-width:1px;border-style:soli=
+d;border-color:#000000;vertical-align:top;margin:0"><img role=3D"presentat=
+ion" class=3D"imageDropZone mceImage" src=3D"https://mcusercontent.com/f17=
+7a264847d7820ba11a4aa3/images/5cbb5077-ffb5-91bb-8860-5f96d2a411ef.jpeg" a=
+lt=3D"" width=3D"273" height=3D"auto" style=3D"display:block;max-width:273=
+px;width:273px;height:auto"/></span>
+<![endif]-->
+</div></td></tr></tbody></table></td></tr></tbody></table></td></tr></tbod=
+y></table></td></tr></tbody></table></td></tr></tbody></table></td></tr></=
+tbody></table></td></tr></tbody></table></td></tr></tbody></table></td></t=
+r></tbody></table></td></tr></tbody></table></td></tr><tr><td style=3D"bac=
+kground-color:transparent;padding-top:12px;padding-bottom:12px;padding-rig=
+ht:24px;padding-left:24px;border:0;border-radius:0" valign=3D"top" class=
+=3D"mceButtonBlockContainer" align=3D"center" id=3D"b24"><div><!--[if !ms=
+o]><!--></div><table align=3D"center" border=3D"0" cellpadding=3D"0" cells=
+pacing=3D"0" width=3D"100%" style=3D"max-width:564px" role=3D"presentation=
+" data-block-id=3D"24" class=3D"mceButtonContainer"><tbody><tr class=3D"mc=
+eStandardButton"><td style=3D"background-color:#af0c0c;border-radius:8px;t=
+ext-align:center" valign=3D"top" class=3D"mceButton"><a href=3D"https://us=
+=2Elist-manage.com/VZhO3mz94Oz?e=3D7868a1eb57&c2id=3Dd575a91cad5d5ad3c6a64ad38aee97e2" target=
+=3D"_blank" class=3D"mceButtonLink" style=3D"background-color:#af0c0c;bord=
+er-radius:8px;border:1px solid #000000;color:#ffffff;display:block;font-fa=
+mily:Arial=2C 'Helvetica Neue'=2C Helvetica=2C sans-serif;font-size:16px;f=
+ont-weight:normal;font-style:normal;padding:16px 28px;text-decoration:none=
+;text-align:center;direction:ltr;letter-spacing:0px" rel=3D"noreferrer" da=
+ta-button-link-id=3D"24">Klik hier om deze podcast te beluisteren</a></td>=
+</tr></tbody></table><div><!--<![endif]--></div><table align=3D"center" b=
+order=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" style=3D"ma=
+x-width:564px" role=3D"presentation" data-block-id=3D"24" class=3D"mceButt=
+onContainer"><tbody><tr>
+<!--[if mso]>
+<td align=3D"center">
+<v:roundrect xmlns:v=3D"urn:schemas-microsoft-com:vml"
+xmlns:w=3D"urn:schemas-microsoft-com:office:word"
+href=3D"https://us.list-manage.com/VZhO3mz94Oz?e=3D7868a1eb57&amp;c2id=3D=
+d575a91cad5d5ad3c6a64ad38aee97e2" data-button-link-id=3D"24"
+style=3D"v-text-anchor:middle; width:564px; height:52.5px;"
+arcsize=3D"1%"
+strokecolor=3D"#000000"
+strokeweight=3D"1px"
+fillcolor=3D"#af0c0c">
+<v:stroke dashstyle=3D"solid"/>
+<w:anchorlock />
+<center style=3D"
+color: #ffffff;
+display: block;
+font-family: Arial=2C 'Helvetica Neue'=2C Helvetica=2C sans-serif;
+font-size: 16;
+font-style: normal;
+font-weight: normal;
+letter-spacing: 0px;
+text-decoration: none;
+text-align: center;
+direction: ltr;"
+>
+Klik hier om deze podcast te beluisteren
+</center>
+</v:roundrect>
+</td>
+<![endif]-->
+</tr></tbody></table></td></tr><tr><td style=3D"background-color:transpare=
+nt;padding-top:12px;padding-bottom:12px;padding-right:24px;padding-left:24=
+px;border:0;border-radius:0" valign=3D"top" class=3D"mceButtonBlockContain=
+er" align=3D"center" id=3D"b25"><div><!--[if !mso]><!--></div><table alig=
+n=3D"center" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100=
+%" style=3D"max-width:564px" role=3D"presentation" data-block-id=3D"25" cl=
+ass=3D"mceButtonContainer"><tbody><tr class=3D"mceStandardButton"><td styl=
+e=3D"background-color:#2baadf;border-radius:8px;text-align:center" valign=
+=3D"top" class=3D"mceButton"><a href=3D"https://us.list-manage.com/HoqhzrU=
+hG_A?e=3D7868a1eb57&c2id=3Dd575a91cad5d5ad3c6a64ad38aee97e2" target=3D"_blank" class=3D"mce=
+ButtonLink" style=3D"background-color:#2baadf;border-radius:8px;border:1px=
+ solid #000000;color:#000000;display:block;font-family:Arial=2C 'Helvetica=
+ Neue'=2C Helvetica=2C sans-serif;font-size:16px;font-weight:normal;font-s=
+tyle:normal;padding:16px 28px;text-decoration:none;text-align:center;direc=
+tion:ltr;letter-spacing:0px" rel=3D"noreferrer" data-button-link-id=3D"25"=
+>Klik hier om dit blog te lezen</a></td></tr></tbody></table><div><!--<![=
+endif]--></div><table align=3D"center" border=3D"0" cellpadding=3D"0" cell=
+spacing=3D"0" width=3D"100%" style=3D"max-width:564px" role=3D"presentatio=
+n" data-block-id=3D"25" class=3D"mceButtonContainer"><tbody><tr>
+<!--[if mso]>
+<td align=3D"center">
+<v:roundrect xmlns:v=3D"urn:schemas-microsoft-com:vml"
+xmlns:w=3D"urn:schemas-microsoft-com:office:word"
+href=3D"https://us.list-manage.com/HoqhzrUhG_A?e=3D7868a1eb57&amp;c2id=3D=
+d575a91cad5d5ad3c6a64ad38aee97e2" data-button-link-id=3D"25"
+style=3D"v-text-anchor:middle; width:564px; height:52.5px;"
+arcsize=3D"1%"
+strokecolor=3D"#000000"
+strokeweight=3D"1px"
+fillcolor=3D"#2baadf">
+<v:stroke dashstyle=3D"solid"/>
+<w:anchorlock />
+<center style=3D"
+color: #000000;
+display: block;
+font-family: Arial=2C 'Helvetica Neue'=2C Helvetica=2C sans-serif;
+font-size: 16;
+font-style: normal;
+font-weight: normal;
+letter-spacing: 0px;
+text-decoration: none;
+text-align: center;
+direction: ltr;"
+>
+Klik hier om dit blog te lezen
+</center>
+</v:roundrect>
+</td>
+<![endif]-->
+</tr></tbody></table></td></tr><tr><td style=3D"padding-top:0;padding-bott=
+om:0;padding-right:0;padding-left:0" valign=3D"top" class=3D"mceGutterCont=
+ainer" id=3D"gutterContainerId-26"><table border=3D"0" cellpadding=3D"0" c=
+ellspacing=3D"0" width=3D"100%" style=3D"border-collapse:separate" role=3D=
+"presentation"><tbody><tr><td style=3D"padding-top:0;padding-bottom:0;padd=
+ing-right:0;padding-left:0;border:0;border-radius:0" valign=3D"top" id=3D"=
+b26"><table width=3D"100%" style=3D"border:0;background-color:transparent;=
+border-radius:0;border-collapse:separate"><tbody><tr><td style=3D"padding-=
+left:24px;padding-right:24px;padding-top:12px;padding-bottom:12px" class=
+=3D"mceTextBlockContainer"><div data-block-id=3D"26" class=3D"mceText" id=
+=3D"d26" style=3D"width:100%"><p>Het thema van deze serie is "Raak!=E2=80=
+=9D. </p><p><br /></p><p class=3D"last-child"><a href=3D"https://us.list-m=
+anage.com/luarJNL7IJL?e=3D7868a1eb57&c2id=3Dd575a91cad5d5ad3c6a64ad38aee97e2">Het podcastco=
+llectief</a>=2C Rachelle van Andel=2C Dik Mook en Margriet Dijkmans van Gu=
+nst</p></div></td></tr></tbody></table></td></tr></tbody></table></td></tr=
+><tr><td style=3D"background-color:transparent;padding-top:12px;padding-bo=
+ttom:12px;padding-right:24px;padding-left:24px;border:0;border-radius:0" v=
+align=3D"top" class=3D"mceButtonBlockContainer" align=3D"center" id=3D"b14=
+3"><div><!--[if !mso]><!--></div><table align=3D"center" border=3D"0" cel=
+lpadding=3D"0" cellspacing=3D"0" role=3D"presentation" data-block-id=3D"14=
+3" class=3D"mceButtonContainer"><tbody><tr class=3D"mceStandardButton"><td=
+ style=3D"background-color:#006483;border-radius:8px;text-align:center" va=
+lign=3D"top" class=3D"mceButton"><a href=3D"https://us.list-manage.com/1BG=
+qIJvRtbq?e=3D7868a1eb57&c2id=3Dd575a91cad5d5ad3c6a64ad38aee97e2" target=3D"_blank" class=3D=
+"mceButtonLink" style=3D"background-color:#006483;border-radius:8px;border=
+:1px none #000000;color:#00a1d8;display:block;font-family:Arial=2C 'Helvet=
+ica Neue'=2C Helvetica=2C sans-serif;font-size:16px;font-weight:normal;fon=
+t-style:normal;padding:16px 28px;text-decoration:none;text-align:center;di=
+rection:ltr;letter-spacing:0px" rel=3D"noreferrer" data-button-link-id=3D"=
+143">Het podcastcollectief</a></td></tr></tbody></table><div><!--<![endif=
+]--></div><table align=3D"center" border=3D"0" cellpadding=3D"0" cellspaci=
+ng=3D"0" role=3D"presentation" data-block-id=3D"143" class=3D"mceButtonCon=
+tainer"><tbody><tr>
+<!--[if mso]>
+<td align=3D"center">
+<v:roundrect xmlns:v=3D"urn:schemas-microsoft-com:vml"
+xmlns:w=3D"urn:schemas-microsoft-com:office:word"
+href=3D"https://us.list-manage.com/1BGqIJvRtbq?e=3D7868a1eb57&amp;c2id=3D=
+d575a91cad5d5ad3c6a64ad38aee97e2" data-button-link-id=3D"143"
+style=3D"v-text-anchor:middle; width:203.63px; height:50.5px;"
+arcsize=3D"4%"
+strokecolor=3D"#006483"
+strokeweight=3D"1px"
+fillcolor=3D"#006483">
+<v:stroke dashstyle=3D"solid"/>
+<w:anchorlock />
+<center style=3D"
+color: #00a1d8;
+display: block;
+font-family: Arial=2C 'Helvetica Neue'=2C Helvetica=2C sans-serif;
+font-size: 16;
+font-style: normal;
+font-weight: normal;
+letter-spacing: 0px;
+text-decoration: none;
+text-align: center;
+direction: ltr;"
+>
+Het podcastcollectief
+</center>
+</v:roundrect>
+</td>
+<![endif]-->
+</tr></tbody></table></td></tr><tr><td style=3D"background-color:transpare=
+nt;border:0;border-radius:0" valign=3D"top" id=3D"b31"><table border=3D"0"=
+ cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" role=3D"presentation"=
+ data-block-id=3D"31"><tbody><tr><td valign=3D"top" class=3D"mceSpacerBloc=
+k" height=3D"20"></td></tr></tbody></table></td></tr><tr><td style=3D"back=
+ground-color:#797979;padding-top:12px;padding-bottom:12px;padding-right:0;=
+padding-left:0;border:0;border-radius:0" valign=3D"top" class=3D"mceLayout=
+Container" id=3D"b32"><table align=3D"center" border=3D"0" cellpadding=3D"=
+0" cellspacing=3D"0" width=3D"100%" role=3D"presentation" data-block-id=3D=
+"32"><tbody><tr class=3D"mceRow"><td style=3D"background-color:#797979;bac=
+kground-position:center;background-repeat:no-repeat;background-size:cover;=
+padding-top:0px;padding-bottom:0px" valign=3D"top"><table border=3D"0" cel=
+lpadding=3D"0" cellspacing=3D"24" width=3D"100%" role=3D"presentation"><tb=
+ody><tr><td valign=3D"top" class=3D"mceColumn" id=3D"mceColumnId--6" data-=
+block-id=3D"-6" colspan=3D"12" width=3D"100%"><table border=3D"0" cellpadd=
+ing=3D"0" cellspacing=3D"0" width=3D"100%" role=3D"presentation"><tbody><t=
+r><td style=3D"border:0;border-radius:0" valign=3D"top" class=3D"mceSocial=
+FollowBlockContainer" id=3D"b-5"><table align=3D"center" border=3D"0" cell=
+padding=3D"0" cellspacing=3D"0" role=3D"presentation" class=3D"mceSocialFo=
+llowBlock" data-block-id=3D"-5"><tbody><tr><td valign=3D"middle" align=3D"=
+center"><!--[if mso]><table align=3D"left" border=3D"0" cellspacing=3D "0=
+" cellpadding=3D"0"><tr><![endif]--><!--[if mso]><td align=3D"center" va=
+lign=3D"top"><![endif]--><table align=3D"left" border=3D"0" cellpadding=
+=3D"0" cellspacing=3D"0" style=3D"display:inline;float:left" role=3D"prese=
+ntation"><tbody><tr><td style=3D"padding-top:3px;padding-bottom:3px;paddin=
+g-left:12px;padding-right:12px" valign=3D"top" class=3D"mceSocialFollowIco=
+n" align=3D"center" width=3D"40"><a href=3D"https://us.list-manage.com/za9=
+JbfImETN?e=3D7868a1eb57&c2id=3Dd575a91cad5d5ad3c6a64ad38aee97e2" target=3D"_blank" rel=3D"n=
+oreferrer"><img class=3D"mceSocialFollowImage" width=3D"40" height=3D"40"=
+ alt=3D"Facebook icon" src=3D"https://cdn-images.mailchimp.com/icons/socia=
+l-block-v3/block-icons-v3/facebook-filled-light-40.png" /></a></td></tr></=
+tbody></table><!--[if mso]></td><![endif]--><!--[if mso]><td align=3D"c=
+enter" valign=3D"top"><![endif]--><table align=3D"left" border=3D"0" cell=
+padding=3D"0" cellspacing=3D"0" style=3D"display:inline;float:left" role=
+=3D"presentation"><tbody><tr><td style=3D"padding-top:3px;padding-bottom:3=
+px;padding-left:12px;padding-right:12px" valign=3D"top" class=3D"mceSocial=
+FollowIcon" align=3D"center" width=3D"40"><a href=3D"https://us.list-manag=
+e.com/ZVd3jptLHgF?e=3D7868a1eb57&c2id=3Dd575a91cad5d5ad3c6a64ad38aee97e2" target=3D"_blank"=
+ rel=3D"noreferrer"><img class=3D"mceSocialFollowImage" width=3D"40" heigh=
+t=3D"40" alt=3D"Instagram icon" src=3D"https://cdn-images.mailchimp.com/ic=
+ons/social-block-v3/block-icons-v3/instagram-filled-light-40.png" /></a></=
+td></tr></tbody></table><!--[if mso]></td><![endif]--><!--[if mso]><td=
+ align=3D"center" valign=3D"top"><![endif]--><table align=3D"left" border=
+=3D"0" cellpadding=3D"0" cellspacing=3D"0" style=3D"display:inline;float:l=
+eft" role=3D"presentation"><tbody><tr><td style=3D"padding-top:3px;padding=
+-bottom:3px;padding-left:12px;padding-right:12px" valign=3D"top" class=3D"=
+mceSocialFollowIcon" align=3D"center" width=3D"40"><a href=3D"https://us.l=
+ist-manage.com/1N1iE0RayuB?e=3D7868a1eb57&c2id=3Dd575a91cad5d5ad3c6a64ad38aee97e2" target=
+=3D"_blank" rel=3D"noreferrer"><img class=3D"mceSocialFollowImage" width=
+=3D"40" height=3D"40" alt=3D"Website icon" src=3D"https://cdn-images.mailc=
+himp.com/icons/social-block-v3/block-icons-v3/website-filled-light-40.png"=
+ /></a></td></tr></tbody></table><!--[if mso]></td><![endif]--><!--[if=
+ mso]><td align=3D"center" valign=3D"top"><![endif]--><table align=3D"lef=
+t" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" style=3D"display:inlin=
+e;float:left" role=3D"presentation"><tbody><tr><td style=3D"padding-top:3p=
+x;padding-bottom:3px;padding-left:12px;padding-right:12px" valign=3D"top"=
+ class=3D"mceSocialFollowIcon" align=3D"center" width=3D"40"><a href=3D"ht=
+tps://us.list-manage.com/evAIPOu3BOk?e=3D7868a1eb57&c2id=3Dd575a91cad5d5ad3c6a64ad38aee97e2=
+" target=3D"_blank" rel=3D"noreferrer"><img class=3D"mceSocialFollowImage"=
+ width=3D"40" height=3D"40" alt=3D"LinkedIn icon" src=3D"https://cdn-image=
+s.mailchimp.com/icons/social-block-v3/block-icons-v3/linkedin-filled-light=
+-40.png" /></a></td></tr></tbody></table><!--[if mso]></td><![endif]--><=
+!--[if mso]></tr></table><![endif]--></td></tr></tbody></table></td></tr=
+></tbody></table></td></tr></tbody></table></td></tr></tbody></table></td>=
+</tr><tr><td valign=3D"top" class=3D"mceGutterContainer" id=3D"gutterConta=
+inerId-38"><table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=
+=3D"100%" style=3D"border-collapse:separate" role=3D"presentation"><tbody>=
+<tr><td style=3D"padding-top:12px;padding-bottom:12px;padding-right:0;padd=
+ing-left:0;border:0;border-radius:0" valign=3D"top" class=3D"mceLayoutCont=
+ainer" id=3D"b38"><table align=3D"center" border=3D"0" cellpadding=3D"0" c=
+ellspacing=3D"0" width=3D"100%" role=3D"presentation" data-block-id=3D"38"=
+ id=3D"section_e461f3a279febb6b4491d7900e505d22" class=3D"mceLayout"><tbod=
+y><tr class=3D"mceRow"><td style=3D"background-position:center;background-=
+repeat:no-repeat;background-size:cover" valign=3D"top"><table border=3D"0"=
+ cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" role=3D"presentation">=
+<tbody><tr><td valign=3D"top" class=3D"mceColumn" id=3D"mceColumnId--16" d=
+ata-block-id=3D"-16" colspan=3D"12" width=3D"100%"><table border=3D"0" cel=
+lpadding=3D"0" cellspacing=3D"0" width=3D"100%" role=3D"presentation"><tbo=
+dy><tr><td style=3D"border:0;border-radius:0" valign=3D"top" align=3D"cent=
+er" id=3D"b-8"><table align=3D"center" border=3D"0" cellpadding=3D"0" cell=
+spacing=3D"0" width=3D"100%" role=3D"presentation" data-block-id=3D"-8"><t=
+body><tr class=3D"mceRow"><td style=3D"background-position:center;backgrou=
+nd-repeat:no-repeat;background-size:cover" valign=3D"top"><table border=3D=
+"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" role=3D"presentatio=
+n"><tbody><tr><td valign=3D"top" class=3D"mceColumn" id=3D"mceColumnId--22=
+" data-block-id=3D"-22" colspan=3D"12" width=3D"100%"><table border=3D"0"=
+ cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" role=3D"presentation">=
+<tbody><tr><td style=3D"border:0;border-radius:0" valign=3D"top" id=3D"b37=
+"><table align=3D"center" border=3D"0" cellpadding=3D"0" cellspacing=3D"0"=
+ width=3D"100%" role=3D"presentation" data-block-id=3D"37"><tbody><tr clas=
+s=3D"mceRow"><td style=3D"background-position:center;background-repeat:no-=
+repeat;background-size:cover;padding-top:0px;padding-bottom:0px" valign=3D=
+"top"><table border=3D"0" cellpadding=3D"0" cellspacing=3D"24" width=3D"10=
+0%" style=3D"table-layout:fixed" role=3D"presentation"><colgroup><col span=
+=3D"1" width=3D"8.333333333333332%" /><col span=3D"1" width=3D"8.333333333=
+333332%" /><col span=3D"1" width=3D"8.333333333333332%" /><col span=3D"1"=
+ width=3D"8.333333333333332%" /><col span=3D"1" width=3D"8.333333333333332=
+%" /><col span=3D"1" width=3D"8.333333333333332%" /><col span=3D"1" width=
+=3D"8.333333333333332%" /><col span=3D"1" width=3D"8.333333333333332%" /><=
+col span=3D"1" width=3D"8.333333333333332%" /><col span=3D"1" width=3D"8.3=
+33333333333332%" /><col span=3D"1" width=3D"8.333333333333332%" /><col spa=
+n=3D"1" width=3D"8.333333333333332%" /></colgroup><tbody><tr><td style=3D"=
+padding-top:0;padding-bottom:0" valign=3D"top" class=3D"mceColumn" id=3D"m=
+ceColumnId-34" data-block-id=3D"34" colspan=3D"6" width=3D"50%"><table bor=
+der=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" role=3D"prese=
+ntation"><tbody><tr><td style=3D"background-color:transparent;padding-top:=
+12px;padding-bottom:12px;padding-right:0;padding-left:0;border:0;border-ra=
+dius:0" valign=3D"top" class=3D"mceImageBlockContainer" align=3D"center" i=
+d=3D"b33"><div><!--[if !mso]><!--></div><a href=3D"https://us.list-manage=
+=2Ecom/hv_Z1keVZl4?e=3D7868a1eb57&c2id=3Dd575a91cad5d5ad3c6a64ad38aee97e2" style=3D"display:b=
+lock" target=3D"_blank" data-block-id=3D"33"><table align=3D"center" borde=
+r=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" style=3D"border=
+-collapse:separate;margin:0;vertical-align:top;max-width:108px;width:100%;=
+height:auto" role=3D"presentation" data-testid=3D"image-33"><tbody><tr><td=
+ style=3D"border:0;border-radius:0;margin:0" valign=3D"top"><img alt=3D""=
+ src=3D"https://mcusercontent.com/f177a264847d7820ba11a4aa3/images/51adc1a=
+3-2389-53de-271c-ffb1693fe341.jpeg" width=3D"108" height=3D"auto" style=3D=
+"display:block;max-width:100%;height:auto;border-radius:0" class=3D"imageD=
+ropZone mceImage" /></td></tr></tbody></table></a><div><!--<![endif]--></=
+div><div>
+<!--[if mso]>
+<a href=3D"https://www.vrijburg.nl"><span class=3D"mceImageBorder" style=
+=3D"border:0;border-width:2px;vertical-align:top;margin:0"><img role=3D"pr=
+esentation" class=3D"imageDropZone mceImage" src=3D"https://mcusercontent.=
+com/f177a264847d7820ba11a4aa3/images/51adc1a3-2389-53de-271c-ffb1693fe341.=
+jpeg" alt=3D"" width=3D"108" height=3D"auto" style=3D"display:block;max-wi=
+dth:108px;width:108px;height:auto"/></span></a>
+<![endif]-->
+</div></td></tr></tbody></table></td><td style=3D"padding-top:0;padding-bo=
+ttom:0" valign=3D"top" class=3D"mceColumn" id=3D"mceColumnId-36" data-bloc=
+k-id=3D"36" colspan=3D"6" width=3D"50%"><table border=3D"0" cellpadding=3D=
+"0" cellspacing=3D"0" width=3D"100%" role=3D"presentation"><tbody><tr><td=
+ style=3D"background-color:transparent;padding-top:12px;padding-bottom:12p=
+x;padding-right:0;padding-left:0;border:0;border-radius:0" valign=3D"top"=
+ class=3D"mceImageBlockContainer" align=3D"center" id=3D"b35"><div><!--[i=
+f !mso]><!--></div><a href=3D"https://us.list-manage.com/bGMdDFrxzyA?e=3D7868a1eb57&c2id=3Dd575a91cad5d5ad3c6a64ad38aee97e2" style=3D"display:block" target=3D"_blank=
+" data-block-id=3D"35"><table align=3D"center" border=3D"0" cellpadding=3D=
+"0" cellspacing=3D"0" width=3D"100%" style=3D"border-collapse:separate;mar=
+gin:0;vertical-align:top;max-width:139px;width:100%;height:auto" role=3D"p=
+resentation" data-testid=3D"image-35"><tbody><tr><td style=3D"border:0;bor=
+der-radius:0;margin:0" valign=3D"top"><img alt=3D"" src=3D"https://mcuserc=
+ontent.com/f177a264847d7820ba11a4aa3/images/21784491-c2b3-efa1-be87-a0ef09=
+ec39fa.png" width=3D"139" height=3D"auto" style=3D"display:block;max-width=
+:100%;height:auto;border-radius:0" class=3D"imageDropZone mceImage" /></td=
+></tr></tbody></table></a><div><!--<![endif]--></div><div>
+<!--[if mso]>
+<a href=3D"https://www.vrijburg.nl/ANBI"><span class=3D"mceImageBorder" st=
+yle=3D"border:0;border-width:2px;vertical-align:top;margin:0"><img role=3D=
+"presentation" class=3D"imageDropZone mceImage" src=3D"https://mcuserconte=
+nt.com/f177a264847d7820ba11a4aa3/images/21784491-c2b3-efa1-be87-a0ef09ec39=
+fa.png" alt=3D"" width=3D"139" height=3D"auto" style=3D"display:block;max-=
+width:139px;width:139px;height:auto"/></span></a>
+<![endif]-->
+</div></td></tr></tbody></table></td></tr></tbody></table></td></tr></tbod=
+y></table></td></tr></tbody></table></td></tr></tbody></table></td></tr></=
+tbody></table></td></tr></tbody></table></td></tr></tbody></table></td></t=
+r></tbody></table></td></tr></tbody></table></td></tr><tr><td style=3D"pad=
+ding-top:0;padding-bottom:0;padding-right:0;padding-left:0" valign=3D"top"=
+ class=3D"mceGutterContainer" id=3D"gutterContainerId-39"><table border=3D=
+"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" style=3D"border-col=
+lapse:separate" role=3D"presentation"><tbody><tr><td style=3D"padding-top:=
+0;padding-bottom:0;padding-right:0;padding-left:0;border:0;border-radius:0=
+" valign=3D"top" id=3D"b39"><table width=3D"100%" style=3D"border:0;backgr=
+ound-color:transparent;border-radius:0;border-collapse:separate"><tbody><t=
+r><td style=3D"padding-left:24px;padding-right:24px;padding-top:12px;paddi=
+ng-bottom:12px" class=3D"mceTextBlockContainer"><div data-block-id=3D"39"=
+ class=3D"mceText" id=3D"d39" style=3D"width:100%"><p style=3D"line-height=
+: 1.25; mso-line-height-alt: 125%; text-align: center;" class=3D"last-chil=
+d"><span style=3D"font-size: 14px">Draagt u Vrijburg een warm hart toe en=
+ wilt u een financi=C3=ABle bijdrage leveren om met onze activiteiten door=
+ te kunnen gaan? Dat kan </span><a href=3D"https://us.list-manage.com/GpjR=
+BrIJ1ui?e=3D7868a1eb57&c2id=3Dd575a91cad5d5ad3c6a64ad38aee97e2" target=3D"_blank"><span sty=
+le=3D"font-size: 14px">via deze link</span></a><span style=3D"font-size: 1=
+4px">. Bij voorbaat dank!</span></p></div></td></tr></tbody></table></td><=
+/tr></tbody></table></td></tr></tbody></table></td></tr></tbody></table></=
+td></tr></tbody></table></td></tr></tbody></table><!--[if (gte mso 9)|(IE=
+)]></td></tr></table><![endif]--></td></tr></tbody><tbody data-block-id=
+=3D"47" class=3D"mceWrapper"><tr><td style=3D"background-color:#f4f4f4" va=
+lign=3D"top" align=3D"center" class=3D"mceSection47"><!--[if (gte mso 9)|=
+(IE)]><table align=3D"center" border=3D"0" cellspacing=3D"0" cellpadding=
+=3D"0" width=3D"660" style=3D"width:660px;"><tr><td><![endif]--><table bo=
+rder=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" style=3D"max=
+-width:660px" role=3D"presentation"><tbody><tr><td style=3D"background-col=
+or:#ffffff" valign=3D"top" class=3D"mceWrapperInner"><table align=3D"cente=
+r" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" role=3D=
+"presentation" data-block-id=3D"46"><tbody><tr class=3D"mceRow"><td style=
+=3D"background-position:center;background-repeat:no-repeat;background-size=
+:cover" valign=3D"top"><table border=3D"0" cellpadding=3D"0" cellspacing=
+=3D"0" width=3D"100%" role=3D"presentation"><tbody><tr><td style=3D"paddin=
+g-top:0;padding-bottom:0" valign=3D"top" class=3D"mceColumn" id=3D"mceColu=
+mnId--18" data-block-id=3D"-18" colspan=3D"12" width=3D"100%"><table borde=
+r=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" role=3D"present=
+ation"><tbody><tr><td style=3D"background-color:transparent;padding-top:12=
+px;padding-bottom:12px;padding-right:24px;padding-left:24px;border:0;borde=
+r-radius:0" valign=3D"top" class=3D"mceButtonBlockContainer" align=3D"cent=
+er" id=3D"b144"><div><!--[if !mso]><!--></div><table align=3D"center" bor=
+der=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentation" data-b=
+lock-id=3D"144" class=3D"mceButtonContainer"><tbody><tr class=3D"mceStanda=
+rdButton"><td style=3D"background-color:#006483;border-radius:8px;text-ali=
+gn:center" valign=3D"top" class=3D"mceButton"><a href=3D"https://us.list-m=
+anage.com/maQd9x5Kv62?e=3D7868a1eb57&c2id=3Dd575a91cad5d5ad3c6a64ad38aee97e2" target=3D"_bl=
+ank" class=3D"mceButtonLink" style=3D"background-color:#006483;border-radi=
+us:8px;border:1px none #000000;color:#00a1d8;display:block;font-family:Ari=
+al=2C 'Helvetica Neue'=2C Helvetica=2C sans-serif;font-size:16px;font-weig=
+ht:normal;font-style:normal;padding:16px 28px;text-decoration:none;text-al=
+ign:center;direction:ltr;letter-spacing:0px" rel=3D"noreferrer" data-butto=
+n-link-id=3D"144">Mediacommissie Vrijburg</a></td></tr></tbody></table><di=
+v><!--<![endif]--></div><table align=3D"center" border=3D"0" cellpadding=
+=3D"0" cellspacing=3D"0" role=3D"presentation" data-block-id=3D"144" class=
+=3D"mceButtonContainer"><tbody><tr>
+<!--[if mso]>
+<td align=3D"center">
+<v:roundrect xmlns:v=3D"urn:schemas-microsoft-com:vml"
+xmlns:w=3D"urn:schemas-microsoft-com:office:word"
+href=3D"https://us.list-manage.com/maQd9x5Kv62?e=3D7868a1eb57&amp;c2id=3D=
+d575a91cad5d5ad3c6a64ad38aee97e2" data-button-link-id=3D"144"
+style=3D"v-text-anchor:middle; width:234.13px; height:50.5px;"
+arcsize=3D"3%"
+strokecolor=3D"#006483"
+strokeweight=3D"1px"
+fillcolor=3D"#006483">
+<v:stroke dashstyle=3D"solid"/>
+<w:anchorlock />
+<center style=3D"
+color: #00a1d8;
+display: block;
+font-family: Arial=2C 'Helvetica Neue'=2C Helvetica=2C sans-serif;
+font-size: 16;
+font-style: normal;
+font-weight: normal;
+letter-spacing: 0px;
+text-decoration: none;
+text-align: center;
+direction: ltr;"
+>
+Mediacommissie Vrijburg
+</center>
+</v:roundrect>
+</td>
+<![endif]-->
+</tr></tbody></table></td></tr><tr><td style=3D"padding-top:8px;padding-bo=
+ttom:8px;padding-right:8px;padding-left:8px;border:0;border-radius:0" vali=
+gn=3D"top" class=3D"mceLayoutContainer" id=3D"b45"><table align=3D"center"=
+ border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" role=3D"p=
+resentation" data-block-id=3D"45" id=3D"section_3a08f122a466dbb5b7932b4a33=
+e4b917" class=3D"mceFooterSection"><tbody><tr class=3D"mceRow"><td style=
+=3D"background-position:center;background-repeat:no-repeat;background-size=
+:cover" valign=3D"top"><table border=3D"0" cellpadding=3D"0" cellspacing=
+=3D"12" width=3D"100%" role=3D"presentation"><tbody><tr><td style=3D"paddi=
+ng-top:0;padding-bottom:0" valign=3D"top" class=3D"mceColumn" id=3D"mceCol=
+umnId--3" data-block-id=3D"-3" colspan=3D"12" width=3D"100%"><table border=
+=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" role=3D"presenta=
+tion"><tbody><tr><td style=3D"padding-top:0;padding-bottom:0;padding-right=
+:0;padding-left:0" valign=3D"top" class=3D"mceGutterContainer" id=3D"gutte=
+rContainerId-43"><table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" w=
+idth=3D"100%" style=3D"border-collapse:separate" role=3D"presentation"><tb=
+ody><tr><td style=3D"padding-top:0;padding-bottom:0;padding-right:0;paddin=
+g-left:0;border:0;border-radius:0" valign=3D"top" align=3D"center" id=3D"b=
+43"><table width=3D"100%" style=3D"border:0;background-color:transparent;b=
+order-radius:0;border-collapse:separate"><tbody><tr><td style=3D"padding-l=
+eft:16px;padding-right:16px;padding-top:12px;padding-bottom:12px" class=3D=
+"mceTextBlockContainer"><div data-block-id=3D"43" class=3D"mceText" id=3D"=
+d43" style=3D"display:inline-block;width:100%"><p class=3D"last-child"><em=
+><span style=3D"font-size: 12px">Copyright =C2=A9 2026 Vrijzinnig Centrum=
+ Vrijburg Amsterdam=2C All rights reserved.</span></em><span style=3D"font=
+-size: 12px"><br />
+ U heeft eerder aangegeven ge=C3=AFnteresseerd te zijn in nieuws van Vrijb=
+urg en/of de Kinderkerk.<br /><br /></span><strong><span style=3D"font-siz=
+e: 14px">Ons adres:</span></strong><span style=3D"font-size: 14px"><br /><=
+/span><a href=3D"https://us.list-manage.com/ggxv49jYAoF?e=3D7868a1eb57&c2=
+id=3Dd575a91cad5d5ad3c6a64ad38aee97e2" target=3D"_self"><span style=3D"font-size: 14px">Medi=
+acommissie Vrijburg</span></a><span style=3D"font-size: 12px"><br /><span=
+ class=3D"vcard"><span class=3D"org fn">Vrijzinnig Centrum Vrijburg Amster=
+dam<br /></span><span class=3D"adr"><span class=3D"street-address">Diepenb=
+rockstraat 46<br /></span><span class=3D"locality">Amsterdam</span>=2C <sp=
+an class=3D"region">NH</span> <span class=3D"postal-code">1077 WE</span> <=
+span class=3D"country-name">Netherlands<br /></span><br /></span><br><a hr=
+ef=3D"https://vrijburg.us5.list-manage.com/vcard?u=3Df177a264847d7820ba11a=
+4aa3&id=3Da70e1c3885" class=3D"hcard-download">Voeg ons toe aan je adresbo=
+ek</a><br /></span>
+<br /><br /></span><a href=3D"https://vrijburg.us5.list-manage.com/profile=
+?u=3Df177a264847d7820ba11a4aa3&id=3Da70e1c3885&e=3D7868a1eb57&c=3Dd4f5109f25=
+" target=3D"_blank"><span style=3D"color:#ffffff;"><span style=3D"font-siz=
+e: 12px">_</span></span></a><span style=3D"font-size: 12px">Om het abonnem=
+ent van uw Vrijburg nieuwsbrieven aan te passen=2C klik dan </span><a href=
+=3D"https://vrijburg.us5.list-manage.com/profile?u=3Df177a264847d7820ba11a=
+4aa3&id=3Da70e1c3885&e=3D7868a1eb57&c=3Dd4f5109f25" target=3D"_blank"><span=
+ style=3D"font-size: 12px">hier</span></a><span style=3D"font-size: 12px">=
+=2E <br />Wilt u helemaal geen enkele nieuwsbrief meer van Vrijburg ontvange=
+n=2C klik dan </span><a href=3D"https://vrijburg.us5.list-manage.com/unsub=
+scribe?u=3Df177a264847d7820ba11a4aa3&id=3Da70e1c3885&t=3Db&e=3D7868a1eb57&c=
+=3Dd4f5109f25" target=3D"_blank"><span style=3D"font-size: 12px">hier</spa=
+n></a></p></div></td></tr></tbody></table></td></tr></tbody></table></td><=
+/tr><tr><td style=3D"border:0;border-radius:0" valign=3D"top" class=3D"mce=
+LayoutContainer" align=3D"center" id=3D"b-2"><table align=3D"center" borde=
+r=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" role=3D"present=
+ation" data-block-id=3D"-2"><tbody><tr class=3D"mceRow"><td style=3D"backg=
+round-position:center;background-repeat:no-repeat;background-size:cover;pa=
+dding-top:0px;padding-bottom:0px" valign=3D"top"><table border=3D"0" cellp=
+adding=3D"0" cellspacing=3D"24" width=3D"100%" role=3D"presentation"><tbod=
+y></tbody></table></td></tr></tbody></table></td></tr></tbody></table></td=
+></tr></tbody></table></td></tr></tbody></table></td></tr></tbody></table>=
+</td></tr></tbody></table></td></tr></tbody></table></td></tr></tbody></ta=
+ble><!--[if (gte mso 9)|(IE)]></td></tr></table><![endif]--></td></tr></=
+tbody></table>
+</td>
+</tr>
+</tbody></table>
+</center>
+</body></html>
+--_----------=_MCPart_581609836--

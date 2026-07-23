@@ -1,0 +1,1693 @@
+X-Antivirus: avg (VPS 26032104)
+X-Antivirus-Status: Clean
+Return-path: <bounce-mc.us5_10844695.5128610-7868a1eb57@mail242.suw101.mcdlv.net>
+Original-recipient: rfc822;martijnroelandse@me.com
+Received: from p00-icloudmta-smtpin-us-west-1a-100-percent-35 by p108-mailgateway-smtp-745bb848f-g2dpk (mailgateway 2610B131)
+	with SMTP id 414e2644-c6cd-4823-8d3f-0e155382c635 
+	for <martijnroelandse@me.com>; Sat, 21 Mar 2026 11:31:55 GMT
+X-ICLOUD-MAIL-BWL: 1
+X-Apple-MoveToFolder: INBOX 
+X-Apple-Action: WL/INBOX
+X-Apple-UUID: 414e2644-c6cd-4823-8d3f-0e155382c635
+Received: from mail242.suw101.mcdlv.net (mail242.suw101.mcdlv.net [198.2.184.242])
+	by p00-icloudmta-smtpin-us-west-1a-100-percent-35 (Postfix) with ESMTPS id 4E4ACC000F4
+	for <martijnroelandse@me.com>; Sat, 21 Mar 2026 11:31:49 +0000 (UTC)
+X-ICL-Info: GAtbRVYDBVFFSlVFSgQEUFUKE0oWX1gHVQoPB0UBD1pbS0hGQAQYUEFLRhIcDVQNABcFElVdVUwAClMoSQAOVkFPX0JWBQdQTU9XR1UHDlRNGFcSGgUBIhgYDxtKBARMBgwRRkgBGA8WHQoBVl5TFlUfAkoOQl8IFwwUEFZeWkIHGlsaGUJCCx8XFBgdXFcMEQoDNxVVGAEaFEYfHVxZXxgYDxtKBARMBgwRRkgBGA8WHQoBVl5TFlUJEgVFXVcLGUtSRVZDQxVESVdZFVNSDgNXCBIMEFIGSA8UHhJSQxASVwgbWF1fBkhFAEZPB1dQQ01eQ09UAVpHSQQWSQFXVhQYVVlPCABaFEgDFU0HGFBFS1BHSwIHU0RKV0NIHgNRExhRRxxRU1BbSwdCS1ECU0I5CxYRXARWR1cVAg8BBlNbFAUTFEYYDBANWA==
+X-ICL-Score: 2.33303322422
+Authentication-Results: bimi.icloud.com; bimi=none
+X-ARC-Info: policy=fail; arc=none; r1=-20; r2=0
+Authentication-Results: arc.icloud.com; arc=none
+Authentication-Results: dmarc.icloud.com; dmarc=pass header.from=vrijburg.nl
+X-DMARC-Policy: v=DMARC1; p=quarantine; pct=100; rua=mailto:webmaster@vrijburg.nl; ruf=mailto:webmaster@vrijburg.nl
+X-DMARC-Info: pass=pass; dmarc-policy=quarantine; s=r0; d=r1; pdomain=vrijburg.nl
+Authentication-Results: dkim-verifier.icloud.com; dkim=pass header.d=vrijburg.nl header.i=webmaster@vrijburg.nl header.b=X/hK/8Bi
+Received-SPF: pass (spf.icloud.com: domain of bounce-mc.us5_10844695.5128610-7868a1eb57@mail242.suw101.mcdlv.net designates 198.2.184.242 as permitted sender) receiver=spf.icloud.com; client-ip=198.2.184.242; helo=mail242.suw101.mcdlv.net; envelope-from=bounce-mc.us5_10844695.5128610-7868a1eb57@mail242.suw101.mcdlv.net
+Authentication-Results: spf.icloud.com; spf=pass (spf.icloud.com: domain of bounce-mc.us5_10844695.5128610-7868a1eb57@mail242.suw101.mcdlv.net designates 198.2.184.242 as permitted sender) smtp.mailfrom=bounce-mc.us5_10844695.5128610-7868a1eb57@mail242.suw101.mcdlv.net
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vrijburg.nl; s=k3;
+	t=1774092708; x=1774362708; i=webmaster@vrijburg.nl;
+	bh=okXp3xBgJVT4SOovBO9X9XdGfzb1N7F9tlSp5I2LcUo=;
+	h=Subject:From:Reply-To:To:Date:Message-ID:X-MC-User:Feedback-ID:
+	 List-ID:List-Unsubscribe:List-Unsubscribe-Post:Content-Type:
+	 MIME-Version:CC:Date:Subject:From;
+	b=X/hK/8BiKQ+sskKq80akPrXtoaz7/b3A7k50envXzfpCrnv7Dp+xe7/ZMwpnHlEFE
+	 Xw+2QHKQNa+dyt4HV4+yJWmMOJWZUNQ8DLo9DsI7FMMe2icG4MUYc8IHLnoyg1q1DC
+	 Usf6LfZsiUtnfJbe7LlXxV4X2RFQMuzz51pN21mAB7pGGCoPQ4clCReJIW0pIvTsE7
+	 Wlq2MHi3InqInQvErRCoBkhiy+m65vg0QoauX4EfCNo3sS2FeGRr56EiEa/4sQ/MYk
+	 mUHSRR4Zlyi0TJZlHLWFCiqSOg6iNYB4RKlpgFU8ohA2LHS17m6y9NvICVs8+7z+N1
+	 mUX5ed9CUxhPA==
+Received: from localhost (localhost [127.0.0.1])
+	by mail242.suw101.mcdlv.net (Mailchimp) with ESMTP id 4fdHMS2p4rz361xms
+	for <martijnroelandse@me.com>; Sat, 21 Mar 2026 11:31:48 +0000 (GMT)
+Subject: =?utf-8?Q?A.s.=20zondag=20in=20Vrijburg=3A=20Goed=20nieuws=20is=20gegrond=20in=20de=20kracht=20van=20zachtheid=E2=80=A6..=20=2D=205e=20dienst=20in=20de=2040=2Ddagentijd?=
+From: Vrijburg Amsterdam <webmaster@vrijburg.nl>
+Reply-To: =?utf-8?Q?Vrijburg=20Amsterdam?= <webmaster@vrijburg.nl>
+To: <martijnroelandse@me.com>
+Date: Sat, 21 Mar 2026 11:31:47 +0000
+Message-ID: <f177a264847d7820ba11a4aa3.7868a1eb57.20260321113140.53fa70dae2.2a53a417@mail242.suw101.mcdlv.net>
+X-Mailer: Mailchimp Mailer - **CID53fa70dae27868a1eb57**
+X-Campaign: mailchimpf177a264847d7820ba11a4aa3.53fa70dae2
+X-campaignid: mailchimpf177a264847d7820ba11a4aa3.53fa70dae2
+X-Report-Abuse: Please report abuse for this campaign here: https://mailchimp.com/contact/abuse/?u=f177a264847d7820ba11a4aa3&id=53fa70dae2&e=7868a1eb57
+X-MC-User: f177a264847d7820ba11a4aa3
+Feedback-ID: 10844695:10844695.5128610:us5:mc
+List-ID: f177a264847d7820ba11a4aa3mc list <f177a264847d7820ba11a4aa3.240277.list-id.mcsv.net>
+X-Accounttype: pd
+List-Unsubscribe: <https://vrijburg.us5.list-manage.com/unsubscribe?u=f177a264847d7820ba11a4aa3&id=a70e1c3885&t=h&e=7868a1eb57&c=53fa70dae2>, <mailto:unsubscribe-mc.us5_f177a264847d7820ba11a4aa3.53fa70dae2-7868a1eb57@unsubscribe.mailchimpapp.net?subject=unsubscribe>
+List-Unsubscribe-Post: List-Unsubscribe=One-Click
+Content-Type: multipart/alternative; boundary="_----------=_MCPart_648302413"
+MIME-Version: 1.0
+X-MANTSH: 1TFkXGxIbEQpZRBdlRF9AWkdYaQVcSxEKWU0XZEVETxEKWUkXGnEaEBp3BhscG3E
+ eGhAadwYYGgYaEQpZXhdsbHkRCkNOF0xZU0MaRGtLf2wbZ3N9WW9PGEATfXJ6GXVifU9FflpAE
+ QpYXBcZBBoEHx4FGxoEGxwYBBkaBBgSEBseGh8aEQpeWRdNE2lwaREKTVwXBxMZEQpMWhdCbU1
+ NexEKTEYXTWsRCkNaFxsTEgQYBBsSHgQYHhgRCkJeFxsRCkJGF2ZnBRN9e3NNEntMEQpCRxdnU
+ FJoc20TWnx4ZxEKQlwXGxEKXk4XGxEKQksXbmFyHxxYRWlmR2ARCkJJF25hch8cWEVpZkdgEQp
+ CRRdpa0lwSR4fTxN+fxEKQk4XbmFyHxxYRWlmR2ARCkJMF25CeVxbcFxCE2V6EQpCbBdpfBlNZ
+ xxFT2BZWhEKQkAXb25iXGwaWWh9fVsRCkJYF21nbWBsGXBhHVh7EQpCeBdrZxp5aEkdS11sXhE
+ KWlgXGx4RCnBnF3p5HBoBZH8BQml5EBoRCnBoF24ce1AfbUB5UmdlEAcSGREKcGgXaXh6fkNPH
+ X1ZS2AQBxIYEQpwaBdtG2t5QgUdW3lMbhAaEQpwaBdmYUBnQl5Ef0N8fhAHHxIRCnB/F25NE3x
+ MSEkaRkttEAcSEhEKcF8XaXNyTUhhbhx4XkcQGhEKcH0XYGhOXxNaAXtsW2cQGhEKcGcXaVtzU
+ hoYZ11AHB8QGhEKcH8Xb3BdelxoRFNsZRgQBxIcEQpwXxdjaR5aZ3tcf1lnRhAaEQpwfRdta01
+ SRntiRx0eYhAaEQpwfRdobG9ZGXlST2dDYBAaEQpwfRdgTE1tSGh4YUlkQRAaEQpwfRdjThpQH
+ BwcWXJdeBAaEQpwfRd6aRxJbmcbYXp5ExAaEQpwfRdlAWRLGVlPHBodeRAaEQpwfRdtHhJleV4
+ dGBgaQBAaEQpwXxdsehh9YGRaG1ttZBAaEQpwfRdlfUNnYll6Yh5MaBAaEQpwXxdkG01rYW8Te
+ hJ/chAaEQpwfRdvQlkdekVwT31fbxAaEQpwfxdtQ2VkGGZITWF/GhAHExgRCnBfF2tFTgUcYGx
+ QQ1oBEAcTHBEKcH0Xa0VOBRxgbFBDWgEQBxMcEQpwfxdnSUN6YBJwUgFiaBAHExkRCnBfF2R8T
+ WFFZEFfWltOEAcTGREKcH0XZHxNYUVkQV9aW04QBxMZEQpwXxdlZGBoZUlNW1oBbxAHEhIRCnB
+ 9F3pJGhp9TnNJAR1FEAcdEhEKcF8XaF18AUcBcGgYbkwQGhEKcH0XZHtuRVlSem1lZx8QGhEKc
+ H0XbksbUmwcfUdtE2EQGhEKcGwXbUVmQkscZmRpGkUQGhEKbX4XGhEKWE0XSxE=
+X-Proofpoint-ORIG-GUID: fsyi0nAaUF1MYWsEe2j9WXP3_HWeoTpj
+X-Proofpoint-GUID: fsyi0nAaUF1MYWsEe2j9WXP3_HWeoTpj
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzIxMDA5NCBTYWx0ZWRfXyQaVCrw4Sq6b
+ tNOrenSabLh9Yn1OW48DAcUMYDuJdaqMSer6vG4mI0+CJ+mF127rc8ipbsq8us9w4zC50Io6tpS
+ PxOxNkqwdE1071irnLg93AU8b0NC+6JY8oBNgwszrbl+hxPbTyZBVOH5aYPlENU+ApMPY61t8df
+ H4L6MHnMJRHiEey4LMAS20OTJddABi1pjscHh5PTwimrp2vTrHWo3655ieKQ61M+7kRXpdFTklE
+ FSkjCQ4KyVDGAwGMj7w2rNO8CB5YjEzfm4bGYyLQSh2+moc6ye03mFQZWcpT7QxDaB1QXEndW7M
+ rCi1xsdb+E0scJxk87J
+X-JNJ: AAAAAAAB85bbEiY/1Lpo67fnInAj9fLFxU06SkKYPmuzNd/kOAbwfX8zpAnHXXaHhhJxKT/iJzF09+tSXRZGUHUCP2R3P/RYqB2K3qa0nJKmJBbsM/Blwkg8LcTf/0i41CJ5x/UbZ0tK0iDDEBTtCS7xS5fmI/M7LtBU5PgNgoWJgsXwyASf8Ah9hT7nxzk7S8/MYMFvrRjFJn2DsbJK1sGM5M5HuBMddKz3de07DF8xFKnunKa+JgT1i+nZYUT5CVRgWvyMiiNmf1Usm2sXFkcFgzDvEf97aE/pROtDatTiobHHDz3pePMT9Ha68VrfFvFypRI5cjihrpANC6g1yl7UkOYfUXo9at2uLOVAtVayJ7Er2C7N9xxSCFZTQ4bLd5i477krEee2HErcOru1+KkfQRtT2Y1KB8NmMYUZeizZeNn7F38SGsP0h9ZzDTeIdxC/tBhHDrFrAQvhwH1E7RVWYkcXsdDTkoYrX7vo+IXNlPRZe0Xtw/lJR6End6H4YAJzEp8I4zhqHoTLNwSjuU2td6pwKJte9Yje2GA9pxSXD77XuVx3LlJ7e4wIEa0Cjmm02ibLKXH7PXeiz+OZl2lFFRe4I4XA/cU9G8BnLqDmS4n5J+GNUeSjRm8Uuh9Xe6jUiuy0ou9hK8s5ujyhAl8nUn45eBrwNrx0ZesNqFc3tb1v6uUIapUosoPkEGNDRvm47N5yYpJe94/I0BIkw4usbbIE0cI6zJHmYsF/Jv/SVQLCVCnfQJS1cjtWoO8ldB5Ki2MHBeVhDZK6sCLz+xGakzr1mQ+/odtxm4bxNsl0nWq/BN34uOjPjG7mK5qf9NQd4VL3g586sf+iSY+q3QRo5bQzZ/F0LwtBVWmCz1NzeAFJxZLGA/3g2IyUl2VPCq397pplA06V/TJvtvQixsfi6tTMBuR75xrmLaDoxJiLmi2YU3+696nfAT+pfK2y+PVSDwmSQdhX+srA5CzzcEsJB/ZvbBTPMifJxzRDLUymqiN0cJ6969qGPB5IlqdtiTk66hHnULntaPnuus3U9xODNhkp1t2yim/dCuY2c/z+BRB4HJUNqXRxpaZm7vmeS4Q2Dw/Ot0m6AVmgkN2WH1Q9Pos+5/O7B51I2Iwzn5ZumSiQSPsmnvW0ZBoFqxaeIGmpf+Xt0rHcKc80pAHkpTnvCvLw0YOpfw==
+
+This is a multi-part message in MIME format
+
+--_----------=_MCPart_648302413
+Content-Type: text/plain; charset="utf-8"; format="fixed"
+Content-Transfer-Encoding: quoted-printable
+
+Voorganger is ds. Martin Kroon
+
+Kinderkerk Nieuwsbrief
+Is deze e-mail niet goed leesbaar? Bekijk het in uw browser (https://mailc=
+hi.mp/92cb13be4790/5n2f6kfiau-5128610?e=3D7868a1eb57)
+Het is enige tijd geleden=2C maar hierbij weer een nieuwe kinderkerknieuws=
+brief om iedereen helemaal bij te praten over de volgende dingen:
+* 0-100 dienst aanstaande zondag 9 november
+* Kerst
+* Whatsapp-groep
+* Tieners
+* Data kinderkerk 2021 / 2022
+
+0-100 dienst aanstaande zondag 9 november
+We lezen dit trimester het verhaal van Jona. Inmiddels zijn we met de kind=
+erkerk (en u ook in de kerkzaal) aangekomen in Ninev=C3=A9. Jona heeft dan=
+ toch maar geprofeteerd en zowaar=2C het heeft effect. De hele stad zit in=
+ zak en as en bekeert zich. Met resultaat=2C want de stad wordt niet verwo=
+est. Maar dit is niet het einde van het verhaal. Er is nog een hoofdstuk.=
+ En over Jona 4 gaan we het de volgende keer hebben met de kinderen. Jona=
+ is sensatiebewust op een berg gaan zitten=2C met uitzicht op Ninev=C3=A9=
+=2C in afwachting van de verwoesting van Ninev=C3=A9. Maar er komt geen ve=
+rwoesting. Op 7 november gaan we kijken hoe Jona daarop reageert.
+
+Kerst
+Vorig jaar hebben we met de hulp van jullie allemaal een geweldige kerstfi=
+lm gemaakt. Dit jaar kunnen we (althans daar gaan we van uit) weer gewoon=
+ een buitengewoon kerstspel spelen in de kerk=2C met het podium en alles e=
+rbij. Annemieke heeft recent een mailtje uitgestuurd met de vraag welke ki=
+nderen (uit Vertelgroep en Gespreksgroep) mee willen doen aan het kerstspe=
+l. Dat betekent meedoen aan de eerste en de generale repetitie=2C en tusse=
+ndoor je tekst (niet zo heel lang) leren=2C en natuurlijk meedoen aan het=
+ kerstspel zelf! We hebben al heel wat reacties mogen ontvangen en het bel=
+ooft weer een mooi spektakel te worden.
+
+Mocht je nog niet hebben gereageerd en je wil graag meedoen=2C wil je Anne=
+mieke dan een mailtje sturen (a.vanderveen.avdv@gmail.com (mailto:a.vander=
+veen.avdv@gmail.com?subject=3DKerst) )?
+
+Onze tweede vraag over de kerst heeft te maken met de planning.
+
+De eerste repetitie van het kerstspel is op zondag 12 december tijdens de=
+ kerkdienst. We gaan de rollen verdelen en de teksten van het kerstspel do=
+ornemen.
+
+De tweede repetitie is moeilijk in te plannen: de kerstvakantie begint off=
+icieel pas op 25 december=2C maar dan moeten we de generale repetitie al a=
+chter de rug hebben!
+We willen jullie vragen om door te geven op welke momenten op vrijdag 24 d=
+ecember jullie kinderen al kunnen oefenen: sommige scholen geven de 24e al=
+ vrij=2C sommige hebben altijd de middag voor de vakantie vrij. Hoe zit da=
+t bij jullie:
+- kunnen jullie kinderen vanaf 14.00 in de kerk repeteren?
+- of tussen 15 en 17 uur?
+- of na 16.00 uur?
+- of op een ander moment?
+Willen jullie dit ook laten weten?
+
+Mocht je 1 van de repetities niet kunnen=2C dan mag je nog altijd mee doen=
+ uiteraard!
+Whatsapp-groep
+Om wat sneller en director contact te houden met elkaar zouden we met de o=
+uders van de kinderkerk-kinderen graag een Whatsapp-groep willen maken. We=
+ horen graag of julllie daaraan mee willen doen. Opgeven kan bij Annemieke=
+ (a.vanderveen.avdv@gmail.com (mailto:a.vanderveen.avdv@gmail.com?subject=
+=3DKerst) ).
+
+Tieners
+Sinds afgelopen zomer is Jasper gestart met de tienergroep=2C voor iederee=
+n tussen de 12 en 15 jaar (vanaf de brugklas). De tieners zijn natuurlijk=
+ altijd welkom in de dienst=2C maar op 7 november geldt dit in het in het=
+ bijzonder! Na de dienst gaan we onder het genot van een kop thee en iets=
+ lekkers in gesprek over de dienst: wat was er raar? Wat was er mooi? Waar=
+om doen we de dingen zoals we ze doen? Daarbij schuift een zeer ervaren ge=
+meentelid aan. Mocht dit bevallen=2C dan doen we dit in het vervolg een ke=
+er per maand.
+
+Verder graag jullie mening over het volgende. Ik zou de kelder graag =C3=
+=A9=C3=A9n middag per twee weken na schooltijd open willen stellen voor de=
+ tieners: om bij te kletsen=2C samen huiswerk te maken en te ontspannen. A=
+an het einde van de middag gaan we dan aan de slag om samen de dienst van=
+ 6 februari voor te bereiden. Afsluitend is er dan de gelegenheid om iets=
+ te eten. Ook zal ik in de donkere maanden ervoor zorgen dat een ieder die=
+ dat wil met de auto naar huis gebracht wordt.
+
+Zouden jullie mij kunnen appen of mailen of jullie dit een idee vinden=2C=
+ en zo ja=2C welke middag geschikt zou zijn? (jasperdijkman@xs4all.nl (mai=
+lto:jasperdijkman@xs4all.nl)  / 0641760555)
+
+Data kinderkerk 2021 / 2022
+
+Voor de volledigheid delen we nog een keertje de data voor de kinderkerk d=
+it seizoen. We hopen jullie dan te zien!
+* 7 november 2021=2C
+* 25 december 2021 (kerst)=2C
+* 6 februari 2022=2C
+* 6 maart 2021=2C
+* 10 april 2022 (palmpasen)=2C
+* 17 april 2022 (pasen)=2C
+* 15 mei 2022=2C
+* 5 juni 2022 (pinksteren)=2C
+* 3 juli 2022 (jaarafsluiting).
+
+Mediacommissie Vrijburg (https://vrijburg.us5.list-manage.com/track/click?=
+u=3Df177a264847d7820ba11a4aa3&id=3Dec97cbb4b4&e=3D7868a1eb57)
+
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+** (https://vrijburg.us5.list-manage.com/track/click?u=3Df177a264847d7820b=
+a11a4aa3&id=3D0788b7b798&e=3D7868a1eb57)
+** Volg ons op Facebook (https://vrijburg.us5.list-manage.com/track/click?=
+u=3Df177a264847d7820ba11a4aa3&id=3D13633aa4e7&e=3D7868a1eb57)
+** (https://vrijburg.us5.list-manage.com/track/click?u=3Df177a264847d7820b=
+a11a4aa3&id=3De431bc8fb1&e=3D7868a1eb57)
+** Volg ons op Twitter (https://vrijburg.us5.list-manage.com/track/click?u=
+=3Df177a264847d7820ba11a4aa3&id=3Dee6fa5e9dc&e=3D7868a1eb57)
+** (https://vrijburg.us5.list-manage.com/track/click?u=3Df177a264847d7820b=
+a11a4aa3&id=3D4713b4aca8&e=3D7868a1eb57)
+** Onze website (https://vrijburg.us5.list-manage.com/track/click?u=3Df177=
+a264847d7820ba11a4aa3&id=3D3b419f313c&e=3D7868a1eb57)
+Copyright =C2=A9 2026 Vrijzinnig Centrum Vrijburg Amsterdam=2C All rights=
+ reserved.
+ U heeft eerder aangegeven ge=C3=AFnteresseerd te zijn in nieuws van Vrijb=
+urg en/of de Kinderkerk.
+
+Ons adres:
+Vrijzinnig Centrum Vrijburg Amsterdam
+Diepenbrockstraat 46
+Amsterdam=2C NH 1077 WE
+Netherlands
+Pas ** hier (https://vrijburg.us5.list-manage.com/profile?u=3Df177a264847d=
+7820ba11a4aa3&id=3Da70e1c3885&e=3D7868a1eb57&c=3D53fa70dae2)
+uw Vrijburg nieuwsbrieven abonnement aan. Wilt u helemaal geen enkele nieu=
+wsbrief meer van Vrijburg ontvangen=2C klik dan ** hier (https://vrijburg.=
+us5.list-manage.com/unsubscribe?u=3Df177a264847d7820ba11a4aa3&id=3Da70e1c3=
+885&t=3Db&e=3D7868a1eb57&c=3D53fa70dae2)
+--_----------=_MCPart_648302413
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+<!DOCTYPE html><html xmlns=3D"http://www.w3.org/1999/xhtml" xmlns:v=3D"urn=
+:schemas-microsoft-com:vml" xmlns:o=3D"urn:schemas-microsoft-com:office:of=
+fice"><head>
+<!--[if gte mso 15]>
+<xml>
+<o:OfficeDocumentSettings>
+<o:AllowPNG/>
+<o:PixelsPerInch>96</o:PixelsPerInch>
+</o:OfficeDocumentSettings>
+</xml>
+<![endif]-->
+<meta charset=3D"UTF-8" />
+<meta http-equiv=3D"X-UA-Compatible" content=3D"IE=3Dedge" />
+<meta name=3D"viewport" content=3D"width=3Ddevice-width=2C initial-scale=
+=3D1" />
+<title>A.s. zondag in Vrijburg: Goed nieuws is gegrond in de kracht van za=
+chtheid=E2=80=A6.. - 5e dienst in de 40-dagentijd</title>
+<link rel=3D"preconnect" href=3D"https://fonts.googleapis.com" />
+<link rel=3D"preconnect" href=3D"https://fonts.gstatic.com" crossorigin=3D=
+"" />
+<!--[if !mso]><!--><link rel=3D"stylesheet" type=3D"text/css" id=3D"newGo=
+ogleFontsStatic" href=3D"https://fonts.googleapis.com/css?family=3DRoboto:=
+400=2C400i=2C700=2C700i=2C900=2C900i" /><!--<![endif]--><style>img{-ms-in=
+terpolation-mode:bicubic;}
+table=2C td{mso-table-lspace:0pt;mso-table-rspace:0pt;}
+=2EmceStandardButton=2C .mceStandardButton td=2C .mceStandardButton td a{mso=
+-hide:all!important;}
+p=2C a=2C li=2C td=2C blockquote{mso-line-height-rule:exactly;}
+p=2C a=2C li=2C td=2C body=2C table=2C blockquote{-ms-text-size-adjust:100=
+%;-webkit-text-size-adjust:100%;}
+=2EmcnPreviewText{display:none!important;}
+=2EbodyCell{margin:0 auto;padding:0;width:100%;}
+=2EExternalClass=2C .ExternalClass p=2C .ExternalClass td=2C .ExternalClass=
+ div=2C .ExternalClass span=2C .ExternalClass font{line-height:100%;}
+=2EReadMsgBody=2C .ExternalClass{width:100%;}
+a[x-apple-data-detectors]{color:inherit!important;text-decoration:none!im=
+portant;font-size:inherit!important;font-family:inherit!important;font-wei=
+ght:inherit!important;line-height:inherit!important;}
+body{height:100%;margin:0;padding:0;width:100%;background:#ffffff;}
+p{margin:0;padding:0;}
+table{border-collapse:collapse;}
+td=2C p=2C a{word-break:break-word;}
+h1=2C h2=2C h3=2C h4=2C h5=2C h6{display:block;margin:0;padding:0;}
+img=2C a img{border:0;height:auto;outline:none;text-decoration:none;}
+a[href^=3D"tel"]=2C a[href^=3D"sms"]{color:inherit;cursor:default;text-d=
+ecoration:none;}
+=2EmceColumn .mceButtonLink=2C
+            .mceColumn-1 .mceButtonLink=2C
+            .mceColumn-2 .mceButtonLink=2C
+            .mceColumn-3 .mceButtonLink=2C
+            .mceColumn-4 .mceButtonLink{min-width:30px;}
+div[contenteditable=3D"true"]{outline:0;}
+=2EmceImageBorder{display:inline-block;}
+=2EmceImageBorder img{border:0!important;}
+body=2C #bodyTable{background-color:rgb(244=2C 244=2C 244);}
+=2EmceText=2C .mcnTextContent=2C .mceLabel{font-family:Arial=2C "Helvetica N=
+eue"=2C Helvetica=2C sans-serif;}
+=2EmceText=2C .mcnTextContent=2C .mceLabel{color:rgb(0=2C 0=2C 0);}
+=2EmceText h1=2C .mceText p=2C .mceText label=2C .mceText input{margin-botto=
+m:0;}
+=2EmceSpacing-24 .mceInput + .mceErrorMessage{margin-top:-12px;}
+=2EmceSpacing-12 .mceInput + .mceErrorMessage{margin-top:-6px;}
+=2EmceInput{background-color:transparent;border:2px solid rgb(208=2C 208=2C=
+ 208);width:60%;color:rgb(77=2C 77=2C 77);display:block;}
+=2EmceInput[type=3D"radio"]=2C .mceInput[type=3D"checkbox"]{float:left;mar=
+gin-right:12px;display:inline;width:auto!important;}
+=2EmceLabel > .mceInput{margin-bottom:0;margin-top:2px;}
+=2EmceLabel{display:block;}
+=2EmceText p=2C .mcnTextContent p{color:rgb(0=2C 0=2C 0);font-family:Arial=
+=2C "Helvetica Neue"=2C Helvetica=2C sans-serif;font-size:16px;font-weight=
+:normal;line-height:1.5;mso-line-height-alt:150%;text-align:left;letter-sp=
+acing:0;direction:ltr;margin:0;}
+=2EmceText h1=2C .mcnTextContent h1{color:rgb(0=2C 0=2C 0);font-family:"Helv=
+etica Neue"=2C Helvetica=2C Arial=2C Verdana=2C sans-serif;font-size:31px;=
+font-weight:bold;line-height:1.5;mso-line-height-alt:150%;text-align:left;=
+letter-spacing:0;direction:ltr;}
+=2EmceText a=2C .mcnTextContent a{color:rgb(43=2C 170=2C 223);font-style:nor=
+mal;font-weight:normal;text-decoration:underline;direction:ltr;}
+p.mcePastedContent=2C h1.mcePastedContent=2C h2.mcePastedContent=2C h3.mce=
+PastedContent=2C h4.mcePastedContent{text-align:left;}
+#d43 p=2C #d43 h1=2C #d43 h2=2C #d43 h3=2C #d43 h4=2C #d43 ul=2C #d1 p=2C=
+ #d1 h1=2C #d1 h2=2C #d1 h3=2C #d1 h4=2C #d1 ul{text-align:center;}
+@media only screen and (max-width: 480px) {
+body=2C table=2C td=2C p=2C a=2C li=2C blockquote{-webkit-text-size-adjust=
+:none!important;}
+body{width:100%!important;min-width:100%!important;}
+body.mobile-native{-webkit-user-select:none;user-select:none;transition:tr=
+ansform 0.2s ease-in;transform-origin:top center;}
+colgroup{display:none;}
+=2EmceLogo img=2C .mceImage img=2C .mceSocialFollowIcon img{height:auto!impo=
+rtant;}
+=2EmceWidthContainer{max-width:660px!important;}
+=2EmceColumn=2C .mceColumn-2{display:block!important;width:100%!important;}
+=2EmceColumn-forceSpan{display:table-cell!important;width:auto!important;}
+=2EmceColumn-forceSpan .mceButton a{min-width:0!important;}
+=2EmceReverseStack{display:table;width:100%;}
+=2EmceColumn-1{display:table-footer-group;width:100%!important;}
+=2EmceColumn-3{display:table-header-group;width:100%!important;}
+=2EmceColumn-4{display:table-caption;width:100%!important;}
+=2EmceKeepColumns .mceButtonLink{min-width:0;}
+=2EmceBlockContainer=2C .mceSpacing-24{padding-right:16px!important;padding-=
+left:16px!important;}
+=2EmceBlockContainerE2E{padding-right:0;padding-left:0;}
+=2EmceImage=2C .mceLogo{width:100%!important;height:auto!important;}
+=2EmceText img{max-width:100%!important;}
+=2EmceFooterSection .mceText=2C .mceFooterSection .mceText p{font-size:16px!=
+important;line-height:140%!important;}
+=2EmceText p{margin:0;font-size:16px!important;line-height:1.5!important;mso=
+-line-height-alt:150%;}
+=2EmceText h1{font-size:31px!important;line-height:1.5!important;mso-line-he=
+ight-alt:150%;}
+=2EbodyCell{padding-left:16px!important;padding-right:16px!important;}
+=2EmceButtonContainer{width:fit-content!important;max-width:fit-content!impo=
+rtant;}
+=2EmceButtonLink{padding:18px 28px!important;font-size:16px!important;}
+=2EmceDividerContainer{width:100%!important;}
+#b1 .mceTextBlockContainer=2C #b12 .mceTextBlockContainer=2C #b24=2C #b25=
+=2C #b26 .mceTextBlockContainer=2C #b39 .mceTextBlockContainer=2C #b120 .m=
+ceTextBlockContainer=2C #b128=2C #b143=2C #b144=2C #b208 .mceTextBlockCont=
+ainer=2C #b300 .mceTextBlockContainer=2C #b311 .mceTextBlockContainer=2C #=
+b312 .mceTextBlockContainer=2C #b315=2C #b327=2C #b331=2C #b332 .mceTextBl=
+ockContainer=2C #b333 .mceTextBlockContainer=2C #b334 .mceTextBlockContain=
+er=2C #b335=2C #b336{padding:12px 24px!important;}
+#gutterContainerId-1=2C #gutterContainerId-12=2C #gutterContainerId-26=2C=
+ #gutterContainerId-39=2C #gutterContainerId-43=2C #gutterContainerId-120=
+=2C #gutterContainerId-208=2C #gutterContainerId-300=2C #gutterContainerId=
+-311=2C #gutterContainerId-312=2C #gutterContainerId-332=2C #gutterContain=
+erId-333=2C #gutterContainerId-334{padding:0!important;}
+#b4=2C #b16=2C #b33=2C #b35=2C #b207{padding:12px 0!important;}
+#b4 table=2C #b16 table{margin-right:auto!important;float:none!important;}
+#b24 table=2C #b25 table=2C #b128 table=2C #b143 table=2C #b144 table=2C #=
+b315 table{float:none!important;margin:0 auto!important;}
+#b24 .mceButtonContainer=2C #b25 .mceButtonContainer=2C #b315 .mceButtonCo=
+ntainer{width:100%!important;max-width:100%!important;}
+#b24 .mceButtonLink=2C #b25 .mceButtonLink=2C #b128 .mceButtonLink=2C #b14=
+3 .mceButtonLink=2C #b144 .mceButtonLink=2C #b315 .mceButtonLink{padding-t=
+op:16px!important;padding-bottom:16px!important;font-size:16px!important;}
+#b33 table=2C #b35 table=2C #b207 table=2C #b330 table=2C #b331 table=2C #=
+b336 table{margin-left:auto!important;margin-right:auto!important;float:no=
+ne!important;}
+#b43 .mceTextBlockContainer=2C #b330{padding:12px 16px!important;}
+#b128 .mceButtonContainer{width:50%!important;max-width:50%!important;}
+#b327 .mceDividerBlock=2C #b335 .mceDividerBlock{border-top-width:2px!impo=
+rtant;}
+}
+@media only screen and (max-width: 640px) {
+=2EmceClusterLayout td{padding:4px!important;}
+}</style></head>
+<body>
+<!--
+-->
+<!--[if !gte mso 9]><!----><span class=3D"mcnPreviewText" style=3D"displa=
+y:none; font-size:0px; line-height:0px; max-height:0px; max-width:0px; opa=
+city:0; overflow:hidden; visibility:hidden; mso-hide:all;">Voorganger is d=
+s. Martin Kroon</span><!--<![endif]-->
+<!--
+-->
+<div style=3D"display: none; max-height: 0px; overflow: hidden;">=CD=8F=
+ =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=
+=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=
+=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C=
+ =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=
+=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0=
+ =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=
+=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=
+=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87=
+  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87 =
+ =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=
+=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F=
+ =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=
+=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=
+=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C=
+ =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=
+=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0=
+ =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=
+=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=
+=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87=
+  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87 =
+ =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=
+=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F=
+ =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=
+=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=
+=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C=
+ =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=
+=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0=
+ =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=
+=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=
+=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87=
+  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87 =
+ =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=
+=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F=
+ =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=
+=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=
+=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C=
+ =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=
+=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0=
+ =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=
+=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=
+=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87=
+  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87 =
+ =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=
+=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F=
+ =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=
+=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=
+=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C=
+ =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=
+=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0=
+ =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=
+=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=
+=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87=
+  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87 =
+ =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=
+=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F=
+ =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=
+=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=
+=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C=
+ =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=
+=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0=
+ =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=
+=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=
+=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87=
+  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87 =
+ =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=
+=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F=
+ =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=
+=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=
+=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C=
+ =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=
+=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0=
+ =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=
+=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=
+=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87=
+  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87 =
+ =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=
+=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F=
+ =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=
+=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=
+=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C=
+ =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=
+=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0=
+ =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=
+=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=
+=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87=
+  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87 =
+ =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=
+=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F=
+ =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=
+=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=
+=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C=
+ =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=
+=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0=
+ =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=
+=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=
+=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87=
+  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87 =
+ =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=
+=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F=
+ =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=
+=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=
+=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C=
+ =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=
+=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0=
+ =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=
+=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=
+=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87=
+  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87 =
+ =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=
+=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F=
+ =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=
+=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=
+=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C=
+ =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=
+=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0=
+ =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=
+=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=
+=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87=
+  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87 =
+ =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=
+=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F=
+ =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=
+=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=
+=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C=
+ =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=
+=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0=
+ =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=
+=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=
+=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87=
+  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87 =
+ =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=
+=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F=
+ =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=
+=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=
+=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C=
+ =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=
+=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0=
+ =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=
+=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=
+=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87=
+  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87 =
+ =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=
+=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F=
+ =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=
+=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=
+=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C=
+ =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=
+=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0=
+ =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=
+=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=
+=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87=
+  =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87 =
+ =CD=8F =E2=80=8C =C2=A0 =E2=80=87  =CD=8F =E2=80=8C =C2=A0 =E2=80=87=C2=
+=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD=
+ =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=
+=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD=
+ =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=
+=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD=
+ =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=
+=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD=
+ =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=
+=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD=
+ =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=
+=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD=
+ =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=
+=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD=
+ =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=
+=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD=
+ =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=
+=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD=
+ =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=
+=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD=
+ =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=
+=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD=
+ =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=
+=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD=
+ =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=
+=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD=
+ =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=
+=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD =C2=AD</div><div styl=
+e=3D"display:none;"><img src=3D"https://vrijburg.us5.list-manage.com/track=
+/open.php?u=3Df177a264847d7820ba11a4aa3&id=3D53fa70dae2&e=3D7868a1eb57" h=
+eight=3D"1" width=3D"1" style=3D"display:none;" alt=3D""></div>
+<center>
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" height=3D"100%" wi=
+dth=3D"100%" id=3D"bodyTable" role=3D"presentation" style=3D"background-co=
+lor: rgb(244=2C 244=2C 244);">
+<tbody><tr>
+<td class=3D"bodyCell" align=3D"center" valign=3D"top">
+<table id=3D"root" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=
+=3D"100%" role=3D"presentation"><tbody data-block-id=3D"3" class=3D"mceWra=
+pper"><tr><td style=3D"background-color:#f4f4f4" valign=3D"top" align=3D"c=
+enter" class=3D"mceSection3"><!--[if (gte mso 9)|(IE)]><table align=3D"ce=
+nter" border=3D"0" cellspacing=3D"0" cellpadding=3D"0" width=3D"660" style=
+=3D"width:660px;"><tr><td><![endif]--><table border=3D"0" cellpadding=3D"=
+0" cellspacing=3D"0" width=3D"100%" style=3D"max-width:660px" role=3D"pres=
+entation"><tbody><tr><td style=3D"background-color:#ffffff" valign=3D"top"=
+ class=3D"mceWrapperInner"><table align=3D"center" border=3D"0" cellpaddin=
+g=3D"0" cellspacing=3D"0" width=3D"100%" role=3D"presentation" data-block-=
+id=3D"2"><tbody><tr class=3D"mceRow"><td style=3D"background-position:cent=
+er;background-repeat:no-repeat;background-size:cover" valign=3D"top"><tabl=
+e border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" role=3D"=
+presentation"><tbody><tr><td style=3D"padding-top:0;padding-bottom:0" vali=
+gn=3D"top" class=3D"mceColumn" id=3D"mceColumnId--13" data-block-id=3D"-13=
+" colspan=3D"12" width=3D"100%"><table border=3D"0" cellpadding=3D"0" cell=
+spacing=3D"0" width=3D"100%" role=3D"presentation"><tbody><tr><td style=3D=
+"padding-top:0;padding-bottom:0;padding-right:0;padding-left:0" valign=3D"=
+top" class=3D"mceGutterContainer" id=3D"gutterContainerId-1"><table border=
+=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" style=3D"border-=
+collapse:separate" role=3D"presentation"><tbody><tr><td style=3D"padding-t=
+op:0;padding-bottom:0;padding-right:0;padding-left:0;border:0;border-radiu=
+s:0" valign=3D"top" id=3D"b1"><table width=3D"100%" style=3D"border:0;back=
+ground-color:transparent;border-radius:0;border-collapse:separate"><tbody>=
+<tr><td style=3D"padding-left:24px;padding-right:24px;padding-top:12px;pad=
+ding-bottom:12px" class=3D"mceTextBlockContainer"><div data-block-id=3D"1"=
+ class=3D"mceText" id=3D"d1" style=3D"width:100%"><p class=3D"last-child">=
+<a href=3D"https://mailchi.mp/92cb13be4790/5n2f6kfiau-5128610?e=3D7868a1eb57=
+" target=3D"_blank"><span style=3D"font-size: 11px">Is deze e-mail niet go=
+ed leesbaar? Bekijk het in uw browser</span></a></p></div></td></tr></tbod=
+y></table></td></tr></tbody></table></td></tr></tbody></table></td></tr></=
+tbody></table></td></tr></tbody></table></td></tr></tbody></table><!--[if=
+ (gte mso 9)|(IE)]></td></tr></table><![endif]--></td></tr></tbody><tbody=
+ data-block-id=3D"41" class=3D"mceWrapper"><tr><td style=3D"background-col=
+or:#f4f4f4" valign=3D"top" align=3D"center" class=3D"mceSection41"><!--[i=
+f (gte mso 9)|(IE)]><table align=3D"center" border=3D"0" cellspacing=3D"0"=
+ cellpadding=3D"0" width=3D"660" style=3D"width:660px;"><tr><td><![endif]=
+--><table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%"=
+ style=3D"max-width:660px" role=3D"presentation"><tbody><tr><td style=3D"b=
+ackground-color:#ffffff" valign=3D"top" class=3D"mceWrapperInner"><table a=
+lign=3D"center" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"=
+100%" role=3D"presentation" data-block-id=3D"40"><tbody><tr class=3D"mceRo=
+w"><td style=3D"background-position:center;background-repeat:no-repeat;bac=
+kground-size:cover" valign=3D"top"><table border=3D"0" cellpadding=3D"0" c=
+ellspacing=3D"0" width=3D"100%" role=3D"presentation"><tbody><tr><td style=
+=3D"padding-top:0;padding-bottom:0" valign=3D"top" class=3D"mceColumn" id=
+=3D"mceColumnId--15" data-block-id=3D"-15" colspan=3D"12" width=3D"100%"><=
+table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" role=
+=3D"presentation"><tbody><tr><td style=3D"background-color:transparent;pad=
+ding-top:12px;padding-bottom:12px;padding-right:0;padding-left:0;border:0;=
+border-radius:0" valign=3D"top" class=3D"mceImageBlockContainer" align=3D"=
+left" id=3D"b4"><div><!--[if !mso]><!--></div><table align=3D"left" borde=
+r=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" style=3D"border=
+-collapse:separate;margin:0;vertical-align:top;max-width:100%;width:100%;h=
+eight:auto" role=3D"presentation" data-testid=3D"image-4"><tbody><tr><td s=
+tyle=3D"border:0;border-radius:0;margin:0" valign=3D"top"><img alt=3D"" sr=
+c=3D"https://mcusercontent.com/f177a264847d7820ba11a4aa3/images/87b5bd54-e=
+7a2-4d3d-a54f-75b5ef9faef6.jpg" width=3D"660" height=3D"auto" style=3D"dis=
+play:block;max-width:100%;height:auto;border-radius:0" class=3D"imageDropZ=
+one mceImage" data-block-id=3D"4" /></td></tr></tbody></table><div><!--<![=
+endif]--></div><div>
+<!--[if mso]>
+<span class=3D"mceImageBorder" style=3D"border:0;border-width:2px;vertical=
+-align:top;margin:0"><img role=3D"presentation" class=3D"imageDropZone mce=
+Image" src=3D"https://mcusercontent.com/f177a264847d7820ba11a4aa3/images/8=
+7b5bd54-e7a2-4d3d-a54f-75b5ef9faef6.jpg" alt=3D"" width=3D"660" height=3D"=
+auto" style=3D"display:block;max-width:660px;width:660px;height:auto"/></s=
+pan>
+<![endif]-->
+</div></td></tr><tr><td style=3D"background-color:transparent;padding-top:=
+12px;padding-bottom:12px;padding-right:24px;padding-left:24px;border:0;bor=
+der-radius:0" valign=3D"top" class=3D"mceImageBlockContainer" align=3D"cen=
+ter" id=3D"b331"><div><!--[if !mso]><!--></div><table align=3D"center" bo=
+rder=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" style=3D"bor=
+der-collapse:separate;margin:0;vertical-align:top;max-width:100%;width:100=
+%;height:auto" role=3D"presentation" data-testid=3D"image-331"><tbody><tr>=
+<td style=3D"border:0;border-radius:0;margin:0" valign=3D"top"><img alt=3D=
+"" src=3D"https://mcusercontent.com/f177a264847d7820ba11a4aa3/images/b75e8=
+cfe-11a0-d9f7-4ea2-4f15818ecf68.png" width=3D"612" height=3D"auto" style=
+=3D"display:block;max-width:100%;height:auto;border-radius:0" class=3D"ima=
+geDropZone mceImage" data-block-id=3D"331" /></td></tr></tbody></table><di=
+v><!--<![endif]--></div><div>
+<!--[if mso]>
+<span class=3D"mceImageBorder" style=3D"border:0;border-width:2px;vertical=
+-align:top;margin:0"><img role=3D"presentation" class=3D"imageDropZone mce=
+Image" src=3D"https://mcusercontent.com/f177a264847d7820ba11a4aa3/images/b=
+75e8cfe-11a0-d9f7-4ea2-4f15818ecf68.png" alt=3D"" width=3D"612" height=3D"=
+auto" style=3D"display:block;max-width:612px;width:612px;height:auto"/></s=
+pan>
+<![endif]-->
+</div></td></tr><tr><td style=3D"padding-top:0;padding-bottom:0;padding-ri=
+ght:0;padding-left:0" valign=3D"top" class=3D"mceGutterContainer" id=3D"gu=
+tterContainerId-332"><table border=3D"0" cellpadding=3D"0" cellspacing=3D"=
+0" width=3D"100%" style=3D"border-collapse:separate" role=3D"presentation"=
+><tbody><tr><td style=3D"padding-top:0;padding-bottom:0;padding-right:0;pa=
+dding-left:0;border:0;border-radius:0" valign=3D"top" id=3D"b332"><table w=
+idth=3D"100%" style=3D"border:0;background-color:transparent;border-radius=
+:0;border-collapse:separate"><tbody><tr><td style=3D"padding-left:24px;pad=
+ding-right:24px;padding-top:12px;padding-bottom:12px" class=3D"mceTextBloc=
+kContainer"><div data-block-id=3D"332" class=3D"mceText" id=3D"d332" style=
+=3D"width:100%"><p style=3D"text-align: center;"><em><span style=3D"color:=
+black;"><span style=3D"font-size: 12pt"><span style=3D"font-family: &quot;=
+Helvetica Neue&quot;">Afbeelding: =E2=80=99t Lam - Sjef Henderickx=2C in d=
+e Grote Kerk van Schiedam=2C </span></span></span></em></p><p style=3D"tex=
+t-align: center;" class=3D"last-child"><em><span style=3D"color:black;"><s=
+pan style=3D"font-size: 12pt"><span style=3D"font-family: &quot;Helvetica=
+ Neue&quot;">foto Jaap van Werkhoven</span></span></span></em></p></div></=
+td></tr></tbody></table></td></tr></tbody></table></td></tr><tr><td style=
+=3D"padding-top:0;padding-bottom:0;padding-right:0;padding-left:0" valign=
+=3D"top" class=3D"mceGutterContainer" id=3D"gutterContainerId-311"><table=
+ border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" style=3D"=
+border-collapse:separate" role=3D"presentation"><tbody><tr><td style=3D"pa=
+dding-top:0;padding-bottom:0;padding-right:0;padding-left:0;border:0;borde=
+r-radius:0" valign=3D"top" id=3D"b311"><table width=3D"100%" style=3D"bord=
+er:0;background-color:transparent;border-radius:0;border-collapse:separate=
+"><tbody><tr><td style=3D"padding-left:24px;padding-right:24px;padding-top=
+:12px;padding-bottom:12px" class=3D"mceTextBlockContainer"><div data-block=
+-id=3D"311" class=3D"mceText" id=3D"d311" style=3D"width:100%"><p style=3D=
+"line-height: 0; mso-line-height-alt: 0%;"><br /></p><p class=3D"" style=
+=3D"padding: 0px; margin: 0px 0px 1.1em; box-sizing: border-box; font-vari=
+ant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter=
+-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-tr=
+ansform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0p=
+x; white-space: normal; background-color: rgb(255=2C 255=2C 255); text-dec=
+oration-thickness: initial; text-decoration-style: initial; text-decoratio=
+n-color: initial;"><strong><span style=3D"color:rgb(51=2C 51=2C 51);"><spa=
+n style=3D"font-size: 16px"><span style=3D"font-family: Roboto=2C sans-ser=
+if"><span style=3D"background-color: rgb(255=2C 255=2C 255)">Zondag 22 maa=
+rt 10.30 uur:=C2=A0=E2=80=98Goed nieuws is gegrond in de kracht van zachth=
+eid=E2=80=A6..=E2=80=99</span></span></span></span></strong></p><p class=
+=3D"" style=3D"padding: 0px; margin: 0px 0px 1.1em; box-sizing: border-box=
+; font-variant-ligatures: normal; font-variant-caps: normal; font-weight:=
+ 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent:=
+ 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-str=
+oke-width: 0px; white-space: normal; background-color: rgb(255=2C 255=2C 2=
+55); text-decoration-thickness: initial; text-decoration-style: initial; t=
+ext-decoration-color: initial;"><em>Vijfde zondag in de 40-dagentijd</em><=
+/p><p>De cartoon van Tjeerd Rooyaards is veelzeggend wanneer het gaat om d=
+e manier waarop wij mensen soms reageren op het nieuws van deze wereld.</p=
+><p><br /></p><p><em>Vertel me iets goeds</em>=2C zo luidt het overkoepele=
+nde thema voor deze tijd richting Pasen.</p><p>Inderdaad=2C wat hebben wij=
+ dat nodig in een tijd waarin sprake is van zoveel hardheid=2C ongebreidel=
+de machtslust en minachting voor internationale verdragen=2C die de mensen=
+rechten waarborgen.</p><p><br /></p><p>Als een soort spiegel=2C een =C2=A0=
+tegenover van al die hardheid=2C lezen wij a.s. zondag uit uit de Bergrede=
+ van Jezus =C2=A0en het kernwoord daarbij is het woord zachtmoedigheid. Wi=
+j zingen daarbij een aantal keren als een soort van mantra dat prachtige l=
+ied van Huub Oosterhuis: <em>=E2=80=98Wek mijn zachtheid weer=2C geef mij=
+ de ogen van een kind=E2=80=99</em>. </p><p><br /></p><p>Daarnaast lezen w=
+ij ook twee aforismen uit =C2=A0het boek van de =E2=80=98Tao en de innerli=
+jke kracht=E2=80=99 van Laozi=2C =C2=A0een oude Chinese natuurfilosofie=2C=
+ zo je wilt levenskunst.</p><p class=3D"last-child">=E2=80=98Wek mijn zach=
+theid weer=E2=80=99. Ja=2C laten wij verzachten=E2=80=A6. =C2=A0op weg gaa=
+n naar die zachtheid waardoor het leven weer kan gaan stromen. </p></div><=
+/td></tr></tbody></table></td></tr></tbody></table></td></tr><tr><td valig=
+n=3D"top" class=3D"mceGutterContainer" id=3D"gutterContainerId-227"><table=
+ border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" style=3D"=
+border-collapse:separate" role=3D"presentation"><tbody><tr><td style=3D"pa=
+dding-top:12px;padding-bottom:12px;padding-right:0;padding-left:0;border:0=
+;border-radius:0" valign=3D"top" class=3D"mceLayoutContainer" id=3D"b227">=
+<table align=3D"center" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" w=
+idth=3D"100%" role=3D"presentation" data-block-id=3D"227" id=3D"section_f8=
+321cbf090e8e79ceea10b9b69f2dae" class=3D"mceLayout"><tbody><tr class=3D"mc=
+eRow"><td style=3D"background-position:center;background-repeat:no-repeat;=
+background-size:cover" valign=3D"top"><table border=3D"0" cellpadding=3D"0=
+" cellspacing=3D"0" width=3D"100%" role=3D"presentation"><tbody><tr><td va=
+lign=3D"top" class=3D"mceColumn" id=3D"mceColumnId--18" data-block-id=3D"-=
+18" colspan=3D"12" width=3D"100%"><table border=3D"0" cellpadding=3D"0" ce=
+llspacing=3D"0" width=3D"100%" role=3D"presentation"><tbody><tr><td style=
+=3D"border:0;border-radius:0" valign=3D"top" align=3D"center" id=3D"b-12">=
+<table align=3D"center" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" w=
+idth=3D"100%" role=3D"presentation" data-block-id=3D"-12"><tbody><tr class=
+=3D"mceRow"><td style=3D"background-position:center;background-repeat:no-r=
+epeat;background-size:cover" valign=3D"top"><table border=3D"0" cellpaddin=
+g=3D"0" cellspacing=3D"0" width=3D"100%" role=3D"presentation"><tbody><tr>=
+<td valign=3D"top" class=3D"mceColumn" id=3D"mceColumnId--21" data-block-i=
+d=3D"-21" colspan=3D"12" width=3D"100%"><table border=3D"0" cellpadding=3D=
+"0" cellspacing=3D"0" width=3D"100%" role=3D"presentation"><tbody><tr><td=
+ style=3D"border:0;border-radius:0" valign=3D"top" id=3D"b232"><table alig=
+n=3D"center" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100=
+%" role=3D"presentation" data-block-id=3D"232"><tbody><tr class=3D"mceRow"=
+><td style=3D"background-position:center;background-repeat:no-repeat;backg=
+round-size:cover" valign=3D"top"><table border=3D"0" cellpadding=3D"0" cel=
+lspacing=3D"24" width=3D"100%" role=3D"presentation"><tbody><tr><td style=
+=3D"padding-top:0;padding-bottom:0" valign=3D"top" class=3D"mceColumn" id=
+=3D"mceColumnId-229" data-block-id=3D"229" colspan=3D"12" width=3D"100%"><=
+table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" role=
+=3D"presentation"><tbody><tr><td style=3D"padding-top:0;padding-bottom:0;p=
+adding-right:0;padding-left:0" valign=3D"top" class=3D"mceGutterContainer"=
+ id=3D"gutterContainerId-312"><table border=3D"0" cellpadding=3D"0" cellsp=
+acing=3D"0" width=3D"100%" style=3D"border-collapse:separate" role=3D"pres=
+entation"><tbody><tr><td style=3D"padding-top:0;padding-bottom:0;padding-r=
+ight:0;padding-left:0;border:0;border-radius:0" valign=3D"top" id=3D"b312"=
+><table width=3D"100%" style=3D"border:0;background-color:transparent;bord=
+er-radius:0;border-collapse:separate"><tbody><tr><td style=3D"padding-left=
+:24px;padding-right:24px;padding-top:12px;padding-bottom:12px" class=3D"mc=
+eTextBlockContainer"><div data-block-id=3D"312" class=3D"mceText" id=3D"d3=
+12" style=3D"width:100%"><p style=3D"line-height: 0; mso-line-height-alt:=
+ 0%;"><br /></p><p style=3D"line-height: 0; mso-line-height-alt: 0%;"><br=
+ /></p><p class=3D"last-child" style=3D"padding: 0px; margin: 0px 0px 1.1e=
+m; box-sizing: border-box; font-variant-ligatures: normal; font-variant-ca=
+ps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-ali=
+gn: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing=
+: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-col=
+or: rgb(255=2C 255=2C 255); text-decoration-thickness: initial; text-decor=
+ation-style: initial; text-decoration-color: initial;"><span style=3D"colo=
+r:rgb(51=2C 51=2C 51);"><span style=3D"font-size: 16px"><span style=3D"fon=
+t-family: Roboto=2C sans-serif"><span style=3D"background-color: rgb(255=
+=2C 255=2C 255)">Voorganger is=C2=A0</span></span></span></span><strong><s=
+pan style=3D"font-size: 16px"><span style=3D"font-family: Roboto=2C sans-s=
+erif"><span style=3D"background-color: rgb(255=2C 255=2C 255)">ds. Martin=
+ Kroon=C2=A0</span></span></span></strong><span style=3D"color:rgb(0=2C 0=
+=2C 0);"><span style=3D"font-size: 16px"><span style=3D"font-family: Arial=
+=2C &quot;Helvetica Neue&quot;=2C Helvetica=2C sans-serif"><span style=3D"=
+background-color: rgb(255=2C 255=2C 255)">en de muzieke omlijsting wordt v=
+erzorgd door Pieter Lanooy op het orgel. De dienst is ook (live en na aflo=
+op) te volgen via </span></span></span></span><a href=3D"https://vrijburg.=
+us5.list-manage.com/track/click?u=3Df177a264847d7820ba11a4aa3&id=3D206c1d7=
+520&e=3D7868a1eb57" title=3D"" style=3D"word-break: break-word; color: rg=
+b(43=2C 170=2C 223); font-style: normal; font-weight: 400; direction: ltr;=
+ font-family: Arial=2C &quot;Helvetica Neue&quot;=2C Helvetica=2C sans-ser=
+if; font-size: 16px; font-variant-caps: normal; letter-spacing: normal; or=
+phans: auto; text-align: left; text-indent: 0px; text-transform: none; whi=
+te-space: normal; widows: auto; word-spacing: 0px; -webkit-text-stroke-wid=
+th: 0px;"><span style=3D"color:rgb(43=2C 170=2C 223);"><span style=3D"font=
+-size: 16px"><span style=3D"font-family: Arial=2C &quot;Helvetica Neue&quo=
+t;=2C Helvetica=2C sans-serif">www.vrijburg.nl/kerk-tv</span></span></span=
+></a><span style=3D"color:rgb(0=2C 0=2C 0);"><span style=3D"font-size: 16p=
+x"><span style=3D"font-family: Arial=2C &quot;Helvetica Neue&quot;=2C Helv=
+etica=2C sans-serif"><span style=3D"background-color: rgb(255=2C 255=2C 25=
+5)">.</span></span></span></span></p></div></td></tr></tbody></table></td>=
+</tr></tbody></table></td></tr><tr><td style=3D"background-color:transpare=
+nt;padding-top:12px;padding-bottom:12px;padding-right:24px;padding-left:24=
+px;border:0;border-radius:0" valign=3D"top" class=3D"mceButtonBlockContain=
+er" align=3D"center" id=3D"b315"><div><!--[if !mso]><!--></div><table ali=
+gn=3D"center" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"10=
+0%" style=3D"max-width:660px" role=3D"presentation" data-block-id=3D"315"=
+ class=3D"mceButtonContainer"><tbody><tr class=3D"mceStandardButton"><td s=
+tyle=3D"background-color:#2baadf;border-radius:8px;text-align:center" vali=
+gn=3D"top" class=3D"mceButton"><a href=3D"https://vrijburg.us5.list-manage=
+=2Ecom/track/click?u=3Df177a264847d7820ba11a4aa3&id=3D0c09e32dcd&e=3D7868a1eb57" target=3D"_blank" class=3D"mceButtonLink" style=3D"background-color:=
+#2baadf;border-radius:8px;border:1px solid #000000;color:#ffffff;display:b=
+lock;font-family:Arial=2C 'Helvetica Neue'=2C Helvetica=2C sans-serif;font=
+-size:16px;font-weight:normal;font-style:normal;padding:16px 28px;text-dec=
+oration:none;text-align:center;direction:ltr;letter-spacing:0px" rel=3D"no=
+referrer">Klik hier om naar de online kerk-tv uitzending te gaan</a></td><=
+/tr></tbody></table><div><!--<![endif]--></div><table align=3D"center" bo=
+rder=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" style=3D"max=
+-width:660px" role=3D"presentation" data-block-id=3D"315" class=3D"mceButt=
+onContainer"><tbody><tr>
+<!--[if mso]>
+<td align=3D"center">
+<v:roundrect xmlns:v=3D"urn:schemas-microsoft-com:vml"
+xmlns:w=3D"urn:schemas-microsoft-com:office:word"
+href=3D"https://www.vrijburg.nl/kerk-tv/"
+style=3D"v-text-anchor:middle; width:612px; height:52.5px;"
+arcsize=3D"1%"
+strokecolor=3D"#000000"
+strokeweight=3D"1px"
+fillcolor=3D"#2baadf">
+<v:stroke dashstyle=3D"solid"/>
+<w:anchorlock />
+<center style=3D"
+color: #ffffff;
+display: block;
+font-family: Arial=2C 'Helvetica Neue'=2C Helvetica=2C sans-serif;
+font-size: 16;
+font-style: normal;
+font-weight: normal;
+letter-spacing: 0px;
+text-decoration: none;
+text-align: center;
+direction: ltr;"
+>
+Klik hier om naar de online kerk-tv uitzending te gaan
+</center>
+</v:roundrect>
+</td>
+<![endif]-->
+</tr></tbody></table></td></tr></tbody></table></td></tr></tbody></table><=
+/td></tr></tbody></table></td></tr></tbody></table></td></tr></tbody></tab=
+le></td></tr></tbody></table></td></tr></tbody></table></td></tr></tbody><=
+/table></td></tr></tbody></table></td></tr></tbody></table></td></tr><tr><=
+td style=3D"padding-top:0;padding-bottom:0;padding-right:0;padding-left:0"=
+ valign=3D"top" class=3D"mceGutterContainer" id=3D"gutterContainerId-12"><=
+table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" styl=
+e=3D"border-collapse:separate" role=3D"presentation"><tbody><tr><td style=
+=3D"padding-top:0;padding-bottom:0;padding-right:0;padding-left:0;border:0=
+;border-radius:0" valign=3D"top" id=3D"b12"><table width=3D"100%" style=3D=
+"border:0;background-color:#797979;border-radius:0;border-collapse:separat=
+e"><tbody><tr><td style=3D"padding-left:24px;padding-right:24px;padding-to=
+p:12px;padding-bottom:12px" class=3D"mceTextBlockContainer"><div data-bloc=
+k-id=3D"12" class=3D"mceText" id=3D"d12" style=3D"width:100%"><h1 class=3D=
+"last-child"><strong><span style=3D"color:#ffffff;">Agenda</span></strong>=
+</h1></div></td></tr></tbody></table></td></tr></tbody></table></td></tr><=
+tr><td style=3D"background-color:transparent;padding-top:12px;padding-bott=
+om:12px;padding-right:24px;padding-left:24px;border:0;border-radius:0" val=
+ign=3D"top" class=3D"mceImageBlockContainer" align=3D"center" id=3D"b336">=
+<div><!--[if !mso]><!--></div><table align=3D"center" border=3D"0" cellpa=
+dding=3D"0" cellspacing=3D"0" width=3D"100%" style=3D"border-collapse:sepa=
+rate;margin:0;vertical-align:top;max-width:100%;width:100%;height:auto" ro=
+le=3D"presentation" data-testid=3D"image-336"><tbody><tr><td style=3D"bord=
+er:0;border-radius:0;margin:0" valign=3D"top"><img alt=3D"" src=3D"https:/=
+/mcusercontent.com/f177a264847d7820ba11a4aa3/images/dc1b6d70-d8c3-0102-a5f=
+e-5e493e087063.jpeg" width=3D"612" height=3D"auto" style=3D"display:block;=
+max-width:100%;height:auto;border-radius:0" class=3D"imageDropZone mceImag=
+e" data-block-id=3D"336" /></td></tr></tbody></table><div><!--<![endif]--=
+></div><div>
+<!--[if mso]>
+<span class=3D"mceImageBorder" style=3D"border:0;border-width:2px;vertical=
+-align:top;margin:0"><img role=3D"presentation" class=3D"imageDropZone mce=
+Image" src=3D"https://mcusercontent.com/f177a264847d7820ba11a4aa3/images/d=
+c1b6d70-d8c3-0102-a5fe-5e493e087063.jpeg" alt=3D"" width=3D"612" height=3D=
+"auto" style=3D"display:block;max-width:612px;width:612px;height:auto"/></=
+span>
+<![endif]-->
+</div></td></tr><tr><td style=3D"padding-top:0;padding-bottom:0;padding-ri=
+ght:0;padding-left:0" valign=3D"top" class=3D"mceGutterContainer" id=3D"gu=
+tterContainerId-300"><table border=3D"0" cellpadding=3D"0" cellspacing=3D"=
+0" width=3D"100%" style=3D"border-collapse:separate" role=3D"presentation"=
+><tbody><tr><td style=3D"padding-top:0;padding-bottom:0;padding-right:0;pa=
+dding-left:0;border:0;border-radius:0" valign=3D"top" id=3D"b300"><table w=
+idth=3D"100%" style=3D"border:0;background-color:transparent;border-radius=
+:0;border-collapse:separate"><tbody><tr><td style=3D"padding-left:24px;pad=
+ding-right:24px;padding-top:12px;padding-bottom:12px" class=3D"mceTextBloc=
+kContainer"><div data-block-id=3D"300" class=3D"mceText" id=3D"d300" style=
+=3D"width:100%"><p style=3D"line-height: 0; mso-line-height-alt: 0%;"><br=
+ /></p><p><strong>Vertel me iets goeds - Stille Week en Pasen</strong></p>=
+<p>Ook in de Stille Week en met Pasen besteden we aandacht aan het thema=
+ =E2=80=98vertel me iets goeds=E2=80=99. We concentreren ons op de basis v=
+an Jezus=E2=80=99 leven en zending in de wereld: zijn radicale welkom=2C l=
+iefde tot het einde=2C zorg voor kwetsbaren=2C verzadiging van hongerigen=
+ en geweldloos verzet tegen onrecht. =E2=80=98Radicaal=E2=80=99 verwijst o=
+ok naar =E2=80=98wortel=E2=80=99 en =E2=80=98grond=E2=80=99. Het goede nie=
+uws dat Jezus brengt=2C brengt ons terug bij onze roots=2C bepaalt ons bij=
+ wat het meest belangrijk is. Hoe kunnen we onszelf gronden in goed nieuws=
+? Hoe kunnen wij zelf het goede nieuws belichamen in een wereld die wordt=
+ gedomineerd door slecht nieuws? Kijk niet weg=2C het jaarthema van dit se=
+izoen in Vrijburg=2C betekent ook elkaar grote en kleine verhalen vertelle=
+n over het goede dat er is en in en om ons heen gebeurt. </p><p><br /></p>=
+<p><strong>29 maart Palmpasen: Goed nieuws=E2=80=A6 inspireert ons te hand=
+elen</strong></p><p>Vrijburg 10.30 uur (dienst met kinderkring) - ds. Japk=
+e van Malde</p><p><br /></p><p><strong>1 april Taiz=C3=A9gebed </strong></=
+p><p>Vrijburg 12.30 uur - ds. Rosaliene Isra=C3=ABl</p><p><br /></p><p><st=
+rong>2 april Witte Donderdag: Goed nieuws is=E2=80=A6 liefde tot het einde=
+</strong></p><p>Vrijburg 19.30 uur (dienst met avondmaal en cantorij) - ds=
+=2E Rosaliene Isra=C3=ABl</p><p><br /></p><p><strong>3 april Goede Vrijdag:=
+ Goed nieuws=E2=80=A6 wordt zichtbaar in geweldloosheid</strong></p><p>Vri=
+jburg 19.30 uur - ds. Rachelle van Andel</p><p><br /></p><p><strong>5 apri=
+l Paasmorgen: Goed nieuws is=E2=80=A6 springlevend</strong></p><p class=3D=
+"last-child">Vrijburg 10.30 uur (dienst met agape-maaltijd=2C kinderkring=
+ en cantorij) - ds. Rachelle van Andel</p></div></td></tr></tbody></table>=
+</td></tr></tbody></table></td></tr><tr><td style=3D"background-color:tran=
+sparent;padding-top:12px;padding-bottom:12px;padding-right:24px;padding-le=
+ft:24px;border:0;border-radius:0" valign=3D"top" class=3D"mceDividerBlockC=
+ontainer" id=3D"b335"><table align=3D"center" border=3D"0" cellpadding=3D"=
+0" cellspacing=3D"0" width=3D"100%" style=3D"background-color:transparent;=
+width:100%" role=3D"presentation" class=3D"mceDividerContainer" data-block=
+-id=3D"335"><tbody><tr><td style=3D"min-width:100%;border-top-width:2px;bo=
+rder-top-style:solid;border-top-color:#000000;line-height:0;font-size:0" v=
+align=3D"top" class=3D"mceDividerBlock">=C2=A0</td></tr></tbody></table></=
+td></tr><tr><td style=3D"padding-top:0;padding-bottom:0;padding-right:0;pa=
+dding-left:0" valign=3D"top" class=3D"mceGutterContainer" id=3D"gutterCont=
+ainerId-334"><table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=
+=3D"100%" style=3D"border-collapse:separate" role=3D"presentation"><tbody>=
+<tr><td style=3D"padding-top:0;padding-bottom:0;padding-right:0;padding-le=
+ft:0;border:0;border-radius:0" valign=3D"top" id=3D"b334"><table width=3D"=
+100%" style=3D"border:0;background-color:transparent;border-radius:0;borde=
+r-collapse:separate"><tbody><tr><td style=3D"padding-left:24px;padding-rig=
+ht:24px;padding-top:12px;padding-bottom:12px" class=3D"mceTextBlockContain=
+er"><div data-block-id=3D"334" class=3D"mceText" id=3D"d334" style=3D"widt=
+h:100%"><p style=3D"line-height: 0; mso-line-height-alt: 0%;"><br /></p><p=
+><strong>Dinsdag 24 maart 11:00 uur=2C Bijbelkring met ds. Klaas Vos </str=
+ong></p><p>We lezen het boek Exodus in de vele bijbelvertalingen waarover=
+ de kringleden beschikken. Iedereen is hartelijk welkom om mee te lezen en=
+ over het gelezen te praten. Contact: <a href=3D"mailto:offerhaus@tiscali.=
+nl?subject=3D&body=3D" target=3D"_blank">Polona Offerhaus</a>=2C 06 306 98=
+4 64</p><p><br /></p><p><strong>Woensdag 25 maart 12:30- 13:00 uur vijfde=
+ Taiz=C3=A9gebed</strong>=2C in het kader van het bezinnende karakter van=
+ de 40-dagentijd. De lezingen sluiten aan bij het thema van de 40-dagentij=
+d =E2=80=98Vertel me iets goeds=E2=80=99. Van harte welkom om mee te bidde=
+n en te zingen.</p><p><br /></p><p class=3D"last-child">In de Kelder prese=
+nteert Milena Zalm haar afstudeerproject over intergenerationele verbindin=
+g. Ontmoetingen tussen jonge en oudere Vrijburgers die hun levensverhalen=
+ met elkaar hebben gedeeld=2C staan centraal. Milena heeft de ontmoetingen=
+ georganiseerd en deze in tekst en met haar camera vastgelegd. U bent van=
+ harte uitgenodigd om de portretten te komen bekijken. Dat kan elke maanda=
+gavond=2C en dan kunt u ook mee=C3=ABten met de jongeren. Neem van tevoren=
+ even contact op met Rachelle=2C rachelle-vanandel@vrijburg.nl.</p></div><=
+/td></tr></tbody></table></td></tr></tbody></table></td></tr><tr><td style=
+=3D"background-color:transparent;padding-top:12px;padding-bottom:12px;padd=
+ing-right:16px;padding-left:16px;border:0;border-radius:0" valign=3D"top"=
+ class=3D"mceImageBlockContainer" align=3D"center" id=3D"b330"><div><!--[=
+if !mso]><!--></div><table align=3D"center" border=3D"0" cellpadding=3D"0"=
+ cellspacing=3D"0" width=3D"100%" style=3D"border-collapse:separate;margin=
+:0;vertical-align:top;max-width:100%;width:100%;height:auto" role=3D"prese=
+ntation" data-testid=3D"image-330"><tbody><tr><td style=3D"border:0;border=
+-radius:0;margin:0" valign=3D"top"><img alt=3D"" src=3D"https://dim.mcuser=
+content.com/cs/f177a264847d7820ba11a4aa3/images/0b65f534-70e6-87b4-4117-b5=
+907c0ca877.jpg?dpr=3D2&rect=3D0%2C0%2C3741%2C2281&w=3D628&h=3D382" width=
+=3D"628" height=3D"auto" style=3D"display:block;max-width:100%;height:auto=
+;border-radius:0" class=3D"imageDropZone mceImage" data-block-id=3D"330" /=
+></td></tr></tbody></table><div><!--<![endif]--></div><div>
+<!--[if mso]>
+<span class=3D"mceImageBorder" style=3D"border:0;border-width:2px;vertical=
+-align:top;margin:0"><img role=3D"presentation" class=3D"imageDropZone mce=
+Image" src=3D"https://dim.mcusercontent.com/cs/f177a264847d7820ba11a4aa3/i=
+mages/0b65f534-70e6-87b4-4117-b5907c0ca877.jpg?dpr=3D2&amp;rect=3D0%2C0%2C=
+3741%2C2281&amp;w=3D628&amp;h=3D382" alt=3D"" width=3D"628" height=3D"auto=
+" style=3D"display:block;max-width:628px;width:628px;height:auto"/></span>
+<![endif]-->
+</div></td></tr><tr><td style=3D"padding-top:0;padding-bottom:0;padding-ri=
+ght:0;padding-left:0" valign=3D"top" class=3D"mceGutterContainer" id=3D"gu=
+tterContainerId-333"><table border=3D"0" cellpadding=3D"0" cellspacing=3D"=
+0" width=3D"100%" style=3D"border-collapse:separate" role=3D"presentation"=
+><tbody><tr><td style=3D"padding-top:0;padding-bottom:0;padding-right:0;pa=
+dding-left:0;border:0;border-radius:0" valign=3D"top" id=3D"b333"><table w=
+idth=3D"100%" style=3D"border:0;background-color:transparent;border-radius=
+:0;border-collapse:separate"><tbody><tr><td style=3D"padding-left:24px;pad=
+ding-right:24px;padding-top:12px;padding-bottom:12px" class=3D"mceTextBloc=
+kContainer"><div data-block-id=3D"333" class=3D"mceText" id=3D"d333" style=
+=3D"width:100%"><p class=3D"last-child">Tot 22 mei laat Mark van Praagh=2C=
+ die zijn atelier heeft op de zolder van Vrijburg=2C onder het motto <stro=
+ng>Kwetsbaar en sterk=2C licht en donker</strong>=2C zijn werk zien in de=
+ Moddermanzaal. De tentoonstelling kan door de week worden bezocht op dins=
+dag=2C woensdag en donderdag. Graag van tevoren bellen: 020-6714277.</p></=
+div></td></tr></tbody></table></td></tr></tbody></table></td></tr><tr><td=
+ style=3D"background-color:transparent;padding-top:12px;padding-bottom:12p=
+x;padding-right:24px;padding-left:24px;border:0;border-radius:0" valign=3D=
+"top" class=3D"mceDividerBlockContainer" id=3D"b327"><table align=3D"cente=
+r" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" style=
+=3D"background-color:transparent;width:100%" role=3D"presentation" class=
+=3D"mceDividerContainer" data-block-id=3D"327"><tbody><tr><td style=3D"min=
+-width:100%;border-top-width:2px;border-top-style:solid;border-top-color:#=
+000000;line-height:0;font-size:0" valign=3D"top" class=3D"mceDividerBlock"=
+>=C2=A0</td></tr></tbody></table></td></tr><tr><td style=3D"padding-top:0;=
+padding-bottom:0;padding-right:0;padding-left:0" valign=3D"top" class=3D"m=
+ceGutterContainer" id=3D"gutterContainerId-120"><table border=3D"0" cellpa=
+dding=3D"0" cellspacing=3D"0" width=3D"100%" style=3D"border-collapse:sepa=
+rate" role=3D"presentation"><tbody><tr><td style=3D"padding-top:0;padding-=
+bottom:0;padding-right:0;padding-left:0;border:0;border-radius:0" valign=
+=3D"top" id=3D"b120"><table width=3D"100%" style=3D"border:0;background-co=
+lor:transparent;border-radius:0;border-collapse:separate"><tbody><tr><td s=
+tyle=3D"padding-left:24px;padding-right:24px;padding-top:12px;padding-bott=
+om:12px" class=3D"mceTextBlockContainer"><div data-block-id=3D"120" class=
+=3D"mceText" id=3D"d120" style=3D"width:100%"><p class=3D"last-child"><em>=
+Zie verder de </em><a href=3D"https://vrijburg.us5.list-manage.com/track/c=
+lick?u=3Df177a264847d7820ba11a4aa3&id=3D4d9ae228af&e=3D7868a1eb57"><em>Ag=
+enda</em></a><em> op website. Tenzij anders aangegeven is de activiteit in=
+ Vrijburg</em></p></div></td></tr></tbody></table></td></tr></tbody></tabl=
+e></td></tr><tr><td style=3D"background-color:transparent;padding-top:12px=
+;padding-bottom:12px;padding-right:24px;padding-left:24px;border:0;border-=
+radius:0" valign=3D"top" class=3D"mceButtonBlockContainer" align=3D"center=
+" id=3D"b128"><div><!--[if !mso]><!--></div><table align=3D"center" borde=
+r=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" style=3D"max-wi=
+dth:282px" role=3D"presentation" data-block-id=3D"128" class=3D"mceButtonC=
+ontainer"><tbody><tr class=3D"mceStandardButton"><td style=3D"background-c=
+olor:#00a8db;border-radius:8px;text-align:center" valign=3D"top" class=3D"=
+mceButton"><a href=3D"https://vrijburg.us5.list-manage.com/track/click?u=
+=3Df177a264847d7820ba11a4aa3&id=3D7f0eb42d79&e=3D7868a1eb57" target=3D"_b=
+lank" class=3D"mceButtonLink" style=3D"background-color:#00a8db;border-rad=
+ius:8px;border:1px solid #000000;color:#ffffff;display:block;font-family:A=
+rial=2C 'Helvetica Neue'=2C Helvetica=2C sans-serif;font-size:16px;font-we=
+ight:normal;font-style:normal;padding:16px 28px;text-decoration:none;text-=
+align:center;direction:ltr;letter-spacing:0px" rel=3D"noreferrer">Agenda</=
+a></td></tr></tbody></table><div><!--<![endif]--></div><table align=3D"ce=
+nter" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" styl=
+e=3D"max-width:282px" role=3D"presentation" data-block-id=3D"128" class=3D=
+"mceButtonContainer"><tbody><tr>
+<!--[if mso]>
+<td align=3D"center">
+<v:roundrect xmlns:v=3D"urn:schemas-microsoft-com:vml"
+xmlns:w=3D"urn:schemas-microsoft-com:office:word"
+href=3D"https://www.vrijburg.nl/evenement-categorie/activiteiten/"
+style=3D"v-text-anchor:middle; width:282px; height:52.5px;"
+arcsize=3D"3%"
+strokecolor=3D"#000000"
+strokeweight=3D"1px"
+fillcolor=3D"#00a8db">
+<v:stroke dashstyle=3D"solid"/>
+<w:anchorlock />
+<center style=3D"
+color: #ffffff;
+display: block;
+font-family: Arial=2C 'Helvetica Neue'=2C Helvetica=2C sans-serif;
+font-size: 16;
+font-style: normal;
+font-weight: normal;
+letter-spacing: 0px;
+text-decoration: none;
+text-align: center;
+direction: ltr;"
+>
+Agenda
+</center>
+</v:roundrect>
+</td>
+<![endif]-->
+</tr></tbody></table></td></tr><tr><td style=3D"background-color:transpare=
+nt;padding-top:12px;padding-bottom:12px;padding-right:0;padding-left:0;bor=
+der:0;border-radius:0" valign=3D"top" class=3D"mceImageBlockContainer" ali=
+gn=3D"left" id=3D"b16"><div><!--[if !mso]><!--></div><a href=3D"https://v=
+rijburg.us5.list-manage.com/track/click?u=3Df177a264847d7820ba11a4aa3&id=
+=3D62aed895c9&e=3D7868a1eb57" style=3D"display:block" target=3D"_blank" d=
+ata-block-id=3D"16"><table align=3D"left" border=3D"0" cellpadding=3D"0" c=
+ellspacing=3D"0" width=3D"100%" style=3D"border-collapse:separate;margin:0=
+;vertical-align:top;max-width:100%;width:100%;height:auto" role=3D"present=
+ation" data-testid=3D"image-16"><tbody><tr><td style=3D"border:0;border-ra=
+dius:0;margin:0" valign=3D"top"><img alt=3D"" src=3D"https://mcusercontent=
+=2Ecom/f177a264847d7820ba11a4aa3/images/0e12da65-6680-d075-a296-dcff7447244f=
+=2Epng" width=3D"660" height=3D"auto" style=3D"display:block;max-width:100%;=
+height:auto;border-radius:0" class=3D"imageDropZone mceImage" /></td></tr>=
+</tbody></table></a><div><!--<![endif]--></div><div>
+<!--[if mso]>
+<a href=3D"https://soundcloud.com/vrijburg-amsterdam/sets/top-2022-2023"><=
+span class=3D"mceImageBorder" style=3D"border:0;border-width:2px;vertical-=
+align:top;margin:0"><img role=3D"presentation" class=3D"imageDropZone mceI=
+mage" src=3D"https://mcusercontent.com/f177a264847d7820ba11a4aa3/images/0e=
+12da65-6680-d075-a296-dcff7447244f.png" alt=3D"" width=3D"660" height=3D"a=
+uto" style=3D"display:block;max-width:660px;width:660px;height:auto"/></sp=
+an></a>
+<![endif]-->
+</div></td></tr><tr><td valign=3D"top" class=3D"mceGutterContainer" id=3D"=
+gutterContainerId-219"><table border=3D"0" cellpadding=3D"0" cellspacing=
+=3D"0" width=3D"100%" style=3D"border-collapse:separate" role=3D"presentat=
+ion"><tbody><tr><td style=3D"padding-top:12px;padding-bottom:12px;padding-=
+right:0;padding-left:0;border:0;border-radius:0" valign=3D"top" class=3D"m=
+ceLayoutContainer" id=3D"b219"><table align=3D"center" border=3D"0" cellpa=
+dding=3D"0" cellspacing=3D"0" width=3D"100%" role=3D"presentation" data-bl=
+ock-id=3D"219" id=3D"section_ce3d468e6e407787d692dab919f2c863" class=3D"mc=
+eLayout"><tbody><tr class=3D"mceRow"><td style=3D"background-position:cent=
+er;background-repeat:no-repeat;background-size:cover" valign=3D"top"><tabl=
+e border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" role=3D"=
+presentation"><tbody><tr><td valign=3D"top" class=3D"mceColumn" id=3D"mceC=
+olumnId--17" data-block-id=3D"-17" colspan=3D"12" width=3D"100%"><table bo=
+rder=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" role=3D"pres=
+entation"><tbody><tr><td style=3D"border:0;border-radius:0" valign=3D"top"=
+ align=3D"center" id=3D"b-10"><table align=3D"center" border=3D"0" cellpad=
+ding=3D"0" cellspacing=3D"0" width=3D"100%" role=3D"presentation" data-blo=
+ck-id=3D"-10"><tbody><tr class=3D"mceRow"><td style=3D"background-position=
+:center;background-repeat:no-repeat;background-size:cover" valign=3D"top">=
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" rol=
+e=3D"presentation"><tbody><tr><td valign=3D"top" class=3D"mceColumn" id=3D=
+"mceColumnId--20" data-block-id=3D"-20" colspan=3D"12" width=3D"100%"><tab=
+le border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" role=3D=
+"presentation"><tbody><tr><td style=3D"border:0;border-radius:0" valign=3D=
+"top" id=3D"b224"><table align=3D"center" border=3D"0" cellpadding=3D"0" c=
+ellspacing=3D"0" width=3D"100%" role=3D"presentation" data-block-id=3D"224=
+"><tbody><tr class=3D"mceRow"><td style=3D"background-position:center;back=
+ground-repeat:no-repeat;background-size:cover;padding-top:0px;padding-bott=
+om:0px" valign=3D"top"><table border=3D"0" cellpadding=3D"0" cellspacing=
+=3D"24" width=3D"100%" style=3D"table-layout:fixed" role=3D"presentation">=
+<colgroup><col span=3D"1" width=3D"8.333333333333332%" /><col span=3D"1" w=
+idth=3D"8.333333333333332%" /><col span=3D"1" width=3D"8.333333333333332%"=
+ /><col span=3D"1" width=3D"8.333333333333332%" /><col span=3D"1" width=3D=
+"8.333333333333332%" /><col span=3D"1" width=3D"8.333333333333332%" /><col=
+ span=3D"1" width=3D"8.333333333333332%" /><col span=3D"1" width=3D"8.3333=
+33333333332%" /><col span=3D"1" width=3D"8.333333333333332%" /><col span=
+=3D"1" width=3D"8.333333333333332%" /><col span=3D"1" width=3D"8.333333333=
+333332%" /><col span=3D"1" width=3D"8.333333333333332%" /></colgroup><tbod=
+y><tr><td style=3D"padding-top:0;padding-bottom:0" valign=3D"top" class=3D=
+"mceColumn" id=3D"mceColumnId-221" data-block-id=3D"221" colspan=3D"7" wid=
+th=3D"58.333333333333336%"><table border=3D"0" cellpadding=3D"0" cellspaci=
+ng=3D"0" width=3D"100%" role=3D"presentation"><tbody><tr><td style=3D"padd=
+ing-top:0;padding-bottom:0;padding-right:0;padding-left:0" valign=3D"top"=
+ class=3D"mceGutterContainer" id=3D"gutterContainerId-208"><table border=
+=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" style=3D"border-=
+collapse:separate" role=3D"presentation"><tbody><tr><td style=3D"padding-t=
+op:0;padding-bottom:0;padding-right:0;padding-left:0;border:0;border-radiu=
+s:0" valign=3D"top" id=3D"b208"><table width=3D"100%" style=3D"border:0;ba=
+ckground-color:transparent;border-radius:0;border-collapse:separate"><tbod=
+y><tr><td style=3D"padding-left:24px;padding-right:24px;padding-top:12px;p=
+adding-bottom:12px" class=3D"mceTextBlockContainer"><div data-block-id=3D"=
+208" class=3D"mceText" id=3D"d208" style=3D"width:100%"><p style=3D"line-h=
+eight: 0; mso-line-height-alt: 0%;"><br /></p><p style=3D"line-height: 0;=
+ mso-line-height-alt: 0%;"><br /></p><p style=3D"line-height: 0; mso-line-=
+height-alt: 0%;"><br /></p><p style=3D"line-height: 0; mso-line-height-alt=
+: 0%;"><br /></p><h1 class=3D"mcePastedContent" style=3D"padding: 0px; mar=
+gin: 20px 0px 22px; box-sizing: border-box; line-height: 1.1; font-variant=
+-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orp=
+hans: 2; text-align: start; text-indent: 0px; text-transform: none; widows=
+: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: norma=
+l; background-color: rgb(255=2C 255=2C 255); text-decoration-thickness: in=
+itial; text-decoration-style: initial; text-decoration-color: initial; mso=
+-line-height-alt: 110.00000000000001%;"><strong><span style=3D"color:rgb(5=
+1=2C 51=2C 51);"><span style=3D"font-size: 36px"><span style=3D"font-famil=
+y: Roboto=2C sans-serif"><span style=3D"background-color: rgb(255=2C 255=
+=2C 255)">Oost best</span></span></span></span></strong></h1><p style=3D"l=
+ine-height: 0; mso-line-height-alt: 0%;"><br /></p><p style=3D"line-height=
+: 0; mso-line-height-alt: 0%;"><br /></p><p style=3D"line-height: 0; mso-l=
+ine-height-alt: 0%;"><br /></p><p style=3D"line-height: 0; mso-line-height=
+-alt: 0%;"><br /></p><p style=3D"line-height: 0; mso-line-height-alt: 0%;"=
+><br /></p><p style=3D"line-height: 0; mso-line-height-alt: 0%;"><br /></p=
+><p style=3D"line-height: 0; mso-line-height-alt: 0%;"><br /></p><p class=
+=3D"mcePastedContent"><span style=3D"color:rgb(51=2C 51=2C 51);"><span sty=
+le=3D"font-size: 16px"><span style=3D"font-family: Roboto=2C sans-serif"><=
+span style=3D"background-color: rgb(255=2C 255=2C 255)">Geschreven door He=
+rman Vinckers<br />Voorgelezen door Sanne van Deursen</span></span></span>=
+</span></p><p>Geluidsmontage Seth Mook</p><p><br /></p><p style=3D"line-he=
+ight: 0; mso-line-height-alt: 0%;"><br /></p><p style=3D"line-height: 0; m=
+so-line-height-alt: 0%;"><br /></p><p class=3D"last-child" style=3D"paddin=
+g: 0px; margin: 0px 0px 1.1em; box-sizing: border-box; font-variant-ligatu=
+res: normal; font-variant-caps: normal; font-weight: 400; letter-spacing:=
+ normal; orphans: 2; text-align: start; text-indent: 0px; text-transform:=
+ none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white=
+-space: normal; background-color: rgb(255=2C 255=2C 255); text-decoration-=
+thickness: initial; text-decoration-style: initial; text-decoration-color:=
+ initial;"><span style=3D"color:rgb(51=2C 51=2C 51);"><span style=3D"font-=
+size: 16px"><span style=3D"font-family: Roboto=2C sans-serif"><span style=
+=3D"background-color: rgb(255=2C 255=2C 255)">Foto: Herman Vinckers</span>=
+</span></span></span></p></div></td></tr></tbody></table></td></tr></tbody=
+></table></td></tr></tbody></table></td><td style=3D"padding-top:0;padding=
+-bottom:0" valign=3D"top" class=3D"mceColumn" id=3D"mceColumnId-223" data-=
+block-id=3D"223" colspan=3D"5" width=3D"41.66666666666667%"><table border=
+=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" role=3D"presenta=
+tion"><tbody><tr><td style=3D"background-color:transparent;padding-top:12p=
+x;padding-bottom:12px;padding-right:0;padding-left:0;border:0;border-radiu=
+s:0" valign=3D"top" class=3D"mceImageBlockContainer" align=3D"center" id=
+=3D"b207"><div><!--[if !mso]><!--></div><table align=3D"center" border=3D=
+"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" style=3D"border-col=
+lapse:separate;margin:0;vertical-align:top;max-width:100%;width:100%;heigh=
+t:auto" role=3D"presentation" data-testid=3D"image-207"><tbody><tr><td sty=
+le=3D"border:0;border-radius:0;margin:0" valign=3D"top"><img alt=3D"" src=
+=3D"https://mcusercontent.com/f177a264847d7820ba11a4aa3/images/908bae47-a7=
+00-d180-de8a-390bea194bf2.jpg" width=3D"275" height=3D"auto" style=3D"disp=
+lay:block;max-width:100%;height:auto;border-radius:0" class=3D"imageDropZo=
+ne mceImage" data-block-id=3D"207" /></td></tr></tbody></table><div><!--<!=
+[endif]--></div><div>
+<!--[if mso]>
+<span class=3D"mceImageBorder" style=3D"border:0;border-width:2px;vertical=
+-align:top;margin:0"><img role=3D"presentation" class=3D"imageDropZone mce=
+Image" src=3D"https://mcusercontent.com/f177a264847d7820ba11a4aa3/images/9=
+08bae47-a700-d180-de8a-390bea194bf2.jpg" alt=3D"" width=3D"275" height=3D"=
+auto" style=3D"display:block;max-width:275px;width:275px;height:auto"/></s=
+pan>
+<![endif]-->
+</div></td></tr></tbody></table></td></tr></tbody></table></td></tr></tbod=
+y></table></td></tr></tbody></table></td></tr></tbody></table></td></tr></=
+tbody></table></td></tr></tbody></table></td></tr></tbody></table></td></t=
+r></tbody></table></td></tr></tbody></table></td></tr><tr><td style=3D"bac=
+kground-color:transparent;padding-top:12px;padding-bottom:12px;padding-rig=
+ht:24px;padding-left:24px;border:0;border-radius:0" valign=3D"top" class=
+=3D"mceButtonBlockContainer" align=3D"center" id=3D"b24"><div><!--[if !ms=
+o]><!--></div><table align=3D"center" border=3D"0" cellpadding=3D"0" cells=
+pacing=3D"0" width=3D"100%" style=3D"max-width:564px" role=3D"presentation=
+" data-block-id=3D"24" class=3D"mceButtonContainer"><tbody><tr class=3D"mc=
+eStandardButton"><td style=3D"background-color:#af0c0c;border-radius:8px;t=
+ext-align:center" valign=3D"top" class=3D"mceButton"><a href=3D"https://vr=
+ijburg.us5.list-manage.com/track/click?u=3Df177a264847d7820ba11a4aa3&id=3D=
+f7ad664510&e=3D7868a1eb57" target=3D"_blank" class=3D"mceButtonLink" styl=
+e=3D"background-color:#af0c0c;border-radius:8px;border:1px solid #000000;c=
+olor:#ffffff;display:block;font-family:Arial=2C 'Helvetica Neue'=2C Helvet=
+ica=2C sans-serif;font-size:16px;font-weight:normal;font-style:normal;padd=
+ing:16px 28px;text-decoration:none;text-align:center;direction:ltr;letter-=
+spacing:0px" rel=3D"noreferrer">Klik hier om deze podcast te beluisteren</=
+a></td></tr></tbody></table><div><!--<![endif]--></div><table align=3D"ce=
+nter" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" styl=
+e=3D"max-width:564px" role=3D"presentation" data-block-id=3D"24" class=3D"=
+mceButtonContainer"><tbody><tr>
+<!--[if mso]>
+<td align=3D"center">
+<v:roundrect xmlns:v=3D"urn:schemas-microsoft-com:vml"
+xmlns:w=3D"urn:schemas-microsoft-com:office:word"
+href=3D"https://soundcloud.com/vrijburg-amsterdam/vrijzinnige-miniatuur-bl=
+og-381"
+style=3D"v-text-anchor:middle; width:564px; height:52.5px;"
+arcsize=3D"1%"
+strokecolor=3D"#000000"
+strokeweight=3D"1px"
+fillcolor=3D"#af0c0c">
+<v:stroke dashstyle=3D"solid"/>
+<w:anchorlock />
+<center style=3D"
+color: #ffffff;
+display: block;
+font-family: Arial=2C 'Helvetica Neue'=2C Helvetica=2C sans-serif;
+font-size: 16;
+font-style: normal;
+font-weight: normal;
+letter-spacing: 0px;
+text-decoration: none;
+text-align: center;
+direction: ltr;"
+>
+Klik hier om deze podcast te beluisteren
+</center>
+</v:roundrect>
+</td>
+<![endif]-->
+</tr></tbody></table></td></tr><tr><td style=3D"background-color:transpare=
+nt;padding-top:12px;padding-bottom:12px;padding-right:24px;padding-left:24=
+px;border:0;border-radius:0" valign=3D"top" class=3D"mceButtonBlockContain=
+er" align=3D"center" id=3D"b25"><div><!--[if !mso]><!--></div><table alig=
+n=3D"center" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100=
+%" style=3D"max-width:564px" role=3D"presentation" data-block-id=3D"25" cl=
+ass=3D"mceButtonContainer"><tbody><tr class=3D"mceStandardButton"><td styl=
+e=3D"background-color:#2baadf;border-radius:8px;text-align:center" valign=
+=3D"top" class=3D"mceButton"><a href=3D"https://vrijburg.us5.list-manage.c=
+om/track/click?u=3Df177a264847d7820ba11a4aa3&id=3D8dfc15ad27&e=3D7868a1eb57" target=3D"_blank" class=3D"mceButtonLink" style=3D"background-color:#2=
+baadf;border-radius:8px;border:1px solid #000000;color:#000000;display:blo=
+ck;font-family:Arial=2C 'Helvetica Neue'=2C Helvetica=2C sans-serif;font-s=
+ize:16px;font-weight:normal;font-style:normal;padding:16px 28px;text-decor=
+ation:none;text-align:center;direction:ltr;letter-spacing:0px" rel=3D"nore=
+ferrer">Klik hier om dit blog te lezen</a></td></tr></tbody></table><div><=
+!--<![endif]--></div><table align=3D"center" border=3D"0" cellpadding=3D"=
+0" cellspacing=3D"0" width=3D"100%" style=3D"max-width:564px" role=3D"pres=
+entation" data-block-id=3D"25" class=3D"mceButtonContainer"><tbody><tr>
+<!--[if mso]>
+<td align=3D"center">
+<v:roundrect xmlns:v=3D"urn:schemas-microsoft-com:vml"
+xmlns:w=3D"urn:schemas-microsoft-com:office:word"
+href=3D"https://www.vrijburg.nl/oost-west-381/"
+style=3D"v-text-anchor:middle; width:564px; height:52.5px;"
+arcsize=3D"1%"
+strokecolor=3D"#000000"
+strokeweight=3D"1px"
+fillcolor=3D"#2baadf">
+<v:stroke dashstyle=3D"solid"/>
+<w:anchorlock />
+<center style=3D"
+color: #000000;
+display: block;
+font-family: Arial=2C 'Helvetica Neue'=2C Helvetica=2C sans-serif;
+font-size: 16;
+font-style: normal;
+font-weight: normal;
+letter-spacing: 0px;
+text-decoration: none;
+text-align: center;
+direction: ltr;"
+>
+Klik hier om dit blog te lezen
+</center>
+</v:roundrect>
+</td>
+<![endif]-->
+</tr></tbody></table></td></tr><tr><td style=3D"padding-top:0;padding-bott=
+om:0;padding-right:0;padding-left:0" valign=3D"top" class=3D"mceGutterCont=
+ainer" id=3D"gutterContainerId-26"><table border=3D"0" cellpadding=3D"0" c=
+ellspacing=3D"0" width=3D"100%" style=3D"border-collapse:separate" role=3D=
+"presentation"><tbody><tr><td style=3D"padding-top:0;padding-bottom:0;padd=
+ing-right:0;padding-left:0;border:0;border-radius:0" valign=3D"top" id=3D"=
+b26"><table width=3D"100%" style=3D"border:0;background-color:transparent;=
+border-radius:0;border-collapse:separate"><tbody><tr><td style=3D"padding-=
+left:24px;padding-right:24px;padding-top:12px;padding-bottom:12px" class=
+=3D"mceTextBlockContainer"><div data-block-id=3D"26" class=3D"mceText" id=
+=3D"d26" style=3D"width:100%"><p>Het thema van deze serie is "Waag =E2=80=
+=99t er op=E2=80=9D. </p><p><br /></p><p class=3D"last-child"><a href=3D"h=
+ttps://vrijburg.us5.list-manage.com/track/click?u=3Df177a264847d7820ba11a4=
+aa3&id=3D7c7c5428a7&e=3D7868a1eb57">Het podcastcollectief</a>=2C Rachelle=
+ van Andel=2C Dik Mook en Margriet Dijkmans van Gunst</p></div></td></tr><=
+/tbody></table></td></tr></tbody></table></td></tr><tr><td style=3D"backgr=
+ound-color:transparent;padding-top:12px;padding-bottom:12px;padding-right:=
+24px;padding-left:24px;border:0;border-radius:0" valign=3D"top" class=3D"m=
+ceButtonBlockContainer" align=3D"center" id=3D"b143"><div><!--[if !mso]><=
+!--></div><table align=3D"center" border=3D"0" cellpadding=3D"0" cellspaci=
+ng=3D"0" role=3D"presentation" data-block-id=3D"143" class=3D"mceButtonCon=
+tainer"><tbody><tr class=3D"mceStandardButton"><td style=3D"background-col=
+or:#006483;border-radius:8px;text-align:center" valign=3D"top" class=3D"mc=
+eButton"><a href=3D"https://vrijburg.us5.list-manage.com/track/click?u=3Df=
+177a264847d7820ba11a4aa3&id=3Dc9190c0643&e=3D7868a1eb57" target=3D"_blank=
+" class=3D"mceButtonLink" style=3D"background-color:#006483;border-radius:=
+8px;border:1px none #000000;color:#00a1d8;display:block;font-family:Arial=
+=2C 'Helvetica Neue'=2C Helvetica=2C sans-serif;font-size:16px;font-weight=
+:normal;font-style:normal;padding:16px 28px;text-decoration:none;text-alig=
+n:center;direction:ltr;letter-spacing:0px" rel=3D"noreferrer">Het podcastc=
+ollectief</a></td></tr></tbody></table><div><!--<![endif]--></div><table=
+ align=3D"center" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D=
+"presentation" data-block-id=3D"143" class=3D"mceButtonContainer"><tbody><=
+tr>
+<!--[if mso]>
+<td align=3D"center">
+<v:roundrect xmlns:v=3D"urn:schemas-microsoft-com:vml"
+xmlns:w=3D"urn:schemas-microsoft-com:office:word"
+href=3D"https://vrijburg.us5.list-manage.com/track/click?u=3Df177a264847d7=
+820ba11a4aa3&id=3D611c85fe67&e=3D7868a1eb57"
+style=3D"v-text-anchor:middle; width:203.63px; height:50.5px;"
+arcsize=3D"4%"
+strokecolor=3D"#006483"
+strokeweight=3D"1px"
+fillcolor=3D"#006483">
+<v:stroke dashstyle=3D"solid"/>
+<w:anchorlock />
+<center style=3D"
+color: #00a1d8;
+display: block;
+font-family: Arial=2C 'Helvetica Neue'=2C Helvetica=2C sans-serif;
+font-size: 16;
+font-style: normal;
+font-weight: normal;
+letter-spacing: 0px;
+text-decoration: none;
+text-align: center;
+direction: ltr;"
+>
+Het podcastcollectief
+</center>
+</v:roundrect>
+</td>
+<![endif]-->
+</tr></tbody></table></td></tr><tr><td style=3D"background-color:transpare=
+nt;border:0;border-radius:0" valign=3D"top" id=3D"b31"><table border=3D"0"=
+ cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" role=3D"presentation"=
+ data-block-id=3D"31"><tbody><tr><td valign=3D"top" class=3D"mceSpacerBloc=
+k" height=3D"20"></td></tr></tbody></table></td></tr><tr><td style=3D"back=
+ground-color:#797979;padding-top:12px;padding-bottom:12px;padding-right:0;=
+padding-left:0;border:0;border-radius:0" valign=3D"top" class=3D"mceLayout=
+Container" id=3D"b32"><table align=3D"center" border=3D"0" cellpadding=3D"=
+0" cellspacing=3D"0" width=3D"100%" role=3D"presentation" data-block-id=3D=
+"32"><tbody><tr class=3D"mceRow"><td style=3D"background-color:#797979;bac=
+kground-position:center;background-repeat:no-repeat;background-size:cover;=
+padding-top:0px;padding-bottom:0px" valign=3D"top"><table border=3D"0" cel=
+lpadding=3D"0" cellspacing=3D"24" width=3D"100%" role=3D"presentation"><tb=
+ody><tr><td valign=3D"top" class=3D"mceColumn" id=3D"mceColumnId--6" data-=
+block-id=3D"-6" colspan=3D"12" width=3D"100%"><table border=3D"0" cellpadd=
+ing=3D"0" cellspacing=3D"0" width=3D"100%" role=3D"presentation"><tbody><t=
+r><td style=3D"border:0;border-radius:0" valign=3D"top" class=3D"mceSocial=
+FollowBlockContainer" id=3D"b-5"><table align=3D"center" border=3D"0" cell=
+padding=3D"0" cellspacing=3D"0" role=3D"presentation" class=3D"mceSocialFo=
+llowBlock" data-block-id=3D"-5"><tbody><tr><td valign=3D"middle" align=3D"=
+center"><!--[if mso]><table align=3D"left" border=3D"0" cellspacing=3D "0=
+" cellpadding=3D"0"><tr><![endif]--><!--[if mso]><td align=3D"center" va=
+lign=3D"top"><![endif]--><table align=3D"left" border=3D"0" cellpadding=
+=3D"0" cellspacing=3D"0" style=3D"display:inline;float:left" role=3D"prese=
+ntation"><tbody><tr><td style=3D"padding-top:3px;padding-bottom:3px;paddin=
+g-left:12px;padding-right:12px" valign=3D"top" class=3D"mceSocialFollowIco=
+n" align=3D"center" width=3D"40"><a href=3D"https://vrijburg.us5.list-mana=
+ge.com/track/click?u=3Df177a264847d7820ba11a4aa3&id=3D02a074b8f8&e=3D7868a1eb57" target=3D"_blank" rel=3D"noreferrer"><img class=3D"mceSocialFollow=
+Image" width=3D"40" height=3D"40" alt=3D"Facebook icon" src=3D"https://cdn=
+-images.mailchimp.com/icons/social-block-v3/block-icons-v3/facebook-filled=
+-light-40.png" /></a></td></tr></tbody></table><!--[if mso]></td><![endi=
+f]--><!--[if mso]><td align=3D"center" valign=3D"top"><![endif]--><table=
+ align=3D"left" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" style=3D"=
+display:inline;float:left" role=3D"presentation"><tbody><tr><td style=3D"p=
+adding-top:3px;padding-bottom:3px;padding-left:12px;padding-right:12px" va=
+lign=3D"top" class=3D"mceSocialFollowIcon" align=3D"center" width=3D"40"><=
+a href=3D"https://vrijburg.us5.list-manage.com/track/click?u=3Df177a264847=
+d7820ba11a4aa3&id=3Da04035edf9&e=3D7868a1eb57" target=3D"_blank" rel=3D"n=
+oreferrer"><img class=3D"mceSocialFollowImage" width=3D"40" height=3D"40"=
+ alt=3D"Instagram icon" src=3D"https://cdn-images.mailchimp.com/icons/soci=
+al-block-v3/block-icons-v3/instagram-filled-light-40.png" /></a></td></tr>=
+</tbody></table><!--[if mso]></td><![endif]--><!--[if mso]><td align=3D=
+"center" valign=3D"top"><![endif]--><table align=3D"left" border=3D"0" ce=
+llpadding=3D"0" cellspacing=3D"0" style=3D"display:inline;float:left" role=
+=3D"presentation"><tbody><tr><td style=3D"padding-top:3px;padding-bottom:3=
+px;padding-left:12px;padding-right:12px" valign=3D"top" class=3D"mceSocial=
+FollowIcon" align=3D"center" width=3D"40"><a href=3D"https://vrijburg.us5.=
+list-manage.com/track/click?u=3Df177a264847d7820ba11a4aa3&id=3Dcae45bf2ed&=
+e=3D7868a1eb57" target=3D"_blank" rel=3D"noreferrer"><img class=3D"mceSoc=
+ialFollowImage" width=3D"40" height=3D"40" alt=3D"Website icon" src=3D"htt=
+ps://cdn-images.mailchimp.com/icons/social-block-v3/block-icons-v3/website=
+-filled-light-40.png" /></a></td></tr></tbody></table><!--[if mso]></td><=
+![endif]--><!--[if mso]><td align=3D"center" valign=3D"top"><![endif]--=
+><table align=3D"left" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" st=
+yle=3D"display:inline;float:left" role=3D"presentation"><tbody><tr><td sty=
+le=3D"padding-top:3px;padding-bottom:3px;padding-left:12px;padding-right:1=
+2px" valign=3D"top" class=3D"mceSocialFollowIcon" align=3D"center" width=
+=3D"40"><a href=3D"https://vrijburg.us5.list-manage.com/track/click?u=3Df1=
+77a264847d7820ba11a4aa3&id=3D256760f7c7&e=3D7868a1eb57" target=3D"_blank"=
+ rel=3D"noreferrer"><img class=3D"mceSocialFollowImage" width=3D"40" heigh=
+t=3D"40" alt=3D"LinkedIn icon" src=3D"https://cdn-images.mailchimp.com/ico=
+ns/social-block-v3/block-icons-v3/linkedin-filled-light-40.png" /></a></td=
+></tr></tbody></table><!--[if mso]></td><![endif]--><!--[if mso]></tr><=
+/table><![endif]--></td></tr></tbody></table></td></tr></tbody></table></=
+td></tr></tbody></table></td></tr></tbody></table></td></tr><tr><td valign=
+=3D"top" class=3D"mceGutterContainer" id=3D"gutterContainerId-38"><table b=
+order=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" style=3D"bo=
+rder-collapse:separate" role=3D"presentation"><tbody><tr><td style=3D"padd=
+ing-top:12px;padding-bottom:12px;padding-right:0;padding-left:0;border:0;b=
+order-radius:0" valign=3D"top" class=3D"mceLayoutContainer" id=3D"b38"><ta=
+ble align=3D"center" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" widt=
+h=3D"100%" role=3D"presentation" data-block-id=3D"38" id=3D"section_62f73b=
+9a7d55bb6fe83f453eeca420a5" class=3D"mceLayout"><tbody><tr class=3D"mceRow=
+"><td style=3D"background-position:center;background-repeat:no-repeat;back=
+ground-size:cover" valign=3D"top"><table border=3D"0" cellpadding=3D"0" ce=
+llspacing=3D"0" width=3D"100%" role=3D"presentation"><tbody><tr><td valign=
+=3D"top" class=3D"mceColumn" id=3D"mceColumnId--14" data-block-id=3D"-14"=
+ colspan=3D"12" width=3D"100%"><table border=3D"0" cellpadding=3D"0" cells=
+pacing=3D"0" width=3D"100%" role=3D"presentation"><tbody><tr><td style=3D"=
+border:0;border-radius:0" valign=3D"top" align=3D"center" id=3D"b-8"><tabl=
+e align=3D"center" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=
+=3D"100%" role=3D"presentation" data-block-id=3D"-8"><tbody><tr class=3D"m=
+ceRow"><td style=3D"background-position:center;background-repeat:no-repeat=
+;background-size:cover" valign=3D"top"><table border=3D"0" cellpadding=3D"=
+0" cellspacing=3D"0" width=3D"100%" role=3D"presentation"><tbody><tr><td v=
+align=3D"top" class=3D"mceColumn" id=3D"mceColumnId--19" data-block-id=3D"=
+-19" colspan=3D"12" width=3D"100%"><table border=3D"0" cellpadding=3D"0" c=
+ellspacing=3D"0" width=3D"100%" role=3D"presentation"><tbody><tr><td style=
+=3D"border:0;border-radius:0" valign=3D"top" id=3D"b37"><table align=3D"ce=
+nter" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" role=
+=3D"presentation" data-block-id=3D"37"><tbody><tr class=3D"mceRow"><td sty=
+le=3D"background-position:center;background-repeat:no-repeat;background-si=
+ze:cover;padding-top:0px;padding-bottom:0px" valign=3D"top"><table border=
+=3D"0" cellpadding=3D"0" cellspacing=3D"24" width=3D"100%" style=3D"table-=
+layout:fixed" role=3D"presentation"><colgroup><col span=3D"1" width=3D"8.3=
+33333333333332%" /><col span=3D"1" width=3D"8.333333333333332%" /><col spa=
+n=3D"1" width=3D"8.333333333333332%" /><col span=3D"1" width=3D"8.33333333=
+3333332%" /><col span=3D"1" width=3D"8.333333333333332%" /><col span=3D"1"=
+ width=3D"8.333333333333332%" /><col span=3D"1" width=3D"8.333333333333332=
+%" /><col span=3D"1" width=3D"8.333333333333332%" /><col span=3D"1" width=
+=3D"8.333333333333332%" /><col span=3D"1" width=3D"8.333333333333332%" /><=
+col span=3D"1" width=3D"8.333333333333332%" /><col span=3D"1" width=3D"8.3=
+33333333333332%" /></colgroup><tbody><tr><td style=3D"padding-top:0;paddin=
+g-bottom:0" valign=3D"top" class=3D"mceColumn" id=3D"mceColumnId-34" data-=
+block-id=3D"34" colspan=3D"6" width=3D"50%"><table border=3D"0" cellpaddin=
+g=3D"0" cellspacing=3D"0" width=3D"100%" role=3D"presentation"><tbody><tr>=
+<td style=3D"background-color:transparent;padding-top:12px;padding-bottom:=
+12px;padding-right:0;padding-left:0;border:0;border-radius:0" valign=3D"to=
+p" class=3D"mceImageBlockContainer" align=3D"center" id=3D"b33"><div><!--[=
+if !mso]><!--></div><a href=3D"https://vrijburg.us5.list-manage.com/track=
+/click?u=3Df177a264847d7820ba11a4aa3&id=3D62411976ba&e=3D7868a1eb57" styl=
+e=3D"display:block" target=3D"_blank" data-block-id=3D"33"><table align=3D=
+"center" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" s=
+tyle=3D"border-collapse:separate;margin:0;vertical-align:top;max-width:108=
+px;width:100%;height:auto" role=3D"presentation" data-testid=3D"image-33">=
+<tbody><tr><td style=3D"border:0;border-radius:0;margin:0" valign=3D"top">=
+<img alt=3D"" src=3D"https://mcusercontent.com/f177a264847d7820ba11a4aa3/i=
+mages/51adc1a3-2389-53de-271c-ffb1693fe341.jpeg" width=3D"108" height=3D"a=
+uto" style=3D"display:block;max-width:100%;height:auto;border-radius:0" cl=
+ass=3D"imageDropZone mceImage" /></td></tr></tbody></table></a><div><!--<!=
+[endif]--></div><div>
+<!--[if mso]>
+<a href=3D"https://www.vrijburg.nl"><span class=3D"mceImageBorder" style=
+=3D"border:0;border-width:2px;vertical-align:top;margin:0"><img role=3D"pr=
+esentation" class=3D"imageDropZone mceImage" src=3D"https://mcusercontent.=
+com/f177a264847d7820ba11a4aa3/images/51adc1a3-2389-53de-271c-ffb1693fe341.=
+jpeg" alt=3D"" width=3D"108" height=3D"auto" style=3D"display:block;max-wi=
+dth:108px;width:108px;height:auto"/></span></a>
+<![endif]-->
+</div></td></tr></tbody></table></td><td style=3D"padding-top:0;padding-bo=
+ttom:0" valign=3D"top" class=3D"mceColumn" id=3D"mceColumnId-36" data-bloc=
+k-id=3D"36" colspan=3D"6" width=3D"50%"><table border=3D"0" cellpadding=3D=
+"0" cellspacing=3D"0" width=3D"100%" role=3D"presentation"><tbody><tr><td=
+ style=3D"background-color:transparent;padding-top:12px;padding-bottom:12p=
+x;padding-right:0;padding-left:0;border:0;border-radius:0" valign=3D"top"=
+ class=3D"mceImageBlockContainer" align=3D"center" id=3D"b35"><div><!--[i=
+f !mso]><!--></div><a href=3D"https://vrijburg.us5.list-manage.com/track/c=
+lick?u=3Df177a264847d7820ba11a4aa3&id=3Ddb3537f2c8&e=3D7868a1eb57" style=
+=3D"display:block" target=3D"_blank" data-block-id=3D"35"><table align=3D"=
+center" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" st=
+yle=3D"border-collapse:separate;margin:0;vertical-align:top;max-width:139p=
+x;width:100%;height:auto" role=3D"presentation" data-testid=3D"image-35"><=
+tbody><tr><td style=3D"border:0;border-radius:0;margin:0" valign=3D"top"><=
+img alt=3D"" src=3D"https://mcusercontent.com/f177a264847d7820ba11a4aa3/im=
+ages/21784491-c2b3-efa1-be87-a0ef09ec39fa.png" width=3D"139" height=3D"aut=
+o" style=3D"display:block;max-width:100%;height:auto;border-radius:0" clas=
+s=3D"imageDropZone mceImage" /></td></tr></tbody></table></a><div><!--<![=
+endif]--></div><div>
+<!--[if mso]>
+<a href=3D"https://www.vrijburg.nl/ANBI"><span class=3D"mceImageBorder" st=
+yle=3D"border:0;border-width:2px;vertical-align:top;margin:0"><img role=3D=
+"presentation" class=3D"imageDropZone mceImage" src=3D"https://mcuserconte=
+nt.com/f177a264847d7820ba11a4aa3/images/21784491-c2b3-efa1-be87-a0ef09ec39=
+fa.png" alt=3D"" width=3D"139" height=3D"auto" style=3D"display:block;max-=
+width:139px;width:139px;height:auto"/></span></a>
+<![endif]-->
+</div></td></tr></tbody></table></td></tr></tbody></table></td></tr></tbod=
+y></table></td></tr></tbody></table></td></tr></tbody></table></td></tr></=
+tbody></table></td></tr></tbody></table></td></tr></tbody></table></td></t=
+r></tbody></table></td></tr></tbody></table></td></tr><tr><td style=3D"pad=
+ding-top:0;padding-bottom:0;padding-right:0;padding-left:0" valign=3D"top"=
+ class=3D"mceGutterContainer" id=3D"gutterContainerId-39"><table border=3D=
+"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" style=3D"border-col=
+lapse:separate" role=3D"presentation"><tbody><tr><td style=3D"padding-top:=
+0;padding-bottom:0;padding-right:0;padding-left:0;border:0;border-radius:0=
+" valign=3D"top" id=3D"b39"><table width=3D"100%" style=3D"border:0;backgr=
+ound-color:transparent;border-radius:0;border-collapse:separate"><tbody><t=
+r><td style=3D"padding-left:24px;padding-right:24px;padding-top:12px;paddi=
+ng-bottom:12px" class=3D"mceTextBlockContainer"><div data-block-id=3D"39"=
+ class=3D"mceText" id=3D"d39" style=3D"width:100%"><p style=3D"line-height=
+: 1.25; mso-line-height-alt: 125%; text-align: center;" class=3D"last-chil=
+d"><span style=3D"font-size: 14px">Draagt u Vrijburg een warm hart toe en=
+ wilt u een financi=C3=ABle bijdrage leveren om met onze activiteiten door=
+ te kunnen gaan? Dat kan </span><a href=3D"https://vrijburg.us5.list-manag=
+e.com/track/click?u=3Df177a264847d7820ba11a4aa3&id=3Dbb94c1623f&e=3D7868a1eb57" target=3D"_blank"><span style=3D"font-size: 14px">via deze link</sp=
+an></a><span style=3D"font-size: 14px">. Bij voorbaat dank!</span></p></di=
+v></td></tr></tbody></table></td></tr></tbody></table></td></tr></tbody></=
+table></td></tr></tbody></table></td></tr></tbody></table></td></tr></tbod=
+y></table><!--[if (gte mso 9)|(IE)]></td></tr></table><![endif]--></td><=
+/tr></tbody><tbody data-block-id=3D"47" class=3D"mceWrapper"><tr><td style=
+=3D"background-color:#f4f4f4" valign=3D"top" align=3D"center" class=3D"mce=
+Section47"><!--[if (gte mso 9)|(IE)]><table align=3D"center" border=3D"0"=
+ cellspacing=3D"0" cellpadding=3D"0" width=3D"660" style=3D"width:660px;">=
+<tr><td><![endif]--><table border=3D"0" cellpadding=3D"0" cellspacing=3D"=
+0" width=3D"100%" style=3D"max-width:660px" role=3D"presentation"><tbody><=
+tr><td style=3D"background-color:#ffffff" valign=3D"top" class=3D"mceWrapp=
+erInner"><table align=3D"center" border=3D"0" cellpadding=3D"0" cellspacin=
+g=3D"0" width=3D"100%" role=3D"presentation" data-block-id=3D"46"><tbody><=
+tr class=3D"mceRow"><td style=3D"background-position:center;background-rep=
+eat:no-repeat;background-size:cover" valign=3D"top"><table border=3D"0" ce=
+llpadding=3D"0" cellspacing=3D"0" width=3D"100%" role=3D"presentation"><tb=
+ody><tr><td style=3D"padding-top:0;padding-bottom:0" valign=3D"top" class=
+=3D"mceColumn" id=3D"mceColumnId--16" data-block-id=3D"-16" colspan=3D"12"=
+ width=3D"100%"><table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" wi=
+dth=3D"100%" role=3D"presentation"><tbody><tr><td style=3D"background-colo=
+r:transparent;padding-top:12px;padding-bottom:12px;padding-right:24px;padd=
+ing-left:24px;border:0;border-radius:0" valign=3D"top" class=3D"mceButtonB=
+lockContainer" align=3D"center" id=3D"b144"><div><!--[if !mso]><!--></div=
+><table align=3D"center" border=3D"0" cellpadding=3D"0" cellspacing=3D"0"=
+ role=3D"presentation" data-block-id=3D"144" class=3D"mceButtonContainer">=
+<tbody><tr class=3D"mceStandardButton"><td style=3D"background-color:#0064=
+83;border-radius:8px;text-align:center" valign=3D"top" class=3D"mceButton"=
+><a href=3D"https://vrijburg.us5.list-manage.com/track/click?u=3Df177a2648=
+47d7820ba11a4aa3&id=3D988390ef92&e=3D7868a1eb57" target=3D"_blank" class=
+=3D"mceButtonLink" style=3D"background-color:#006483;border-radius:8px;bor=
+der:1px none #000000;color:#00a1d8;display:block;font-family:Arial=2C 'Hel=
+vetica Neue'=2C Helvetica=2C sans-serif;font-size:16px;font-weight:normal;=
+font-style:normal;padding:16px 28px;text-decoration:none;text-align:center=
+;direction:ltr;letter-spacing:0px" rel=3D"noreferrer">Mediacommissie Vrijb=
+urg</a></td></tr></tbody></table><div><!--<![endif]--></div><table align=
+=3D"center" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"prese=
+ntation" data-block-id=3D"144" class=3D"mceButtonContainer"><tbody><tr>
+<!--[if mso]>
+<td align=3D"center">
+<v:roundrect xmlns:v=3D"urn:schemas-microsoft-com:vml"
+xmlns:w=3D"urn:schemas-microsoft-com:office:word"
+href=3D"http://www.vrijburg.nl/medewerkers/mediacommissie/"
+style=3D"v-text-anchor:middle; width:234.13px; height:50.5px;"
+arcsize=3D"3%"
+strokecolor=3D"#006483"
+strokeweight=3D"1px"
+fillcolor=3D"#006483">
+<v:stroke dashstyle=3D"solid"/>
+<w:anchorlock />
+<center style=3D"
+color: #00a1d8;
+display: block;
+font-family: Arial=2C 'Helvetica Neue'=2C Helvetica=2C sans-serif;
+font-size: 16;
+font-style: normal;
+font-weight: normal;
+letter-spacing: 0px;
+text-decoration: none;
+text-align: center;
+direction: ltr;"
+>
+Mediacommissie Vrijburg
+</center>
+</v:roundrect>
+</td>
+<![endif]-->
+</tr></tbody></table></td></tr><tr><td style=3D"padding-top:8px;padding-bo=
+ttom:8px;padding-right:8px;padding-left:8px;border:0;border-radius:0" vali=
+gn=3D"top" class=3D"mceLayoutContainer" id=3D"b45"><table align=3D"center"=
+ border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" role=3D"p=
+resentation" data-block-id=3D"45" id=3D"section_1999d27257ed70d5deefe967aa=
+2e5274" class=3D"mceFooterSection"><tbody><tr class=3D"mceRow"><td style=
+=3D"background-position:center;background-repeat:no-repeat;background-size=
+:cover" valign=3D"top"><table border=3D"0" cellpadding=3D"0" cellspacing=
+=3D"12" width=3D"100%" role=3D"presentation"><tbody><tr><td style=3D"paddi=
+ng-top:0;padding-bottom:0" valign=3D"top" class=3D"mceColumn" id=3D"mceCol=
+umnId--3" data-block-id=3D"-3" colspan=3D"12" width=3D"100%"><table border=
+=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" role=3D"presenta=
+tion"><tbody><tr><td style=3D"padding-top:0;padding-bottom:0;padding-right=
+:0;padding-left:0" valign=3D"top" class=3D"mceGutterContainer" id=3D"gutte=
+rContainerId-43"><table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" w=
+idth=3D"100%" style=3D"border-collapse:separate" role=3D"presentation"><tb=
+ody><tr><td style=3D"padding-top:0;padding-bottom:0;padding-right:0;paddin=
+g-left:0;border:0;border-radius:0" valign=3D"top" align=3D"center" id=3D"b=
+43"><table width=3D"100%" style=3D"border:0;background-color:transparent;b=
+order-radius:0;border-collapse:separate"><tbody><tr><td style=3D"padding-l=
+eft:16px;padding-right:16px;padding-top:12px;padding-bottom:12px" class=3D=
+"mceTextBlockContainer"><div data-block-id=3D"43" class=3D"mceText" id=3D"=
+d43" style=3D"display:inline-block;width:100%"><p class=3D"last-child"><em=
+><span style=3D"font-size: 12px">Copyright =C2=A9 2026 Vrijzinnig Centrum=
+ Vrijburg Amsterdam=2C All rights reserved.</span></em><span style=3D"font=
+-size: 12px"><br />
+ U heeft eerder aangegeven ge=C3=AFnteresseerd te zijn in nieuws van Vrijb=
+urg en/of de Kinderkerk.<br /><br /></span><strong><span style=3D"font-siz=
+e: 14px">Ons adres:</span></strong><span style=3D"font-size: 14px"><br /><=
+/span><a href=3D"https://vrijburg.us5.list-manage.com/track/click?u=3Df177=
+a264847d7820ba11a4aa3&id=3De6165d28c3&e=3D7868a1eb57" target=3D"_self"><s=
+pan style=3D"font-size: 14px">Mediacommissie Vrijburg</span></a><span styl=
+e=3D"font-size: 12px"><br /><span class=3D"vcard"><span class=3D"org fn">V=
+rijzinnig Centrum Vrijburg Amsterdam<br /></span><span class=3D"adr"><span=
+ class=3D"street-address">Diepenbrockstraat 46<br /></span><span class=3D"=
+locality">Amsterdam</span>=2C <span class=3D"region">NH</span> <span class=
+=3D"postal-code">1077 WE</span> <span class=3D"country-name">Netherlands<b=
+r /></span><br /></span><br><a href=3D"https://vrijburg.us5.list-manage.co=
+m/vcard?u=3Df177a264847d7820ba11a4aa3&id=3Da70e1c3885" class=3D"hcard-down=
+load">Voeg ons toe aan je adresboek</a><br /></span>
+<br /><br /></span><a href=3D"https://vrijburg.us5.list-manage.com/profile=
+?u=3Df177a264847d7820ba11a4aa3&id=3Da70e1c3885&e=3D7868a1eb57&c=3D53fa70dae2=
+" target=3D"_blank"><span style=3D"color:#ffffff;"><span style=3D"font-siz=
+e: 12px">_</span></span></a><span style=3D"font-size: 12px">Om het abonnem=
+ent van uw Vrijburg nieuwsbrieven aan te passen=2C klik dan </span><a href=
+=3D"https://vrijburg.us5.list-manage.com/profile?u=3Df177a264847d7820ba11a=
+4aa3&id=3Da70e1c3885&e=3D7868a1eb57&c=3D53fa70dae2" target=3D"_blank"><span=
+ style=3D"font-size: 12px">hier</span></a><span style=3D"font-size: 12px">=
+=2E <br />Wilt u helemaal geen enkele nieuwsbrief meer van Vrijburg ontvange=
+n=2C klik dan </span><a href=3D"https://vrijburg.us5.list-manage.com/unsub=
+scribe?u=3Df177a264847d7820ba11a4aa3&id=3Da70e1c3885&t=3Db&e=3D7868a1eb57&c=
+=3D53fa70dae2" target=3D"_blank"><span style=3D"font-size: 12px">hier</spa=
+n></a></p></div></td></tr></tbody></table></td></tr></tbody></table></td><=
+/tr><tr><td style=3D"border:0;border-radius:0" valign=3D"top" class=3D"mce=
+LayoutContainer" align=3D"center" id=3D"b-2"><table align=3D"center" borde=
+r=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" role=3D"present=
+ation" data-block-id=3D"-2"><tbody><tr class=3D"mceRow"><td style=3D"backg=
+round-position:center;background-repeat:no-repeat;background-size:cover;pa=
+dding-top:0px;padding-bottom:0px" valign=3D"top"><table border=3D"0" cellp=
+adding=3D"0" cellspacing=3D"24" width=3D"100%" role=3D"presentation"><tbod=
+y></tbody></table></td></tr></tbody></table></td></tr></tbody></table></td=
+></tr></tbody></table></td></tr></tbody></table></td></tr></tbody></table>=
+</td></tr></tbody></table></td></tr></tbody></table></td></tr></tbody></ta=
+ble><!--[if (gte mso 9)|(IE)]></td></tr></table><![endif]--></td></tr></=
+tbody></table>
+</td>
+</tr>
+</tbody></table>
+</center>
+</body></html>
+--_----------=_MCPart_648302413--
