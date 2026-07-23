@@ -661,7 +661,7 @@
       </div>
       <div class="row">
         <div class="field" style="grid-column: 1/-1">
-          <label>Foto <span class="opt">– voor op de voorkant van de liturgie</span></label>
+          <label>Foto <span class="opt">– liturgie, socials en website</span></label>
           <div class="foto-upload-row">
             <div class="foto-preview-wrap">
               <img id="foto-preview" class="foto-preview" alt="Voorbeeld foto">
@@ -673,9 +673,12 @@
                 <button type="button" class="btn-small" onclick="downloadFoto()">Download foto</button>
                 <button type="button" class="btn-small" onclick="clearFoto()">Foto verwijderen</button>
               </div>
+              <p class="comm-hint" style="color:var(--brand-dark)">
+                <strong>Rechten verplicht:</strong> lever alleen een foto waarvan Vrijburg de rechten heeft voor gebruik op de liturgie, socials (Facebook/Instagram) en eventueel vrijburg.nl.
+              </p>
               <p class="comm-hint">
                 <strong>Liturgie (.docx):</strong> de foto wordt automatisch op de voorkant geplaatst.<br>
-                <strong>Website (vrijburg.nl):</strong> download de foto en upload handmatig in WordPress (komt later mogelijk automatisch, in overleg met webmaster).<br>
+                <strong>Socials &amp; website:</strong> het bureau gebruikt de foto voor promotie van de dienst (FB/Insta) en soms op vrijburg.nl.<br>
                 <strong>E-mail naar bureau:</strong> bij &ldquo;Ik ben klaar&rdquo; wordt de foto gedownload — voeg die handmatig toe als bijlage (paperclip in uw mailprogramma).
               </p>
             </div>
@@ -683,9 +686,10 @@
         </div>
       </div>
       <div class="row">
-        <div class="field">
-          <label>Foto credit <span class="opt">optioneel</span></label>
+        <div class="field" style="grid-column: 1/-1">
+          <label>Foto credit <span class="opt">– naam fotograaf / bron (verplicht bij upload)</span></label>
           <input type="text" id="foto_credit" placeholder="bijv. Foto ammoniet: Petra Galama">
+          <p class="comm-hint">Vermeld altijd de bron of fotograaf als u een foto uploadt.</p>
         </div>
       </div>
       <div class="row">
@@ -1131,7 +1135,13 @@ function onFotoUpload(event) {
       fotoDataUrl = canvas.toDataURL('image/jpeg', 0.85);
       updateFotoPreview();
       scheduleDraftSave();
-      setStatus('✓ Foto toegevoegd', 'ok');
+      const credit = document.getElementById('foto_credit').value.trim();
+      if (!credit) {
+        setStatus('Foto toegevoegd — vul ook de foto credit / bron in (rechten verplicht)', 'err');
+        document.getElementById('foto_credit').focus();
+      } else {
+        setStatus('✓ Foto toegevoegd', 'ok');
+      }
     };
     img.src = e.target.result;
   };
@@ -1487,6 +1497,13 @@ function terugNaarBureau() {
   const overdenking = document.getElementById('overdenking_email').value.trim();
   const fotoBestand = getFotoFilename();
   const heeftFoto = !!fotoDataUrl;
+  const fotoCredit = document.getElementById('foto_credit').value.trim();
+
+  if (heeftFoto && !fotoCredit) {
+    setStatus('Vul de foto credit / bron in — rechten voor liturgie, socials en website zijn verplicht', 'err');
+    document.getElementById('foto_credit').focus();
+    return;
+  }
 
   setStatus('Opslaan & link maken…', '');
 
@@ -1499,7 +1516,10 @@ function terugNaarBureau() {
 
     if (heeftFoto && cloud && currentFotoPath) {
       body +=
-        `\nDe foto is meegeslagen in de cloud-opslag bij deze link.\n` +
+        `\nDe foto is meegeslagen in de cloud-opslag bij deze link` +
+        (fotoCredit ? ` (credit: ${fotoCredit})` : '') +
+        `.\n` +
+        `Vrijburg mag deze foto gebruiken voor liturgie, socials (FB/Insta) en eventueel de website.\n` +
         `Het bureau kan de foto ook in het Word-document (.docx) zien.\n`;
     } else if (heeftFoto) {
       downloadFoto(true);
@@ -1508,11 +1528,14 @@ function terugNaarBureau() {
         `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
         `⚠ BIJLAGE NODIG: FOTO\n` +
         `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n` +
-        `Ik heb een foto geüpload. Die zit niet in de link.\n\n` +
+        `Ik heb een foto geüpload` +
+        (fotoCredit ? ` (credit: ${fotoCredit})` : '') +
+        `. Die zit niet in de link.\n` +
+        `Vrijburg mag deze foto gebruiken voor liturgie, socials (FB/Insta) en eventueel de website.\n\n` +
         `Stappen:\n` +
         `1. Het bestand "${fotoBestand}" is zojuist naar uw Downloads-map gedownload.\n` +
         `2. Voeg dit bestand toe als bijlage aan deze e-mail (paperclip in uw mailprogramma).\n` +
-        `3. Het bureau kan de foto op vrijburg.nl plaatsen.\n\n` +
+        `3. Het bureau kan de foto voor socials/website gebruiken.\n\n` +
         `De foto staat ook in het Word-document (.docx) als het bureau dat downloadt.\n`;
     }
 
