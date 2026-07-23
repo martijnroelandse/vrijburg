@@ -515,7 +515,7 @@
   </a>
   <div>
     <h1>Liturgie Generator</h1>
-    <p>Remonstranten · Vrijzinnige Protestanten · <a href="info.html" style="color:inherit;opacity:0.95">Uitleg &amp; privacy</a></p>
+    <p>Remonstranten · Vrijzinnige Protestanten · <a href="info.html" style="color:inherit;opacity:0.95">Uitleg &amp; privacy</a> · <a href="nieuwsbrief.html" id="link-nieuwsbrief" style="color:inherit;opacity:0.95">Nieuwsbrief / Mailchimp</a></p>
   </div>
 </header>
 
@@ -695,8 +695,9 @@
           <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px">
             <button type="button" class="btn-small" onclick="copyField('nieuwsbrief', 'Nieuwsbrieftekst gekopieerd')">Kopieer voor nieuwsbrief</button>
             <button type="button" class="btn-small" onclick="copyMailchimpCards()">Kopieer voor Mailchimp cards</button>
+            <button type="button" class="btn-small" onclick="openNieuwsbriefPage()">Open nieuwsbrief-app</button>
           </div>
-          <p class="comm-hint">Mailchimp-copy is platte tekst met losse card/box-blokken (geen HTML), zodat je per blok makkelijk kunt nabewerken.</p>
+          <p class="comm-hint">Mailchimp-copy is platte tekst met losse card/box-blokken (geen HTML). De aparte nieuwsbrief-app opent dezelfde cloud-<code>id</code> voor nabewerking.</p>
         </div>
       </div>
       <div class="row">
@@ -1225,6 +1226,12 @@ function updateCloudHint() {
     el.style.display = 'none';
     el.textContent = '';
   }
+  const nb = document.getElementById('link-nieuwsbrief');
+  if (nb) {
+    nb.href = currentShortId
+      ? `nieuwsbrief.html?id=${encodeURIComponent(currentShortId)}`
+      : 'nieuwsbrief.html';
+  }
 }
 
 function getCloudPayload() {
@@ -1600,6 +1607,16 @@ function copyMailchimpCards() {
   navigator.clipboard.writeText(text).then(() => {
     setStatus('✓ Mailchimp cards als platte tekst gekopieerd', 'ok');
   }).catch(() => prompt('Kopieer deze Mailchimp cards:', text));
+}
+
+function openNieuwsbriefPage() {
+  const url = currentShortId
+    ? `nieuwsbrief.html?id=${encodeURIComponent(currentShortId)}`
+    : 'nieuwsbrief.html';
+  if (!currentShortId) {
+    setStatus('Tip: sla eerst op (☁ Opslaan) voor een gedeelde id', '');
+  }
+  window.open(url, '_blank');
 }
 
 function addOrde(type, content = '') {
