@@ -857,6 +857,7 @@
   <div class="generate-bar-actions">
     <button class="btn-generate" id="btn-download" onclick="generateDocx()">⬇ Download liturgie (.docx)</button>
     <div class="toolbar">
+      <button class="btn-secondary" id="btn-cloud-save" onclick="saveDienstManual()">☁ Opslaan</button>
       <button class="btn-secondary" id="btn-email-voorganger" onclick="emailRol('voorganger')">✉ Link naar voorganger</button>
       <button class="btn-secondary" id="btn-email-organist" onclick="emailRol('organist')">✉ Link naar organist</button>
       <button class="btn-secondary" onclick="copyShareLink()">🔗 Kopieer link</button>
@@ -866,6 +867,7 @@
   </div>
   <div class="generate-bar-footer">
     <span class="generate-hint" id="generate-hint">Het document is direct klaar om te printen</span>
+    <span id="cloud-id-hint" class="generate-hint" style="display:none"></span>
     <span id="status-msg"></span>
     <a href="info.html" class="generate-bar-info">Handleiding, credits &amp; privacy</a>
   </div>
@@ -873,6 +875,7 @@
 
 <!-- Libraries -->
 <script src="https://cdn.jsdelivr.net/npm/lz-string@1.5.0/libs/lz-string.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.8/dist/umd/supabase.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.js"></script>
 
 <script>
@@ -926,6 +929,21 @@ const BIJBEL_VERSIE = 'bb'; // bb = BasisBijbel (vrij), hsv = Herziene Statenver
 const LIEDBOEK_URL = 'https://liedboek.liedbundels.nu/site/nl/home/Default.aspx';
 const STORAGE_KEY = 'vrijburg-liturgie-draft';
 const VRIJBURG_EVENTS_API = 'https://www.vrijburg.nl/wp-json/wp/v2/evenementen';
+
+// Supabase (gedeelde opslag liturgie + nieuwsbrief)
+const SUPABASE_URL = 'https://iabrbkirzsolwnuknbel.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlhYnJia2lyenNvbHdudWtuYmVsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ3OTU4MDIsImV4cCI6MjEwMDM3MTgwMn0.ojjiiwwAwb3eITwThJPXGgOk_XynghQUNZ_snDDe6iQ';
+const SUPABASE_FOTO_BUCKET = 'dienst-fotos';
+
+const sb = (() => {
+  const lib = (typeof supabase !== 'undefined') ? supabase : null;
+  const create = lib?.createClient || lib?.default?.createClient;
+  return create ? create(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+})();
+
+let currentDienstUuid = null;
+let currentShortId = null;
+let currentFotoPath = null;
 
 const VL_LABELS = {
   vlv: 'Vrijburg laat voorgaan',
@@ -1193,6 +1211,185 @@ function decodeShareState(encoded, legacy) {
 const SHARE_LINK_LABEL = 'Open Liturgie Generator';
 const TINYURL_API = 'https://tinyurl.com/api-create.php';
 
+// ============================================================
+// SUPABASE: OPSLAAN / LADEN VIA short_id
+// ============================================================
+function updateCloudHint() {
+  const el = document.getElementById('cloud-id-hint');
+  if (!el) return;
+  if (currentShortId) {
+    el.style.display = '';
+    el.textContent = `☁ id=${currentShortId}`;
+  } else {
+    el.style.display = 'none';
+    el.textContent = '';
+  }
+}
+
+function getCloudPayload() {
+  const state = getFormState();
+  delete state.foto_data; // foto apart in Storage
+  return state;
+}
+
+function getCloudShareUrl(rol) {
+  const url = new URL(location.href.split('?')[0]);
+  url.searchParams.set('id', currentShortId);
+  if (rol) url.searchParams.set('rol', rol);
+  return url.toString();
+}
+
+function setCurrentDienst(row) {
+  currentDienstUuid = row.id;
+  currentShortId = row.short_id;
+  currentFotoPath = row.foto_path || null;
+  updateCloudHint();
+  try {
+    history.replaceState(null, '', getCloudShareUrl(
+      new URLSearchParams(location.search).get('rol') || undefined
+    ));
+  } catch (_) { /* ignore */ }
+}
+
+async function dataUrlToBlob(dataUrl) {
+  const res = await fetch(dataUrl);
+  return res.blob();
+}
+
+async function uploadFotoToStorage(shortId) {
+  if (!sb || !fotoDataUrl) return currentFotoPath || null;
+  const blob = await dataUrlToBlob(fotoDataUrl);
+  const ext = blob.type === 'image/png' ? 'png' : (blob.type === 'image/webp' ? 'webp' : 'jpg');
+  const path = `${shortId}/hoofdfoto.${ext}`;
+  const { error } = await sb.storage
+    .from(SUPABASE_FOTO_BUCKET)
+    .upload(path, blob, { upsert: true, contentType: blob.type || 'image/jpeg' });
+  if (error) throw new Error('Foto uploaden mislukt: ' + error.message);
+  currentFotoPath = path;
+  return path;
+}
+
+async function loadFotoFromStorage(path) {
+  if (!sb || !path) return '';
+  const { data } = sb.storage.from(SUPABASE_FOTO_BUCKET).getPublicUrl(path);
+  const publicUrl = data?.publicUrl;
+  if (!publicUrl) return '';
+  try {
+    const res = await fetch(publicUrl + (publicUrl.includes('?') ? '&' : '?') + 't=' + Date.now());
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const blob = await res.blob();
+    return await new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  } catch (e) {
+    console.warn('Foto laden mislukt:', e);
+    return '';
+  }
+}
+
+async function saveDienstToCloud({ status } = {}) {
+  if (!sb) throw new Error('Supabase niet geladen');
+
+  const payload = getCloudPayload();
+  const datum = payload.datum || null;
+  const thema = (payload.thema || '').trim() || null;
+  const fotoCredit = (payload.foto_credit || '').trim() || null;
+
+  // Eerst short_id bepalen (bestaand of tijdelijk nieuw via insert)
+  let row;
+  if (currentDienstUuid) {
+    const fotoPath = await uploadFotoToStorage(currentShortId);
+    const update = {
+      datum,
+      thema,
+      data: payload,
+      foto_path: fotoPath,
+      foto_credit: fotoCredit,
+    };
+    if (status) update.status = status;
+    const { data, error } = await sb
+      .from('diensten')
+      .update(update)
+      .eq('id', currentDienstUuid)
+      .select('id, short_id, foto_path')
+      .single();
+    if (error) throw error;
+    row = data;
+  } else {
+    const insert = {
+      datum,
+      thema,
+      data: payload,
+      foto_credit: fotoCredit,
+      status: status || 'concept',
+    };
+    const { data, error } = await sb
+      .from('diensten')
+      .insert(insert)
+      .select('id, short_id, foto_path')
+      .single();
+    if (error) throw error;
+    row = data;
+    setCurrentDienst(row);
+    // Foto uploaden nadat short_id bekend is
+    if (fotoDataUrl) {
+      const fotoPath = await uploadFotoToStorage(row.short_id);
+      const { data: updated, error: upErr } = await sb
+        .from('diensten')
+        .update({ foto_path: fotoPath })
+        .eq('id', row.id)
+        .select('id, short_id, foto_path')
+        .single();
+      if (upErr) throw upErr;
+      row = updated;
+    }
+  }
+
+  setCurrentDienst(row);
+  saveDraft();
+  return row;
+}
+
+async function loadDienstFromCloud(shortId) {
+  if (!sb) throw new Error('Supabase niet geladen');
+  const { data, error } = await sb
+    .from('diensten')
+    .select('id, short_id, datum, thema, status, data, foto_path, foto_credit')
+    .eq('short_id', shortId)
+    .maybeSingle();
+  if (error) throw error;
+  if (!data) throw new Error('Dienst niet gevonden: ' + shortId);
+
+  setCurrentDienst(data);
+  const state = { ...(data.data || {}) };
+  if (data.datum) state.datum = data.datum;
+  if (data.thema != null && state.thema == null) state.thema = data.thema;
+  if (data.foto_credit != null) state.foto_credit = data.foto_credit;
+
+  if (data.foto_path) {
+    state.foto_data = await loadFotoFromStorage(data.foto_path);
+  }
+
+  applyFormState(state);
+  const rolParam = new URLSearchParams(location.search).get('rol');
+  if (rolParam && ROL_CONFIG[rolParam]) setRol(rolParam);
+  return data;
+}
+
+async function saveDienstManual() {
+  setStatus('Opslaan in cloud…', '');
+  try {
+    const row = await saveDienstToCloud();
+    setStatus('✓ Opgeslagen (id=' + row.short_id + ')', 'ok');
+  } catch (err) {
+    console.error(err);
+    setStatus('Opslaan mislukt: ' + (err.message || err), 'err');
+  }
+}
+
 async function shortenShareUrl(longUrl) {
   const cacheKey = 'vrijburg-short-' + longUrl.length + longUrl.slice(-48);
   try {
@@ -1214,9 +1411,19 @@ async function shortenShareUrl(longUrl) {
 }
 
 async function prepareShareLink(rol) {
+  // Voorkeur: korte cloud-link (?id=...)
+  if (sb) {
+    try {
+      await saveDienstToCloud();
+      const url = getCloudShareUrl(rol);
+      return { long: url, short: url, cloud: true };
+    } catch (e) {
+      console.warn('Cloud-opslag mislukt, fallback naar URL-state:', e);
+    }
+  }
   const long = getShareUrl(rol);
   const short = await shortenShareUrl(long);
-  return { long, short };
+  return { long, short, cloud: false };
 }
 
 function mailLinkBlock(shortUrl) {
@@ -1261,17 +1468,21 @@ function terugNaarBureau() {
   const fotoBestand = getFotoFilename();
   const heeftFoto = !!fotoDataUrl;
 
-  if (heeftFoto) downloadFoto(true);
-  setStatus('Link verkorten…', '');
+  setStatus('Opslaan & link maken…', '');
 
-  prepareShareLink().then(async ({ short }) => {
+  prepareShareLink().then(async ({ short, cloud }) => {
     await copyShareLinkRich(short);
     let body =
       `Beste,\n\n` +
       `Hierbij mijn ingevulde onderdeel voor de liturgie op ${datumTekst} (${rolLabel}).\n\n` +
       mailLinkBlock(short);
 
-    if (heeftFoto) {
+    if (heeftFoto && cloud && currentFotoPath) {
+      body +=
+        `\nDe foto is meegeslagen in de cloud-opslag bij deze link.\n` +
+        `Het bureau kan de foto ook in het Word-document (.docx) zien.\n`;
+    } else if (heeftFoto) {
+      downloadFoto(true);
       body +=
         `\n` +
         `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
@@ -1297,9 +1508,9 @@ function terugNaarBureau() {
       body,
     });
 
-    const msg = heeftFoto
-      ? '✓ Korte link in mail + klembord — voeg foto als bijlage toe'
-      : '✓ Korte link in mail en op klembord';
+    const msg = cloud
+      ? (heeftFoto ? '✓ Cloud-link in mail + klembord (foto meegeslagen)' : '✓ Cloud-link in mail en op klembord')
+      : (heeftFoto ? '✓ Link in mail + klembord — voeg foto als bijlage toe' : '✓ Link in mail en op klembord');
     setStatus(msg, 'ok');
   }).catch(err => {
     console.error(err);
@@ -1684,8 +1895,9 @@ function applyFormState(state) {
   }
   if (state.rol) setRol(state.rol);
   else applyRolUI();
-  if (state.datum) onDatumChange();
-  else if (state.c2_type) onC2TypeChange();
+  // Geen onDatumChange() hier: dat overschrijft opgeslagen namen met planning.
+  // Datum-keuze door de gebruiker triggert onDatumChange via het input-veld.
+  if (!state.datum && state.c2_type) onC2TypeChange();
 }
 
 function getShareUrl(rol) {
@@ -1717,11 +1929,33 @@ function loadFromUrl() {
   }
 }
 
+async function loadFromUrlOrCloud() {
+  const params = new URLSearchParams(location.search);
+  const id = params.get('id');
+  if (id) {
+    try {
+      setStatus('Dienst laden…', '');
+      await loadDienstFromCloud(id);
+      setStatus('✓ Dienst geladen (id=' + id + ')', 'ok');
+      return true;
+    } catch (e) {
+      console.warn('Cloud laden mislukt:', e);
+      setStatus('Kon dienst niet laden: ' + (e.message || e), 'err');
+      return false;
+    }
+  }
+  return loadFromUrl();
+}
+
 async function copyShareLink() {
-  setStatus('Link verkorten…', '');
-  const { short } = await prepareShareLink();
+  setStatus('Opslaan & link maken…', '');
+  const { short, cloud } = await prepareShareLink();
   const mode = await copyShareLinkRich(short);
-  setStatus(mode === 'rich' ? '✓ Korte link gekopieerd' : '✓ Link gekopieerd', 'ok');
+  if (cloud) {
+    setStatus(mode === 'rich' ? '✓ Cloud-link gekopieerd' : '✓ Cloud-link gekopieerd', 'ok');
+  } else {
+    setStatus(mode === 'rich' ? '✓ Korte link gekopieerd' : '✓ Link gekopieerd', 'ok');
+  }
 }
 
 async function emailRol(rol) {
@@ -1732,8 +1966,8 @@ async function emailRol(rol) {
     voorganger: 'thema, foto, nieuwsbrief, overdenking, orde van dienst (liederen en lezingen) en lichtlied/slotlied',
     organist: 'orgelspel en muziek in de dienst',
   };
-  setStatus('Link verkorten…', '');
-  const { short } = await prepareShareLink(rol);
+  setStatus('Opslaan & link maken…', '');
+  const { short, cloud } = await prepareShareLink(rol);
   await copyShareLinkRich(short);
   const body =
     `Beste ${namen[rol]},\n\n` +
@@ -1747,7 +1981,7 @@ async function emailRol(rol) {
     subject: `Liturgie Vrijburg – ${datumTekst} (${namen[rol]})`,
     body,
   });
-  setStatus('✓ Korte link in mail en op klembord', 'ok');
+  setStatus(cloud ? '✓ Cloud-link in mail en op klembord' : '✓ Korte link in mail en op klembord', 'ok');
 }
 
 // ============================================================
@@ -2463,25 +2697,29 @@ Promise.all([
 function initApp() {
   setupAutoSave();
   setupSectionToggles();
+  updateCloudHint();
 
-  if (!loadFromUrl()) {
-    const draft = loadDraft();
-    if (draft) {
-      applyFormState(draft);
-      setStatus('Concept hersteld uit vorige sessie', 'ok');
-    } else {
-      setRol('medewerker');
+  loadFromUrlOrCloud().then(loaded => {
+    if (!loaded) {
+      const draft = loadDraft();
+      if (draft) {
+        applyFormState(draft);
+        setStatus('Concept hersteld uit vorige sessie', 'ok');
+      } else {
+        setRol('medewerker');
+      }
     }
-  }
 
-  if (!ordeItems.length) {
-    addOrde('lied', '');
-    addOrde('lezing', '');
-    addOrde('lied', '');
-  }
+    if (!ordeItems.length) {
+      addOrde('lied', '');
+      addOrde('lezing', '');
+      addOrde('lied', '');
+    }
 
-  if (document.getElementById('datum').value) onDatumChange();
-  applyRolUI();
+    // Alleen planning auto-invullen bij leeg/nieuw formulier, niet na cloud/URL-load
+    if (!loaded && document.getElementById('datum').value) onDatumChange();
+    applyRolUI();
+  });
 }
 </script>
 
