@@ -928,6 +928,7 @@ const NL_DAGEN = ['zondag','maandag','dinsdag','woensdag','donderdag','vrijdag',
 const BIJBEL_VERSIE = 'bb'; // bb = BasisBijbel (vrij), hsv = Herziene Statenvertaling
 const LIEDBOEK_URL = 'https://liedboek.liedbundels.nu/site/nl/home/Default.aspx';
 const STORAGE_KEY = 'vrijburg-liturgie-draft';
+const SESSION_ACTIVE_KEY = 'vrijburg-liturgie-session';
 const VRIJBURG_EVENTS_API = 'https://www.vrijburg.nl/wp-json/wp/v2/evenementen';
 
 // Supabase (gedeelde opslag liturgie + nieuwsbrief)
@@ -1249,6 +1250,18 @@ function setCurrentDienst(row) {
       new URLSearchParams(location.search).get('rol') || undefined
     ));
   } catch (_) { /* ignore */ }
+}
+
+function clearCloudBinding({ updateUrl = false } = {}) {
+  currentDienstUuid = null;
+  currentShortId = null;
+  currentFotoPath = null;
+  updateCloudHint();
+  if (updateUrl) {
+    try {
+      history.replaceState(null, '', location.href.split('?')[0]);
+    } catch (_) { /* ignore */ }
+  }
 }
 
 async function dataUrlToBlob(dataUrl) {
@@ -1988,13 +2001,16 @@ async function emailRol(rol) {
 // CONCEPT OPSLAAN (localStorage)
 // ============================================================
 let draftTimer = null;
+let suppressDraftSave = false;
 
 function scheduleDraftSave() {
+  if (suppressDraftSave) return;
   clearTimeout(draftTimer);
   draftTimer = setTimeout(saveDraft, 500);
 }
 
 function saveDraft() {
+  if (suppressDraftSave) return;
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(getFormState()));
   } catch (e) { /* quota exceeded */ }
@@ -2008,9 +2024,77 @@ function loadDraft() {
   return null;
 }
 
+function emptyFormState() {
+  return {
+    rol: 'medewerker',
+    datum: '',
+    aanvangstijd: '',
+    bijzondere_dienst: '',
+    cantorij: false,
+    kinderkerk: '',
+    vlv: '',
+    vlh: '',
+    vlz: '',
+    avondmaal: '',
+    bijzonderheden: '',
+    voorganger: '',
+    organist: '',
+    lector: '',
+    thema: '',
+    intro: '',
+    nieuwsbrief: '',
+    overdenking_email: '',
+    foto_credit: '',
+    foto_data: '',
+    orgelspel_opening: '',
+    lichtlied: '',
+    slotlied: '',
+    orgelspel_slot: '',
+    bloemen: '',
+    c1_thema: '',
+    c1_naam: '',
+    c1_tekst: '',
+    c1_rekening: '',
+    c2_type: 'diaconie',
+    c2_tekst: '',
+    c2_rekening: '',
+    agenda_kort: '',
+    agenda_ver: '',
+    orde: [
+      { id: Date.now() + 1, type: 'lied', content: '' },
+      { id: Date.now() + 2, type: 'lezing', content: '' },
+      { id: Date.now() + 3, type: 'lied', content: '' },
+    ],
+  };
+}
+
+function resetFormToEmpty() {
+  suppressDraftSave = true;
+  try {
+    applyFormState(emptyFormState());
+    onC2TypeChange();
+    const planningNotice = document.getElementById('planning-notice');
+    if (planningNotice) planningNotice.style.display = 'none';
+    const collecteNotice = document.getElementById('collecte-notice');
+    if (collecteNotice) collecteNotice.style.display = 'none';
+    document.getElementById('foto_file').value = '';
+  } finally {
+    suppressDraftSave = false;
+  }
+}
+
 function clearDraft() {
-  localStorage.removeItem(STORAGE_KEY);
-  setStatus('Concept gewist', 'ok');
+  clearTimeout(draftTimer);
+  suppressDraftSave = true;
+  try {
+    localStorage.removeItem(STORAGE_KEY);
+    try { sessionStorage.removeItem(SESSION_ACTIVE_KEY); } catch (_) {}
+    clearCloudBinding({ updateUrl: true });
+    resetFormToEmpty();
+  } finally {
+    suppressDraftSave = false;
+  }
+  setStatus('Concept gewist — formulier is leeg', 'ok');
 }
 
 function setupAutoSave() {
@@ -2701,14 +2785,26 @@ function initApp() {
 
   loadFromUrlOrCloud().then(loaded => {
     if (!loaded) {
-      const draft = loadDraft();
-      if (draft) {
-        applyFormState(draft);
-        setStatus('Concept hersteld uit vorige sessie', 'ok');
-      } else {
+      // Kale URL zonder id: leeg formulier.
+      // Alleen na refresh in dezelfde tab een lokaal concept herstellen.
+      let restored = false;
+      try {
+        if (sessionStorage.getItem(SESSION_ACTIVE_KEY)) {
+          const draft = loadDraft();
+          if (draft) {
+            applyFormState(draft);
+            setStatus('Concept hersteld uit vorige sessie', 'ok');
+            restored = true;
+          }
+        }
+      } catch (_) { /* private mode */ }
+
+      if (!restored) {
         setRol('medewerker');
       }
     }
+
+    try { sessionStorage.setItem(SESSION_ACTIVE_KEY, '1'); } catch (_) {}
 
     if (!ordeItems.length) {
       addOrde('lied', '');
