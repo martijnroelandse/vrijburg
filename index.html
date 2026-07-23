@@ -1867,22 +1867,85 @@ function formatDatum(val) {
 // ============================================================
 // DOCX GENERATOR
 // ============================================================
-function buildFotoParagraph(dataUrl) {
-  const { Paragraph, ImageRun } = docx;
+const DOCX_ASSETS = {
+  logo: 'assets/logo-vrijburg-xl.png',
+  qr1: 'assets/collecte1.png',
+  qrDiaconie: 'assets/collecte_diaconie.png',
+  qrGemeente: 'assets/collecte_gemeente.png',
+};
+
+function dataUrlToBytes(dataUrl) {
+  const binary = atob(dataUrl.split(',')[1]);
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+  return bytes;
+}
+
+function loadImageElement(src) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => resolve(img);
+    img.onerror = () => reject(new Error('Afbeelding laden mislukt: ' + src));
+    img.src = src;
+  });
+}
+
+async function preparePngImage(src, maxWidthPx) {
+  const img = await loadImageElement(src);
+  const scale = img.width > maxWidthPx ? maxWidthPx / img.width : 1;
+  const width = Math.max(1, Math.round(img.width * scale));
+  const height = Math.max(1, Math.round(img.height * scale));
+  const canvas = document.createElement('canvas');
+  canvas.width = width;
+  canvas.height = height;
+  canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+  return { bytes: dataUrlToBytes(canvas.toDataURL('image/png')), width, height };
+}
+
+function buildFotoParagraph(dataUrl, { floating = true } = {}) {
+  const {
+    Paragraph, ImageRun, AlignmentType,
+    TextWrappingType, TextWrappingSide,
+    HorizontalPositionRelativeFrom, HorizontalPositionAlign,
+    VerticalPositionRelativeFrom, VerticalPositionAlign,
+  } = docx;
   return new Promise((resolve) => {
     const img = new Image();
     img.onload = () => {
       try {
-        const binary = atob(dataUrl.split(',')[1]);
-        const bytes = new Uint8Array(binary.length);
-        for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
-        const maxW = 180;
+        const bytes = dataUrlToBytes(dataUrl);
+        const maxW = floating ? 240 : 180;
         const scale = img.width > maxW ? maxW / img.width : 1;
         const width = Math.round(img.width * scale);
         const height = Math.round(img.height * scale);
         const type = dataUrl.startsWith('data:image/png') ? 'png' : 'jpg';
+        const imageOpts = {
+          data: bytes,
+          transformation: { width, height },
+          type,
+          altText: { title: 'Liturgiefoto', description: 'Afbeelding bij de dienst', name: 'foto' },
+        };
+        if (floating) {
+          imageOpts.floating = {
+            horizontalPosition: {
+              relative: HorizontalPositionRelativeFrom.MARGIN,
+              align: HorizontalPositionAlign.RIGHT,
+            },
+            verticalPosition: {
+              relative: VerticalPositionRelativeFrom.PARAGRAPH,
+              align: VerticalPositionAlign.TOP,
+            },
+            wrap: {
+              type: TextWrappingType.SQUARE,
+              side: TextWrappingSide.BOTH_SIDES,
+            },
+            allowOverlap: false,
+            margins: { top: 0, bottom: 100000, left: 120000, right: 0 },
+          };
+        }
         resolve(new Paragraph({
-          children: [new ImageRun({ data: bytes, transformation: { width, height }, type })],
+          children: [new ImageRun(imageOpts)],
+          alignment: AlignmentType.CENTER,
           spacing: { before: 0, after: 0, line: 240, lineRule: 'auto' },
         }));
       } catch (e) {
@@ -1907,7 +1970,11 @@ function generateDocx() {
 }
 
 async function generateDocxAsync() {
-  const { Document, Paragraph, TextRun, AlignmentType, convertInchesToTwip } = docx;
+  const {
+    Document, Paragraph, TextRun, AlignmentType, convertInchesToTwip,
+    ExternalHyperlink, ImageRun, Table, TableRow, TableCell,
+    WidthType, BorderStyle,
+  } = docx;
 
   const font = 'Calibri';
   const szBody = 32;   // 16pt — standaard liturgietekst (handmatige liturgie)
@@ -1915,9 +1982,10 @@ async function generateDocxAsync() {
   const szSub = 40;    // 20pt — thema / intro
   const szSmall = 24;  // 12pt — fotocredit, voetnoten
   const spacingTight = { before: 0, after: 0, line: 240, lineRule: 'auto' };
+  const noBorder = { style: BorderStyle.NONE, size: 0, color: 'FFFFFF' };
+  const noBorders = { top: noBorder, bottom: noBorder, left: noBorder, right: noBorder };
 
   const datum    = document.getElementById('datum').value;
-  const aanvangstijd = document.getElementById('aanvangstijd').value.trim();
   const bijzondereDienst = document.getElementById('bijzondere_dienst').value.trim();
   const cantorij = document.getElementById('cantorij').checked;
   const kinderkerk = document.getElementById('kinderkerk').value.trim();
@@ -1950,16 +2018,17 @@ async function generateDocxAsync() {
   const datumDisplay = formatDatum(datum);
 
   function paragraphOpts(opts = {}) {
-    return {
+    const o = {
       spacing: {
         ...spacingTight,
         before: opts.before ?? 0,
         after: opts.after ?? 0,
       },
-      alignment: opts.align || AlignmentType.LEFT,
-      indent: opts.indent ? { left: convertInchesToTwip(opts.indent) } : undefined,
       ...opts.para,
     };
+    if (opts.align) o.alignment = opts.align;
+    if (opts.indent) o.indent = { left: convertInchesToTwip(opts.indent) };
+    return o;
   }
 
   function textRun(text, opts = {}) {
@@ -1970,10 +2039,26 @@ async function generateDocxAsync() {
       bold: !!opts.bold,
       italics: !!opts.italic,
       break: opts.break || 0,
+      color: opts.color,
+      underline: opts.underline,
     });
   }
 
-  // Helper: maak een simpele alinea
+  function hyperlink(text, url, opts = {}) {
+    return new ExternalHyperlink({
+      link: url,
+      children: [
+        textRun(text, {
+          sz: opts.sz,
+          italic: opts.italic,
+          bold: opts.bold,
+          color: '0563C1',
+          underline: {},
+        }),
+      ],
+    });
+  }
+
   function p(text, opts = {}) {
     const runs = [];
     if (Array.isArray(text)) {
@@ -1984,23 +2069,30 @@ async function generateDocxAsync() {
     return new Paragraph({ children: runs, ...paragraphOpts(opts) });
   }
 
-  // Helper: alinea met meerdere runs
   function pr(runs, opts = {}) {
     return new Paragraph({
-      children: runs.map(r => textRun(r.t, { sz: r.sz, bold: r.bold, italic: r.italic })),
+      children: runs.map(r => {
+        if (r.hyperlink) return hyperlink(r.t, r.hyperlink, { sz: r.sz, bold: r.bold, italic: r.italic });
+        return textRun(r.t, { sz: r.sz, bold: r.bold, italic: r.italic });
+      }),
       ...paragraphOpts(opts),
     });
   }
 
-  // Helper: sectietitel (vetgedrukt)
+  function empty() { return p(''); }
+
   function sectie(text) {
     return p(text, { bold: true });
   }
 
-  // Helper: meerdere regels tekst als alinea's
   function multiline(text, opts = {}) {
     if (!text) return [];
     return text.split('\n').map(line => p(line.trim(), opts));
+  }
+
+  function expandTabColumns(line) {
+    if (!line.includes('\t')) return [line];
+    return line.split('\t').map(part => part.trim()).filter(Boolean);
   }
 
   function formatLiedLyricLine(line) {
@@ -2027,16 +2119,20 @@ async function generateDocxAsync() {
     return p(text, { bold: true });
   }
 
-  // Helper: bemoediging/groet (geen vet op labels, conform handmatige liturgie)
   function beurtzang(lines) {
     return lines.map(line => p(`${line.wie}: ${line.tekst}`));
   }
 
-  // Orde van dienst regels
   function renderOrdeItems() {
     const paragraphs = [];
     ordeItems.forEach(item => {
-      const lines = item.content.split('\n').filter(l => l.trim());
+      const rawLines = item.content.split('\n');
+      const lines = [];
+      rawLines.forEach(line => {
+        expandTabColumns(line).forEach(part => {
+          if (part.trim()) lines.push(part.trim());
+        });
+      });
       if (item.type === 'lied') {
         if (lines.length > 0) {
           paragraphs.push(p(lines[0], { bold: true }));
@@ -2067,10 +2163,97 @@ async function generateDocxAsync() {
     return paragraphs;
   }
 
+  async function assetParagraph(path, maxWidthPx, opts = {}) {
+    try {
+      const { bytes, width, height } = await preparePngImage(path, maxWidthPx);
+      return new Paragraph({
+        children: [
+          new ImageRun({
+            data: bytes,
+            transformation: { width, height },
+            type: 'png',
+            altText: { title: opts.title || 'Afbeelding', description: opts.title || 'Afbeelding', name: opts.name || 'img' },
+          }),
+        ],
+        alignment: opts.align || AlignmentType.CENTER,
+        spacing: { before: 0, after: 0, line: 240, lineRule: 'auto' },
+      });
+    } catch (e) {
+      console.warn(e);
+      return null;
+    }
+  }
+
+  async function buildQrBlock(qrType) {
+    const rightPath = qrType === 'diaconie' ? DOCX_ASSETS.qrDiaconie : DOCX_ASSETS.qrGemeente;
+    const rightLabel = `vrijburg.nl/collecte${qrType}`;
+    const rightUrl = `https://www.vrijburg.nl/collecte${qrType}`;
+    try {
+      const left = await preparePngImage(DOCX_ASSETS.qr1, 110);
+      const right = await preparePngImage(rightPath, 110);
+      const cell = (img, label, url) => new TableCell({
+        borders: noBorders,
+        width: { size: 3500, type: WidthType.DXA },
+        children: [
+          new Paragraph({
+            children: [
+              new ImageRun({
+                data: img.bytes,
+                transformation: { width: img.width, height: img.height },
+                type: 'png',
+                altText: { title: label, description: label, name: label },
+              }),
+            ],
+            alignment: AlignmentType.CENTER,
+            spacing: { before: 60, after: 40, line: 240, lineRule: 'auto' },
+          }),
+          new Paragraph({
+            children: [hyperlink(label, url, { sz: szSmall })],
+            alignment: AlignmentType.CENTER,
+            spacing: { before: 0, after: 0, line: 240, lineRule: 'auto' },
+          }),
+        ],
+      });
+      return new Table({
+        width: { size: 7000, type: WidthType.DXA },
+        columnWidths: [3500, 3500],
+        rows: [
+          new TableRow({
+            children: [
+              cell(left, 'vrijburg.nl/collecte1', 'https://www.vrijburg.nl/collecte1'),
+              cell(right, rightLabel, rightUrl),
+            ],
+          }),
+        ],
+      });
+    } catch (e) {
+      console.warn('QR-codes niet geladen:', e);
+      return new Paragraph({
+        children: [
+          hyperlink('vrijburg.nl/collecte1', 'https://www.vrijburg.nl/collecte1', { sz: szSmall }),
+          textRun('\t\t', { sz: szSmall }),
+          hyperlink(rightLabel, rightUrl, { sz: szSmall }),
+        ],
+        ...paragraphOpts(),
+      });
+    }
+  }
+
+  // ---- Assets vooraf laden ----
+  setStatus('Document samenstellen…', '');
+  const logoPara = await assetParagraph(DOCX_ASSETS.logo, 160, { title: 'Vrijburg logo', name: 'logo' });
+  const fotoPara = fotoDataUrl ? await buildFotoParagraph(fotoDataUrl, { floating: true }) : null;
+
   // ---- Bouw het document ----
   const children = [];
 
-  // HEADER — pagina 1 (conform handmatige liturgie)
+  // Logo bovenaan
+  if (logoPara) {
+    children.push(logoPara);
+    children.push(empty());
+  }
+
+  // HEADER — pagina 1
   children.push(p(`Dienst ${datumDisplay}`, { sz: szTitle, align: AlignmentType.CENTER }));
 
   const dienstExtra = [];
@@ -2084,11 +2267,13 @@ async function generateDocxAsync() {
 
   if (thema) children.push(p(thema, { sz: szSub, align: AlignmentType.CENTER }));
   if (intro) children.push(...multiline(intro, { sz: szSub, italic: true, align: AlignmentType.CENTER }));
-  if (foto) children.push(p('         ' + foto, { sz: szSmall, italic: true }));
-  if (fotoDataUrl) {
-    const fotoPara = await buildFotoParagraph(fotoDataUrl);
-    if (fotoPara) children.push(fotoPara);
+
+  // Foto eerst, daarna credit (conform handmatige liturgie)
+  if (fotoPara) {
+    children.push(empty());
+    children.push(fotoPara);
   }
+  if (foto) children.push(p('         ' + foto, { sz: szSmall, italic: true }));
 
   const voorgangerLabel = /\s+en\s+/i.test(voorganger) ? 'Voorgangers' : 'Voorganger';
   if (voorganger) children.push(p(`${voorgangerLabel}: ${voorganger}`));
@@ -2109,8 +2294,17 @@ async function generateDocxAsync() {
   }
   if (bijzonderheden) children.push(...multiline(bijzonderheden));
 
-  children.push(p('De kerkdienst wordt opgenomen en uitgezonden via www.vrijburg.nl en', { italic: true }));
-  children.push(p('via www.kerkdienstgemist.nl', { italic: true }));
+  children.push(empty());
+  children.push(pr([
+    { t: 'De kerkdienst wordt opgenomen en uitgezonden via ', italic: true },
+    { t: 'www.vrijburg.nl', italic: true, hyperlink: 'https://www.vrijburg.nl' },
+    { t: ' en', italic: true },
+  ]));
+  children.push(pr([
+    { t: 'via ', italic: true },
+    { t: 'www.kerkdienstgemist.nl', italic: true, hyperlink: 'https://www.kerkdienstgemist.nl' },
+  ]));
+  children.push(empty());
 
   // OPENING
   children.push(sectie('Opening van de dienst'));
@@ -2135,16 +2329,19 @@ async function generateDocxAsync() {
   children.push(...renderOrdeItems());
 
   // OVERDENKING
+  children.push(empty());
   children.push(p('Overdenking', { bold: true }));
   children.push(p('Stilte', { bold: true }));
   children.push(p('Muziek', { bold: true }));
 
   // VOORBEDEN
+  children.push(empty());
   children.push(p('Voorbeden', { bold: true }));
   children.push(p('Stil gebed, afgesloten met Onze Vader:'));
   ONZE_VADER.forEach(regel => children.push(p(regel, { indent: 0.5 })));
 
   // MEDEDELINGEN & COLLECTEN
+  children.push(empty());
   children.push(sectie('Mededelingen en collecten'));
   if (bloemen) children.push(p('De bloemen in deze dienst gaan naar ' + bloemen + '.'));
 
@@ -2160,17 +2357,17 @@ async function generateDocxAsync() {
   if (c2Rek)   children.push(p('Rekening: ' + c2Rek + '.'));
 
   const qrType = c2Type === 'diaconie' ? 'diaconie' : 'gemeente';
-  children.push(p(QR_TEKST.replace('{type}', qrType), { sz: szSmall }));
-  children.push(new Paragraph({
-    children: [
-      textRun('vrijburg.nl/collecte 1', { sz: szSmall }),
-      textRun('\t\t\t', { sz: szSmall }),
-      textRun(`vrijburg.nl/collecte${qrType}`, { sz: szSmall }),
-    ],
-    ...paragraphOpts(),
-  }));
+  children.push(pr([
+    { t: 'Voor digitaal collecteren maken wij gebruik van een algemene QR-code. Deze kunt u niet met uw eigen bank-app lezen maar wel met een algemene QR-code reader (bv Lens op Android of Camera op iPhone). U kunt ook in uw internetapplicatie naar ', sz: szSmall },
+    { t: 'vrijburg.nl/collecte1', sz: szSmall, hyperlink: 'https://www.vrijburg.nl/collecte1' },
+    { t: ' en ', sz: szSmall },
+    { t: `vrijburg.nl/collecte${qrType}`, sz: szSmall, hyperlink: `https://www.vrijburg.nl/collecte${qrType}` },
+    { t: ' gaan. In alle gevallen wordt u dan doorverwezen naar de ING Betaalverzoekpagina van Vrijburg.', sz: szSmall },
+  ]));
+  children.push(await buildQrBlock(qrType));
 
   // SLOT
+  children.push(empty());
   children.push(p('De gemeente gaat staan', { italic: true }));
   children.push(p(slotlied ? 'Slotlied ' + slotlied : 'Slotlied', { bold: true }));
   children.push(p('Uitzending en zegen', { bold: true }));
@@ -2179,17 +2376,34 @@ async function generateDocxAsync() {
   children.push(p('Na de dienst is er gelegenheid met elkaar koffie of thee te drinken'));
 
   // AGENDA
+  children.push(empty());
   children.push(sectie('Agenda'));
-  children.push(p('[Aankondiging van evenementen in Vrijburg. Zie voor meer informatie altijd de website van Vrijburg en/of het meest recente (digitale) Maandblad]', { italic: true, sz: szSmall }));
-
   const agendaGezamenlijk = [agendaKort, agendaVer].filter(Boolean).join('\n\n');
   if (agendaGezamenlijk) {
     children.push(...multiline(agendaGezamenlijk));
+  } else {
+    children.push(p('[Aankondiging van evenementen in Vrijburg. Zie voor meer informatie altijd de website van Vrijburg en/of het meest recente (digitale) Maandblad]', { italic: true, sz: szSmall }));
   }
 
-  // SEPARATOR + FOOTER
-  children.push(p('='.repeat(62), { sz: 18 }));
-  children.push(...multiline(FOOTER, { sz: szSmall }));
+  // FOOTER (zonder ==== scheidingslijn)
+  children.push(empty());
+  FOOTER.split('\n').forEach(line => {
+    const trimmed = line.trim();
+    if (!trimmed) {
+      children.push(empty());
+      return;
+    }
+    if (trimmed.includes('www.vrijburg.nl')) {
+      const parts = trimmed.split('www.vrijburg.nl');
+      children.push(pr([
+        { t: parts[0], sz: szSmall },
+        { t: 'www.vrijburg.nl', sz: szSmall, hyperlink: 'https://www.vrijburg.nl' },
+        { t: parts.slice(1).join('www.vrijburg.nl'), sz: szSmall },
+      ]));
+    } else {
+      children.push(p(trimmed, { sz: szSmall }));
+    }
+  });
 
   // ---- Maak document ----
   const doc = new Document({
@@ -2219,13 +2433,12 @@ async function generateDocxAsync() {
   const datumSlug = datum || 'liturgie';
   const filename = `liturgie-${datumSlug}.docx`;
 
-  docx.Packer.toBlob(doc).then(blob => {
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url; a.download = filename; a.click();
-    URL.revokeObjectURL(url);
-    setStatus('✓ ' + filename + ' gedownload', 'ok');
-  });
+  const blob = await docx.Packer.toBlob(doc);
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename; a.click();
+  URL.revokeObjectURL(url);
+  setStatus('✓ ' + filename + ' gedownload', 'ok');
 }
 
 function setStatus(msg, type) {
