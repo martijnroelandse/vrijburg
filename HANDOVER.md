@@ -157,8 +157,8 @@ Via WordPress REST API: `https://www.vrijburg.nl/wp-json/wp/v2/evenementen` (cus
 **4. Collectes seizoen 2027-2028 bijwerken**  
 `collectes.json` dekt 2026-2027. Voor volgend seizoen: vervang of breid het bestand uit. Overweeg een simpel beheerscherm of gewoon het JSON-bestand handmatig bijwerken.
 
-**5. Gedeelde backend (Supabase)** 🚧 *schema klaar*  
-Liturgie en nieuwsbrief delen één datastore i.p.v. lange URL-state. SQL + setup: `supabase/migrations/001_diensten.sql` en `supabase/README.md`. Volgende stap: opslaan/laden in de apps via `short_id`.
+**5. Gedeelde backend (Supabase)** ✅ *schema + liturgie save/load*  
+Liturgie slaat op in tabel `diensten` en deelt via korte link `?id=short_id` (foto in Storage-bucket `dienst-fotos`). Oude `?z=`-links blijven als fallback. SQL: `supabase/migrations/001_diensten.sql`. Volgende stap: aparte nieuwsbrief-app op dezelfde records.
 
 ### Lage prioriteit / nice-to-have
 
