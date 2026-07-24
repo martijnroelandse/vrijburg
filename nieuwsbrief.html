@@ -150,6 +150,27 @@
       display: block;
       margin-top: 8px;
     }
+    .card-media {
+      padding: 0 12px 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: flex-start;
+    }
+    .card-media-meta {
+      flex: 1;
+      min-width: 180px;
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+    .card-media-meta strong { color: var(--text); }
+    .card-media-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
     .bar {
       position: fixed;
       left: 0; right: 0; bottom: 0;
@@ -298,6 +319,43 @@ function getFotoPublicUrl(path) {
   return data?.publicUrl || '';
 }
 
+function filenameFromUrl(url, fallback) {
+  try {
+    const name = decodeURIComponent(new URL(url).pathname.split('/').pop() || '');
+    return name || fallback;
+  } catch (_) {
+    return fallback;
+  }
+}
+
+function fullSizeImageUrl(url) {
+  if (!url) return '';
+  // WP content often embeds -490x368 sized variants; prefer original
+  return url.replace(/-\d+x\d+(\.[a-z0-9]+)$/i, '$1');
+}
+
+function extractPodcastImage(post, contentHtml) {
+  const featured = post?._embedded?.['wp:featuredmedia']?.[0];
+  if (featured?.source_url) {
+    return {
+      imageUrl: featured.source_url,
+      imageFilename: filenameFromUrl(
+        featured.source_url,
+        `miniatuur-${post.id || 'illustratie'}.jpg`
+      ),
+    };
+  }
+  const imgMatch = String(contentHtml || '').match(/<img[^>]+src=["']([^"']+)["']/i);
+  if (imgMatch) {
+    const imageUrl = fullSizeImageUrl(imgMatch[1]);
+    return {
+      imageUrl,
+      imageFilename: filenameFromUrl(imageUrl, `miniatuur-${post.id || 'illustratie'}.jpg`),
+    };
+  }
+  return { imageUrl: '', imageFilename: '' };
+}
+
 function parseMiniatuurFromPost(post) {
   const title = stripTags(post.title?.rendered || '').replace(/\s+/g, ' ').trim();
   const content = post.content?.rendered || '';
@@ -318,7 +376,11 @@ function parseMiniatuurFromPost(post) {
     else if ((m = line.match(/^Thema:\s*(.+)$/i))) fields.thema = m[1];
     else if ((m = line.match(/^Titel:\s*(.+)$/i))) fields.titel = m[1];
     else if ((m = line.match(/^Miniatuur\s+(\d+)$/i))) fields.nummer = m[1];
-    else if ((m = line.match(/^(?:Foto|Illustratie):\s*(.+)$/i))) fields.foto = m[1];
+    else if ((m = line.match(/^(Foto|Illustratie):\s*(.+)$/i))) {
+      fields.creditLabel = m[1];
+      fields.creditText = m[2];
+      fields.creditLine = `${m[1]}: ${m[2]}`;
+    }
     else if ((m = line.match(/^(\d{1,2} \w+ \d{4})$/))) fields.datumTekst = m[1];
   }
 
@@ -333,6 +395,20 @@ function parseMiniatuurFromPost(post) {
   // Alleen echte miniaturen (met nummer of soundcloud-track)
   if (!fields.nummer && !soundcloudUrl) return null;
 
+  // Fallback copyright uit featured caption (bijv. "Screenshot")
+  if (!fields.creditLine) {
+    const caption = stripTags(post?._embedded?.['wp:featuredmedia']?.[0]?.caption?.rendered || '')
+      .replace(/\s+/g, ' ')
+      .trim();
+    if (caption && !/^screenshot$/i.test(caption)) {
+      fields.creditLabel = 'Illustratie';
+      fields.creditText = caption;
+      fields.creditLine = `Illustratie: ${caption}`;
+    }
+  }
+
+  const image = extractPodcastImage(post, content);
+
   return {
     nummer: fields.nummer || '',
     titel: fields.titel || title,
@@ -340,7 +416,15 @@ function parseMiniatuurFromPost(post) {
     geschreven: fields.geschreven || '',
     voorgelezen: fields.voorgelezen || '',
     montage: fields.montage || '',
-    foto: fields.foto || '',
+    creditLabel: fields.creditLabel || '',
+    creditText: fields.creditText || '',
+    creditLine: fields.creditLine || '',
+    // backward-compat alias for older card builders
+    foto: fields.creditText || '',
+    imageUrl: image.imageUrl,
+    imageFilename: image.imageFilename || (
+      fields.nummer ? `miniatuur-${fields.nummer}.jpg` : 'miniatuur-illustratie.jpg'
+    ),
     datumTekst: fields.datumTekst || (post.date ? formatDatum(post.date.slice(0, 10)) : ''),
     pageUrl: post.link,
     soundcloudUrl: soundcloudUrl || (fields.nummer
@@ -361,6 +445,7 @@ async function fetchLatestPodcast({ force = false } = {}) {
     url.searchParams.set('per_page', '8');
     url.searchParams.set('orderby', 'date');
     url.searchParams.set('order', 'desc');
+    url.searchParams.set('_embed', '1');
 
     const res = await fetch(url.toString());
     if (!res.ok) throw new Error('Vrijburg blog-API niet bereikbaar');
@@ -369,8 +454,9 @@ async function fetchLatestPodcast({ force = false } = {}) {
       const parsed = parseMiniatuurFromPost(post);
       if (parsed) {
         latestPodcast = parsed;
+        const creditHint = parsed.creditLine ? ` · ${parsed.creditLine}` : '';
         setPodcastStatus(
-          `✓ Miniatuur ${parsed.nummer || ''}: ${parsed.titel}`.trim(),
+          `✓ Miniatuur ${parsed.nummer || ''}: ${parsed.titel}${creditHint}`.trim(),
           'ok'
         );
         return parsed;
@@ -391,7 +477,7 @@ async function fetchLatestPodcast({ force = false } = {}) {
 
 function buildPodcastCard(podcast, cardNumber) {
   const lines = [];
-  if (podcast.foto) lines.push(`Foto: ${podcast.foto}`);
+  if (podcast.creditLine) lines.push(podcast.creditLine);
   if (podcast.nummer) lines.push(`Miniatuur ${podcast.nummer}`);
   if (podcast.geschreven) lines.push(`Geschreven door ${podcast.geschreven}`);
   if (podcast.voorgelezen) lines.push(`Voorgelezen door ${podcast.voorgelezen}`);
@@ -413,7 +499,12 @@ function buildPodcastCard(podcast, cardNumber) {
     key: 'podcast',
     title: `CARD ${cardNumber} · VRIJZINNIGE MINIATUUR`,
     body: lines.join('\n'),
-    hint: 'In Mailchimp: plak de SoundCloud-URL in een embed/box, of houd deze platte tekst.',
+    hint: 'Download de illustratie hieronder en upload die in Mailchimp. SoundCloud-URL kun je als embed/box zetten.',
+    fotoUrl: podcast.imageUrl || '',
+    fotoCredit: podcast.creditLine || '',
+    fotoDownloadName: podcast.imageFilename || '',
+    fotoAlt: 'Miniatuur-illustratie',
+    allowDownload: !!podcast.imageUrl,
   };
 }
 
@@ -594,6 +685,34 @@ function renderCards(cards) {
   cards.forEach((c, idx) => {
     const div = document.createElement('div');
     div.className = 'card-block';
+
+    let mediaHtml = '';
+    if (c.fotoUrl || c.fotoCredit || c.allowDownload) {
+      const actions = [];
+      if (c.allowDownload && c.fotoUrl) {
+        actions.push(
+          `<button type="button" class="btn-small" data-dl-idx="${idx}">⬇ Download illustratie</button>`
+        );
+      }
+      if (c.fotoCredit) {
+        actions.push(
+          `<button type="button" class="btn-small" data-credit-idx="${idx}">Kopieer copyright</button>`
+        );
+      }
+      mediaHtml =
+        `<div class="card-media">` +
+          (c.fotoUrl
+            ? `<img class="foto-thumb" src="${escapeHtml(c.fotoUrl)}" alt="${escapeHtml(c.fotoAlt || 'Afbeelding')}">`
+            : '') +
+          `<div class="card-media-meta">` +
+            (c.fotoCredit
+              ? `<div><strong>Copyright / bron</strong><br>${escapeHtml(c.fotoCredit)}</div>`
+              : '<div><strong>Illustratie</strong><br>Geen copyrightregel gevonden op de Vrijburg-pagina — controleer handmatig.</div>') +
+            (actions.length ? `<div class="card-media-actions">${actions.join('')}</div>` : '') +
+          `</div>` +
+        `</div>`;
+    }
+
     div.innerHTML =
       `<div class="card-block-h">` +
         `<span>${escapeHtml(c.title)}</span>` +
@@ -601,13 +720,59 @@ function renderCards(cards) {
       `</div>` +
       `<pre>${escapeHtml(c.body)}</pre>` +
       (c.hint ? `<p class="hint" style="padding:0 12px 10px">${escapeHtml(c.hint)}</p>` : '') +
-      (c.fotoUrl ? `<div style="padding:0 12px 12px"><img class="foto-thumb" src="${escapeHtml(c.fotoUrl)}" alt="Dienstfoto"></div>` : '');
+      mediaHtml;
     wrap.appendChild(div);
   });
 
   wrap.querySelectorAll('button[data-idx]').forEach(btn => {
     btn.addEventListener('click', () => copyOneCard(Number(btn.getAttribute('data-idx'))));
   });
+  wrap.querySelectorAll('button[data-dl-idx]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const c = currentCards[Number(btn.getAttribute('data-dl-idx'))];
+      if (c) downloadCardImage(c);
+    });
+  });
+  wrap.querySelectorAll('button[data-credit-idx]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const c = currentCards[Number(btn.getAttribute('data-credit-idx'))];
+      if (!c?.fotoCredit) return;
+      copyText(c.fotoCredit).then(() =>
+        setStatus('✓ Copyright gekopieerd: ' + c.fotoCredit, 'ok')
+      );
+    });
+  });
+}
+
+async function downloadCardImage(card) {
+  if (!card?.fotoUrl) {
+    setStatus('Geen illustratie om te downloaden', 'err');
+    return;
+  }
+  const filename = card.fotoDownloadName || filenameFromUrl(card.fotoUrl, 'miniatuur-illustratie.jpg');
+  const creditNote = card.fotoCredit ? ` · ${card.fotoCredit}` : '';
+
+  try {
+    const res = await fetch(card.fotoUrl, { mode: 'cors' });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 2500);
+    setStatus('✓ Illustratie gedownload (' + filename + ')' + creditNote, 'ok');
+  } catch (err) {
+    // Cross-origin zonder CORS-headers: open full-size in nieuw tabblad
+    window.open(card.fotoUrl, '_blank', 'noopener');
+    setStatus(
+      'Illustratie geopend in nieuw tabblad — sla op via rechtermuisklik → Afbeelding opslaan als…' + creditNote,
+      'ok'
+    );
+  }
 }
 
 function renderMeta(row) {
