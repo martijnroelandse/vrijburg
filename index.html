@@ -2456,8 +2456,8 @@ function buildFotoParagraph(dataUrl, { floating = false, maxWidth, maxHeight } =
       try {
         const bytes = dataUrlToBytes(dataUrl);
         // Zo groot mogelijk binnen maxWidth × maxHeight (aspect ratio behouden)
-        const maxW = maxWidth ?? (floating ? 220 : 480);
-        const maxH = maxHeight ?? (floating ? 280 : 360);
+        const maxW = maxWidth ?? (floating ? 220 : 560);
+        const maxH = maxHeight ?? (floating ? 280 : 480);
         const scale = Math.min(maxW / img.width, maxH / img.height, 1);
         const width = Math.max(1, Math.round(img.width * scale));
         const height = Math.max(1, Math.round(img.height * scale));
