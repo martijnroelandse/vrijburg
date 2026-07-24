@@ -545,8 +545,12 @@ function buildCardsFromDienst(row, podcast) {
       key: 'kop',
       title: `CARD ${n++} · KOP`,
       body: lines.join('\n'),
-      hint: fotoPath ? 'Upload de foto apart in Mailchimp (zie miniatuur hieronder).' : '',
+      hint: fotoPath ? 'Download/upload de dienstfoto apart in Mailchimp (zie miniatuur hieronder).' : '',
       fotoUrl: getFotoPublicUrl(fotoPath),
+      fotoCredit: fotoCredit ? `Foto: ${fotoCredit}` : '',
+      fotoDownloadName: fotoPath ? filenameFromUrl(fotoPath, 'dienstfoto.jpg') : '',
+      fotoAlt: 'Dienstfoto',
+      allowDownload: !!fotoPath,
     });
   }
 
