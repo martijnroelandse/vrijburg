@@ -77,3 +77,5 @@ Dat is bewust voor een snelle interne start. Later aanscherpen met:
 
 Open `nieuwsbrief.html?id=...` (of via de link in de liturgie-header).  
 Toont Mailchimp card-blokken op basis van dezelfde dienst; kopieer per card of alles.
+
+Optioneel: laatste **Vrijzinnige Miniatuur** ophalen van vrijburg.nl (met SoundCloud-luisterlink + leeslink) als aparte card, inclusief illustratie-download en copyright.
