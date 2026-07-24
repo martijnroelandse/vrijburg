@@ -600,7 +600,7 @@
       </div>
       <div class="vl-grid" data-owner="medewerker">
         <div class="vl-card" id="card-vlv">
-          <img src="assets/logo-vlv.svg" alt="Vrijburg laat voorgaan">
+          <img src="assets/Logo%20Vrijburg%20laat%20voorgaan.png" alt="Vrijburg laat voorgaan">
           <div class="vl-card-head">
             <input type="checkbox" id="vlv_chk" onchange="onVlToggle('vlv')">
             <label for="vlv_chk"><strong>VLV</strong>Vrijburg laat voorgaan</label>
@@ -608,7 +608,7 @@
           <input type="text" class="vl-detail" id="vlv" placeholder="Toelichting (optioneel)" oninput="onVlDetail('vlv')">
         </div>
         <div class="vl-card" id="card-vlh">
-          <img src="assets/logo-vlh.svg" alt="Vrijburg laat horen">
+          <img src="assets/Logo%20Vrijburg%20laat%20horen.png" alt="Vrijburg laat horen">
           <div class="vl-card-head">
             <input type="checkbox" id="vlh_chk" onchange="onVlToggle('vlh')">
             <label for="vlh_chk"><strong>VLH</strong>Vrijburg laat horen</label>
@@ -616,7 +616,7 @@
           <input type="text" class="vl-detail" id="vlh" placeholder="Toelichting (optioneel)" oninput="onVlDetail('vlh')">
         </div>
         <div class="vl-card" id="card-vlz">
-          <img src="assets/logo-vlz.svg" alt="Vrijburg laat zien">
+          <img src="assets/Logo%20Vrijburg%20laat%20zien.png" alt="Vrijburg laat zien">
           <div class="vl-card-head">
             <input type="checkbox" id="vlz_chk" onchange="onVlToggle('vlz')">
             <label for="vlz_chk"><strong>VLZ</strong>Vrijburg laat zien</label>
@@ -2281,9 +2281,9 @@ function formatDatum(val) {
 // ============================================================
 const DOCX_ASSETS = {
   logo: 'assets/logo-vrijburg-xl.png',
-  logoVlv: 'assets/logo-vlv.png',
-  logoVlh: 'assets/logo-vlh.png',
-  logoVlz: 'assets/logo-vlz.png',
+  logoVlv: 'assets/Logo Vrijburg laat voorgaan.png',
+  logoVlh: 'assets/Logo Vrijburg laat horen.png',
+  logoVlz: 'assets/Logo Vrijburg laat zien.png',
   qr1: 'assets/collecte1.png',
   qrDiaconie: 'assets/collecte_diaconie.png',
   qrGemeente: 'assets/collecte_gemeente.png',
@@ -2291,9 +2291,9 @@ const DOCX_ASSETS = {
 
 /** Logo rechtsboven: speciale dienst vervangt Vrijburg-logo. */
 function resolveCoverLogo(vlv, vlh, vlz) {
-  if (vlv) return { path: DOCX_ASSETS.logoVlv, title: VL_LABELS.vlv, maxWidth: 150, kind: 'vl', key: 'vlv' };
-  if (vlh) return { path: DOCX_ASSETS.logoVlh, title: VL_LABELS.vlh, maxWidth: 150, kind: 'vl', key: 'vlh' };
-  if (vlz) return { path: DOCX_ASSETS.logoVlz, title: VL_LABELS.vlz, maxWidth: 150, kind: 'vl', key: 'vlz' };
+  if (vlv) return { path: DOCX_ASSETS.logoVlv, title: VL_LABELS.vlv, maxWidth: 160, kind: 'vl', key: 'vlv' };
+  if (vlh) return { path: DOCX_ASSETS.logoVlh, title: VL_LABELS.vlh, maxWidth: 160, kind: 'vl', key: 'vlh' };
+  if (vlz) return { path: DOCX_ASSETS.logoVlz, title: VL_LABELS.vlz, maxWidth: 100, kind: 'vl', key: 'vlz' };
   // ~50% van de eerdere 160px
   return { path: DOCX_ASSETS.logo, title: 'Vrijburg logo', maxWidth: 80, kind: 'vrijburg', key: null };
 }
@@ -2310,7 +2310,8 @@ function loadImageElement(src) {
     const img = new Image();
     img.onload = () => resolve(img);
     img.onerror = () => reject(new Error('Afbeelding laden mislukt: ' + src));
-    img.src = src;
+    // Paden met spaties (bijv. "Logo Vrijburg laat ….png") veilig encoden
+    img.src = encodeURI(src);
   });
 }
 
@@ -2757,15 +2758,10 @@ async function generateDocxAsync() {
   if (kinderkerk && !dienstExtra.includes('kinderkerk')) {
     children.push(p(`Kinderkerk: ${kinderkerk}`));
   }
-  // VL-tekstregels alleen als het cover-logo níet al dat logo toont
+  // VL-tekstregels: cover-logo dekt de actieve speciale dienst (tenzij er detailtekst is)
   [['vlv', vlv], ['vlh', vlh], ['vlz', vlz]].forEach(([key, val]) => {
     if (!val) return;
-    // Als dit de actieve cover-dienst is, logo volstaat; detailtekst wél tonen indien niet alleen "ja"
-    if (coverLogo.kind === 'vl' && DOCX_ASSETS['logo' + key.charAt(0).toUpperCase() + key.slice(1)] === coverLogo.path) {
-      if (val === 'ja' || val === '?') return;
-      children.push(p(VL_LABELS[key] + ': ' + val, { italic: true }));
-      return;
-    }
+    if (coverLogo.key === key && (val === 'ja' || val === '?')) return;
     const suffix = val === 'ja' ? '' : (val === '?' ? ' (gepland)' : ': ' + val);
     children.push(p(VL_LABELS[key] + suffix, { italic: true }));
   });
