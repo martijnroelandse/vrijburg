@@ -843,7 +843,7 @@
     <div class="section-body">
       <div style="margin-bottom:12px">
         <button class="btn-secondary" onclick="importAgenda()" id="btn-import-agenda">↻ Importeer van vrijburg.nl</button>
-        <span style="font-size:12px;color:#aaa;margin-left:8px">Haalt activiteiten van de komende 2 weken op</span>
+        <span style="font-size:12px;color:#aaa;margin-left:8px">Haalt aankomende activiteiten op (2 weken + tot 6 weken)</span>
       </div>
       <div class="field" style="margin-bottom:16px">
         <label>Activiteiten komende week <span class="opt">– voor activiteiten die binnenkort plaatsvinden</span></label>
@@ -1809,15 +1809,45 @@ async function fetchBibleText(id) {
 // ============================================================
 // AGENDA IMPORT
 // ============================================================
+async function fetchVrijburgEvenementen() {
+  // orderby=date is de WordPress-publicatiedatum, níet acf.start.
+  // Daarom: nieuwste posts eerst (desc). Met order=asc kreeg je alleen oude
+  // evenementen uit 2013–2014 en vielen alle toekomstige activiteiten weg.
+  const collected = [];
+  const maxPages = 3;
+  for (let page = 1; page <= maxPages; page++) {
+    const res = await fetch(
+      `${VRIJBURG_EVENTS_API}?per_page=100&page=${page}&orderby=date&order=desc`
+    );
+    if (!res.ok) throw new Error('API niet bereikbaar (' + res.status + ')');
+    const batch = await res.json();
+    if (!Array.isArray(batch) || !batch.length) break;
+    collected.push(...batch);
+
+    const totalPages = parseInt(res.headers.get('X-WP-TotalPages') || '1', 10);
+    const now = new Date();
+    now.setHours(0, 0, 0, 0);
+    const hasFuture = batch.some(ev => {
+      const startStr = ev.acf?.start;
+      if (!startStr) return false;
+      const start = new Date(startStr.replace(' ', 'T'));
+      return !Number.isNaN(start.getTime()) && start >= now;
+    });
+    // Volgende pagina's zijn ouder gepubliceerd; stop als deze pagina
+    // geen toekomstige startdata meer heeft (na de eerste pagina).
+    if (page > 1 && !hasFuture) break;
+    if (page >= totalPages) break;
+  }
+  return collected;
+}
+
 async function importAgenda() {
   const btn = document.getElementById('btn-import-agenda');
   btn.disabled = true;
   btn.textContent = 'Bezig met importeren…';
 
   try {
-    const res = await fetch(`${VRIJBURG_EVENTS_API}?per_page=100&orderby=date&order=asc`);
-    if (!res.ok) throw new Error('API niet bereikbaar');
-    const events = await res.json();
+    const events = await fetchVrijburgEvenementen();
 
     const now = new Date();
     now.setHours(0, 0, 0, 0);
@@ -1832,10 +1862,16 @@ async function importAgenda() {
       const startStr = ev.acf?.start;
       if (!startStr) return;
       const start = new Date(startStr.replace(' ', 'T'));
-      if (start < now) return;
+      if (Number.isNaN(start.getTime()) || start < now) return;
 
-      const title = ev.title.rendered.replace(/<[^>]+>/g, '').replace(/&#8217;/g, "'").replace(/&#8216;/g, "'");
-      const loc = ev.acf.locatie ? ` – ${ev.acf.locatie}` : '';
+      const title = (ev.title?.rendered || '')
+        .replace(/<[^>]+>/g, '')
+        .replace(/&#8217;/g, "'")
+        .replace(/&#8216;/g, "'")
+        .replace(/&#8220;/g, '"')
+        .replace(/&#8221;/g, '"')
+        .replace(/&amp;/g, '&');
+      const loc = ev.acf?.locatie ? ` – ${ev.acf.locatie}` : '';
       const line = formatAgendaRegel(start) + ' – ' + title + loc;
 
       if (start <= inTwoWeeks) kort.push({ start, line });
@@ -1845,11 +1881,16 @@ async function importAgenda() {
     kort.sort((a, b) => a.start - b.start);
     ver.sort((a, b) => a.start - b.start);
 
-    if (kort.length) document.getElementById('agenda_kort').value = kort.map(e => e.line).join('\n');
-    if (ver.length) document.getElementById('agenda_ver').value = ver.map(e => e.line).join('\n');
+    document.getElementById('agenda_kort').value = kort.map(e => e.line).join('\n');
+    document.getElementById('agenda_ver').value = ver.map(e => e.line).join('\n');
 
     scheduleDraftSave();
-    setStatus(`✓ ${kort.length + ver.length} activiteiten geïmporteerd`, 'ok');
+    const total = kort.length + ver.length;
+    if (total) {
+      setStatus(`✓ ${total} activiteiten geïmporteerd (${kort.length} komende 2 weken, ${ver.length} daarna)`, 'ok');
+    } else {
+      setStatus('Geen aankomende activiteiten gevonden in de komende 6 weken', 'err');
+    }
   } catch (err) {
     setStatus('Agenda importeren mislukt: ' + err.message, 'err');
   } finally {
