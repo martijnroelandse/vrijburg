@@ -1643,18 +1643,23 @@ function openNieuwsbriefPage() {
 }
 
 function addOrde(type, content = '') {
-  const id = Date.now() + Math.random();
+  const id = `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
   ordeItems.push({ id, type, content });
   renderOrde();
 }
 
+function findOrdeIndex(id) {
+  return ordeItems.findIndex(i => i && String(i.id) === String(id));
+}
+
 function removeOrde(id) {
-  ordeItems = ordeItems.filter(i => i.id !== id);
+  ordeItems = ordeItems.filter(i => i && String(i.id) !== String(id));
   renderOrde();
 }
 
 function moveOrde(id, dir) {
-  const idx = ordeItems.findIndex(i => i.id === id);
+  const idx = findOrdeIndex(id);
+  if (idx < 0) return;
   if (dir === -1 && idx === 0) return;
   if (dir === 1 && idx === ordeItems.length - 1) return;
   const other = idx + dir;
@@ -1664,6 +1669,10 @@ function moveOrde(id, dir) {
 
 function renderOrde() {
   const list = document.getElementById('orde-list');
+  // Verwijder eventuele corrupte null-gaten (oude bug bij omhoog/omlaag)
+  if (ordeItems.some(i => !i || !i.type)) {
+    ordeItems = ordeItems.filter(i => i && i.type);
+  }
   list.innerHTML = '';
   ordeItems.forEach((item, idx) => {
     const labels = { lied: 'Lied', lezing: 'Lezing', inleiding: 'Inleiding', muziek: 'Muziek', overig: 'Overig' };
@@ -1676,41 +1685,43 @@ function renderOrde() {
     };
     const div = document.createElement('div');
     div.className = 'orde-item';
+    const safeId = String(item.id).replace(/\\/g, '\\\\').replace(/'/g, "\\'");
     const fetchBtn = item.type === 'lezing'
-      ? `<button class="btn-fetch" onclick="fetchBibleText('${item.id}')" title="Haal bijbeltekst op via BijbelAPI">Tekst ophalen</button>`
+      ? `<button class="btn-fetch" onclick="fetchBibleText('${safeId}')" title="Haal bijbeltekst op via BijbelAPI">Tekst ophalen</button>`
       : item.type === 'lied'
-      ? `<button class="btn-fetch" onclick="openLiedboekOnline('${item.id}')" title="Open Liedboek Online (inlog vereist)">Liedboek Online</button>`
+      ? `<button class="btn-fetch" onclick="openLiedboekOnline('${safeId}')" title="Open Liedboek Online (inlog vereist)">Liedboek Online</button>`
       : '';
     div.innerHTML = `
-      <select onchange="updateOrdeType('${item.id}', this.value)">
+      <select onchange="updateOrdeType('${safeId}', this.value)">
         ${['lied','lezing','inleiding','muziek','overig'].map(t =>
           `<option value="${t}"${t===item.type?' selected':''}>${labels[t]}</option>`
         ).join('')}
       </select>
       <div style="display:flex;flex-direction:column;gap:6px">
         <textarea placeholder="${placeholders[item.type]||''}"
-                  onchange="updateOrdeContent('${item.id}', this.value)"
-                  oninput="updateOrdeContent('${item.id}', this.value)">${item.content}</textarea>
+                  onchange="updateOrdeContent('${safeId}', this.value)"
+                  oninput="updateOrdeContent('${safeId}', this.value)"></textarea>
         ${fetchBtn}
       </div>
       <div style="display:flex;flex-direction:column;gap:4px">
-        <button class="btn-icon" onclick="moveOrde('${item.id}',-1)" title="Omhoog">↑</button>
-        <button class="btn-icon" onclick="moveOrde('${item.id}',1)" title="Omlaag">↓</button>
+        <button class="btn-icon" onclick="moveOrde('${safeId}',-1)" title="Omhoog">↑</button>
+        <button class="btn-icon" onclick="moveOrde('${safeId}',1)" title="Omlaag">↓</button>
       </div>
-      <button class="btn-icon del" onclick="removeOrde('${item.id}')" title="Verwijder">✕</button>
+      <button class="btn-icon del" onclick="removeOrde('${safeId}')" title="Verwijder">✕</button>
     `;
+    div.querySelector('textarea').value = item.content || '';
     list.appendChild(div);
   });
   scheduleDraftSave();
 }
 
 function updateOrdeType(id, type) {
-  const item = ordeItems.find(i => i.id == id);
+  const item = ordeItems[findOrdeIndex(id)];
   if (item) { item.type = type; renderOrde(); }
 }
 
 function updateOrdeContent(id, content) {
-  const item = ordeItems.find(i => i.id == id);
+  const item = ordeItems[findOrdeIndex(id)];
   if (item) item.content = content;
   scheduleDraftSave();
 }
@@ -1726,7 +1737,7 @@ function parseLiedNummer(text) {
 }
 
 function openLiedboekOnline(id) {
-  const item = ordeItems.find(i => i.id == id);
+  const item = ordeItems[findOrdeIndex(id)];
   if (!item) return;
   const nr = parseLiedNummer(item.content);
   if (!nr) {
@@ -1942,8 +1953,10 @@ function applyFormState(state) {
   if (state.bijzonderheden && !state.vlv && !state.vlh && !state.vlz) {
     migrateLegacyBijzonderheden(state.bijzonderheden);
   }
-  if (state.orde?.length) {
-    ordeItems = state.orde;
+  if (Array.isArray(state.orde)) {
+    ordeItems = state.orde
+      .filter(i => i && i.type)
+      .map(i => ({ ...i, id: i.id != null ? String(i.id) : `${Date.now()}-${Math.random().toString(36).slice(2, 9)}` }));
     renderOrde();
   }
   if (state.rol) setRol(state.rol);
@@ -2101,9 +2114,9 @@ function emptyFormState() {
     agenda_kort: '',
     agenda_ver: '',
     orde: [
-      { id: Date.now() + 1, type: 'lied', content: '' },
-      { id: Date.now() + 2, type: 'lezing', content: '' },
-      { id: Date.now() + 3, type: 'lied', content: '' },
+      { id: 'seed-1', type: 'lied', content: '' },
+      { id: 'seed-2', type: 'lezing', content: '' },
+      { id: 'seed-3', type: 'lied', content: '' },
     ],
   };
 }
