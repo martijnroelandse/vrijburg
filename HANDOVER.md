@@ -158,7 +158,7 @@ Via WordPress REST API: `https://www.vrijburg.nl/wp-json/wp/v2/evenementen` (cus
 `collectes.json` dekt 2026-2027. Voor volgend seizoen: vervang of breid het bestand uit. Overweeg een simpel beheerscherm of gewoon het JSON-bestand handmatig bijwerken.
 
 **5. Gedeelde backend (Supabase)** ✅ *schema + liturgie save/load + nieuwsbrief-pagina*  
-Liturgie slaat op in tabel `diensten` en deelt via korte link `?id=short_id` (foto in Storage-bucket `dienst-fotos`). Aparte pagina `nieuwsbrief.html` opent dezelfde id en toont Mailchimp-cards (platte tekst, kopieer per card). Oude `?z=`-links blijven als fallback. SQL: `supabase/migrations/001_diensten.sql`.
+Liturgie slaat op in tabel `diensten` en deelt via korte link `?id=short_id` (foto in Storage-bucket `dienst-fotos`). Aparte pagina `nieuwsbrief.html` opent dezelfde id en toont Mailchimp-cards (platte tekst, kopieer per card), inclusief optionele card voor de laatste Vrijzinnige Miniatuur (via vrijburg.nl blog + SoundCloud-link). Oude `?z=`-links blijven als fallback. SQL: `supabase/migrations/001_diensten.sql`.
 
 ### Lage prioriteit / nice-to-have
 
