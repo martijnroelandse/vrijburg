@@ -2398,7 +2398,52 @@ async function buildCornerLogoParagraph(logo) {
   }
 }
 
-function buildFotoParagraph(dataUrl, { floating = false } = {}) {
+/**
+ * Schat hoeveel verticale ruimte (px @ 96dpi) de tekst op pagina 1 inneemt,
+ * zodat de foto de resterende ruimte mag vullen zonder overloop.
+ */
+function estimateCoverTextHeightPx({
+  hasLogo = true,
+  hasDienstExtra = false,
+  thema = '',
+  intro = '',
+  fotoCredit = '',
+  roleLines = 0,
+  extraLines = 0,
+} = {}) {
+  // A4 ≈ 1123 px hoog; verticale marges ~2×57 px → bruikbaar ~1009 px.
+  // Conservatief houden we een veiligheidsmarge onderaan.
+  const line = (pt, factor = 1.2) => Math.ceil(pt * (96 / 72) * factor);
+  let h = 0;
+  if (hasLogo) h += 36; // floating logo dekt deels titel, maar reserveer iets
+  h += line(24, 1.25); // titel "Dienst …"
+  if (hasDienstExtra) h += line(16);
+  if (thema) h += line(20);
+  if (intro) {
+    const n = Math.max(1, intro.split('\n').filter(l => l.trim()).length);
+    h += n * line(20);
+  }
+  h += 10; // foto spacing before/after
+  if (fotoCredit) h += line(12, 1.15);
+  h += roleLines * line(16, 1.15);
+  h += extraLines * line(16, 1.15);
+  h += 12; // lege regel voor opname-tekst
+  h += 2 * line(16, 1.15); // opname + kerkdienstgemist
+  h += 28; // veiligheidsmarge
+  return h;
+}
+
+/** Maximale foto-afmetingen zodat titel+foto+rollen+opname op 1 pagina blijven. */
+function calcCoverFotoMaxSize(textHeightPx) {
+  const PAGE_CONTENT_H = 980; // px @ 96dpi, A4 minus marges (conservatief)
+  const CONTENT_W = 560;      // ~5,8" — bijna volle tekstbreedte
+  const MIN_H = 140;
+  const MAX_H = 560;          // harde cap tegen overschatting van vrije ruimte
+  const maxH = Math.max(MIN_H, Math.min(MAX_H, PAGE_CONTENT_H - textHeightPx));
+  return { maxWidth: CONTENT_W, maxHeight: maxH };
+}
+
+function buildFotoParagraph(dataUrl, { floating = false, maxWidth, maxHeight } = {}) {
   const {
     Paragraph, ImageRun, AlignmentType,
     TextWrappingType, TextWrappingSide,
@@ -2410,11 +2455,12 @@ function buildFotoParagraph(dataUrl, { floating = false } = {}) {
     img.onload = () => {
       try {
         const bytes = dataUrlToBytes(dataUrl);
-        // Iets kleiner zodat pagina 1 (t/m opname-tekst) blijft passen
-        const maxW = floating ? 220 : 240;
-        const scale = img.width > maxW ? maxW / img.width : 1;
-        const width = Math.round(img.width * scale);
-        const height = Math.round(img.height * scale);
+        // Zo groot mogelijk binnen maxWidth × maxHeight (aspect ratio behouden)
+        const maxW = maxWidth ?? (floating ? 220 : 480);
+        const maxH = maxHeight ?? (floating ? 280 : 360);
+        const scale = Math.min(maxW / img.width, maxH / img.height, 1);
+        const width = Math.max(1, Math.round(img.width * scale));
+        const height = Math.max(1, Math.round(img.height * scale));
         const type = dataUrl.startsWith('data:image/png') ? 'png' : 'jpg';
         const imageOpts = {
           data: bytes,
@@ -2443,7 +2489,7 @@ function buildFotoParagraph(dataUrl, { floating = false } = {}) {
         resolve(new Paragraph({
           children: [new ImageRun(imageOpts)],
           alignment: AlignmentType.CENTER,
-          spacing: { before: 60, after: 60, line: 240, lineRule: 'auto' },
+          spacing: { before: 40, after: 40, line: 240, lineRule: 'auto' },
         }));
       } catch (e) {
         console.warn('Foto kon niet in document:', e);
@@ -2751,8 +2797,49 @@ async function generateDocxAsync() {
   setStatus('Document samenstellen…', '');
   const coverLogo = resolveCoverLogo(vlv, vlh, vlz);
   const logoPara = await buildCornerLogoParagraph(coverLogo);
-  // Gecentreerde foto (geen wrap) — credit en rollen eronder
-  const fotoPara = fotoDataUrl ? await buildFotoParagraph(fotoDataUrl, { floating: false }) : null;
+
+  const dienstExtraPreview = [];
+  if (kinderkerk) dienstExtraPreview.push('kinderkerk');
+  if (cantorij) dienstExtraPreview.push('Cantorij');
+
+  // Tel tekstregels op pagina 1 (zonder foto) om de foto zo groot mogelijk te maken
+  let coverRoleLines = 0;
+  if (voorganger) coverRoleLines++;
+  if (organist) coverRoleLines++;
+  if (lector) coverRoleLines++;
+  if (cantorij) coverRoleLines++;
+  if (kinderkerk && !dienstExtraPreview.includes('kinderkerk')) coverRoleLines++;
+
+  let coverExtraLines = 0;
+  [['vlv', vlv], ['vlh', vlh], ['vlz', vlz]].forEach(([key, val]) => {
+    if (!val) return;
+    if (coverLogo.key === key && (val === 'ja' || val === '?')) return;
+    coverExtraLines++;
+  });
+  if (avondmaal) coverExtraLines++;
+  if (bijzonderheden) {
+    coverExtraLines += Math.max(1, bijzonderheden.split('\n').filter(l => l.trim()).length);
+  }
+
+  const coverTextH = estimateCoverTextHeightPx({
+    hasLogo: !!logoPara,
+    hasDienstExtra: !!(dienstExtraPreview.length || bijzondereDienst),
+    thema,
+    intro,
+    fotoCredit: foto,
+    roleLines: coverRoleLines,
+    extraLines: coverExtraLines,
+  });
+  const fotoMax = calcCoverFotoMaxSize(coverTextH);
+
+  // Gecentreerde foto (geen wrap) — zo groot mogelijk binnen resterende paginaruimte
+  const fotoPara = fotoDataUrl
+    ? await buildFotoParagraph(fotoDataUrl, {
+        floating: false,
+        maxWidth: fotoMax.maxWidth,
+        maxHeight: fotoMax.maxHeight,
+      })
+    : null;
 
   // ---- Bouw het document ----
   const children = [];
