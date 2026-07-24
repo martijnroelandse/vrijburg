@@ -2281,10 +2281,22 @@ function formatDatum(val) {
 // ============================================================
 const DOCX_ASSETS = {
   logo: 'assets/logo-vrijburg-xl.png',
+  logoVlv: 'assets/logo-vlv.png',
+  logoVlh: 'assets/logo-vlh.png',
+  logoVlz: 'assets/logo-vlz.png',
   qr1: 'assets/collecte1.png',
   qrDiaconie: 'assets/collecte_diaconie.png',
   qrGemeente: 'assets/collecte_gemeente.png',
 };
+
+/** Logo rechtsboven: speciale dienst vervangt Vrijburg-logo. */
+function resolveCoverLogo(vlv, vlh, vlz) {
+  if (vlv) return { path: DOCX_ASSETS.logoVlv, title: VL_LABELS.vlv, maxWidth: 150, kind: 'vl', key: 'vlv' };
+  if (vlh) return { path: DOCX_ASSETS.logoVlh, title: VL_LABELS.vlh, maxWidth: 150, kind: 'vl', key: 'vlh' };
+  if (vlz) return { path: DOCX_ASSETS.logoVlz, title: VL_LABELS.vlz, maxWidth: 150, kind: 'vl', key: 'vlz' };
+  // ~50% van de eerdere 160px
+  return { path: DOCX_ASSETS.logo, title: 'Vrijburg logo', maxWidth: 80, kind: 'vrijburg', key: null };
+}
 
 function dataUrlToBytes(dataUrl) {
   const binary = atob(dataUrl.split(',')[1]);
@@ -2314,6 +2326,48 @@ async function preparePngImage(src, maxWidthPx) {
   return { bytes: dataUrlToBytes(canvas.toDataURL('image/png')), width, height };
 }
 
+async function buildCornerLogoParagraph(logo) {
+  const {
+    Paragraph, ImageRun,
+    TextWrappingType, TextWrappingSide,
+    HorizontalPositionRelativeFrom, HorizontalPositionAlign,
+    VerticalPositionRelativeFrom, VerticalPositionAlign,
+  } = docx;
+  try {
+    const { bytes, width, height } = await preparePngImage(logo.path, logo.maxWidth);
+    return new Paragraph({
+      children: [
+        new ImageRun({
+          data: bytes,
+          transformation: { width, height },
+          type: 'png',
+          altText: { title: logo.title, description: logo.title, name: 'cover-logo' },
+          floating: {
+            horizontalPosition: {
+              relative: HorizontalPositionRelativeFrom.MARGIN,
+              align: HorizontalPositionAlign.RIGHT,
+            },
+            verticalPosition: {
+              relative: VerticalPositionRelativeFrom.MARGIN,
+              align: VerticalPositionAlign.TOP,
+            },
+            wrap: {
+              type: TextWrappingType.SQUARE,
+              side: TextWrappingSide.LEFT,
+            },
+            allowOverlap: false,
+            margins: { top: 0, bottom: 60000, left: 100000, right: 0 },
+          },
+        }),
+      ],
+      spacing: { before: 0, after: 0, line: 240, lineRule: 'auto' },
+    });
+  } catch (e) {
+    console.warn('Cover-logo niet geladen:', e);
+    return null;
+  }
+}
+
 function buildFotoParagraph(dataUrl, { floating = false } = {}) {
   const {
     Paragraph, ImageRun, AlignmentType,
@@ -2326,7 +2380,8 @@ function buildFotoParagraph(dataUrl, { floating = false } = {}) {
     img.onload = () => {
       try {
         const bytes = dataUrlToBytes(dataUrl);
-        const maxW = floating ? 240 : 320;
+        // Iets kleiner zodat pagina 1 (t/m opname-tekst) blijft passen
+        const maxW = floating ? 220 : 240;
         const scale = img.width > maxW ? maxW / img.width : 1;
         const width = Math.round(img.width * scale);
         const height = Math.round(img.height * scale);
@@ -2358,7 +2413,7 @@ function buildFotoParagraph(dataUrl, { floating = false } = {}) {
         resolve(new Paragraph({
           children: [new ImageRun(imageOpts)],
           alignment: AlignmentType.CENTER,
-          spacing: { before: 120, after: 120, line: 240, lineRule: 'auto' },
+          spacing: { before: 60, after: 60, line: 240, lineRule: 'auto' },
         }));
       } catch (e) {
         console.warn('Foto kon niet in document:', e);
@@ -2664,41 +2719,35 @@ async function generateDocxAsync() {
 
   // ---- Assets vooraf laden ----
   setStatus('Document samenstellen…', '');
-  const logoPara = await assetParagraph(DOCX_ASSETS.logo, 160, { title: 'Vrijburg logo', name: 'logo' });
+  const coverLogo = resolveCoverLogo(vlv, vlh, vlz);
+  const logoPara = await buildCornerLogoParagraph(coverLogo);
   // Gecentreerde foto (geen wrap) — credit en rollen eronder
   const fotoPara = fotoDataUrl ? await buildFotoParagraph(fotoDataUrl, { floating: false }) : null;
 
   // ---- Bouw het document ----
   const children = [];
 
-  // Logo bovenaan
-  if (logoPara) {
-    children.push(logoPara);
-    children.push(empty());
-  }
+  // Logo rechtsboven (Vrijburg, of VLV/VLH/VLZ indien aangevinkt)
+  if (logoPara) children.push(logoPara);
 
   // HEADER — pagina 1
-  children.push(p(`Dienst ${datumDisplay}`, { sz: szTitle, align: AlignmentType.CENTER, after: 80 }));
+  children.push(p(`Dienst ${datumDisplay}`, { sz: szTitle, align: AlignmentType.CENTER, after: 40 }));
 
   const dienstExtra = [];
   if (kinderkerk) dienstExtra.push('kinderkerk');
   if (cantorij) dienstExtra.push('Cantorij');
   if (dienstExtra.length) {
-    children.push(p('met ' + dienstExtra.join(' en '), { align: AlignmentType.CENTER, after: 80 }));
+    children.push(p('met ' + dienstExtra.join(' en '), { align: AlignmentType.CENTER, after: 40 }));
   } else if (bijzondereDienst) {
-    children.push(p(bijzondereDienst, { align: AlignmentType.CENTER, after: 80 }));
+    children.push(p(bijzondereDienst, { align: AlignmentType.CENTER, after: 40 }));
   }
 
-  if (thema) children.push(p(thema, { sz: szSub, align: AlignmentType.CENTER, after: 80 }));
-  if (intro) children.push(...multiline(intro, { sz: szSub, italic: true, align: AlignmentType.CENTER, after: 80 }));
+  if (thema) children.push(p(thema, { sz: szSub, align: AlignmentType.CENTER, after: 40 }));
+  if (intro) children.push(...multiline(intro, { sz: szSub, italic: true, align: AlignmentType.CENTER, after: 40 }));
 
   // Foto gecentreerd, daarna credit eronder
-  if (fotoPara) {
-    children.push(empty());
-    children.push(fotoPara);
-  }
-  if (foto) children.push(p(foto, { sz: szSmall, italic: true, align: AlignmentType.CENTER, after: 120 }));
-  if (fotoPara || foto) children.push(empty());
+  if (fotoPara) children.push(fotoPara);
+  if (foto) children.push(p(foto, { sz: szSmall, italic: true, align: AlignmentType.CENTER, after: 80 }));
 
   const voorgangerLabel = /\s+en\s+/i.test(voorganger) ? 'Voorgangers' : 'Voorganger';
   if (voorganger) children.push(p(`${voorgangerLabel}: ${voorganger}`));
@@ -2708,8 +2757,15 @@ async function generateDocxAsync() {
   if (kinderkerk && !dienstExtra.includes('kinderkerk')) {
     children.push(p(`Kinderkerk: ${kinderkerk}`));
   }
+  // VL-tekstregels alleen als het cover-logo níet al dat logo toont
   [['vlv', vlv], ['vlh', vlh], ['vlz', vlz]].forEach(([key, val]) => {
     if (!val) return;
+    // Als dit de actieve cover-dienst is, logo volstaat; detailtekst wél tonen indien niet alleen "ja"
+    if (coverLogo.kind === 'vl' && DOCX_ASSETS['logo' + key.charAt(0).toUpperCase() + key.slice(1)] === coverLogo.path) {
+      if (val === 'ja' || val === '?') return;
+      children.push(p(VL_LABELS[key] + ': ' + val, { italic: true }));
+      return;
+    }
     const suffix = val === 'ja' ? '' : (val === '?' ? ' (gepland)' : ': ' + val);
     children.push(p(VL_LABELS[key] + suffix, { italic: true }));
   });
