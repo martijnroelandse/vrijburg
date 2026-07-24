@@ -157,6 +157,9 @@ Via WordPress REST API: `https://www.vrijburg.nl/wp-json/wp/v2/evenementen` (cus
 **4. Collectes seizoen 2027-2028 bijwerken**  
 `collectes.json` dekt 2026-2027. Voor volgend seizoen: vervang of breid het bestand uit. Overweeg een simpel beheerscherm of gewoon het JSON-bestand handmatig bijwerken.
 
+**5. Gedeelde backend (Supabase)** ✅ *schema + liturgie save/load + nieuwsbrief-pagina*  
+Liturgie slaat op in tabel `diensten` en deelt via korte link `?id=short_id` (foto in Storage-bucket `dienst-fotos`). Aparte pagina `nieuwsbrief.html` opent dezelfde id en toont Mailchimp-cards (platte tekst, kopieer per card), inclusief optionele card voor de laatste Vrijzinnige Miniatuur (via vrijburg.nl blog + SoundCloud-link), met downloadknop voor de illustratie en copyright/bronvermelding. Oude `?z=`-links blijven als fallback. SQL: `supabase/migrations/001_diensten.sql`.
+
 ### Lage prioriteit / nice-to-have
 
 - **Opslaan als concept** ✅ *geïmplementeerd* — localStorage zodat een half-ingevuld formulier bewaard blijft bij sluiten
@@ -187,9 +190,10 @@ Via WordPress REST API: `https://www.vrijburg.nl/wp-json/wp/v2/evenementen` (cus
 | .docx generatie | [docx](https://docx.js.org/) v8.5.0 via CDN |
 | Bijbelteksten | [BijbelAPI](https://www.bijbelapi.com/) (BasisBijbel) |
 | Agenda | WordPress REST API (vrijburg.nl) |
-| Data | collectes.json (statisch bestand) |
+| Data | collectes.json (statisch) + Supabase `diensten` (gedeelde opslag) |
 | Hosting | GitHub Pages (statisch) |
-| Geen | Backend, database, build-tool, npm |
+| Backend | Supabase Free (Postgres + Storage); zie `supabase/` |
+| Geen | Build-tool, npm (vooralsnog) |
 
 ---
 

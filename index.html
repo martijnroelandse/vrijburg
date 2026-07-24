@@ -515,7 +515,7 @@
   </a>
   <div>
     <h1>Liturgie Generator</h1>
-    <p>Remonstranten · Vrijzinnige Protestanten · <a href="info.html" style="color:inherit;opacity:0.95">Uitleg &amp; privacy</a></p>
+    <p>Remonstranten · Vrijzinnige Protestanten · <a href="info.html" style="color:inherit;opacity:0.95">Uitleg &amp; privacy</a> · <a href="nieuwsbrief.html" id="link-nieuwsbrief" style="color:inherit;opacity:0.95">Nieuwsbrief / Mailchimp</a></p>
   </div>
 </header>
 
@@ -661,7 +661,7 @@
       </div>
       <div class="row">
         <div class="field" style="grid-column: 1/-1">
-          <label>Foto <span class="opt">– voor op de voorkant van de liturgie</span></label>
+          <label>Foto <span class="opt">– liturgie, socials en website</span></label>
           <div class="foto-upload-row">
             <div class="foto-preview-wrap">
               <img id="foto-preview" class="foto-preview" alt="Voorbeeld foto">
@@ -673,9 +673,12 @@
                 <button type="button" class="btn-small" onclick="downloadFoto()">Download foto</button>
                 <button type="button" class="btn-small" onclick="clearFoto()">Foto verwijderen</button>
               </div>
+              <p class="comm-hint" style="color:var(--brand-dark)">
+                <strong>Rechten verplicht:</strong> lever alleen een foto waarvan Vrijburg de rechten heeft voor gebruik op de liturgie, socials (Facebook/Instagram) en eventueel vrijburg.nl.
+              </p>
               <p class="comm-hint">
                 <strong>Liturgie (.docx):</strong> de foto wordt automatisch op de voorkant geplaatst.<br>
-                <strong>Website (vrijburg.nl):</strong> download de foto en upload handmatig in WordPress (komt later mogelijk automatisch, in overleg met webmaster).<br>
+                <strong>Socials &amp; website:</strong> het bureau gebruikt de foto voor promotie van de dienst (FB/Insta) en soms op vrijburg.nl.<br>
                 <strong>E-mail naar bureau:</strong> bij &ldquo;Ik ben klaar&rdquo; wordt de foto gedownload — voeg die handmatig toe als bijlage (paperclip in uw mailprogramma).
               </p>
             </div>
@@ -683,9 +686,10 @@
         </div>
       </div>
       <div class="row">
-        <div class="field">
-          <label>Foto credit <span class="opt">optioneel</span></label>
+        <div class="field" style="grid-column: 1/-1">
+          <label>Foto credit <span class="opt">– naam fotograaf / bron (verplicht bij upload)</span></label>
           <input type="text" id="foto_credit" placeholder="bijv. Foto ammoniet: Petra Galama">
+          <p class="comm-hint">Vermeld altijd de bron of fotograaf als u een foto uploadt.</p>
         </div>
       </div>
       <div class="row">
@@ -695,8 +699,9 @@
           <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px">
             <button type="button" class="btn-small" onclick="copyField('nieuwsbrief', 'Nieuwsbrieftekst gekopieerd')">Kopieer voor nieuwsbrief</button>
             <button type="button" class="btn-small" onclick="copyMailchimpCards()">Kopieer voor Mailchimp cards</button>
+            <button type="button" class="btn-small" onclick="openNieuwsbriefPage()">Open nieuwsbrief-app</button>
           </div>
-          <p class="comm-hint">Mailchimp-copy is platte tekst met losse card/box-blokken (geen HTML), zodat je per blok makkelijk kunt nabewerken.</p>
+          <p class="comm-hint">Mailchimp-copy is platte tekst met losse card/box-blokken (geen HTML). De aparte nieuwsbrief-app opent dezelfde cloud-<code>id</code> voor nabewerking.</p>
         </div>
       </div>
       <div class="row">
@@ -838,7 +843,7 @@
     <div class="section-body">
       <div style="margin-bottom:12px">
         <button class="btn-secondary" onclick="importAgenda()" id="btn-import-agenda">↻ Importeer van vrijburg.nl</button>
-        <span style="font-size:12px;color:#aaa;margin-left:8px">Haalt activiteiten van de komende 2 weken op</span>
+        <span style="font-size:12px;color:#aaa;margin-left:8px">Haalt aankomende activiteiten op (2 weken + tot 6 weken)</span>
       </div>
       <div class="field" style="margin-bottom:16px">
         <label>Activiteiten komende week <span class="opt">– voor activiteiten die binnenkort plaatsvinden</span></label>
@@ -857,6 +862,7 @@
   <div class="generate-bar-actions">
     <button class="btn-generate" id="btn-download" onclick="generateDocx()">⬇ Download liturgie (.docx)</button>
     <div class="toolbar">
+      <button class="btn-secondary" id="btn-cloud-save" onclick="saveDienstManual()">☁ Opslaan</button>
       <button class="btn-secondary" id="btn-email-voorganger" onclick="emailRol('voorganger')">✉ Link naar voorganger</button>
       <button class="btn-secondary" id="btn-email-organist" onclick="emailRol('organist')">✉ Link naar organist</button>
       <button class="btn-secondary" onclick="copyShareLink()">🔗 Kopieer link</button>
@@ -866,6 +872,7 @@
   </div>
   <div class="generate-bar-footer">
     <span class="generate-hint" id="generate-hint">Het document is direct klaar om te printen</span>
+    <span id="cloud-id-hint" class="generate-hint" style="display:none"></span>
     <span id="status-msg"></span>
     <a href="info.html" class="generate-bar-info">Handleiding, credits &amp; privacy</a>
   </div>
@@ -873,6 +880,7 @@
 
 <!-- Libraries -->
 <script src="https://cdn.jsdelivr.net/npm/lz-string@1.5.0/libs/lz-string.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.8/dist/umd/supabase.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.js"></script>
 
 <script>
@@ -925,7 +933,23 @@ const NL_DAGEN = ['zondag','maandag','dinsdag','woensdag','donderdag','vrijdag',
 const BIJBEL_VERSIE = 'bb'; // bb = BasisBijbel (vrij), hsv = Herziene Statenvertaling
 const LIEDBOEK_URL = 'https://liedboek.liedbundels.nu/site/nl/home/Default.aspx';
 const STORAGE_KEY = 'vrijburg-liturgie-draft';
+const SESSION_ACTIVE_KEY = 'vrijburg-liturgie-session';
 const VRIJBURG_EVENTS_API = 'https://www.vrijburg.nl/wp-json/wp/v2/evenementen';
+
+// Supabase (gedeelde opslag liturgie + nieuwsbrief)
+const SUPABASE_URL = 'https://iabrbkirzsolwnuknbel.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlhYnJia2lyenNvbHdudWtuYmVsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ3OTU4MDIsImV4cCI6MjEwMDM3MTgwMn0.ojjiiwwAwb3eITwThJPXGgOk_XynghQUNZ_snDDe6iQ';
+const SUPABASE_FOTO_BUCKET = 'dienst-fotos';
+
+const sb = (() => {
+  const lib = (typeof supabase !== 'undefined') ? supabase : null;
+  const create = lib?.createClient || lib?.default?.createClient;
+  return create ? create(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+})();
+
+let currentDienstUuid = null;
+let currentShortId = null;
+let currentFotoPath = null;
 
 const VL_LABELS = {
   vlv: 'Vrijburg laat voorgaan',
@@ -1111,7 +1135,13 @@ function onFotoUpload(event) {
       fotoDataUrl = canvas.toDataURL('image/jpeg', 0.85);
       updateFotoPreview();
       scheduleDraftSave();
-      setStatus('✓ Foto toegevoegd', 'ok');
+      const credit = document.getElementById('foto_credit').value.trim();
+      if (!credit) {
+        setStatus('Foto toegevoegd — vul ook de foto credit / bron in (rechten verplicht)', 'err');
+        document.getElementById('foto_credit').focus();
+      } else {
+        setStatus('✓ Foto toegevoegd', 'ok');
+      }
     };
     img.src = e.target.result;
   };
@@ -1193,6 +1223,203 @@ function decodeShareState(encoded, legacy) {
 const SHARE_LINK_LABEL = 'Open Liturgie Generator';
 const TINYURL_API = 'https://tinyurl.com/api-create.php';
 
+// ============================================================
+// SUPABASE: OPSLAAN / LADEN VIA short_id
+// ============================================================
+function updateCloudHint() {
+  const el = document.getElementById('cloud-id-hint');
+  if (!el) return;
+  if (currentShortId) {
+    el.style.display = '';
+    el.textContent = `☁ id=${currentShortId}`;
+  } else {
+    el.style.display = 'none';
+    el.textContent = '';
+  }
+  const nb = document.getElementById('link-nieuwsbrief');
+  if (nb) {
+    nb.href = currentShortId
+      ? `nieuwsbrief.html?id=${encodeURIComponent(currentShortId)}`
+      : 'nieuwsbrief.html';
+  }
+}
+
+function getCloudPayload() {
+  const state = getFormState();
+  delete state.foto_data; // foto apart in Storage
+  return state;
+}
+
+function getCloudShareUrl(rol) {
+  const url = new URL(location.href.split('?')[0]);
+  url.searchParams.set('id', currentShortId);
+  if (rol) url.searchParams.set('rol', rol);
+  return url.toString();
+}
+
+function setCurrentDienst(row) {
+  currentDienstUuid = row.id;
+  currentShortId = row.short_id;
+  currentFotoPath = row.foto_path || null;
+  updateCloudHint();
+  try {
+    history.replaceState(null, '', getCloudShareUrl(
+      new URLSearchParams(location.search).get('rol') || undefined
+    ));
+  } catch (_) { /* ignore */ }
+}
+
+function clearCloudBinding({ updateUrl = false } = {}) {
+  currentDienstUuid = null;
+  currentShortId = null;
+  currentFotoPath = null;
+  updateCloudHint();
+  if (updateUrl) {
+    try {
+      history.replaceState(null, '', location.href.split('?')[0]);
+    } catch (_) { /* ignore */ }
+  }
+}
+
+async function dataUrlToBlob(dataUrl) {
+  const res = await fetch(dataUrl);
+  return res.blob();
+}
+
+async function uploadFotoToStorage(shortId) {
+  if (!sb || !fotoDataUrl) return currentFotoPath || null;
+  const blob = await dataUrlToBlob(fotoDataUrl);
+  const ext = blob.type === 'image/png' ? 'png' : (blob.type === 'image/webp' ? 'webp' : 'jpg');
+  const path = `${shortId}/hoofdfoto.${ext}`;
+  const { error } = await sb.storage
+    .from(SUPABASE_FOTO_BUCKET)
+    .upload(path, blob, { upsert: true, contentType: blob.type || 'image/jpeg' });
+  if (error) throw new Error('Foto uploaden mislukt: ' + error.message);
+  currentFotoPath = path;
+  return path;
+}
+
+async function loadFotoFromStorage(path) {
+  if (!sb || !path) return '';
+  const { data } = sb.storage.from(SUPABASE_FOTO_BUCKET).getPublicUrl(path);
+  const publicUrl = data?.publicUrl;
+  if (!publicUrl) return '';
+  try {
+    const res = await fetch(publicUrl + (publicUrl.includes('?') ? '&' : '?') + 't=' + Date.now());
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const blob = await res.blob();
+    return await new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  } catch (e) {
+    console.warn('Foto laden mislukt:', e);
+    return '';
+  }
+}
+
+async function saveDienstToCloud({ status } = {}) {
+  if (!sb) throw new Error('Supabase niet geladen');
+
+  const payload = getCloudPayload();
+  const datum = payload.datum || null;
+  const thema = (payload.thema || '').trim() || null;
+  const fotoCredit = (payload.foto_credit || '').trim() || null;
+
+  // Eerst short_id bepalen (bestaand of tijdelijk nieuw via insert)
+  let row;
+  if (currentDienstUuid) {
+    const fotoPath = await uploadFotoToStorage(currentShortId);
+    const update = {
+      datum,
+      thema,
+      data: payload,
+      foto_path: fotoPath,
+      foto_credit: fotoCredit,
+    };
+    if (status) update.status = status;
+    const { data, error } = await sb
+      .from('diensten')
+      .update(update)
+      .eq('id', currentDienstUuid)
+      .select('id, short_id, foto_path')
+      .single();
+    if (error) throw error;
+    row = data;
+  } else {
+    const insert = {
+      datum,
+      thema,
+      data: payload,
+      foto_credit: fotoCredit,
+      status: status || 'concept',
+    };
+    const { data, error } = await sb
+      .from('diensten')
+      .insert(insert)
+      .select('id, short_id, foto_path')
+      .single();
+    if (error) throw error;
+    row = data;
+    setCurrentDienst(row);
+    // Foto uploaden nadat short_id bekend is
+    if (fotoDataUrl) {
+      const fotoPath = await uploadFotoToStorage(row.short_id);
+      const { data: updated, error: upErr } = await sb
+        .from('diensten')
+        .update({ foto_path: fotoPath })
+        .eq('id', row.id)
+        .select('id, short_id, foto_path')
+        .single();
+      if (upErr) throw upErr;
+      row = updated;
+    }
+  }
+
+  setCurrentDienst(row);
+  saveDraft();
+  return row;
+}
+
+async function loadDienstFromCloud(shortId) {
+  if (!sb) throw new Error('Supabase niet geladen');
+  const { data, error } = await sb
+    .from('diensten')
+    .select('id, short_id, datum, thema, status, data, foto_path, foto_credit')
+    .eq('short_id', shortId)
+    .maybeSingle();
+  if (error) throw error;
+  if (!data) throw new Error('Dienst niet gevonden: ' + shortId);
+
+  setCurrentDienst(data);
+  const state = { ...(data.data || {}) };
+  if (data.datum) state.datum = data.datum;
+  if (data.thema != null && state.thema == null) state.thema = data.thema;
+  if (data.foto_credit != null) state.foto_credit = data.foto_credit;
+
+  if (data.foto_path) {
+    state.foto_data = await loadFotoFromStorage(data.foto_path);
+  }
+
+  applyFormState(state);
+  const rolParam = new URLSearchParams(location.search).get('rol');
+  if (rolParam && ROL_CONFIG[rolParam]) setRol(rolParam);
+  return data;
+}
+
+async function saveDienstManual() {
+  setStatus('Opslaan in cloud…', '');
+  try {
+    const row = await saveDienstToCloud();
+    setStatus('✓ Opgeslagen (id=' + row.short_id + ')', 'ok');
+  } catch (err) {
+    console.error(err);
+    setStatus('Opslaan mislukt: ' + (err.message || err), 'err');
+  }
+}
+
 async function shortenShareUrl(longUrl) {
   const cacheKey = 'vrijburg-short-' + longUrl.length + longUrl.slice(-48);
   try {
@@ -1214,9 +1441,19 @@ async function shortenShareUrl(longUrl) {
 }
 
 async function prepareShareLink(rol) {
+  // Voorkeur: korte cloud-link (?id=...)
+  if (sb) {
+    try {
+      await saveDienstToCloud();
+      const url = getCloudShareUrl(rol);
+      return { long: url, short: url, cloud: true };
+    } catch (e) {
+      console.warn('Cloud-opslag mislukt, fallback naar URL-state:', e);
+    }
+  }
   const long = getShareUrl(rol);
   const short = await shortenShareUrl(long);
-  return { long, short };
+  return { long, short, cloud: false };
 }
 
 function mailLinkBlock(shortUrl) {
@@ -1260,28 +1497,45 @@ function terugNaarBureau() {
   const overdenking = document.getElementById('overdenking_email').value.trim();
   const fotoBestand = getFotoFilename();
   const heeftFoto = !!fotoDataUrl;
+  const fotoCredit = document.getElementById('foto_credit').value.trim();
 
-  if (heeftFoto) downloadFoto(true);
-  setStatus('Link verkorten…', '');
+  if (heeftFoto && !fotoCredit) {
+    setStatus('Vul de foto credit / bron in — rechten voor liturgie, socials en website zijn verplicht', 'err');
+    document.getElementById('foto_credit').focus();
+    return;
+  }
 
-  prepareShareLink().then(async ({ short }) => {
+  setStatus('Opslaan & link maken…', '');
+
+  prepareShareLink().then(async ({ short, cloud }) => {
     await copyShareLinkRich(short);
     let body =
       `Beste,\n\n` +
       `Hierbij mijn ingevulde onderdeel voor de liturgie op ${datumTekst} (${rolLabel}).\n\n` +
       mailLinkBlock(short);
 
-    if (heeftFoto) {
+    if (heeftFoto && cloud && currentFotoPath) {
+      body +=
+        `\nDe foto is meegeslagen in de cloud-opslag bij deze link` +
+        (fotoCredit ? ` (credit: ${fotoCredit})` : '') +
+        `.\n` +
+        `Vrijburg mag deze foto gebruiken voor liturgie, socials (FB/Insta) en eventueel de website.\n` +
+        `Het bureau kan de foto ook in het Word-document (.docx) zien.\n`;
+    } else if (heeftFoto) {
+      downloadFoto(true);
       body +=
         `\n` +
         `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
         `⚠ BIJLAGE NODIG: FOTO\n` +
         `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n` +
-        `Ik heb een foto geüpload. Die zit niet in de link.\n\n` +
+        `Ik heb een foto geüpload` +
+        (fotoCredit ? ` (credit: ${fotoCredit})` : '') +
+        `. Die zit niet in de link.\n` +
+        `Vrijburg mag deze foto gebruiken voor liturgie, socials (FB/Insta) en eventueel de website.\n\n` +
         `Stappen:\n` +
         `1. Het bestand "${fotoBestand}" is zojuist naar uw Downloads-map gedownload.\n` +
         `2. Voeg dit bestand toe als bijlage aan deze e-mail (paperclip in uw mailprogramma).\n` +
-        `3. Het bureau kan de foto op vrijburg.nl plaatsen.\n\n` +
+        `3. Het bureau kan de foto voor socials/website gebruiken.\n\n` +
         `De foto staat ook in het Word-document (.docx) als het bureau dat downloadt.\n`;
     }
 
@@ -1297,9 +1551,9 @@ function terugNaarBureau() {
       body,
     });
 
-    const msg = heeftFoto
-      ? '✓ Korte link in mail + klembord — voeg foto als bijlage toe'
-      : '✓ Korte link in mail en op klembord';
+    const msg = cloud
+      ? (heeftFoto ? '✓ Cloud-link in mail + klembord (foto meegeslagen)' : '✓ Cloud-link in mail en op klembord')
+      : (heeftFoto ? '✓ Link in mail + klembord — voeg foto als bijlage toe' : '✓ Link in mail en op klembord');
     setStatus(msg, 'ok');
   }).catch(err => {
     console.error(err);
@@ -1378,19 +1632,34 @@ function copyMailchimpCards() {
   }).catch(() => prompt('Kopieer deze Mailchimp cards:', text));
 }
 
+function openNieuwsbriefPage() {
+  const url = currentShortId
+    ? `nieuwsbrief.html?id=${encodeURIComponent(currentShortId)}`
+    : 'nieuwsbrief.html';
+  if (!currentShortId) {
+    setStatus('Tip: sla eerst op (☁ Opslaan) voor een gedeelde id', '');
+  }
+  window.open(url, '_blank');
+}
+
 function addOrde(type, content = '') {
-  const id = Date.now() + Math.random();
+  const id = `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
   ordeItems.push({ id, type, content });
   renderOrde();
 }
 
+function findOrdeIndex(id) {
+  return ordeItems.findIndex(i => i && String(i.id) === String(id));
+}
+
 function removeOrde(id) {
-  ordeItems = ordeItems.filter(i => i.id !== id);
+  ordeItems = ordeItems.filter(i => i && String(i.id) !== String(id));
   renderOrde();
 }
 
 function moveOrde(id, dir) {
-  const idx = ordeItems.findIndex(i => i.id === id);
+  const idx = findOrdeIndex(id);
+  if (idx < 0) return;
   if (dir === -1 && idx === 0) return;
   if (dir === 1 && idx === ordeItems.length - 1) return;
   const other = idx + dir;
@@ -1400,6 +1669,10 @@ function moveOrde(id, dir) {
 
 function renderOrde() {
   const list = document.getElementById('orde-list');
+  // Verwijder eventuele corrupte null-gaten (oude bug bij omhoog/omlaag)
+  if (ordeItems.some(i => !i || !i.type)) {
+    ordeItems = ordeItems.filter(i => i && i.type);
+  }
   list.innerHTML = '';
   ordeItems.forEach((item, idx) => {
     const labels = { lied: 'Lied', lezing: 'Lezing', inleiding: 'Inleiding', muziek: 'Muziek', overig: 'Overig' };
@@ -1412,41 +1685,43 @@ function renderOrde() {
     };
     const div = document.createElement('div');
     div.className = 'orde-item';
+    const safeId = String(item.id).replace(/\\/g, '\\\\').replace(/'/g, "\\'");
     const fetchBtn = item.type === 'lezing'
-      ? `<button class="btn-fetch" onclick="fetchBibleText('${item.id}')" title="Haal bijbeltekst op via BijbelAPI">Tekst ophalen</button>`
+      ? `<button class="btn-fetch" onclick="fetchBibleText('${safeId}')" title="Haal bijbeltekst op via BijbelAPI">Tekst ophalen</button>`
       : item.type === 'lied'
-      ? `<button class="btn-fetch" onclick="openLiedboekOnline('${item.id}')" title="Open Liedboek Online (inlog vereist)">Liedboek Online</button>`
+      ? `<button class="btn-fetch" onclick="openLiedboekOnline('${safeId}')" title="Open Liedboek Online (inlog vereist)">Liedboek Online</button>`
       : '';
     div.innerHTML = `
-      <select onchange="updateOrdeType('${item.id}', this.value)">
+      <select onchange="updateOrdeType('${safeId}', this.value)">
         ${['lied','lezing','inleiding','muziek','overig'].map(t =>
           `<option value="${t}"${t===item.type?' selected':''}>${labels[t]}</option>`
         ).join('')}
       </select>
       <div style="display:flex;flex-direction:column;gap:6px">
         <textarea placeholder="${placeholders[item.type]||''}"
-                  onchange="updateOrdeContent('${item.id}', this.value)"
-                  oninput="updateOrdeContent('${item.id}', this.value)">${item.content}</textarea>
+                  onchange="updateOrdeContent('${safeId}', this.value)"
+                  oninput="updateOrdeContent('${safeId}', this.value)"></textarea>
         ${fetchBtn}
       </div>
       <div style="display:flex;flex-direction:column;gap:4px">
-        <button class="btn-icon" onclick="moveOrde('${item.id}',-1)" title="Omhoog">↑</button>
-        <button class="btn-icon" onclick="moveOrde('${item.id}',1)" title="Omlaag">↓</button>
+        <button class="btn-icon" onclick="moveOrde('${safeId}',-1)" title="Omhoog">↑</button>
+        <button class="btn-icon" onclick="moveOrde('${safeId}',1)" title="Omlaag">↓</button>
       </div>
-      <button class="btn-icon del" onclick="removeOrde('${item.id}')" title="Verwijder">✕</button>
+      <button class="btn-icon del" onclick="removeOrde('${safeId}')" title="Verwijder">✕</button>
     `;
+    div.querySelector('textarea').value = item.content || '';
     list.appendChild(div);
   });
   scheduleDraftSave();
 }
 
 function updateOrdeType(id, type) {
-  const item = ordeItems.find(i => i.id == id);
+  const item = ordeItems[findOrdeIndex(id)];
   if (item) { item.type = type; renderOrde(); }
 }
 
 function updateOrdeContent(id, content) {
-  const item = ordeItems.find(i => i.id == id);
+  const item = ordeItems[findOrdeIndex(id)];
   if (item) item.content = content;
   scheduleDraftSave();
 }
@@ -1462,7 +1737,7 @@ function parseLiedNummer(text) {
 }
 
 function openLiedboekOnline(id) {
-  const item = ordeItems.find(i => i.id == id);
+  const item = ordeItems[findOrdeIndex(id)];
   if (!item) return;
   const nr = parseLiedNummer(item.content);
   if (!nr) {
@@ -1534,15 +1809,45 @@ async function fetchBibleText(id) {
 // ============================================================
 // AGENDA IMPORT
 // ============================================================
+async function fetchVrijburgEvenementen() {
+  // orderby=date is de WordPress-publicatiedatum, níet acf.start.
+  // Daarom: nieuwste posts eerst (desc). Met order=asc kreeg je alleen oude
+  // evenementen uit 2013–2014 en vielen alle toekomstige activiteiten weg.
+  const collected = [];
+  const maxPages = 3;
+  for (let page = 1; page <= maxPages; page++) {
+    const res = await fetch(
+      `${VRIJBURG_EVENTS_API}?per_page=100&page=${page}&orderby=date&order=desc`
+    );
+    if (!res.ok) throw new Error('API niet bereikbaar (' + res.status + ')');
+    const batch = await res.json();
+    if (!Array.isArray(batch) || !batch.length) break;
+    collected.push(...batch);
+
+    const totalPages = parseInt(res.headers.get('X-WP-TotalPages') || '1', 10);
+    const now = new Date();
+    now.setHours(0, 0, 0, 0);
+    const hasFuture = batch.some(ev => {
+      const startStr = ev.acf?.start;
+      if (!startStr) return false;
+      const start = new Date(startStr.replace(' ', 'T'));
+      return !Number.isNaN(start.getTime()) && start >= now;
+    });
+    // Volgende pagina's zijn ouder gepubliceerd; stop als deze pagina
+    // geen toekomstige startdata meer heeft (na de eerste pagina).
+    if (page > 1 && !hasFuture) break;
+    if (page >= totalPages) break;
+  }
+  return collected;
+}
+
 async function importAgenda() {
   const btn = document.getElementById('btn-import-agenda');
   btn.disabled = true;
   btn.textContent = 'Bezig met importeren…';
 
   try {
-    const res = await fetch(`${VRIJBURG_EVENTS_API}?per_page=100&orderby=date&order=asc`);
-    if (!res.ok) throw new Error('API niet bereikbaar');
-    const events = await res.json();
+    const events = await fetchVrijburgEvenementen();
 
     const now = new Date();
     now.setHours(0, 0, 0, 0);
@@ -1557,10 +1862,16 @@ async function importAgenda() {
       const startStr = ev.acf?.start;
       if (!startStr) return;
       const start = new Date(startStr.replace(' ', 'T'));
-      if (start < now) return;
+      if (Number.isNaN(start.getTime()) || start < now) return;
 
-      const title = ev.title.rendered.replace(/<[^>]+>/g, '').replace(/&#8217;/g, "'").replace(/&#8216;/g, "'");
-      const loc = ev.acf.locatie ? ` – ${ev.acf.locatie}` : '';
+      const title = (ev.title?.rendered || '')
+        .replace(/<[^>]+>/g, '')
+        .replace(/&#8217;/g, "'")
+        .replace(/&#8216;/g, "'")
+        .replace(/&#8220;/g, '"')
+        .replace(/&#8221;/g, '"')
+        .replace(/&amp;/g, '&');
+      const loc = ev.acf?.locatie ? ` – ${ev.acf.locatie}` : '';
       const line = formatAgendaRegel(start) + ' – ' + title + loc;
 
       if (start <= inTwoWeeks) kort.push({ start, line });
@@ -1570,11 +1881,16 @@ async function importAgenda() {
     kort.sort((a, b) => a.start - b.start);
     ver.sort((a, b) => a.start - b.start);
 
-    if (kort.length) document.getElementById('agenda_kort').value = kort.map(e => e.line).join('\n');
-    if (ver.length) document.getElementById('agenda_ver').value = ver.map(e => e.line).join('\n');
+    document.getElementById('agenda_kort').value = kort.map(e => e.line).join('\n');
+    document.getElementById('agenda_ver').value = ver.map(e => e.line).join('\n');
 
     scheduleDraftSave();
-    setStatus(`✓ ${kort.length + ver.length} activiteiten geïmporteerd`, 'ok');
+    const total = kort.length + ver.length;
+    if (total) {
+      setStatus(`✓ ${total} activiteiten geïmporteerd (${kort.length} komende 2 weken, ${ver.length} daarna)`, 'ok');
+    } else {
+      setStatus('Geen aankomende activiteiten gevonden in de komende 6 weken', 'err');
+    }
   } catch (err) {
     setStatus('Agenda importeren mislukt: ' + err.message, 'err');
   } finally {
@@ -1678,14 +1994,17 @@ function applyFormState(state) {
   if (state.bijzonderheden && !state.vlv && !state.vlh && !state.vlz) {
     migrateLegacyBijzonderheden(state.bijzonderheden);
   }
-  if (state.orde?.length) {
-    ordeItems = state.orde;
+  if (Array.isArray(state.orde)) {
+    ordeItems = state.orde
+      .filter(i => i && i.type)
+      .map(i => ({ ...i, id: i.id != null ? String(i.id) : `${Date.now()}-${Math.random().toString(36).slice(2, 9)}` }));
     renderOrde();
   }
   if (state.rol) setRol(state.rol);
   else applyRolUI();
-  if (state.datum) onDatumChange();
-  else if (state.c2_type) onC2TypeChange();
+  // Geen onDatumChange() hier: dat overschrijft opgeslagen namen met planning.
+  // Datum-keuze door de gebruiker triggert onDatumChange via het input-veld.
+  if (!state.datum && state.c2_type) onC2TypeChange();
 }
 
 function getShareUrl(rol) {
@@ -1717,11 +2036,33 @@ function loadFromUrl() {
   }
 }
 
+async function loadFromUrlOrCloud() {
+  const params = new URLSearchParams(location.search);
+  const id = params.get('id');
+  if (id) {
+    try {
+      setStatus('Dienst laden…', '');
+      await loadDienstFromCloud(id);
+      setStatus('✓ Dienst geladen (id=' + id + ')', 'ok');
+      return true;
+    } catch (e) {
+      console.warn('Cloud laden mislukt:', e);
+      setStatus('Kon dienst niet laden: ' + (e.message || e), 'err');
+      return false;
+    }
+  }
+  return loadFromUrl();
+}
+
 async function copyShareLink() {
-  setStatus('Link verkorten…', '');
-  const { short } = await prepareShareLink();
+  setStatus('Opslaan & link maken…', '');
+  const { short, cloud } = await prepareShareLink();
   const mode = await copyShareLinkRich(short);
-  setStatus(mode === 'rich' ? '✓ Korte link gekopieerd' : '✓ Link gekopieerd', 'ok');
+  if (cloud) {
+    setStatus(mode === 'rich' ? '✓ Cloud-link gekopieerd' : '✓ Cloud-link gekopieerd', 'ok');
+  } else {
+    setStatus(mode === 'rich' ? '✓ Korte link gekopieerd' : '✓ Link gekopieerd', 'ok');
+  }
 }
 
 async function emailRol(rol) {
@@ -1732,8 +2073,8 @@ async function emailRol(rol) {
     voorganger: 'thema, foto, nieuwsbrief, overdenking, orde van dienst (liederen en lezingen) en lichtlied/slotlied',
     organist: 'orgelspel en muziek in de dienst',
   };
-  setStatus('Link verkorten…', '');
-  const { short } = await prepareShareLink(rol);
+  setStatus('Opslaan & link maken…', '');
+  const { short, cloud } = await prepareShareLink(rol);
   await copyShareLinkRich(short);
   const body =
     `Beste ${namen[rol]},\n\n` +
@@ -1747,20 +2088,23 @@ async function emailRol(rol) {
     subject: `Liturgie Vrijburg – ${datumTekst} (${namen[rol]})`,
     body,
   });
-  setStatus('✓ Korte link in mail en op klembord', 'ok');
+  setStatus(cloud ? '✓ Cloud-link in mail en op klembord' : '✓ Korte link in mail en op klembord', 'ok');
 }
 
 // ============================================================
 // CONCEPT OPSLAAN (localStorage)
 // ============================================================
 let draftTimer = null;
+let suppressDraftSave = false;
 
 function scheduleDraftSave() {
+  if (suppressDraftSave) return;
   clearTimeout(draftTimer);
   draftTimer = setTimeout(saveDraft, 500);
 }
 
 function saveDraft() {
+  if (suppressDraftSave) return;
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(getFormState()));
   } catch (e) { /* quota exceeded */ }
@@ -1774,9 +2118,77 @@ function loadDraft() {
   return null;
 }
 
+function emptyFormState() {
+  return {
+    rol: 'medewerker',
+    datum: '',
+    aanvangstijd: '',
+    bijzondere_dienst: '',
+    cantorij: false,
+    kinderkerk: '',
+    vlv: '',
+    vlh: '',
+    vlz: '',
+    avondmaal: '',
+    bijzonderheden: '',
+    voorganger: '',
+    organist: '',
+    lector: '',
+    thema: '',
+    intro: '',
+    nieuwsbrief: '',
+    overdenking_email: '',
+    foto_credit: '',
+    foto_data: '',
+    orgelspel_opening: '',
+    lichtlied: '',
+    slotlied: '',
+    orgelspel_slot: '',
+    bloemen: '',
+    c1_thema: '',
+    c1_naam: '',
+    c1_tekst: '',
+    c1_rekening: '',
+    c2_type: 'diaconie',
+    c2_tekst: '',
+    c2_rekening: '',
+    agenda_kort: '',
+    agenda_ver: '',
+    orde: [
+      { id: 'seed-1', type: 'lied', content: '' },
+      { id: 'seed-2', type: 'lezing', content: '' },
+      { id: 'seed-3', type: 'lied', content: '' },
+    ],
+  };
+}
+
+function resetFormToEmpty() {
+  suppressDraftSave = true;
+  try {
+    applyFormState(emptyFormState());
+    onC2TypeChange();
+    const planningNotice = document.getElementById('planning-notice');
+    if (planningNotice) planningNotice.style.display = 'none';
+    const collecteNotice = document.getElementById('collecte-notice');
+    if (collecteNotice) collecteNotice.style.display = 'none';
+    document.getElementById('foto_file').value = '';
+  } finally {
+    suppressDraftSave = false;
+  }
+}
+
 function clearDraft() {
-  localStorage.removeItem(STORAGE_KEY);
-  setStatus('Concept gewist', 'ok');
+  clearTimeout(draftTimer);
+  suppressDraftSave = true;
+  try {
+    localStorage.removeItem(STORAGE_KEY);
+    try { sessionStorage.removeItem(SESSION_ACTIVE_KEY); } catch (_) {}
+    clearCloudBinding({ updateUrl: true });
+    resetFormToEmpty();
+  } finally {
+    suppressDraftSave = false;
+  }
+  setStatus('Concept gewist — formulier is leeg', 'ok');
 }
 
 function setupAutoSave() {
@@ -1869,10 +2281,22 @@ function formatDatum(val) {
 // ============================================================
 const DOCX_ASSETS = {
   logo: 'assets/logo-vrijburg-xl.png',
+  logoVlv: 'assets/logo-vlv.png',
+  logoVlh: 'assets/logo-vlh.png',
+  logoVlz: 'assets/logo-vlz.png',
   qr1: 'assets/collecte1.png',
   qrDiaconie: 'assets/collecte_diaconie.png',
   qrGemeente: 'assets/collecte_gemeente.png',
 };
+
+/** Logo rechtsboven: speciale dienst vervangt Vrijburg-logo. */
+function resolveCoverLogo(vlv, vlh, vlz) {
+  if (vlv) return { path: DOCX_ASSETS.logoVlv, title: VL_LABELS.vlv, maxWidth: 150, kind: 'vl', key: 'vlv' };
+  if (vlh) return { path: DOCX_ASSETS.logoVlh, title: VL_LABELS.vlh, maxWidth: 150, kind: 'vl', key: 'vlh' };
+  if (vlz) return { path: DOCX_ASSETS.logoVlz, title: VL_LABELS.vlz, maxWidth: 150, kind: 'vl', key: 'vlz' };
+  // ~50% van de eerdere 160px
+  return { path: DOCX_ASSETS.logo, title: 'Vrijburg logo', maxWidth: 80, kind: 'vrijburg', key: null };
+}
 
 function dataUrlToBytes(dataUrl) {
   const binary = atob(dataUrl.split(',')[1]);
@@ -1902,7 +2326,49 @@ async function preparePngImage(src, maxWidthPx) {
   return { bytes: dataUrlToBytes(canvas.toDataURL('image/png')), width, height };
 }
 
-function buildFotoParagraph(dataUrl, { floating = true } = {}) {
+async function buildCornerLogoParagraph(logo) {
+  const {
+    Paragraph, ImageRun,
+    TextWrappingType, TextWrappingSide,
+    HorizontalPositionRelativeFrom, HorizontalPositionAlign,
+    VerticalPositionRelativeFrom, VerticalPositionAlign,
+  } = docx;
+  try {
+    const { bytes, width, height } = await preparePngImage(logo.path, logo.maxWidth);
+    return new Paragraph({
+      children: [
+        new ImageRun({
+          data: bytes,
+          transformation: { width, height },
+          type: 'png',
+          altText: { title: logo.title, description: logo.title, name: 'cover-logo' },
+          floating: {
+            horizontalPosition: {
+              relative: HorizontalPositionRelativeFrom.MARGIN,
+              align: HorizontalPositionAlign.RIGHT,
+            },
+            verticalPosition: {
+              relative: VerticalPositionRelativeFrom.MARGIN,
+              align: VerticalPositionAlign.TOP,
+            },
+            wrap: {
+              type: TextWrappingType.SQUARE,
+              side: TextWrappingSide.LEFT,
+            },
+            allowOverlap: false,
+            margins: { top: 0, bottom: 60000, left: 100000, right: 0 },
+          },
+        }),
+      ],
+      spacing: { before: 0, after: 0, line: 240, lineRule: 'auto' },
+    });
+  } catch (e) {
+    console.warn('Cover-logo niet geladen:', e);
+    return null;
+  }
+}
+
+function buildFotoParagraph(dataUrl, { floating = false } = {}) {
   const {
     Paragraph, ImageRun, AlignmentType,
     TextWrappingType, TextWrappingSide,
@@ -1914,7 +2380,8 @@ function buildFotoParagraph(dataUrl, { floating = true } = {}) {
     img.onload = () => {
       try {
         const bytes = dataUrlToBytes(dataUrl);
-        const maxW = floating ? 240 : 180;
+        // Iets kleiner zodat pagina 1 (t/m opname-tekst) blijft passen
+        const maxW = floating ? 220 : 240;
         const scale = img.width > maxW ? maxW / img.width : 1;
         const width = Math.round(img.width * scale);
         const height = Math.round(img.height * scale);
@@ -1946,7 +2413,7 @@ function buildFotoParagraph(dataUrl, { floating = true } = {}) {
         resolve(new Paragraph({
           children: [new ImageRun(imageOpts)],
           alignment: AlignmentType.CENTER,
-          spacing: { before: 0, after: 0, line: 240, lineRule: 'auto' },
+          spacing: { before: 60, after: 60, line: 240, lineRule: 'auto' },
         }));
       } catch (e) {
         console.warn('Foto kon niet in document:', e);
@@ -1973,7 +2440,7 @@ async function generateDocxAsync() {
   const {
     Document, Paragraph, TextRun, AlignmentType, convertInchesToTwip,
     ExternalHyperlink, ImageRun, Table, TableRow, TableCell,
-    WidthType, BorderStyle,
+    WidthType, BorderStyle, PageBreak,
   } = docx;
 
   const font = 'Calibri';
@@ -1981,7 +2448,7 @@ async function generateDocxAsync() {
   const szTitle = 48;  // 24pt — diensttitel
   const szSub = 40;    // 20pt — thema / intro
   const szSmall = 24;  // 12pt — fotocredit, voetnoten
-  const spacingTight = { before: 0, after: 0, line: 240, lineRule: 'auto' };
+  const spacingTight = { before: 0, after: 60, line: 276, lineRule: 'auto' };
   const noBorder = { style: BorderStyle.NONE, size: 0, color: 'FFFFFF' };
   const noBorders = { top: noBorder, bottom: noBorder, left: noBorder, right: noBorder };
 
@@ -2079,10 +2546,19 @@ async function generateDocxAsync() {
     });
   }
 
-  function empty() { return p(''); }
+  function empty() {
+    return new Paragraph({
+      children: [textRun('')],
+      spacing: { before: 0, after: 0, line: 276, lineRule: 'auto' },
+    });
+  }
+
+  function pageBreak() {
+    return new Paragraph({ children: [new PageBreak()] });
+  }
 
   function sectie(text) {
-    return p(text, { bold: true });
+    return p(text, { bold: true, before: 200, after: 80 });
   }
 
   function multiline(text, opts = {}) {
@@ -2125,7 +2601,7 @@ async function generateDocxAsync() {
 
   function renderOrdeItems() {
     const paragraphs = [];
-    ordeItems.forEach(item => {
+    ordeItems.forEach((item, index) => {
       const rawLines = item.content.split('\n');
       const lines = [];
       rawLines.forEach(line => {
@@ -2133,9 +2609,11 @@ async function generateDocxAsync() {
           if (part.trim()) lines.push(part.trim());
         });
       });
+      if (!lines.length && item.type !== 'inleiding' && item.type !== 'muziek') return;
+      if (index > 0 || paragraphs.length) paragraphs.push(empty());
       if (item.type === 'lied') {
         if (lines.length > 0) {
-          paragraphs.push(p(lines[0], { bold: true }));
+          paragraphs.push(p(lines[0], { bold: true, before: 60 }));
           lines.slice(1).forEach(l => {
             const para = formatLiedLyricLine(l);
             if (para) paragraphs.push(para);
@@ -2143,21 +2621,21 @@ async function generateDocxAsync() {
         }
       } else if (item.type === 'lezing') {
         if (lines.length > 0) {
-          paragraphs.push(p('Lezing: ' + lines[0], { bold: true }));
+          paragraphs.push(p('Lezing: ' + lines[0], { bold: true, before: 60 }));
           lines.slice(1).forEach(l => paragraphs.push(p(l, { italic: true })));
         }
       } else if (item.type === 'inleiding') {
         if (lines.length > 0) {
-          paragraphs.push(p(lines[0], { bold: true }));
+          paragraphs.push(p(lines[0], { bold: true, before: 60 }));
           lines.slice(1).forEach(l => paragraphs.push(p(l)));
         } else {
-          paragraphs.push(p('Inleiding', { bold: true }));
+          paragraphs.push(p('Inleiding', { bold: true, before: 60 }));
         }
       } else if (item.type === 'muziek') {
         const tekst = lines[0] ? 'Muziek: ' + lines[0] : 'Muziek';
-        paragraphs.push(p(tekst, { bold: true }));
+        paragraphs.push(p(tekst, { bold: true, before: 60 }));
       } else {
-        lines.forEach(l => paragraphs.push(p(l, { bold: true })));
+        lines.forEach((l, i) => paragraphs.push(p(l, { bold: true, before: i === 0 ? 60 : 0 })));
       }
     });
     return paragraphs;
@@ -2241,39 +2719,35 @@ async function generateDocxAsync() {
 
   // ---- Assets vooraf laden ----
   setStatus('Document samenstellen…', '');
-  const logoPara = await assetParagraph(DOCX_ASSETS.logo, 160, { title: 'Vrijburg logo', name: 'logo' });
-  const fotoPara = fotoDataUrl ? await buildFotoParagraph(fotoDataUrl, { floating: true }) : null;
+  const coverLogo = resolveCoverLogo(vlv, vlh, vlz);
+  const logoPara = await buildCornerLogoParagraph(coverLogo);
+  // Gecentreerde foto (geen wrap) — credit en rollen eronder
+  const fotoPara = fotoDataUrl ? await buildFotoParagraph(fotoDataUrl, { floating: false }) : null;
 
   // ---- Bouw het document ----
   const children = [];
 
-  // Logo bovenaan
-  if (logoPara) {
-    children.push(logoPara);
-    children.push(empty());
-  }
+  // Logo rechtsboven (Vrijburg, of VLV/VLH/VLZ indien aangevinkt)
+  if (logoPara) children.push(logoPara);
 
   // HEADER — pagina 1
-  children.push(p(`Dienst ${datumDisplay}`, { sz: szTitle, align: AlignmentType.CENTER }));
+  children.push(p(`Dienst ${datumDisplay}`, { sz: szTitle, align: AlignmentType.CENTER, after: 40 }));
 
   const dienstExtra = [];
   if (kinderkerk) dienstExtra.push('kinderkerk');
   if (cantorij) dienstExtra.push('Cantorij');
   if (dienstExtra.length) {
-    children.push(p('met ' + dienstExtra.join(' en '), { align: AlignmentType.CENTER }));
+    children.push(p('met ' + dienstExtra.join(' en '), { align: AlignmentType.CENTER, after: 40 }));
   } else if (bijzondereDienst) {
-    children.push(p(bijzondereDienst, { align: AlignmentType.CENTER }));
+    children.push(p(bijzondereDienst, { align: AlignmentType.CENTER, after: 40 }));
   }
 
-  if (thema) children.push(p(thema, { sz: szSub, align: AlignmentType.CENTER }));
-  if (intro) children.push(...multiline(intro, { sz: szSub, italic: true, align: AlignmentType.CENTER }));
+  if (thema) children.push(p(thema, { sz: szSub, align: AlignmentType.CENTER, after: 40 }));
+  if (intro) children.push(...multiline(intro, { sz: szSub, italic: true, align: AlignmentType.CENTER, after: 40 }));
 
-  // Foto eerst, daarna credit (conform handmatige liturgie)
-  if (fotoPara) {
-    children.push(empty());
-    children.push(fotoPara);
-  }
-  if (foto) children.push(p('         ' + foto, { sz: szSmall, italic: true }));
+  // Foto gecentreerd, daarna credit eronder
+  if (fotoPara) children.push(fotoPara);
+  if (foto) children.push(p(foto, { sz: szSmall, italic: true, align: AlignmentType.CENTER, after: 80 }));
 
   const voorgangerLabel = /\s+en\s+/i.test(voorganger) ? 'Voorgangers' : 'Voorganger';
   if (voorganger) children.push(p(`${voorgangerLabel}: ${voorganger}`));
@@ -2283,8 +2757,15 @@ async function generateDocxAsync() {
   if (kinderkerk && !dienstExtra.includes('kinderkerk')) {
     children.push(p(`Kinderkerk: ${kinderkerk}`));
   }
+  // VL-tekstregels alleen als het cover-logo níet al dat logo toont
   [['vlv', vlv], ['vlh', vlh], ['vlz', vlz]].forEach(([key, val]) => {
     if (!val) return;
+    // Als dit de actieve cover-dienst is, logo volstaat; detailtekst wél tonen indien niet alleen "ja"
+    if (coverLogo.kind === 'vl' && DOCX_ASSETS['logo' + key.charAt(0).toUpperCase() + key.slice(1)] === coverLogo.path) {
+      if (val === 'ja' || val === '?') return;
+      children.push(p(VL_LABELS[key] + ': ' + val, { italic: true }));
+      return;
+    }
     const suffix = val === 'ja' ? '' : (val === '?' ? ' (gepland)' : ': ' + val);
     children.push(p(VL_LABELS[key] + suffix, { italic: true }));
   });
@@ -2304,39 +2785,46 @@ async function generateDocxAsync() {
     { t: 'via ', italic: true },
     { t: 'www.kerkdienstgemist.nl', italic: true, hyperlink: 'https://www.kerkdienstgemist.nl' },
   ]));
-  children.push(empty());
 
-  // OPENING
+  // Pagina 1 eindigt na de opname-tekst
+  children.push(pageBreak());
+
+  // OPENING — pagina 2
   children.push(sectie('Opening van de dienst'));
   if (orgelOpen) children.push(pOrgelspel('Orgelspel: ' + orgelOpen));
   else            children.push(p('Orgelspel', { bold: true }));
   children.push(p('Luiden van de klokken, welkom en korte mededelingen', { bold: true }));
   children.push(p('Aansteken van de kaars en Stilte', { bold: true }));
+  children.push(empty());
   children.push(p('De gemeente gaat staan', { italic: true }));
   children.push(p(lichtlied || 'Lichtlied: Licht dat wil ingaan tegen donkere nachten', { bold: true }));
 
   // BEMOEDIGING
-  children.push(p('Bemoediging', { bold: true }));
+  children.push(empty());
+  children.push(p('Bemoediging', { bold: true, before: 120 }));
   children.push(...beurtzang(BEMOEDIGING_LINES));
 
   // GROET
-  children.push(p('Groet:', { bold: true }));
+  children.push(empty());
+  children.push(p('Groet:', { bold: true, before: 120 }));
   children.push(...beurtzang(GROET_LINES));
+  children.push(empty());
   children.push(p('De gemeente gaat zitten', { italic: true }));
   children.push(p('Gebed', { bold: true }));
 
   // ORDE VAN DIENST
+  children.push(empty());
   children.push(...renderOrdeItems());
 
   // OVERDENKING
   children.push(empty());
-  children.push(p('Overdenking', { bold: true }));
+  children.push(p('Overdenking', { bold: true, before: 120 }));
   children.push(p('Stilte', { bold: true }));
   children.push(p('Muziek', { bold: true }));
 
   // VOORBEDEN
   children.push(empty());
-  children.push(p('Voorbeden', { bold: true }));
+  children.push(p('Voorbeden', { bold: true, before: 120 }));
   children.push(p('Stil gebed, afgesloten met Onze Vader:'));
   ONZE_VADER.forEach(regel => children.push(p(regel, { indent: 0.5 })));
 
@@ -2344,17 +2832,20 @@ async function generateDocxAsync() {
   children.push(empty());
   children.push(sectie('Mededelingen en collecten'));
   if (bloemen) children.push(p('De bloemen in deze dienst gaan naar ' + bloemen + '.'));
+  if (bloemen) children.push(empty());
 
   if (c1Thema) children.push(p('Collectethema: ' + c1Thema, { bold: true }));
 
-  children.push(p('Eerste collecte: ' + c1Naam, { bold: true }));
+  children.push(p('Eerste collecte: ' + c1Naam, { bold: true, before: 80 }));
   if (c1Tekst) children.push(...multiline(c1Tekst));
   if (c1Rek)   children.push(p('Rekening: ' + c1Rek));
+  children.push(empty());
 
   const c2Naam = c2Type === 'diaconie' ? 'onze diaconie' : 'onze gemeente';
-  children.push(p('Tweede collecte: ' + c2Naam, { bold: true }));
+  children.push(p('Tweede collecte: ' + c2Naam, { bold: true, before: 80 }));
   if (c2Tekst) children.push(...multiline(c2Tekst));
   if (c2Rek)   children.push(p('Rekening: ' + c2Rek + '.'));
+  children.push(empty());
 
   const qrType = c2Type === 'diaconie' ? 'diaconie' : 'gemeente';
   children.push(pr([
@@ -2368,11 +2859,12 @@ async function generateDocxAsync() {
 
   // SLOT
   children.push(empty());
-  children.push(p('De gemeente gaat staan', { italic: true }));
+  children.push(p('De gemeente gaat staan', { italic: true, before: 120 }));
   children.push(p(slotlied ? 'Slotlied ' + slotlied : 'Slotlied', { bold: true }));
   children.push(p('Uitzending en zegen', { bold: true }));
   if (orgelSlot) children.push(pOrgelspel('Orgelspel: ' + orgelSlot));
   else            children.push(p('Orgelspel', { bold: true }));
+  children.push(empty());
   children.push(p('Na de dienst is er gelegenheid met elkaar koffie of thee te drinken'));
 
   // AGENDA
@@ -2386,6 +2878,7 @@ async function generateDocxAsync() {
   }
 
   // FOOTER (zonder ==== scheidingslijn)
+  children.push(empty());
   children.push(empty());
   FOOTER.split('\n').forEach(line => {
     const trimmed = line.trim();
@@ -2463,25 +2956,41 @@ Promise.all([
 function initApp() {
   setupAutoSave();
   setupSectionToggles();
+  updateCloudHint();
 
-  if (!loadFromUrl()) {
-    const draft = loadDraft();
-    if (draft) {
-      applyFormState(draft);
-      setStatus('Concept hersteld uit vorige sessie', 'ok');
-    } else {
-      setRol('medewerker');
+  loadFromUrlOrCloud().then(loaded => {
+    if (!loaded) {
+      // Kale URL zonder id: leeg formulier.
+      // Alleen na refresh in dezelfde tab een lokaal concept herstellen.
+      let restored = false;
+      try {
+        if (sessionStorage.getItem(SESSION_ACTIVE_KEY)) {
+          const draft = loadDraft();
+          if (draft) {
+            applyFormState(draft);
+            setStatus('Concept hersteld uit vorige sessie', 'ok');
+            restored = true;
+          }
+        }
+      } catch (_) { /* private mode */ }
+
+      if (!restored) {
+        setRol('medewerker');
+      }
     }
-  }
 
-  if (!ordeItems.length) {
-    addOrde('lied', '');
-    addOrde('lezing', '');
-    addOrde('lied', '');
-  }
+    try { sessionStorage.setItem(SESSION_ACTIVE_KEY, '1'); } catch (_) {}
 
-  if (document.getElementById('datum').value) onDatumChange();
-  applyRolUI();
+    if (!ordeItems.length) {
+      addOrde('lied', '');
+      addOrde('lezing', '');
+      addOrde('lied', '');
+    }
+
+    // Alleen planning auto-invullen bij leeg/nieuw formulier, niet na cloud/URL-load
+    if (!loaded && document.getElementById('datum').value) onDatumChange();
+    applyRolUI();
+  });
 }
 </script>
 
