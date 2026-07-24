@@ -2314,7 +2314,7 @@ async function preparePngImage(src, maxWidthPx) {
   return { bytes: dataUrlToBytes(canvas.toDataURL('image/png')), width, height };
 }
 
-function buildFotoParagraph(dataUrl, { floating = true } = {}) {
+function buildFotoParagraph(dataUrl, { floating = false } = {}) {
   const {
     Paragraph, ImageRun, AlignmentType,
     TextWrappingType, TextWrappingSide,
@@ -2326,7 +2326,7 @@ function buildFotoParagraph(dataUrl, { floating = true } = {}) {
     img.onload = () => {
       try {
         const bytes = dataUrlToBytes(dataUrl);
-        const maxW = floating ? 240 : 180;
+        const maxW = floating ? 240 : 320;
         const scale = img.width > maxW ? maxW / img.width : 1;
         const width = Math.round(img.width * scale);
         const height = Math.round(img.height * scale);
@@ -2358,7 +2358,7 @@ function buildFotoParagraph(dataUrl, { floating = true } = {}) {
         resolve(new Paragraph({
           children: [new ImageRun(imageOpts)],
           alignment: AlignmentType.CENTER,
-          spacing: { before: 0, after: 0, line: 240, lineRule: 'auto' },
+          spacing: { before: 120, after: 120, line: 240, lineRule: 'auto' },
         }));
       } catch (e) {
         console.warn('Foto kon niet in document:', e);
@@ -2385,7 +2385,7 @@ async function generateDocxAsync() {
   const {
     Document, Paragraph, TextRun, AlignmentType, convertInchesToTwip,
     ExternalHyperlink, ImageRun, Table, TableRow, TableCell,
-    WidthType, BorderStyle,
+    WidthType, BorderStyle, PageBreak,
   } = docx;
 
   const font = 'Calibri';
@@ -2393,7 +2393,7 @@ async function generateDocxAsync() {
   const szTitle = 48;  // 24pt — diensttitel
   const szSub = 40;    // 20pt — thema / intro
   const szSmall = 24;  // 12pt — fotocredit, voetnoten
-  const spacingTight = { before: 0, after: 0, line: 240, lineRule: 'auto' };
+  const spacingTight = { before: 0, after: 60, line: 276, lineRule: 'auto' };
   const noBorder = { style: BorderStyle.NONE, size: 0, color: 'FFFFFF' };
   const noBorders = { top: noBorder, bottom: noBorder, left: noBorder, right: noBorder };
 
@@ -2491,10 +2491,19 @@ async function generateDocxAsync() {
     });
   }
 
-  function empty() { return p(''); }
+  function empty() {
+    return new Paragraph({
+      children: [textRun('')],
+      spacing: { before: 0, after: 0, line: 276, lineRule: 'auto' },
+    });
+  }
+
+  function pageBreak() {
+    return new Paragraph({ children: [new PageBreak()] });
+  }
 
   function sectie(text) {
-    return p(text, { bold: true });
+    return p(text, { bold: true, before: 200, after: 80 });
   }
 
   function multiline(text, opts = {}) {
@@ -2537,7 +2546,7 @@ async function generateDocxAsync() {
 
   function renderOrdeItems() {
     const paragraphs = [];
-    ordeItems.forEach(item => {
+    ordeItems.forEach((item, index) => {
       const rawLines = item.content.split('\n');
       const lines = [];
       rawLines.forEach(line => {
@@ -2545,9 +2554,11 @@ async function generateDocxAsync() {
           if (part.trim()) lines.push(part.trim());
         });
       });
+      if (!lines.length && item.type !== 'inleiding' && item.type !== 'muziek') return;
+      if (index > 0 || paragraphs.length) paragraphs.push(empty());
       if (item.type === 'lied') {
         if (lines.length > 0) {
-          paragraphs.push(p(lines[0], { bold: true }));
+          paragraphs.push(p(lines[0], { bold: true, before: 60 }));
           lines.slice(1).forEach(l => {
             const para = formatLiedLyricLine(l);
             if (para) paragraphs.push(para);
@@ -2555,21 +2566,21 @@ async function generateDocxAsync() {
         }
       } else if (item.type === 'lezing') {
         if (lines.length > 0) {
-          paragraphs.push(p('Lezing: ' + lines[0], { bold: true }));
+          paragraphs.push(p('Lezing: ' + lines[0], { bold: true, before: 60 }));
           lines.slice(1).forEach(l => paragraphs.push(p(l, { italic: true })));
         }
       } else if (item.type === 'inleiding') {
         if (lines.length > 0) {
-          paragraphs.push(p(lines[0], { bold: true }));
+          paragraphs.push(p(lines[0], { bold: true, before: 60 }));
           lines.slice(1).forEach(l => paragraphs.push(p(l)));
         } else {
-          paragraphs.push(p('Inleiding', { bold: true }));
+          paragraphs.push(p('Inleiding', { bold: true, before: 60 }));
         }
       } else if (item.type === 'muziek') {
         const tekst = lines[0] ? 'Muziek: ' + lines[0] : 'Muziek';
-        paragraphs.push(p(tekst, { bold: true }));
+        paragraphs.push(p(tekst, { bold: true, before: 60 }));
       } else {
-        lines.forEach(l => paragraphs.push(p(l, { bold: true })));
+        lines.forEach((l, i) => paragraphs.push(p(l, { bold: true, before: i === 0 ? 60 : 0 })));
       }
     });
     return paragraphs;
@@ -2654,7 +2665,8 @@ async function generateDocxAsync() {
   // ---- Assets vooraf laden ----
   setStatus('Document samenstellen…', '');
   const logoPara = await assetParagraph(DOCX_ASSETS.logo, 160, { title: 'Vrijburg logo', name: 'logo' });
-  const fotoPara = fotoDataUrl ? await buildFotoParagraph(fotoDataUrl, { floating: true }) : null;
+  // Gecentreerde foto (geen wrap) — credit en rollen eronder
+  const fotoPara = fotoDataUrl ? await buildFotoParagraph(fotoDataUrl, { floating: false }) : null;
 
   // ---- Bouw het document ----
   const children = [];
@@ -2666,26 +2678,27 @@ async function generateDocxAsync() {
   }
 
   // HEADER — pagina 1
-  children.push(p(`Dienst ${datumDisplay}`, { sz: szTitle, align: AlignmentType.CENTER }));
+  children.push(p(`Dienst ${datumDisplay}`, { sz: szTitle, align: AlignmentType.CENTER, after: 80 }));
 
   const dienstExtra = [];
   if (kinderkerk) dienstExtra.push('kinderkerk');
   if (cantorij) dienstExtra.push('Cantorij');
   if (dienstExtra.length) {
-    children.push(p('met ' + dienstExtra.join(' en '), { align: AlignmentType.CENTER }));
+    children.push(p('met ' + dienstExtra.join(' en '), { align: AlignmentType.CENTER, after: 80 }));
   } else if (bijzondereDienst) {
-    children.push(p(bijzondereDienst, { align: AlignmentType.CENTER }));
+    children.push(p(bijzondereDienst, { align: AlignmentType.CENTER, after: 80 }));
   }
 
-  if (thema) children.push(p(thema, { sz: szSub, align: AlignmentType.CENTER }));
-  if (intro) children.push(...multiline(intro, { sz: szSub, italic: true, align: AlignmentType.CENTER }));
+  if (thema) children.push(p(thema, { sz: szSub, align: AlignmentType.CENTER, after: 80 }));
+  if (intro) children.push(...multiline(intro, { sz: szSub, italic: true, align: AlignmentType.CENTER, after: 80 }));
 
-  // Foto eerst, daarna credit (conform handmatige liturgie)
+  // Foto gecentreerd, daarna credit eronder
   if (fotoPara) {
     children.push(empty());
     children.push(fotoPara);
   }
-  if (foto) children.push(p('         ' + foto, { sz: szSmall, italic: true }));
+  if (foto) children.push(p(foto, { sz: szSmall, italic: true, align: AlignmentType.CENTER, after: 120 }));
+  if (fotoPara || foto) children.push(empty());
 
   const voorgangerLabel = /\s+en\s+/i.test(voorganger) ? 'Voorgangers' : 'Voorganger';
   if (voorganger) children.push(p(`${voorgangerLabel}: ${voorganger}`));
@@ -2716,39 +2729,46 @@ async function generateDocxAsync() {
     { t: 'via ', italic: true },
     { t: 'www.kerkdienstgemist.nl', italic: true, hyperlink: 'https://www.kerkdienstgemist.nl' },
   ]));
-  children.push(empty());
 
-  // OPENING
+  // Pagina 1 eindigt na de opname-tekst
+  children.push(pageBreak());
+
+  // OPENING — pagina 2
   children.push(sectie('Opening van de dienst'));
   if (orgelOpen) children.push(pOrgelspel('Orgelspel: ' + orgelOpen));
   else            children.push(p('Orgelspel', { bold: true }));
   children.push(p('Luiden van de klokken, welkom en korte mededelingen', { bold: true }));
   children.push(p('Aansteken van de kaars en Stilte', { bold: true }));
+  children.push(empty());
   children.push(p('De gemeente gaat staan', { italic: true }));
   children.push(p(lichtlied || 'Lichtlied: Licht dat wil ingaan tegen donkere nachten', { bold: true }));
 
   // BEMOEDIGING
-  children.push(p('Bemoediging', { bold: true }));
+  children.push(empty());
+  children.push(p('Bemoediging', { bold: true, before: 120 }));
   children.push(...beurtzang(BEMOEDIGING_LINES));
 
   // GROET
-  children.push(p('Groet:', { bold: true }));
+  children.push(empty());
+  children.push(p('Groet:', { bold: true, before: 120 }));
   children.push(...beurtzang(GROET_LINES));
+  children.push(empty());
   children.push(p('De gemeente gaat zitten', { italic: true }));
   children.push(p('Gebed', { bold: true }));
 
   // ORDE VAN DIENST
+  children.push(empty());
   children.push(...renderOrdeItems());
 
   // OVERDENKING
   children.push(empty());
-  children.push(p('Overdenking', { bold: true }));
+  children.push(p('Overdenking', { bold: true, before: 120 }));
   children.push(p('Stilte', { bold: true }));
   children.push(p('Muziek', { bold: true }));
 
   // VOORBEDEN
   children.push(empty());
-  children.push(p('Voorbeden', { bold: true }));
+  children.push(p('Voorbeden', { bold: true, before: 120 }));
   children.push(p('Stil gebed, afgesloten met Onze Vader:'));
   ONZE_VADER.forEach(regel => children.push(p(regel, { indent: 0.5 })));
 
@@ -2756,17 +2776,20 @@ async function generateDocxAsync() {
   children.push(empty());
   children.push(sectie('Mededelingen en collecten'));
   if (bloemen) children.push(p('De bloemen in deze dienst gaan naar ' + bloemen + '.'));
+  if (bloemen) children.push(empty());
 
   if (c1Thema) children.push(p('Collectethema: ' + c1Thema, { bold: true }));
 
-  children.push(p('Eerste collecte: ' + c1Naam, { bold: true }));
+  children.push(p('Eerste collecte: ' + c1Naam, { bold: true, before: 80 }));
   if (c1Tekst) children.push(...multiline(c1Tekst));
   if (c1Rek)   children.push(p('Rekening: ' + c1Rek));
+  children.push(empty());
 
   const c2Naam = c2Type === 'diaconie' ? 'onze diaconie' : 'onze gemeente';
-  children.push(p('Tweede collecte: ' + c2Naam, { bold: true }));
+  children.push(p('Tweede collecte: ' + c2Naam, { bold: true, before: 80 }));
   if (c2Tekst) children.push(...multiline(c2Tekst));
   if (c2Rek)   children.push(p('Rekening: ' + c2Rek + '.'));
+  children.push(empty());
 
   const qrType = c2Type === 'diaconie' ? 'diaconie' : 'gemeente';
   children.push(pr([
@@ -2780,11 +2803,12 @@ async function generateDocxAsync() {
 
   // SLOT
   children.push(empty());
-  children.push(p('De gemeente gaat staan', { italic: true }));
+  children.push(p('De gemeente gaat staan', { italic: true, before: 120 }));
   children.push(p(slotlied ? 'Slotlied ' + slotlied : 'Slotlied', { bold: true }));
   children.push(p('Uitzending en zegen', { bold: true }));
   if (orgelSlot) children.push(pOrgelspel('Orgelspel: ' + orgelSlot));
   else            children.push(p('Orgelspel', { bold: true }));
+  children.push(empty());
   children.push(p('Na de dienst is er gelegenheid met elkaar koffie of thee te drinken'));
 
   // AGENDA
@@ -2798,6 +2822,7 @@ async function generateDocxAsync() {
   }
 
   // FOOTER (zonder ==== scheidingslijn)
+  children.push(empty());
   children.push(empty());
   FOOTER.split('\n').forEach(line => {
     const trimmed = line.trim();
