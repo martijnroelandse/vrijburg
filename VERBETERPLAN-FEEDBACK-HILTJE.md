@@ -237,22 +237,21 @@ Een collecte voor "Cuba" (of een ander eenmalig doel) past dus niet: er is
 geen derde optie en geen manier om een andere QR-afbeelding/URL te koppelen.
 
 **Voorstel:** ✅ *Geïmplementeerd (lichte variant)*
-- Een derde optie **"Speciale collecte"** is toegevoegd aan het type-veld,
+- Een derde optie **"Bijzondere collecte"** is toegevoegd aan het type-veld,
   met een eigen naamveld (`c2_naam`, bijv. "Wederopbouw Cuba") in plaats
   van de vaste tekst "onze diaconie"/"onze gemeente".
 - Deze optie gebruikt een vierde, vaste QR-afbeelding
-  (`DOCX_ASSETS.qrSpeciaal` → `assets/collecte_speciaal.png`) en de link
-  `vrijburg.nl/collectespeciaal` — naar hetzelfde patroon als de bestaande
-  `collecte1`/`collectediaconie`/`collectegemeente`. Het PNG-bestand zelf
-  moet nog worden toegevoegd (zie README); zolang dat ontbreekt valt de
-  liturgie automatisch terug op platte tekstlinks in plaats van
-  QR-afbeeldingen.
+  (`DOCX_ASSETS.qrBijzonder` → `assets/collecte_bijzonder.png`) en de link
+  `vrijburg.nl/bijzonderecollecte` — de bestaande, echte pagina op
+  vrijburg.nl voor dit doel (aangeleverd door Martijn). Let op: dit volgt
+  een ander URL-patroon dan diaconie/gemeente (`bijzonderecollecte` i.p.v.
+  `collectebijzonder`), dat is expliciet in de code afgehandeld.
 - Val terug op het huidige gedrag (diaconie/gemeente + standaard-QR) als er
   niets aangepast is — geen impact op de bestaande, veelvoorkomende flow.
 - *Niet geïmplementeerd (bewust, lagere prioriteit):* een upload-mogelijkheid
   voor een eigen QR-afbeelding per dienst. Dat is alleen nodig als de
-  speciale collecte per keer een andere QR-code/URL nodig heeft in plaats
-  van één vaste "speciale collecte"-pagina op vrijburg.nl.
+  bijzondere collecte per keer een andere QR-code/URL nodig heeft in plaats
+  van één vaste "bijzondere collecte"-pagina op vrijburg.nl.
 
 **Impact/risico:** laag zoals geïmplementeerd (geen nieuwe upload/opslag-flow
 nodig, alleen een extra dropdown-optie + veld).
@@ -306,7 +305,7 @@ aanpassingen (punt 3b/4) zijn gebouwd:
 - [ ] Tekstveld "Gebed na de Groet" in sectie Opening (punt 2)
 - [x] Sectie "Voorbeden" met override voor Onze Vader + vrij tekstveld voor
       acclamaties (punt 3a/3c, lichte variant)
-- [x] Collecte: optie "Speciale collecte" met eigen naam + vierde QR-code
+- [x] Collecte: optie "Bijzondere collecte" met eigen naam + vierde QR-code
       (punt 5, lichte variant — geen per-dienst QR-upload)
 - [ ] Live-voorbeeldpaneel met de volledige liturgietekst (overkoepelend
       voorstel 1)

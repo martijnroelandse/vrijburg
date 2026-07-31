@@ -841,7 +841,7 @@
             <select id="c2_type" onchange="onC2TypeChange()">
               <option value="diaconie">Diaconie</option>
               <option value="gemeente">Gemeente</option>
-              <option value="speciaal">Speciale collecte</option>
+              <option value="bijzonder">Bijzondere collecte</option>
             </select>
           </div>
           <div class="field" id="c2-naam-field" style="display:none">
@@ -861,9 +861,9 @@
             <input type="text" id="c2_rekening">
           </div>
         </div>
-        <p class="comm-hint" id="c2-speciaal-hint" style="display:none">
-          Bij een speciale collecte (bijv. een eenmalig doel i.p.v. de vaste diaconie- of gemeentecollecte) wordt
-          een aparte QR-code gebruikt (<code>vrijburg.nl/collectespeciaal</code>). Zorg dat deze bestemming ook op
+        <p class="comm-hint" id="c2-bijzonder-hint" style="display:none">
+          Bij een bijzondere collecte (bijv. een eenmalig doel i.p.v. de vaste diaconie- of gemeentecollecte) wordt
+          een aparte QR-code gebruikt (<code>vrijburg.nl/bijzonderecollecte</code>). Zorg dat deze bestemming ook op
           de website/ING-betaalpagina staat.
         </p>
       </div>
@@ -2324,9 +2324,9 @@ function onDatumChange() {
 }
 
 function syncC2NaamVisibility() {
-  const isSpeciaal = document.getElementById('c2_type').value === 'speciaal';
-  document.getElementById('c2-naam-field').style.display = isSpeciaal ? '' : 'none';
-  document.getElementById('c2-speciaal-hint').style.display = isSpeciaal ? '' : 'none';
+  const isBijzonder = document.getElementById('c2_type').value === 'bijzonder';
+  document.getElementById('c2-naam-field').style.display = isBijzonder ? '' : 'none';
+  document.getElementById('c2-bijzonder-hint').style.display = isBijzonder ? '' : 'none';
 }
 
 function onC2TypeChange() {
@@ -2338,7 +2338,7 @@ function onC2TypeChange() {
     document.getElementById('c2_tekst').value = GEMEENTE_TEKST;
     document.getElementById('c2_rekening').value = GEMEENTE_REK;
   }
-  // Speciale collecte: geen vaste tekst/rekening — voorganger/bureau vult dit zelf in
+  // Bijzondere collecte: geen vaste tekst/rekening — voorganger/bureau vult dit zelf in
   syncC2NaamVisibility();
 }
 
@@ -2366,7 +2366,7 @@ const DOCX_ASSETS = {
   qr1: 'assets/collecte1.png',
   qrDiaconie: 'assets/collecte_diaconie.png',
   qrGemeente: 'assets/collecte_gemeente.png',
-  qrSpeciaal: 'assets/collecte_speciaal.png',
+  qrBijzonder: 'assets/collecte_bijzonder.png',
 };
 
 /** Logo rechtsboven: speciale dienst vervangt Vrijburg-logo. */
@@ -2795,9 +2795,12 @@ async function generateDocxAsync() {
   async function buildQrBlock(qrType) {
     const rightPath = qrType === 'diaconie' ? DOCX_ASSETS.qrDiaconie
       : qrType === 'gemeente' ? DOCX_ASSETS.qrGemeente
-      : DOCX_ASSETS.qrSpeciaal;
-    const rightLabel = `vrijburg.nl/collecte${qrType}`;
-    const rightUrl = `https://www.vrijburg.nl/collecte${qrType}`;
+      : DOCX_ASSETS.qrBijzonder;
+    // De bijzondere collecte heeft een eigen vaste pagina op vrijburg.nl
+    // (vrijburg.nl/bijzonderecollecte), anders dan het collecte{type}-patroon
+    // van diaconie/gemeente.
+    const rightLabel = qrType === 'bijzonder' ? 'vrijburg.nl/bijzonderecollecte' : `vrijburg.nl/collecte${qrType}`;
+    const rightUrl = qrType === 'bijzonder' ? 'https://www.vrijburg.nl/bijzonderecollecte' : `https://www.vrijburg.nl/collecte${qrType}`;
     try {
       const left = await preparePngImage(DOCX_ASSETS.qr1, 110);
       const right = await preparePngImage(rightPath, 110);
@@ -3023,12 +3026,14 @@ async function generateDocxAsync() {
   if (c2Rek)   children.push(p('Rekening: ' + c2Rek + '.'));
   children.push(empty());
 
-  const qrType = c2Type === 'diaconie' ? 'diaconie' : c2Type === 'gemeente' ? 'gemeente' : 'speciaal';
+  const qrType = c2Type === 'diaconie' ? 'diaconie' : c2Type === 'gemeente' ? 'gemeente' : 'bijzonder';
+  const qrLabel = qrType === 'bijzonder' ? 'vrijburg.nl/bijzonderecollecte' : `vrijburg.nl/collecte${qrType}`;
+  const qrUrl = qrType === 'bijzonder' ? 'https://www.vrijburg.nl/bijzonderecollecte' : `https://www.vrijburg.nl/collecte${qrType}`;
   children.push(pr([
     { t: 'Voor digitaal collecteren maken wij gebruik van een algemene QR-code. Deze kunt u niet met uw eigen bank-app lezen maar wel met een algemene QR-code reader (bv Lens op Android of Camera op iPhone). U kunt ook in uw internetapplicatie naar ', sz: szSmall },
     { t: 'vrijburg.nl/collecte1', sz: szSmall, hyperlink: 'https://www.vrijburg.nl/collecte1' },
     { t: ' en ', sz: szSmall },
-    { t: `vrijburg.nl/collecte${qrType}`, sz: szSmall, hyperlink: `https://www.vrijburg.nl/collecte${qrType}` },
+    { t: qrLabel, sz: szSmall, hyperlink: qrUrl },
     { t: ' gaan. In alle gevallen wordt u dan doorverwezen naar de ING Betaalverzoekpagina van Vrijburg.', sz: szSmall },
   ]));
   children.push(await buildQrBlock(qrType));

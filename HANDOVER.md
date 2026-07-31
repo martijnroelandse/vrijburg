@@ -184,10 +184,10 @@ Hiervan zijn inmiddels geïmplementeerd:
 - **Sectie "5. Voorbeden"**: vrij tekstveld voor eigen voorbeden/acclamaties
   (`#voorbeden_tekst`) + checkbox om het standaard Onze Vader weg te laten
   (`#geen_onze_vader`). Standaardgedrag (leeg formulier) blijft ongewijzigd.
-- **Collecte "Speciale collecte"**: derde optie naast Diaconie/Gemeente voor
+- **Collecte "Bijzondere collecte"**: derde optie naast Diaconie/Gemeente voor
   een eenmalige bestemming, met eigen naamveld (`#c2_naam`) en een vierde
-  QR-code (`DOCX_ASSETS.qrSpeciaal` → `assets/collecte_speciaal.png`, nog
-  toe te voegen — zie README).
+  QR-code (`DOCX_ASSETS.qrBijzonder` → `assets/collecte_bijzonder.png`,
+  verwijst naar de vaste pagina `vrijburg.nl/bijzonderecollecte`).
 
 Nog open (zie verbeterplan): labels verduidelijken, live-voorbeeldpaneel,
 gebedsveld bij Opening, Overdenking/Afsluiting als vrije lijst.
