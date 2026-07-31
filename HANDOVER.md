@@ -172,6 +172,14 @@ Liturgie slaat op in tabel `diensten` en deelt via korte link `?id=short_id` (fo
 
 ---
 
+## Feedback van de handmatige liturgie-maker (Hiltje)
+
+Zie `VERBETERPLAN-FEEDBACK-HILTJE.md` voor een puntsgewijze analyse van haar
+feedback (juli 2026) — met name over de vaste, niet-zichtbare/niet-bewerkbare
+blokken (Gebed na de Groet, Voorbeden, Onze Vader, Uitzending/Zegen) die een
+gastvoorganger die van de basisliturgie afwijkt in de weg zitten — en een
+gefaseerd verbetervoorstel.
+
 ## Bekende issues / aandachtspunten
 
 - **Tab-uitlijning bemoediging**: de docx.js tab-stops werken maar zijn moeilijk exact te matchen met de originele Word-opmaak. Bij grote afwijkingen: aanpassen via `TabStopPosition` waarden in `beurtzang()`.
