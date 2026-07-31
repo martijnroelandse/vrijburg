@@ -57,6 +57,16 @@ Zie `HANDOVER.md` voor technische details.
 
 Voor een nieuw seizoen: vervang `collectes.json` met de nieuwe gegevens.
 
+### Bijzondere collecte (bijv. eenmalig doel i.p.v. diaconie/gemeente)
+
+Bij de tweede collecte kan naast "Diaconie" en "Gemeente" ook **"Bijzondere collecte"**
+gekozen worden — voor een eenmalige bestemming (bijv. een noodhulpactie) die niet
+in `collectes.json` staat. Vul dan zelf de naam/bestemming, beschrijving en
+rekeningnummer in. Deze optie gebruikt een vierde QR-code:
+`assets/collecte_bijzonder.png`, die verwijst naar `vrijburg.nl/bijzonderecollecte`
+(vaste pagina op de website, net als `vrijburg.nl/collectediaconie` en
+`vrijburg.nl/collectegemeente`).
+
 ## Vaste teksten aanpassen
 
 De vaste teksten (Bemoediging, Groet, Onze Vader, QR-code tekst, footer) staan bovenin `index.html` als JavaScript-constanten. Die kun je direct bewerken.

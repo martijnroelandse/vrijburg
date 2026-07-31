@@ -754,9 +754,32 @@
     </div>
   </div>
 
-  <!-- 5. SLOT -->
+  <!-- 5. VOORBEDEN -->
+  <div class="section" id="section-voorbeden" data-section="voorbeden">
+    <div class="section-header">5. Voorbeden <span style="font-weight:400;font-size:12px;color:#888">– optioneel, voor wie afwijkt van het standaardgebed</span></div>
+    <div class="section-body">
+      <div class="row">
+        <div class="field field-mine" data-owner="voorganger" style="grid-column: 1/-1">
+          <label>Voorbeden <span class="opt">eigen tekst, acclamaties (optioneel)</span></label>
+          <textarea id="voorbeden_tekst" rows="4" placeholder="Laat leeg voor de standaardtekst &quot;Stil gebed, afgesloten met Onze Vader:&quot;.&#10;Vul hier bijv. eigen voorbeden met acclamaties in, zoals:&#10;Voorganger: Zo bidden wij…&#10;Allen: Heer, hoor ons gebed."></textarea>
+        </div>
+      </div>
+      <div class="row">
+        <div class="field field-mine" data-owner="voorganger" style="flex-direction:row;align-items:center;gap:8px;grid-column:1/-1">
+          <input type="checkbox" id="geen_onze_vader" style="width:auto" onchange="scheduleDraftSave()">
+          <label for="geen_onze_vader" style="text-transform:none;letter-spacing:0;font-size:14px">Geen standaard Onze Vader (eigen afsluiting staat hierboven bij Voorbeden)</label>
+        </div>
+      </div>
+      <p style="font-size:12px;color:#aaa;margin-top:4px">
+        Standaard sluit de tool de Voorbeden af met de vaste tekst van het Onze Vader. Vul hierboven een eigen
+        tekst in als de voorganger iets anders wil bidden, en vink het vakje aan om de standaardtekst weg te laten.
+      </p>
+    </div>
+  </div>
+
+  <!-- 6. SLOT -->
   <div class="section" id="section-slot" data-section="slot">
-    <div class="section-header">5. Afsluiting</div>
+    <div class="section-header">6. Afsluiting</div>
     <div class="section-body">
       <div class="row">
         <div class="field field-mine" data-owner="voorganger">
@@ -771,9 +794,9 @@
     </div>
   </div>
 
-  <!-- 6. COLLECTE & BLOEMEN -->
+  <!-- 7. COLLECTE & BLOEMEN -->
   <div class="section" id="section-collecte" data-section="collecte">
-    <div class="section-header">6. Collecte &amp; bloemen</div>
+    <div class="section-header">7. Collecte &amp; bloemen</div>
     <div class="section-body">
       <div class="row" style="margin-bottom:16px">
         <div class="field" style="grid-column: 1/-1">
@@ -818,7 +841,12 @@
             <select id="c2_type" onchange="onC2TypeChange()">
               <option value="diaconie">Diaconie</option>
               <option value="gemeente">Gemeente</option>
+              <option value="bijzonder">Bijzondere collecte</option>
             </select>
+          </div>
+          <div class="field" id="c2-naam-field" style="display:none">
+            <label>Naam / bestemming</label>
+            <input type="text" id="c2_naam" placeholder="bijv. Wederopbouw Cuba" oninput="scheduleDraftSave()">
           </div>
         </div>
         <div class="row">
@@ -833,13 +861,18 @@
             <input type="text" id="c2_rekening">
           </div>
         </div>
+        <p class="comm-hint" id="c2-bijzonder-hint" style="display:none">
+          Bij een bijzondere collecte (bijv. een eenmalig doel i.p.v. de vaste diaconie- of gemeentecollecte) wordt
+          een aparte QR-code gebruikt (<code>vrijburg.nl/bijzonderecollecte</code>). Zorg dat deze bestemming ook op
+          de website/ING-betaalpagina staat.
+        </p>
       </div>
     </div>
   </div>
 
   <!-- 7. AGENDA -->
   <div class="section" id="section-agenda" data-section="agenda">
-    <div class="section-header">7. Agenda</div>
+    <div class="section-header">8. Agenda</div>
     <div class="section-body">
       <div style="margin-bottom:12px">
         <button class="btn-secondary" onclick="importAgenda()" id="btn-import-agenda">↻ Importeer van vrijburg.nl</button>
@@ -1024,8 +1057,8 @@ let huidigeRol = 'medewerker';
 const ROL_CONFIG = {
   voorganger: {
     label: 'Voorganger',
-    primary: ['thema', 'opening', 'orde', 'slot'],
-    hint: 'Vul thema, beschrijving, foto, nieuwsbrief en overdenking in. Vul de orde van dienst in (liederen, lezingen) en lichtlied/slotlied. Klik op <strong>Ik ben klaar</strong> om alles naar bureau@vrijburg.nl te sturen.',
+    primary: ['thema', 'opening', 'orde', 'voorbeden', 'slot'],
+    hint: 'Vul thema, beschrijving, foto, nieuwsbrief en overdenking in. Vul de orde van dienst in (liederen, lezingen) en lichtlied/slotlied. Wijkt u af van het standaardgebed? Vul dat in bij Voorbeden. Klik op <strong>Ik ben klaar</strong> om alles naar bureau@vrijburg.nl te sturen.',
     emailAan: 'voorganger',
   },
   organist: {
@@ -1042,7 +1075,7 @@ const ROL_CONFIG = {
   },
   compleet: {
     label: 'Alles bekijken',
-    primary: ['dienst', 'thema', 'opening', 'orde', 'slot', 'collecte', 'agenda'],
+    primary: ['dienst', 'thema', 'opening', 'orde', 'voorbeden', 'slot', 'collecte', 'agenda'],
     hint: 'Volledig overzicht van alle onderdelen. Controleer of alles is ingevuld en download de liturgie als .docx.',
     emailAan: null,
   },
@@ -1970,8 +2003,11 @@ function getFormState() {
     c1_tekst: document.getElementById('c1_tekst').value,
     c1_rekening: document.getElementById('c1_rekening').value,
     c2_type: document.getElementById('c2_type').value,
+    c2_naam: document.getElementById('c2_naam').value,
     c2_tekst: document.getElementById('c2_tekst').value,
     c2_rekening: document.getElementById('c2_rekening').value,
+    voorbeden_tekst: document.getElementById('voorbeden_tekst').value,
+    geen_onze_vader: document.getElementById('geen_onze_vader').checked,
     agenda_kort: document.getElementById('agenda_kort').value,
     agenda_ver: document.getElementById('agenda_ver').value,
     orde: ordeItems,
@@ -2004,11 +2040,13 @@ function applyFormState(state) {
   const fields = ['datum','aanvangstijd','bijzondere_dienst','kinderkerk','bijzonderheden',
     'voorganger','organist','lector','thema','intro','nieuwsbrief','overdenking_email','foto_credit',
     'orgelspel_opening','lichtlied','slotlied','orgelspel_slot','bloemen',
-    'c1_thema','c1_naam','c1_tekst','c1_rekening','c2_type','c2_tekst','c2_rekening',
+    'c1_thema','c1_naam','c1_tekst','c1_rekening','c2_type','c2_naam','c2_tekst','c2_rekening',
+    'voorbeden_tekst',
     'agenda_kort','agenda_ver','avondmaal'];
   fields.forEach(id => {
     if (state[id] !== undefined) document.getElementById(id).value = state[id];
   });
+  if (state.geen_onze_vader !== undefined) document.getElementById('geen_onze_vader').checked = !!state.geen_onze_vader;
   if ('foto_data' in state) {
     fotoDataUrl = state.foto_data || '';
     updateFotoPreview();
@@ -2034,6 +2072,7 @@ function applyFormState(state) {
   // Geen onDatumChange() hier: dat overschrijft opgeslagen namen met planning.
   // Datum-keuze door de gebruiker triggert onDatumChange via het input-veld.
   if (!state.datum && state.c2_type) onC2TypeChange();
+  else syncC2NaamVisibility();
 }
 
 function getShareUrl(rol) {
@@ -2179,8 +2218,11 @@ function emptyFormState() {
     c1_tekst: '',
     c1_rekening: '',
     c2_type: 'diaconie',
+    c2_naam: '',
     c2_tekst: '',
     c2_rekening: '',
+    voorbeden_tekst: '',
+    geen_onze_vader: false,
     agenda_kort: '',
     agenda_ver: '',
     orde: [
@@ -2281,15 +2323,23 @@ function onDatumChange() {
   }
 }
 
+function syncC2NaamVisibility() {
+  const isBijzonder = document.getElementById('c2_type').value === 'bijzonder';
+  document.getElementById('c2-naam-field').style.display = isBijzonder ? '' : 'none';
+  document.getElementById('c2-bijzonder-hint').style.display = isBijzonder ? '' : 'none';
+}
+
 function onC2TypeChange() {
   const type = document.getElementById('c2_type').value;
   if (type === 'diaconie') {
     document.getElementById('c2_tekst').value = DIACONIE_TEKST;
     document.getElementById('c2_rekening').value = DIACONIE_REK;
-  } else {
+  } else if (type === 'gemeente') {
     document.getElementById('c2_tekst').value = GEMEENTE_TEKST;
     document.getElementById('c2_rekening').value = GEMEENTE_REK;
   }
+  // Bijzondere collecte: geen vaste tekst/rekening — voorganger/bureau vult dit zelf in
+  syncC2NaamVisibility();
 }
 
 // Init tweede collecte
@@ -2316,6 +2366,7 @@ const DOCX_ASSETS = {
   qr1: 'assets/collecte1.png',
   qrDiaconie: 'assets/collecte_diaconie.png',
   qrGemeente: 'assets/collecte_gemeente.png',
+  qrBijzonder: 'assets/collecte_bijzonder.png',
 };
 
 /** Logo rechtsboven: speciale dienst vervangt Vrijburg-logo. */
@@ -2553,8 +2604,11 @@ async function generateDocxAsync() {
   const c1Tekst    = document.getElementById('c1_tekst').value.trim();
   const c1Rek      = document.getElementById('c1_rekening').value.trim();
   const c2Type     = document.getElementById('c2_type').value;
+  const c2NaamVeld = document.getElementById('c2_naam').value.trim();
   const c2Tekst    = document.getElementById('c2_tekst').value.trim();
   const c2Rek      = document.getElementById('c2_rekening').value.trim();
+  const voorbedenTekst  = document.getElementById('voorbeden_tekst').value.trim();
+  const geenOnzeVader   = document.getElementById('geen_onze_vader').checked;
   const agendaKort = document.getElementById('agenda_kort').value.trim();
   const agendaVer  = document.getElementById('agenda_ver').value.trim();
 
@@ -2739,9 +2793,14 @@ async function generateDocxAsync() {
   }
 
   async function buildQrBlock(qrType) {
-    const rightPath = qrType === 'diaconie' ? DOCX_ASSETS.qrDiaconie : DOCX_ASSETS.qrGemeente;
-    const rightLabel = `vrijburg.nl/collecte${qrType}`;
-    const rightUrl = `https://www.vrijburg.nl/collecte${qrType}`;
+    const rightPath = qrType === 'diaconie' ? DOCX_ASSETS.qrDiaconie
+      : qrType === 'gemeente' ? DOCX_ASSETS.qrGemeente
+      : DOCX_ASSETS.qrBijzonder;
+    // De bijzondere collecte heeft een eigen vaste pagina op vrijburg.nl
+    // (vrijburg.nl/bijzonderecollecte), anders dan het collecte{type}-patroon
+    // van diaconie/gemeente.
+    const rightLabel = qrType === 'bijzonder' ? 'vrijburg.nl/bijzonderecollecte' : `vrijburg.nl/collecte${qrType}`;
+    const rightUrl = qrType === 'bijzonder' ? 'https://www.vrijburg.nl/bijzonderecollecte' : `https://www.vrijburg.nl/collecte${qrType}`;
     try {
       const left = await preparePngImage(DOCX_ASSETS.qr1, 110);
       const right = await preparePngImage(rightPath, 110);
@@ -2937,8 +2996,14 @@ async function generateDocxAsync() {
   // VOORBEDEN
   children.push(empty());
   children.push(p('Voorbeden', { bold: true, before: 120 }));
-  children.push(p('Stil gebed, afgesloten met Onze Vader:'));
-  ONZE_VADER.forEach(regel => children.push(p(regel, { indent: 0.5 })));
+  if (voorbedenTekst) {
+    children.push(...multiline(voorbedenTekst));
+  } else {
+    children.push(p('Stil gebed, afgesloten met Onze Vader:'));
+  }
+  if (!geenOnzeVader) {
+    ONZE_VADER.forEach(regel => children.push(p(regel, { indent: 0.5 })));
+  }
 
   // MEDEDELINGEN & COLLECTEN
   children.push(empty());
@@ -2953,18 +3018,22 @@ async function generateDocxAsync() {
   if (c1Rek)   children.push(p('Rekening: ' + c1Rek));
   children.push(empty());
 
-  const c2Naam = c2Type === 'diaconie' ? 'onze diaconie' : 'onze gemeente';
+  const c2Naam = c2Type === 'diaconie' ? 'onze diaconie'
+    : c2Type === 'gemeente' ? 'onze gemeente'
+    : (c2NaamVeld || 'deze bijzondere collecte');
   children.push(p('Tweede collecte: ' + c2Naam, { bold: true, before: 80 }));
   if (c2Tekst) children.push(...multiline(c2Tekst));
   if (c2Rek)   children.push(p('Rekening: ' + c2Rek + '.'));
   children.push(empty());
 
-  const qrType = c2Type === 'diaconie' ? 'diaconie' : 'gemeente';
+  const qrType = c2Type === 'diaconie' ? 'diaconie' : c2Type === 'gemeente' ? 'gemeente' : 'bijzonder';
+  const qrLabel = qrType === 'bijzonder' ? 'vrijburg.nl/bijzonderecollecte' : `vrijburg.nl/collecte${qrType}`;
+  const qrUrl = qrType === 'bijzonder' ? 'https://www.vrijburg.nl/bijzonderecollecte' : `https://www.vrijburg.nl/collecte${qrType}`;
   children.push(pr([
     { t: 'Voor digitaal collecteren maken wij gebruik van een algemene QR-code. Deze kunt u niet met uw eigen bank-app lezen maar wel met een algemene QR-code reader (bv Lens op Android of Camera op iPhone). U kunt ook in uw internetapplicatie naar ', sz: szSmall },
     { t: 'vrijburg.nl/collecte1', sz: szSmall, hyperlink: 'https://www.vrijburg.nl/collecte1' },
     { t: ' en ', sz: szSmall },
-    { t: `vrijburg.nl/collecte${qrType}`, sz: szSmall, hyperlink: `https://www.vrijburg.nl/collecte${qrType}` },
+    { t: qrLabel, sz: szSmall, hyperlink: qrUrl },
     { t: ' gaan. In alle gevallen wordt u dan doorverwezen naar de ING Betaalverzoekpagina van Vrijburg.', sz: szSmall },
   ]));
   children.push(await buildQrBlock(qrType));
