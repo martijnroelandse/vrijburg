@@ -152,15 +152,17 @@ tussenliggende acclamaties, en `ONZE_VADER` is een vaste JS-constante
 
 **Voorstel (gefaseerd, van klein naar groot):**
 
-1. **Direct oplosbaar zonder herontwerp:** voeg een zichtbare sectie
-   "Voorbeden" toe aan het formulier (net als Opening/Slot nu al zijn), met:
-   - een checkbox **"Standaard Onze Vader gebruiken"** (aan = huidig gedrag);
-   - indien uit: een tekstveld voor een eigen gebedstekst;
-   - een optioneel tekstveld **"Acclamatie(s)"** dat, indien ingevuld, na elk
-     stuk vrije gebedstekst wordt herhaald (of, eenvoudiger: één vrij
-     tekstveld "Voorbeden" waarin de voorganger zelf lege regels/acclamaties
-     opneemt zoals hij/zij dat wil, in plaats van de tool dit te laten
-     opmaken).
+1. ✅ *Geïmplementeerd:* een zichtbare sectie "Voorbeden" is toegevoegd aan
+   het formulier (tussen Orde van dienst en Afsluiting), met:
+   - een vrij tekstveld `voorbeden_tekst` — leeg = standaardtekst "Stil
+     gebed, afgesloten met Onze Vader:"; ingevuld = die tekst (kan zelf
+     acclamaties bevatten, in de volgorde die de voorganger wil);
+   - een checkbox `geen_onze_vader` — indien aangevinkt wordt de vaste
+     `ONZE_VADER`-tekst niet meer toegevoegd (voor wie zelf een afsluiting
+     in het tekstveld hierboven heeft opgenomen).
+   - Dit is bewust de lichte variant (vrij tekstveld i.p.v. een
+     item-per-acclamatie-lijst) — snel te bouwen, dekt de praktijksituatie
+     die Hiltje beschrijft, en breekt niets voor wie niets aanpast.
 2. **Structurele oplossing (grotere ingreep, aparte discussie met Hiltje):**
    maak "Overdenking" en "Voorbeden" **item-typen in dezelfde vrije lijst**
    als lied/lezing/muziek, in plaats van hardcoded stappen na de lijst. Zo
@@ -234,19 +236,26 @@ liedcoupletten tussen te zetten.
 Een collecte voor "Cuba" (of een ander eenmalig doel) past dus niet: er is
 geen derde optie en geen manier om een andere QR-afbeelding/URL te koppelen.
 
-**Voorstel:**
-- Voeg een derde optie **"Anders / bijzonder doel"** toe aan het
-  type-veld.
-- Bij die keuze: toon een upload-veld voor een eigen QR-afbeelding (zelfde
-  mechanisme als de bestaande foto-upload) én een vrij tekstveld voor de
-  bijbehorende link/toelichting, die de hardcoded
-  `vrijburg.nl/collecte[type]`-tekst en QR-afbeelding vervangen.
+**Voorstel:** ✅ *Geïmplementeerd (lichte variant)*
+- Een derde optie **"Speciale collecte"** is toegevoegd aan het type-veld,
+  met een eigen naamveld (`c2_naam`, bijv. "Wederopbouw Cuba") in plaats
+  van de vaste tekst "onze diaconie"/"onze gemeente".
+- Deze optie gebruikt een vierde, vaste QR-afbeelding
+  (`DOCX_ASSETS.qrSpeciaal` → `assets/collecte_speciaal.png`) en de link
+  `vrijburg.nl/collectespeciaal` — naar hetzelfde patroon als de bestaande
+  `collecte1`/`collectediaconie`/`collectegemeente`. Het PNG-bestand zelf
+  moet nog worden toegevoegd (zie README); zolang dat ontbreekt valt de
+  liturgie automatisch terug op platte tekstlinks in plaats van
+  QR-afbeeldingen.
 - Val terug op het huidige gedrag (diaconie/gemeente + standaard-QR) als er
   niets aangepast is — geen impact op de bestaande, veelvoorkomende flow.
+- *Niet geïmplementeerd (bewust, lagere prioriteit):* een upload-mogelijkheid
+  voor een eigen QR-afbeelding per dienst. Dat is alleen nodig als de
+  speciale collecte per keer een andere QR-code/URL nodig heeft in plaats
+  van één vaste "speciale collecte"-pagina op vrijburg.nl.
 
-**Impact/risico:** gemiddeld — vraagt een nieuwe upload/opslag-flow
-vergelijkbaar met de bestaande fotofunctionaliteit (inclusief opslag in
-Supabase Storage voor het delen via de link).
+**Impact/risico:** laag zoals geïmplementeerd (geen nieuwe upload/opslag-flow
+nodig, alleen een extra dropdown-optie + veld).
 
 ---
 
@@ -295,10 +304,10 @@ aanpassingen (punt 3b/4) zijn gebouwd:
 
 **Fase 2 — Nieuwe velden zonder herontwerp van het datamodel**
 - [ ] Tekstveld "Gebed na de Groet" in sectie Opening (punt 2)
-- [ ] Sectie "Voorbeden" met override voor Onze Vader + vrij tekstveld voor
+- [x] Sectie "Voorbeden" met override voor Onze Vader + vrij tekstveld voor
       acclamaties (punt 3a/3c, lichte variant)
-- [ ] Collecte: optie "Anders / bijzonder doel" met eigen QR-upload en
-      linktekst (punt 5)
+- [x] Collecte: optie "Speciale collecte" met eigen naam + vierde QR-code
+      (punt 5, lichte variant — geen per-dienst QR-upload)
 - [ ] Live-voorbeeldpaneel met de volledige liturgietekst (overkoepelend
       voorstel 1)
 
