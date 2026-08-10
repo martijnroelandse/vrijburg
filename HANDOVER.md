@@ -144,7 +144,7 @@ Het 2026-template gebruikt verkorte kolomnamen (`KK`, `VLV`, `VLH`, `VLZ`); het 
 ### Hoge prioriteit
 
 **1. Bijbelteksten automatisch ophalen** ✅ *geïmplementeerd*  
-Bij type "lezing" in de orde-lijst: knop "Tekst ophalen" die de referentie parseert en de tekst invult via [BijbelAPI](https://www.bijbelapi.com/) (BasisBijbel, vrij beschikbaar).
+Bij type "lezing" in de orde-lijst: knop "Tekst ophalen (Statenvertaling)" die de referentie parseert en de tekst invult via [BijbelAPI](https://www.bijbelapi.com/) (enige gratis vertaling die de API aanbiedt). Knop "NBV21 openen" ✅ *geïmplementeerd* opent de referentie op debijbel.nl om de tekst handmatig te kopiëren (NBV21 heeft geen gratis API, auteursrecht Nederlands-Vlaams Bijbelgenootschap).
 
 **2. Emailformulier naar dominee** ✅ *geïmplementeerd*  
 Knop "Stuur link naar dominee" opent een pre-ingevulde mailto:-link. Formulierstatus wordt geserialiseerd naar URL-params zodat een gedeelde link de velden pre-invult.
@@ -198,7 +198,7 @@ gebedsveld bij Opening, Overdenking/Afsluiting als vrije lijst.
 - **Liedteksten**: sommige liturgieën bevatten de volledige liedtekst (bijv. lied 773 in de dienst van 14 juni). Dit is optioneel — de dominee voert dit in het tekstgebied in als hij het wil.
 - **Bijzondere diensten**: Kerst, Pasen, Pinksteren hebben soms een afwijkende structuur (avondmaal, doopdienst). Overweeg een "bijzondere dienst" toggle.
 - **Fetch van collectes.json**: werkt via GitHub Pages (HTTPS). Bij lokaal openen van index.html als `file://` werkt de fetch niet — dan moet `COLLECTES` inline in de JS staan. Oplossing: in de catch-handler de data inline fallback plaatsen.
-- **Bijbelvertaling**: de automatische tekstophaling gebruikt de BasisBijbel (bb) via BijbelAPI. Voor andere vertalingen (HSV, Statenvertaling) kan de `BIJBEL_VERSIE`-constante in `index.html` worden aangepast.
+- **Bijbelvertaling**: de gratis BijbelAPI biedt momenteel alleen Statenvertaling (`sv`), Canisiusbijbel en De Heilige Schrift 1917 aan (`GET /api/versions`) — géén BasisBijbel en géén NBV21 (auteursrechtelijk beschermd door het Nederlands-Vlaams Bijbelgenootschap, geen gratis API). Knop "Tekst ophalen (Statenvertaling)" gebruikt daarom `sv`. Voor NBV21 opent de knop "NBV21 openen" de juiste referentie op debijbel.nl (boeknaam → OSIS-code via `BIJBELBOEK_OSIS`), waarna de tekst handmatig gekopieerd en geplakt moet worden — vergelijkbaar met de "Liedboek Online"-knop.
 - **Supabase-project pauzeert bij inactiviteit** (opgetreden 10 augustus 2026): het gratis Supabase-project pauzeert automatisch na ~1 week zonder API-gebruik. Symptoom in de app: **"Opslaan mislukt: TypeError: Load failed"** (Safari) of "Failed to fetch" (Chrome) bij opslaan/laden/delen via `?id=…`. Herstel: Supabase-dashboard → project → **Restore project** (of via de Supabase MCP-tool `restore_project` met project-ref `iabrbkirzsolwnuknbel`); duurt 1–3 minuten. Preventie: `.github/workflows/keep-supabase-active.yml` doet elke 3 dagen een publieke leesaanvraag om het project actief te houden. Let op: GitHub schakelt scheduled workflows automatisch uit na 60 dagen zonder commits op de repo — bij twijfel de workflow handmatig draaien via **Actions → Houd Supabase-project actief → Run workflow**.
 
 ---
@@ -209,7 +209,7 @@ gebedsveld bij Opening, Overdenking/Afsluiting als vrije lijst.
 |---|---|
 | Frontend | Vanilla HTML/CSS/JS (geen framework) |
 | .docx generatie | [docx](https://docx.js.org/) v8.5.0 via CDN |
-| Bijbelteksten | [BijbelAPI](https://www.bijbelapi.com/) (BasisBijbel) |
+| Bijbelteksten | [BijbelAPI](https://www.bijbelapi.com/) (Statenvertaling) + handmatige NBV21-link naar debijbel.nl |
 | Agenda | WordPress REST API (vrijburg.nl) |
 | Data | collectes.json (statisch) + Supabase `diensten` (gedeelde opslag) |
 | Hosting | GitHub Pages (statisch) |

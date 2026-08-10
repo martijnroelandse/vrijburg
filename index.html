@@ -505,6 +505,16 @@
       margin-top: 6px;
       line-height: 1.4;
     }
+    .vaste-tekst-preview {
+      background: #f4fbfe;
+      border: 1px dashed var(--brand-mid);
+      border-radius: var(--radius);
+      padding: 10px 12px;
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+    .vaste-tekst-preview strong { color: var(--text); }
   </style>
 </head>
 <body>
@@ -732,6 +742,18 @@
           </div>
         </div>
       </div>
+      <div class="row">
+        <div class="field" style="grid-column: 1/-1">
+          <label>Bemoediging &amp; Groet <span class="opt">vast onderdeel — komt automatisch in de liturgie, hoeft niet apart ingevuld te worden</span></label>
+          <div class="vaste-tekst-preview" id="vaste-tekst-opening"></div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="field field-mine" data-owner="voorganger" style="grid-column: 1/-1">
+          <label>Gebed <span class="opt">na de Groet — optioneel, staat standaard alleen als kopje "Gebed" in de liturgie</span></label>
+          <textarea id="gebed_opening" rows="3" placeholder="Laat leeg voor alleen het kopje 'Gebed'. Vul hier de tekst in als u het openingsgebed woordelijk in de liturgie wilt afdrukken."></textarea>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -748,7 +770,10 @@
         <button class="btn-add" onclick="addOrde('overig')">+ Overig</button>
       </div>
       <p style="font-size:12px;color:#aaa;margin-top:10px;">
-        Tip: voor een lied voer je bijv. in "Lied 652: 1, 3 en 5". Bij lezingen: knop <em>Tekst ophalen</em>.
+        Tip: voor een lied voer je bijv. in "Lied 652: 1, 3 en 5". Bij lezingen: knop <em>Tekst ophalen (Statenvertaling)</em>
+        haalt de tekst automatisch op (de enige gratis vertaling die hiervoor beschikbaar is); knop <em>NBV21 openen</em>
+        opent debijbel.nl met de juiste referentie — kopieer die tekst zelf en plak hem hier (NBV21 is auteursrechtelijk
+        beschermd, er is geen gratis API voor).
         Bij liederen: knop <em>Liedboek Online</em> (tekst downloaden met Vrijburg-licentie, daarna hier plakken).
       </p>
     </div>
@@ -801,7 +826,7 @@
       <div class="row" style="margin-bottom:16px">
         <div class="field" style="grid-column: 1/-1">
           <label>Bloemen gaan naar</label>
-          <input type="text" id="bloemen" placeholder="bijv. mw. Joke K. Bruhl">
+          <input type="text" id="bloemen">
         </div>
       </div>
 
@@ -938,6 +963,17 @@ const GROET_LINES = [
   { wie: 'gemeente',   tekst: 'De wereld zij vrede.' },
 ];
 
+function renderVasteTekstOpeningPreview() {
+  const el = document.getElementById('vaste-tekst-opening');
+  if (!el) return;
+  const regel = ({ wie, tekst }) => `<div><strong>${wie === 'voorganger' ? 'Voorganger' : 'Allen'}:</strong> ${tekst}</div>`;
+  el.innerHTML =
+    '<div style="margin-bottom:6px"><strong>Bemoediging</strong></div>' +
+    BEMOEDIGING_LINES.map(regel).join('') +
+    '<div style="margin-top:10px;margin-bottom:6px"><strong>Groet</strong></div>' +
+    GROET_LINES.map(regel).join('');
+}
+
 const ONZE_VADER = [
   'Onze Vader, die in de hemel zijt,',
   'Uw naam worde geheiligd, Uw Koninkrijk kome,',
@@ -963,7 +999,10 @@ const NL_MAANDEN = ['januari','februari','maart','april','mei','juni','juli','au
 const NL_MAANDEN_CAP = ['Januari','Februari','Maart','April','Mei','Juni','Juli','Augustus','September','Oktober','November','December'];
 const NL_DAGEN = ['zondag','maandag','dinsdag','woensdag','donderdag','vrijdag','zaterdag'];
 
-const BIJBEL_VERSIE = 'bb'; // bb = BasisBijbel (vrij), hsv = Herziene Statenvertaling
+// BijbelAPI (gratis) biedt momenteel alleen sv (Statenvertaling), canisius en
+// hs1917 aan (zie GET /api/versions) — geen BasisBijbel of NBV21 (auteursrecht).
+// 'sv' is dus de enige zinvolle waarde hier; voor NBV21 zie de knop "NBV21 openen".
+const BIJBEL_VERSIE = 'sv';
 const LIEDBOEK_URL = 'https://liedboek.liedbundels.nu/site/nl/home/Default.aspx';
 const STORAGE_KEY = 'vrijburg-liturgie-draft';
 const SESSION_ACTIVE_KEY = 'vrijburg-liturgie-session';
@@ -1264,10 +1303,13 @@ function updateCloudHint() {
   if (!el) return;
   if (currentShortId) {
     el.style.display = '';
-    el.textContent = `☁ id=${currentShortId}`;
+    const rol = new URLSearchParams(location.search).get('rol') || undefined;
+    const url = getCloudShareUrl(rol);
+    const safeUrl = url.replace(/"/g, '&quot;');
+    el.innerHTML = `☁ Opgeslagen — <a href="${safeUrl}" title="Bewaar deze link (bijv. in uw favorieten) om later verder te werken">bewaar deze link om later verder te werken</a>`;
   } else {
     el.style.display = 'none';
-    el.textContent = '';
+    el.innerHTML = '';
   }
   const nb = document.getElementById('link-nieuwsbrief');
   if (nb) {
@@ -1446,7 +1488,7 @@ async function saveDienstManual() {
   setStatus('Opslaan in cloud…', '');
   try {
     const row = await saveDienstToCloud();
-    setStatus('✓ Opgeslagen (id=' + row.short_id + ')', 'ok');
+    setStatus('✓ Opgeslagen — de link om later verder te werken staat nu hieronder ("bewaar deze link")', 'ok');
   } catch (err) {
     console.error(err);
     setStatus('Opslaan mislukt: ' + (err.message || err), 'err');
@@ -1720,7 +1762,8 @@ function renderOrde() {
     div.className = 'orde-item';
     const safeId = String(item.id).replace(/\\/g, '\\\\').replace(/'/g, "\\'");
     const fetchBtn = item.type === 'lezing'
-      ? `<button class="btn-fetch" onclick="fetchBibleText('${safeId}')" title="Haal bijbeltekst op via BijbelAPI">Tekst ophalen</button>`
+      ? `<button class="btn-fetch" onclick="fetchBibleText('${safeId}')" title="Haal bijbeltekst op via BijbelAPI (let op: alleen Statenvertaling beschikbaar)">Tekst ophalen (Statenvertaling)</button>
+         <button class="btn-fetch" onclick="openNbv21('${safeId}')" title="Open NBV21 op debijbel.nl — kopieer de tekst zelf (geen gratis API voor deze vertaling)">NBV21 openen</button>`
       : item.type === 'lied'
       ? `<button class="btn-fetch" onclick="openLiedboekOnline('${safeId}')" title="Open Liedboek Online (inlog vereist)">Liedboek Online</button>`
       : '';
@@ -1804,6 +1847,113 @@ function normalizeBibleRef(text) {
     .replace(/^psalm\s+/i, 'Psalm ')
     .replace(/,\s*(\d)/, ':$1'); // Nederlands formaat: "Johannes 20, 26" → "Johannes 20:26"
   return firstLine;
+}
+
+// ============================================================
+// NBV21 OPENEN (debijbel.nl — geen gratis/legale API voor NBV21,
+// dus alleen een directe link; overtypen/plakken blijft handmatig)
+// ============================================================
+const BIJBELBOEK_OSIS = (() => {
+  const map = {};
+  const add = (code, ...namen) => namen.forEach(n => { map[normalizeBoeknaam(n)] = code; });
+  add('GEN', 'Genesis', 'Gen');
+  add('EXO', 'Exodus', 'Ex', 'Exod');
+  add('LEV', 'Leviticus', 'Lev');
+  add('NUM', 'Numeri', 'Num');
+  add('DEU', 'Deuteronomium', 'Deut', 'Deu');
+  add('JOS', 'Jozua', 'Joz');
+  add('JDG', 'Rechters', 'Recht');
+  add('RUT', 'Ruth', 'Rut');
+  add('1SA', '1 Samuel', '1 Samuël', '1Sam');
+  add('2SA', '2 Samuel', '2 Samuël', '2Sam');
+  add('1KI', '1 Koningen', '1Kon');
+  add('2KI', '2 Koningen', '2Kon');
+  add('1CH', '1 Kronieken', '1Kron');
+  add('2CH', '2 Kronieken', '2Kron');
+  add('EZR', 'Ezra');
+  add('NEH', 'Nehemia', 'Neh');
+  add('EST', 'Ester', 'Esther');
+  add('JOB', 'Job');
+  add('PSA', 'Psalmen', 'Psalm', 'Ps');
+  add('PRO', 'Spreuken', 'Spr');
+  add('ECC', 'Prediker', 'Pred');
+  add('SNG', 'Hooglied', 'Hoogl');
+  add('ISA', 'Jesaja', 'Jes');
+  add('JER', 'Jeremia', 'Jer');
+  add('LAM', 'Klaagliederen', 'Klaagl');
+  add('EZK', 'Ezechiel', 'Ezechiël', 'Ez');
+  add('DAN', 'Daniel', 'Daniël', 'Dan');
+  add('HOS', 'Hosea', 'Hos');
+  add('JOL', 'Joel', 'Joël');
+  add('AMO', 'Amos', 'Am');
+  add('OBA', 'Obadja', 'Ob');
+  add('JON', 'Jona');
+  add('MIC', 'Micha', 'Mi');
+  add('NAM', 'Nahum', 'Nah');
+  add('HAB', 'Habakuk', 'Hab');
+  add('ZEP', 'Sefanja', 'Zefanja', 'Sef');
+  add('HAG', 'Haggai', 'Haggaï', 'Hag');
+  add('ZEC', 'Zacharia', 'Zach');
+  add('MAL', 'Maleachi', 'Mal');
+  add('MAT', 'Mattheus', 'Mattheüs', 'Matteus', 'Matteüs', 'Matt', 'Mt');
+  add('MRK', 'Marcus', 'Marc', 'Mc', 'Mr');
+  add('LUK', 'Lucas', 'Luc', 'Lk');
+  add('JHN', 'Johannes', 'Joh', 'Jh', 'Jn');
+  add('ACT', 'Handelingen', 'Hand');
+  add('ROM', 'Romeinen', 'Rom');
+  add('1CO', '1 Korintiers', '1 Korintiërs', '1 Corinthiers', '1Kor');
+  add('2CO', '2 Korintiers', '2 Korintiërs', '2 Corinthiers', '2Kor');
+  add('GAL', 'Galaten', 'Gal');
+  add('EPH', 'Efeziers', 'Efeziërs', 'Ef');
+  add('PHP', 'Filippenzen', 'Fil');
+  add('COL', 'Kolossenzen', 'Kol');
+  add('1TH', '1 Tessalonicenzen', '1Tess');
+  add('2TH', '2 Tessalonicenzen', '2Tess');
+  add('1TI', '1 Timoteus', '1 Timoteüs', '1Tim');
+  add('2TI', '2 Timoteus', '2 Timoteüs', '2Tim');
+  add('TIT', 'Titus', 'Tit');
+  add('PHM', 'Filemon', 'Filem');
+  add('HEB', 'Hebreeen', 'Hebreeën', 'Hebr');
+  add('JAS', 'Jakobus', 'Jak');
+  add('1PE', '1 Petrus', '1Petr');
+  add('2PE', '2 Petrus', '2Petr');
+  add('1JN', '1 Johannes', '1Joh');
+  add('2JN', '2 Johannes', '2Joh');
+  add('3JN', '3 Johannes', '3Joh');
+  add('JUD', 'Judas', 'Jud');
+  add('REV', 'Openbaring', 'Openb', 'Opb');
+  return map;
+})();
+
+function normalizeBoeknaam(naam) {
+  return String(naam || '')
+    .toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // diakritische tekens weg (ë→e, ï→i, …)
+    .replace(/\./g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function parseBijbelverwijzing(text) {
+  const ref = normalizeBibleRef(text);
+  const m = ref.match(/^(\d\s*)?([a-zA-ZÀ-ÿ' -]+?)\s+(\d+)(?::(\d+))?/);
+  if (!m) return null;
+  const boeknaam = (m[1] ? m[1].trim() + ' ' : '') + m[2].trim();
+  const code = BIJBELBOEK_OSIS[normalizeBoeknaam(boeknaam)];
+  if (!code) return null;
+  return { code, hoofdstuk: m[3], vers: m[4] || '1' };
+}
+
+function openNbv21(id) {
+  const item = ordeItems[findOrdeIndex(id)];
+  if (!item) return;
+  const parsed = parseBijbelverwijzing(item.content);
+  if (!parsed) {
+    setStatus('Kon het bijbelboek niet herkennen — vul eerst een referentie in (bijv. "Johannes 3:16")', 'err');
+    return;
+  }
+  window.open(`https://www.debijbel.nl/bijbel/NBV21/${parsed.code}.${parsed.hoofdstuk}.${parsed.vers}`, '_blank', 'noopener');
+  setStatus('NBV21 geopend in nieuw tabblad — kopieer de tekst en plak die hier (auteursrecht Bijbelgenootschap, geen automatisch ophalen mogelijk)', 'ok');
 }
 
 async function fetchBibleText(id) {
@@ -1995,6 +2145,7 @@ function getFormState() {
     foto_data: fotoDataUrl,
     orgelspel_opening: document.getElementById('orgelspel_opening').value,
     lichtlied: document.getElementById('lichtlied').value,
+    gebed_opening: document.getElementById('gebed_opening').value,
     slotlied: document.getElementById('slotlied').value,
     orgelspel_slot: document.getElementById('orgelspel_slot').value,
     bloemen: document.getElementById('bloemen').value,
@@ -2039,7 +2190,7 @@ function applyFormState(state) {
   if (!state) return;
   const fields = ['datum','aanvangstijd','bijzondere_dienst','kinderkerk','bijzonderheden',
     'voorganger','organist','lector','thema','intro','nieuwsbrief','overdenking_email','foto_credit',
-    'orgelspel_opening','lichtlied','slotlied','orgelspel_slot','bloemen',
+    'orgelspel_opening','lichtlied','gebed_opening','slotlied','orgelspel_slot','bloemen',
     'c1_thema','c1_naam','c1_tekst','c1_rekening','c2_type','c2_naam','c2_tekst','c2_rekening',
     'voorbeden_tekst',
     'agenda_kort','agenda_ver','avondmaal'];
@@ -2210,6 +2361,7 @@ function emptyFormState() {
     foto_data: '',
     orgelspel_opening: '',
     lichtlied: '',
+    gebed_opening: '',
     slotlied: '',
     orgelspel_slot: '',
     bloemen: '',
@@ -2596,6 +2748,7 @@ async function generateDocxAsync() {
   const foto       = document.getElementById('foto_credit').value.trim();
   const orgelOpen  = document.getElementById('orgelspel_opening').value.trim();
   const lichtlied  = document.getElementById('lichtlied').value.trim();
+  const gebedOpening = document.getElementById('gebed_opening').value.trim();
   const slotlied   = document.getElementById('slotlied').value.trim();
   const orgelSlot  = document.getElementById('orgelspel_slot').value.trim();
   const bloemen    = document.getElementById('bloemen').value.trim();
@@ -2982,6 +3135,7 @@ async function generateDocxAsync() {
   children.push(empty());
   children.push(p('De gemeente gaat zitten', { italic: true }));
   children.push(p('Gebed', { bold: true }));
+  if (gebedOpening) children.push(...multiline(gebedOpening));
 
   // ORDE VAN DIENST
   children.push(empty());
@@ -3138,6 +3292,7 @@ function initApp() {
   setupAutoSave();
   setupSectionToggles();
   updateCloudHint();
+  renderVasteTekstOpeningPreview();
 
   loadFromUrlOrCloud().then(loaded => {
     if (!loaded) {
