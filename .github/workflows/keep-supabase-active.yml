@@ -1,0 +1,31 @@
+name: Houd Supabase-project actief
+
+# Supabase pauzeert gratis projecten automatisch na ~1 week zonder
+# API-activiteit. Deze workflow doet elke paar dagen een kleine, publieke
+# leesaanvraag zodat het project actief blijft en de liturgie-app niet
+# faalt met "Opslaan mislukt: TypeError: Load failed" (Safari) /
+# "Failed to fetch" (Chrome) doordat het project gepauzeerd is.
+#
+# Gebruikt alleen de publieke project-URL en anon key — dezelfde die al
+# client-side in index.html staan, geen secrets nodig.
+
+on:
+  schedule:
+    - cron: '0 6 */3 * *' # elke 3 dagen om 06:00 UTC
+  workflow_dispatch: {}
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Supabase REST-endpoint
+        run: |
+          set -euo pipefail
+          URL="https://iabrbkirzsolwnuknbel.supabase.co/rest/v1/diensten?select=short_id&limit=1"
+          KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlhYnJia2lyenNvbHdudWtuYmVsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ3OTU4MDIsImV4cCI6MjEwMDM3MTgwMn0.ojjiiwwAwb3eITwThJPXGgOk_XynghQUNZ_snDDe6iQ"
+          status=$(curl -s -o /dev/null -w "%{http_code}" "$URL" -H "apikey: $KEY")
+          echo "HTTP status: $status"
+          if [ "$status" -ge 400 ]; then
+            echo "::warning::Supabase-project reageerde met status $status — mogelijk gepauzeerd. Herstel via Supabase-dashboard (Restore project) of de Supabase MCP-tool restore_project."
+            exit 1
+          fi
