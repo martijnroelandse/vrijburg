@@ -199,6 +199,7 @@ gebedsveld bij Opening, Overdenking/Afsluiting als vrije lijst.
 - **Bijzondere diensten**: Kerst, Pasen, Pinksteren hebben soms een afwijkende structuur (avondmaal, doopdienst). Overweeg een "bijzondere dienst" toggle.
 - **Fetch van collectes.json**: werkt via GitHub Pages (HTTPS). Bij lokaal openen van index.html als `file://` werkt de fetch niet — dan moet `COLLECTES` inline in de JS staan. Oplossing: in de catch-handler de data inline fallback plaatsen.
 - **Bijbelvertaling**: de automatische tekstophaling gebruikt de BasisBijbel (bb) via BijbelAPI. Voor andere vertalingen (HSV, Statenvertaling) kan de `BIJBEL_VERSIE`-constante in `index.html` worden aangepast.
+- **Supabase-project pauzeert bij inactiviteit** (opgetreden 10 augustus 2026): het gratis Supabase-project pauzeert automatisch na ~1 week zonder API-gebruik. Symptoom in de app: **"Opslaan mislukt: TypeError: Load failed"** (Safari) of "Failed to fetch" (Chrome) bij opslaan/laden/delen via `?id=…`. Herstel: Supabase-dashboard → project → **Restore project** (of via de Supabase MCP-tool `restore_project` met project-ref `iabrbkirzsolwnuknbel`); duurt 1–3 minuten. Preventie: `.github/workflows/keep-supabase-active.yml` doet elke 3 dagen een publieke leesaanvraag om het project actief te houden. Let op: GitHub schakelt scheduled workflows automatisch uit na 60 dagen zonder commits op de repo — bij twijfel de workflow handmatig draaien via **Actions → Houd Supabase-project actief → Run workflow**.
 
 ---
 
