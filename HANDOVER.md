@@ -167,6 +167,30 @@ Oplossing (`index.html`, functies `mergeStateForSave()` en `saveDienstToCloud()`
 
 Beperking: als iemand een veld bewust **leegmaakt** (intentioneel wissen) terwijl een ander tegelijk iets anders invult, wordt die leegmaak-actie wel als "gewijzigd" gezien (baseline had een waarde, nu leeg) en dus doorgevoerd — dat is correct gedrag. Alleen *niet-aangeraakte* velden worden beschermd.
 
+**7. Melding "liturgie is klaar" (e-mail-ping + id)** ✅ *geïmplementeerd (aug 2026)*  
+Feedback: er was geen signaal wanneer een liturgie echt compleet was en geen manier om de `id` te achterhalen zonder de link er specifiek bij te zoeken — terwijl die nodig is om de nieuwsbrief (`nieuwsbrief.html?id=...`) te openen.
+
+Nieuwe knop **"📣 Meld: liturgie is klaar"** (zichtbaar voor rol Bureaumedewerker / Alles bekijken, naast de downloadknop):
+1. Slaat de dienst op met `status = 'klaar'` (kolom bestond al in `diensten`, werd tot nu toe nooit gezet).
+2. Roept de Supabase Edge Function `supabase/functions/meld-klaar` aan (`sb.functions.invoke('meld-klaar', …)`) met `short_id`, datum, thema en de liturgie-/nieuwsbrief-link.
+3. Die functie verstuurt een e-mail via de [Resend](https://resend.com) API naar het adres in de secret `NOTIFY_EMAIL`. Vereiste secrets op het Supabase-project (Dashboard → Edge Functions → `meld-klaar` → Secrets, of via CLI):
+   ```bash
+   supabase secrets set --project-ref iabrbkirzsolwnuknbel \
+     RESEND_API_KEY=re_xxx \
+     RESEND_FROM="Liturgie Vrijburg <liturgie@vrijburg.nl>" \
+     NOTIFY_EMAIL="bureau@vrijburg.nl"
+   ```
+   (Resend: gratis account, 100 mails/dag; `RESEND_FROM` moet een bij Resend geverifieerd domein zijn — gebruik tijdelijk `onboarding@resend.dev` als testafzender tot dat geregeld is.)
+4. **Zolang deze secrets niet zijn ingesteld** antwoordt de functie met `{ ok: false, error: '...' }` (HTTP 501) en valt `index.html` automatisch terug op een kant-en-klare **mailto**-link naar `KLAAR_NOTIFY_EMAIL` (constante bovenin `index.html`, standaard `bureau@vrijburg.nl` — pas aan naar wie de nieuwsbrief maakt). De melding gaat dus in beide gevallen de deur uit; het verschil is alleen automatisch versus één klik op "verstuur" in het eigen mailprogramma.
+5. De functie is al gedeployed op het live project (`iabrbkirzsolwnuknbel`) via de Supabase MCP-tool; alleen de secrets ontbreken nog. Testen zonder secrets:
+   ```bash
+   curl -X POST "https://iabrbkirzsolwnuknbel.supabase.co/functions/v1/meld-klaar" \
+     -H "Authorization: Bearer <anon-key>" -H "apikey: <anon-key>" \
+     -H "Content-Type: application/json" \
+     -d '{"short_id":"test1234","datum":"zondag 1 januari 2027","thema":"Test"}'
+   # → {"ok":false,"error":"Niet geconfigureerd: ..."} (HTTP 501) totdat de secrets zijn gezet
+   ```
+
 ### Lage prioriteit / nice-to-have
 
 - **Opslaan als concept** ✅ *geïmplementeerd* — localStorage zodat een half-ingevuld formulier bewaard blijft bij sluiten
@@ -220,7 +244,8 @@ gebedsveld bij Opening, Overdenking/Afsluiting als vrije lijst.
 | Agenda | WordPress REST API (vrijburg.nl) |
 | Data | collectes.json (statisch) + Supabase `diensten` (gedeelde opslag) |
 | Hosting | GitHub Pages (statisch) |
-| Backend | Supabase Free (Postgres + Storage); zie `supabase/` |
+| Backend | Supabase Free (Postgres + Storage + Edge Functions); zie `supabase/` |
+| E-mail-ping "klaar" | Supabase Edge Function `meld-klaar` + [Resend](https://resend.com) API (secrets vereist, zie hierboven); mailto-fallback ingebouwd |
 | Geen | Build-tool, npm (vooralsnog) |
 
 ---
