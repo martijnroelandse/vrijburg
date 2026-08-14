@@ -160,6 +160,42 @@ Via WordPress REST API: `https://www.vrijburg.nl/wp-json/wp/v2/evenementen` (cus
 **5. Gedeelde backend (Supabase)** ✅ *schema + liturgie save/load + nieuwsbrief-pagina*  
 Liturgie slaat op in tabel `diensten` en deelt via korte link `?id=short_id` (foto in Storage-bucket `dienst-fotos`). Aparte pagina `nieuwsbrief.html` opent dezelfde id en toont Mailchimp-cards (platte tekst, kopieer per card), inclusief optionele card voor de laatste Vrijzinnige Miniatuur (via vrijburg.nl blog + SoundCloud-link), met downloadknop voor de illustratie en copyright/bronvermelding. Oude `?z=`-links blijven als fallback. SQL: `supabase/migrations/001_diensten.sql`.
 
+**6. Gelijktijdig invullen overschrijft elkaar niet meer** ✅ *geïmplementeerd (aug 2026)*  
+Bug: de voorganger en organist krijgen vaak *tegelijk* een link (zie workflow hierboven — stap "Bureaumedewerker stuurt link naar voorganger én organist"). Als beiden de pagina al open hadden vóórdat de ander opsloeg, overschreef `saveDienstToCloud()` de **hele** `data`-kolom met de eigen (deels verouderde) formulierstand — inclusief lege velden die de ander intussen wél had ingevuld. Dit verklaart het symptoom "de nieuwsbrieftekst is verdwenen, terwijl de dominee 'm wel heeft ingevuld": de organist sloeg daarna op met een stand van vóór het invullen van de nieuwsbrief, en die (lege) waarde won.
+
+Oplossing (`index.html`, functies `mergeStateForSave()` en `saveDienstToCloud()`): bij iedere save naar een bestaande dienst wordt eerst de nieuwste stand van de server opgehaald en samengevoegd met de lokale stand — per veld geldt: *alleen* velden die in déze sessie daadwerkelijk zijn gewijzigd (t.o.v. de laatst geladen/opgeslagen `baselineState`) overschrijven de servernaarde; niet-aangeraakte velden krijgen altijd de nieuwste serverwaarde. Zo kunnen voorganger en organist tegelijk in hetzelfde formulier werken zonder elkaars invoer te wissen. `baselineState` wordt bijgewerkt na elke succesvolle load/save.
+
+Beperking: als iemand een veld bewust **leegmaakt** (intentioneel wissen) terwijl een ander tegelijk iets anders invult, wordt die leegmaak-actie wel als "gewijzigd" gezien (baseline had een waarde, nu leeg) en dus doorgevoerd — dat is correct gedrag. Alleen *niet-aangeraakte* velden worden beschermd.
+
+**7. Melding "liturgie is klaar" (e-mail-ping + id)** ✅ *geïmplementeerd (aug 2026)*  
+Feedback: er was geen signaal wanneer een liturgie echt compleet was en geen manier om de `id` te achterhalen zonder de link er specifiek bij te zoeken — terwijl die nodig is om de nieuwsbrief (`nieuwsbrief.html?id=...`) te openen.
+
+Nieuwe knop **"📣 Meld: liturgie is klaar"** (zichtbaar voor rol Bureaumedewerker / Alles bekijken, naast de downloadknop):
+1. Slaat de dienst op met `status = 'klaar'` (kolom bestond al in `diensten`, werd tot nu toe nooit gezet).
+2. Roept de Supabase Edge Function `supabase/functions/meld-klaar` aan (`sb.functions.invoke('meld-klaar', …)`) met `short_id`, datum, thema en de liturgie-/nieuwsbrief-link.
+3. Die functie verstuurt een e-mail via de [Resend](https://resend.com) API naar het adres in de secret `NOTIFY_EMAIL`. Vereiste secrets op het Supabase-project (Dashboard → Edge Functions → `meld-klaar` → Secrets, of via CLI):
+   ```bash
+   supabase secrets set --project-ref iabrbkirzsolwnuknbel \
+     RESEND_API_KEY=re_xxx \
+     RESEND_FROM="Liturgie Vrijburg <liturgie@vrijburg.nl>" \
+     NOTIFY_EMAIL="bureau@vrijburg.nl"
+   ```
+   (Resend: gratis account, 100 mails/dag; `RESEND_FROM` moet een bij Resend geverifieerd domein zijn — gebruik tijdelijk `onboarding@resend.dev` als testafzender tot dat geregeld is.)
+4. **Zolang deze secrets niet zijn ingesteld** antwoordt de functie met `{ ok: false, error: '...' }` (HTTP 501) en valt `index.html` automatisch terug op een kant-en-klare **mailto**-link naar `KLAAR_NOTIFY_EMAIL` (constante bovenin `index.html`, standaard `bureau@vrijburg.nl` — pas aan naar wie de nieuwsbrief maakt). De melding gaat dus in beide gevallen de deur uit; het verschil is alleen automatisch versus één klik op "verstuur" in het eigen mailprogramma.
+5. De functie is al gedeployed op het live project (`iabrbkirzsolwnuknbel`) via de Supabase MCP-tool; alleen de secrets ontbreken nog. Testen zonder secrets:
+   ```bash
+   curl -X POST "https://iabrbkirzsolwnuknbel.supabase.co/functions/v1/meld-klaar" \
+     -H "Authorization: Bearer <anon-key>" -H "apikey: <anon-key>" \
+     -H "Content-Type: application/json" \
+     -d '{"short_id":"test1234","datum":"zondag 1 januari 2027","thema":"Test"}'
+   # → {"ok":false,"error":"Niet geconfigureerd: ..."} (HTTP 501) totdat de secrets zijn gezet
+   ```
+
+**7b. "Meld nieuwsbriefredactie" direct onder het nieuwsbriefveld** ✅ *geïmplementeerd (aug 2026)*  
+Aanleiding: in de praktijk staat de nieuwsbrieftekst niet altijd al klaar op het moment dat de rest van de liturgie compleet is (dat was ook de directe oorzaak van het "ik zie geen nieuwsbrieftekst"-signaal — de tekst was simpelweg nog niet ingevuld, geen bug). Losse melding per veld is dus handiger dan wachten op de algemene "klaar"-melding van de hele dienst.
+
+Nieuwe knop **"📣 Meld nieuwsbriefredactie"** naast "Open nieuwsbrief-app" (sectie Thema, foto & communicatie, onder het nieuwsbriefveld): slaat op (`prepareShareLink()`, zodat er een deelbare `id` is) en opent een `mailto:`-link met de nieuwsbrieftekst plus de link, naar het adres in de constante `NIEUWSBRIEF_REDACTIE_EMAIL` bovenin `index.html`. Staat voor nu op `martijnroelandse@me.com` ("voor nu", zoals gevraagd) — pas dit aan naar het definitieve redactie-adres zodra dat bekend is. Gebruikt bewust (nog) geen Edge Function/automatische e-mail: simpele mailto is hier voldoende en werkt zonder verdere configuratie.
+
 ### Lage prioriteit / nice-to-have
 
 - **Opslaan als concept** ✅ *geïmplementeerd* — localStorage zodat een half-ingevuld formulier bewaard blijft bij sluiten
@@ -213,7 +249,8 @@ gebedsveld bij Opening, Overdenking/Afsluiting als vrije lijst.
 | Agenda | WordPress REST API (vrijburg.nl) |
 | Data | collectes.json (statisch) + Supabase `diensten` (gedeelde opslag) |
 | Hosting | GitHub Pages (statisch) |
-| Backend | Supabase Free (Postgres + Storage); zie `supabase/` |
+| Backend | Supabase Free (Postgres + Storage + Edge Functions); zie `supabase/` |
+| E-mail-ping "klaar" | Supabase Edge Function `meld-klaar` + [Resend](https://resend.com) API (secrets vereist, zie hierboven); mailto-fallback ingebouwd |
 | Geen | Build-tool, npm (vooralsnog) |
 
 ---

@@ -71,6 +71,19 @@ rekeningnummer in. Deze optie gebruikt een vierde QR-code:
 
 De vaste teksten (Bemoediging, Groet, Onze Vader, QR-code tekst, footer) staan bovenin `index.html` als JavaScript-constanten. Die kun je direct bewerken.
 
+## Melding "liturgie is klaar" (voor de nieuwsbrief-maker)
+
+Zodra alles is ingevuld, klikt de bureaumedewerker (rol "Bureaumedewerker" of "Alles bekijken") op **📣 Meld: liturgie is klaar**. Dat doet twee dingen:
+
+1. Slaat de dienst op met status `klaar` (zichtbaar naast de cloud-link onderin het formulier).
+2. Stuurt een e-mail-ping met de datum, het thema en de `id` naar het adres in `KLAAR_NOTIFY_EMAIL` (bovenin `index.html`) — zodat degene die de nieuwsbrief maakt niet zelf hoeft te checken of/wanneer een liturgie compleet is.
+
+Die e-mail wordt automatisch verstuurd via de Supabase Edge Function `supabase/functions/meld-klaar`, mits de secrets `RESEND_API_KEY`, `RESEND_FROM` en `NOTIFY_EMAIL` zijn ingesteld (zie de comment bovenin dat bestand en `HANDOVER.md`). Zolang dat nog niet is gebeurd, opent de knop in plaats daarvan een kant-en-klare e-mail in uw eigen mailprogramma — de melding gaat dus sowieso de deur uit.
+
+### Los daarvan: "Meld nieuwsbriefredactie" (direct onder het nieuwsbriefveld)
+
+Naast de melding voor de hele dienst (hierboven) staat er ook een knop **📣 Meld nieuwsbriefredactie** direct onder het nieuwsbrief-tekstveld. Die is bedoeld voor de voorganger: zodra de nieuwsbrieftekst zelf klaar is (nog vóórdat de rest van de liturgie compleet is), kan die meteen gemeld worden — de tekst staat namelijk niet per definitie al klaar op het moment dat de rest van de liturgie is afgerond. De knop slaat op (voor een deelbare `id`) en opent een mailto met de nieuwsbrieftekst + link. Adres staat (voorlopig, "voor nu") in de constante `NIEUWSBRIEF_REDACTIE_EMAIL` in `index.html` — momenteel `martijnroelandse@me.com`, later te vervangen door het vaste redactie-adres.
+
 ## Toekomstige uitbreidingen
 
 Zie `HANDOVER.md` voor de volledige lijst. Recent toegevoegd:
@@ -85,6 +98,8 @@ Zie `HANDOVER.md` voor de volledige lijst. Recent toegevoegd:
 - Mailchimp cards-copy als platte tekst (zonder HTML, per card/box)
 - Overdenking naar bureau@vrijburg.nl (mailto)
 - Foto in liturgie (.docx) + download voor website
+- Gelijktijdig invullen door voorganger + organist overschrijft elkaars velden niet meer (samenvoegen bij opslaan)
+- Melding "liturgie is klaar" met e-mail-ping + id (zie hierboven)
 
 Nog open: collectes 2027-2028, liedboek lookup, bijzondere diensten.
 

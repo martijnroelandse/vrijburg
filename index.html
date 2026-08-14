@@ -710,8 +710,9 @@
             <button type="button" class="btn-small" onclick="copyField('nieuwsbrief', 'Nieuwsbrieftekst gekopieerd')">Kopieer voor nieuwsbrief</button>
             <button type="button" class="btn-small" onclick="copyMailchimpCards()">Kopieer voor Mailchimp cards</button>
             <button type="button" class="btn-small" onclick="openNieuwsbriefPage()">Open nieuwsbrief-app</button>
+            <button type="button" class="btn-small" onclick="meldNieuwsbriefRedactie()">📣 Meld nieuwsbriefredactie</button>
           </div>
-          <p class="comm-hint">Mailchimp-copy is platte tekst met losse card/box-blokken (geen HTML). De aparte nieuwsbrief-app opent dezelfde cloud-<code>id</code> voor nabewerking.</p>
+          <p class="comm-hint">Mailchimp-copy is platte tekst met losse card/box-blokken (geen HTML). De aparte nieuwsbrief-app opent dezelfde cloud-<code>id</code> voor nabewerking. &ldquo;Meld nieuwsbriefredactie&rdquo; slaat op en stuurt de tekst + id per e-mail.</p>
         </div>
       </div>
       <div class="row">
@@ -925,6 +926,7 @@
       <button class="btn-secondary" id="btn-email-organist" onclick="emailRol('organist')">✉ Link naar organist</button>
       <button class="btn-secondary" onclick="copyShareLink()">🔗 Kopieer link</button>
       <button class="btn-secondary" id="btn-klaar" onclick="terugNaarBureau()">✓ Ik ben klaar – stuur naar bureau</button>
+      <button class="btn-secondary" id="btn-meld-klaar" onclick="meldDienstKlaar()" title="Zet de status op 'klaar' en stuurt automatisch een e-mail-melding met de id, zodat de nieuwsbrief gemaakt kan worden">📣 Meld: liturgie is klaar</button>
       <button class="btn-secondary" onclick="clearDraft()">Wis concept</button>
     </div>
   </div>
@@ -1012,6 +1014,17 @@ const VRIJBURG_EVENTS_API = 'https://www.vrijburg.nl/wp-json/wp/v2/evenementen';
 const SUPABASE_URL = 'https://iabrbkirzsolwnuknbel.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlhYnJia2lyenNvbHdudWtuYmVsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ3OTU4MDIsImV4cCI6MjEwMDM3MTgwMn0.ojjiiwwAwb3eITwThJPXGgOk_XynghQUNZ_snDDe6iQ';
 const SUPABASE_FOTO_BUCKET = 'dienst-fotos';
+// Ontvanger van de "klaar"-melding (zie meldDienstKlaar()). Pas dit adres aan
+// naar wie de nieuwsbrief samenstelt (of degene die wil weten wanneer een
+// liturgie compleet is en wat de id is). Wordt zowel gebruikt als fallback
+// mailto-adres als als "to" voor de automatische e-mail via de Edge Function
+// (die op zijn beurt NOTIFY_EMAIL als secret gebruikt — zie supabase/functions/meld-klaar).
+const KLAAR_NOTIFY_EMAIL = 'bureau@vrijburg.nl';
+// Ontvanger van de "meld nieuwsbriefredactie"-knop (zie meldNieuwsbriefRedactie()).
+// Voor nu tijdelijk naar Martijn zodat hij meteen ziet wanneer een
+// nieuwsbrieftekst klaarstaat; later te vervangen door het vaste
+// redactie-adres.
+const NIEUWSBRIEF_REDACTIE_EMAIL = 'martijnroelandse@me.com';
 
 const sb = (() => {
   const lib = (typeof supabase !== 'undefined') ? supabase : null;
@@ -1022,6 +1035,11 @@ const sb = (() => {
 let currentDienstUuid = null;
 let currentShortId = null;
 let currentFotoPath = null;
+let currentDienstStatus = null;
+// Laatst bekende opgeslagen stand (server of leeg formulier). Wordt gebruikt
+// om bij het opslaan te bepalen welke velden in déze sessie zijn gewijzigd,
+// zodat gelijktijdig invullen door voorganger/organist elkaar niet overschrijft.
+let baselineState = null;
 
 const VL_LABELS = {
   vlv: 'Vrijburg laat voorgaan',
@@ -1164,6 +1182,7 @@ function applyRolUI() {
   // Actieknoppen per rol
   const isSamenvoeger = huidigeRol === 'medewerker' || huidigeRol === 'compleet';
   document.getElementById('btn-download').style.display = isSamenvoeger ? '' : 'none';
+  document.getElementById('btn-meld-klaar').style.display = isSamenvoeger ? '' : 'none';
   document.getElementById('btn-email-voorganger').style.display = huidigeRol === 'medewerker' ? '' : 'none';
   document.getElementById('btn-email-organist').style.display = huidigeRol === 'medewerker' ? '' : 'none';
   document.getElementById('btn-klaar').style.display = (huidigeRol === 'voorganger' || huidigeRol === 'organist') ? '' : 'none';
@@ -1279,6 +1298,42 @@ function emailOverdenkingNaarBureau() {
   window.location.href = `mailto:bureau@vrijburg.nl?subject=${subject}&body=${body}`;
 }
 
+// Slaat op (zodat er een id/link is) en meldt de nieuwsbriefredactie per
+// e-mail dat de nieuwsbrieftekst klaarstaat — inclusief de tekst zelf en de
+// link/id, zodat die niet apart opgezocht hoeft te worden.
+function meldNieuwsbriefRedactie() {
+  const tekst = document.getElementById('nieuwsbrief').value.trim();
+  if (!tekst) {
+    setStatus('Vul eerst de nieuwsbrieftekst in', 'err');
+    document.getElementById('nieuwsbrief').focus();
+    return;
+  }
+  const datum = document.getElementById('datum').value;
+  const datumTekst = datum ? formatDatum(datum) : 'komende dienst';
+  const thema = document.getElementById('thema').value.trim();
+
+  setStatus('Opslaan & nieuwsbriefredactie melden…', '');
+  prepareShareLink().then(async ({ short, cloud }) => {
+    await copyShareLinkRich(short);
+    const body =
+      `Beste redactie,\n\n` +
+      `De nieuwsbrieftekst voor de dienst op ${datumTekst}` +
+      (thema ? ` (${thema})` : '') + ` staat klaar:\n\n` +
+      `${tekst}\n\n` +
+      (cloud ? mailLinkBlock(short) + '\n' : '') +
+      `Met vriendelijke groet`;
+    openMailto({
+      to: NIEUWSBRIEF_REDACTIE_EMAIL,
+      subject: `Nieuwsbriefredactie – ${datumTekst}${thema ? ' – ' + thema : ''}`,
+      body,
+    });
+    setStatus(cloud ? '✓ Nieuwsbriefredactie gemeld (link in mail en op klembord)' : '✓ Nieuwsbriefredactie gemeld', 'ok');
+  }).catch(err => {
+    console.error(err);
+    setStatus('Melden nieuwsbriefredactie mislukt: ' + (err.message || err), 'err');
+  });
+}
+
 function encodeShareState(state) {
   return LZString.compressToEncodedURIComponent(JSON.stringify(state));
 }
@@ -1306,7 +1361,8 @@ function updateCloudHint() {
     const rol = new URLSearchParams(location.search).get('rol') || undefined;
     const url = getCloudShareUrl(rol);
     const safeUrl = url.replace(/"/g, '&quot;');
-    el.innerHTML = `☁ Opgeslagen — <a href="${safeUrl}" title="Bewaar deze link (bijv. in uw favorieten) om later verder te werken">bewaar deze link om later verder te werken</a>`;
+    const statusLabel = currentDienstStatus === 'klaar' ? ' · status: 📣 klaar' : '';
+    el.innerHTML = `☁ Opgeslagen (id=${currentShortId})${statusLabel} — <a href="${safeUrl}" title="Bewaar deze link (bijv. in uw favorieten) om later verder te werken">bewaar deze link om later verder te werken</a>`;
   } else {
     el.style.display = 'none';
     el.innerHTML = '';
@@ -1336,6 +1392,7 @@ function setCurrentDienst(row) {
   currentDienstUuid = row.id;
   currentShortId = row.short_id;
   currentFotoPath = row.foto_path || null;
+  if (row.status) currentDienstStatus = row.status;
   updateCloudHint();
   try {
     history.replaceState(null, '', getCloudShareUrl(
@@ -1395,17 +1452,56 @@ async function loadFotoFromStorage(path) {
   }
 }
 
+// Voegt de lokale (mogelijk verouderde) stand samen met de nieuwste stand op
+// de server: een veld wordt alleen overschreven als het in déze sessie is
+// gewijzigd t.o.v. de vorige keer laden/opslaan (baseline). Niet-aangeraakte
+// velden krijgen de nieuwste serverwaarde — zo overschrijft bijvoorbeeld de
+// organist niet per ongeluk de nieuwsbrieftekst die de voorganger intussen
+// heeft opgeslagen (en omgekeerd).
+function mergeStateForSave(baseline, local, serverLatest) {
+  const merged = { ...(serverLatest || {}) };
+  const keys = new Set([
+    ...Object.keys(baseline || {}),
+    ...Object.keys(local || {}),
+    ...Object.keys(serverLatest || {}),
+  ]);
+  keys.forEach((key) => {
+    if (key === 'foto_data') return; // foto loopt apart via Storage
+    const localVal = local ? local[key] : undefined;
+    const baseVal = baseline ? baseline[key] : undefined;
+    const wasChangedLocally = JSON.stringify(localVal) !== JSON.stringify(baseVal);
+    if (wasChangedLocally || !serverLatest || !(key in serverLatest)) {
+      merged[key] = localVal;
+    }
+  });
+  return merged;
+}
+
 async function saveDienstToCloud({ status } = {}) {
   if (!sb) throw new Error('Supabase niet geladen');
 
-  const payload = getCloudPayload();
-  const datum = payload.datum || null;
-  const thema = (payload.thema || '').trim() || null;
-  const fotoCredit = (payload.foto_credit || '').trim() || null;
+  const localPayload = getCloudPayload();
+  let payload = localPayload;
 
   // Eerst short_id bepalen (bestaand of tijdelijk nieuw via insert)
   let row;
   if (currentDienstUuid) {
+    try {
+      const { data: latest, error: fetchErr } = await sb
+        .from('diensten')
+        .select('data')
+        .eq('id', currentDienstUuid)
+        .maybeSingle();
+      if (!fetchErr && latest && latest.data) {
+        payload = mergeStateForSave(baselineState, localPayload, latest.data);
+      }
+    } catch (e) {
+      console.warn('Kon nieuwste stand niet ophalen vóór opslaan, gebruik lokale stand:', e);
+    }
+
+    const datum = payload.datum || null;
+    const thema = (payload.thema || '').trim() || null;
+    const fotoCredit = (payload.foto_credit || '').trim() || null;
     const fotoPath = await uploadFotoToStorage(currentShortId);
     const update = {
       datum,
@@ -1419,11 +1515,14 @@ async function saveDienstToCloud({ status } = {}) {
       .from('diensten')
       .update(update)
       .eq('id', currentDienstUuid)
-      .select('id, short_id, foto_path')
+      .select('id, short_id, foto_path, status')
       .single();
     if (error) throw error;
     row = data;
   } else {
+    const datum = payload.datum || null;
+    const thema = (payload.thema || '').trim() || null;
+    const fotoCredit = (payload.foto_credit || '').trim() || null;
     const insert = {
       datum,
       thema,
@@ -1434,7 +1533,7 @@ async function saveDienstToCloud({ status } = {}) {
     const { data, error } = await sb
       .from('diensten')
       .insert(insert)
-      .select('id, short_id, foto_path')
+      .select('id, short_id, foto_path, status')
       .single();
     if (error) throw error;
     row = data;
@@ -1446,7 +1545,7 @@ async function saveDienstToCloud({ status } = {}) {
         .from('diensten')
         .update({ foto_path: fotoPath })
         .eq('id', row.id)
-        .select('id, short_id, foto_path')
+        .select('id, short_id, foto_path, status')
         .single();
       if (upErr) throw upErr;
       row = updated;
@@ -1454,6 +1553,7 @@ async function saveDienstToCloud({ status } = {}) {
   }
 
   setCurrentDienst(row);
+  baselineState = JSON.parse(JSON.stringify(payload));
   saveDraft();
   return row;
 }
@@ -1479,6 +1579,10 @@ async function loadDienstFromCloud(shortId) {
   }
 
   applyFormState(state);
+  // Baseline = de stand zoals net geladen (zonder foto_data, net als getCloudPayload()),
+  // zodat een latere save alleen echt gewijzigde velden overschrijft.
+  baselineState = { ...(data.data || {}) };
+  delete baselineState.foto_data;
   const rolParam = new URLSearchParams(location.search).get('rol');
   if (rolParam && ROL_CONFIG[rolParam]) setRol(rolParam);
   return data;
@@ -1492,6 +1596,81 @@ async function saveDienstManual() {
   } catch (err) {
     console.error(err);
     setStatus('Opslaan mislukt: ' + (err.message || err), 'err');
+  }
+}
+
+// ============================================================
+// "LITURGIE IS KLAAR" MELDING (voor nieuwsbrief-maker)
+// ============================================================
+// Probeert een automatische e-mail-ping te sturen via een Supabase Edge
+// Function (supabase/functions/meld-klaar). Die functie stuurt pas echt een
+// e-mail als de secrets RESEND_API_KEY en NOTIFY_EMAIL zijn ingesteld op het
+// Supabase-project — zie HANDOVER.md. Zolang dat niet is gebeurd (of de
+// functie niet bereikbaar is), valt meldDienstKlaar() terug op een
+// kant-en-klare mailto-link, zodat de melding sowieso verstuurd kan worden.
+async function pingKlaarNotificatie({ shortId, datumTekst, thema, liturgieUrl, nieuwsbriefUrl }) {
+  if (!sb) return { ok: false, reason: 'Geen Supabase-verbinding' };
+  try {
+    const { data, error } = await sb.functions.invoke('meld-klaar', {
+      body: {
+        short_id: shortId,
+        datum: datumTekst,
+        thema,
+        liturgie_url: liturgieUrl,
+        nieuwsbrief_url: nieuwsbriefUrl,
+      },
+    });
+    if (error) return { ok: false, reason: error.message || String(error) };
+    if (data && data.ok === false) return { ok: false, reason: data.error || 'onbekende fout' };
+    return { ok: true };
+  } catch (e) {
+    return { ok: false, reason: e.message || String(e) };
+  }
+}
+
+async function meldDienstKlaar() {
+  const datum = document.getElementById('datum').value;
+  if (!datum) {
+    setStatus('Vul eerst een datum in voordat u de liturgie als klaar meldt', 'err');
+    return;
+  }
+  const datumTekst = formatDatum(datum);
+  const thema = document.getElementById('thema').value.trim();
+
+  setStatus('Opslaan & melden dat de liturgie klaar is…', '');
+  try {
+    const row = await saveDienstToCloud({ status: 'klaar' });
+    const shortId = row.short_id;
+    const liturgieUrl = getCloudShareUrl();
+    const nieuwsbriefUrl = new URL('nieuwsbrief.html', location.href.split('?')[0]);
+    nieuwsbriefUrl.searchParams.set('id', shortId);
+
+    const ping = await pingKlaarNotificatie({
+      shortId,
+      datumTekst,
+      thema,
+      liturgieUrl,
+      nieuwsbriefUrl: nieuwsbriefUrl.toString(),
+    });
+
+    if (ping.ok) {
+      setStatus(`✓ Liturgie gemeld als klaar — e-mail verstuurd (id=${shortId})`, 'ok');
+    } else {
+      console.warn('Automatische e-mail-ping (nog) niet gelukt:', ping.reason);
+      openMailto({
+        to: KLAAR_NOTIFY_EMAIL,
+        subject: `Liturgie klaar – ${datumTekst}${thema ? ' – ' + thema : ''} (id=${shortId})`,
+        body:
+          `De liturgie voor ${datumTekst}${thema ? ' (' + thema + ')' : ''} is compleet en gemarkeerd als klaar.\n\n` +
+          `id: ${shortId}\n\n` +
+          `Liturgie: ${liturgieUrl}\n` +
+          `Nieuwsbrief-app: ${nieuwsbriefUrl.toString()}\n`,
+      });
+      setStatus(`✓ Gemarkeerd als klaar (id=${shortId}) — e-mail geopend in uw mailprogramma, verstuur die nog even (automatische ping is nog niet ingesteld, zie HANDOVER.md)`, 'ok');
+    }
+  } catch (err) {
+    console.error(err);
+    setStatus('Melden als klaar mislukt: ' + (err.message || err), 'err');
   }
 }
 
