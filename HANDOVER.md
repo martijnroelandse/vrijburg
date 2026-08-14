@@ -160,6 +160,13 @@ Via WordPress REST API: `https://www.vrijburg.nl/wp-json/wp/v2/evenementen` (cus
 **5. Gedeelde backend (Supabase)** ✅ *schema + liturgie save/load + nieuwsbrief-pagina*  
 Liturgie slaat op in tabel `diensten` en deelt via korte link `?id=short_id` (foto in Storage-bucket `dienst-fotos`). Aparte pagina `nieuwsbrief.html` opent dezelfde id en toont Mailchimp-cards (platte tekst, kopieer per card), inclusief optionele card voor de laatste Vrijzinnige Miniatuur (via vrijburg.nl blog + SoundCloud-link), met downloadknop voor de illustratie en copyright/bronvermelding. Oude `?z=`-links blijven als fallback. SQL: `supabase/migrations/001_diensten.sql`.
 
+**6. Gelijktijdig invullen overschrijft elkaar niet meer** ✅ *geïmplementeerd (aug 2026)*  
+Bug: de voorganger en organist krijgen vaak *tegelijk* een link (zie workflow hierboven — stap "Bureaumedewerker stuurt link naar voorganger én organist"). Als beiden de pagina al open hadden vóórdat de ander opsloeg, overschreef `saveDienstToCloud()` de **hele** `data`-kolom met de eigen (deels verouderde) formulierstand — inclusief lege velden die de ander intussen wél had ingevuld. Dit verklaart het symptoom "de nieuwsbrieftekst is verdwenen, terwijl de dominee 'm wel heeft ingevuld": de organist sloeg daarna op met een stand van vóór het invullen van de nieuwsbrief, en die (lege) waarde won.
+
+Oplossing (`index.html`, functies `mergeStateForSave()` en `saveDienstToCloud()`): bij iedere save naar een bestaande dienst wordt eerst de nieuwste stand van de server opgehaald en samengevoegd met de lokale stand — per veld geldt: *alleen* velden die in déze sessie daadwerkelijk zijn gewijzigd (t.o.v. de laatst geladen/opgeslagen `baselineState`) overschrijven de servernaarde; niet-aangeraakte velden krijgen altijd de nieuwste serverwaarde. Zo kunnen voorganger en organist tegelijk in hetzelfde formulier werken zonder elkaars invoer te wissen. `baselineState` wordt bijgewerkt na elke succesvolle load/save.
+
+Beperking: als iemand een veld bewust **leegmaakt** (intentioneel wissen) terwijl een ander tegelijk iets anders invult, wordt die leegmaak-actie wel als "gewijzigd" gezien (baseline had een waarde, nu leeg) en dus doorgevoerd — dat is correct gedrag. Alleen *niet-aangeraakte* velden worden beschermd.
+
 ### Lage prioriteit / nice-to-have
 
 - **Opslaan als concept** ✅ *geïmplementeerd* — localStorage zodat een half-ingevuld formulier bewaard blijft bij sluiten

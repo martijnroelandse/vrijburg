@@ -1022,6 +1022,10 @@ const sb = (() => {
 let currentDienstUuid = null;
 let currentShortId = null;
 let currentFotoPath = null;
+// Laatst bekende opgeslagen stand (server of leeg formulier). Wordt gebruikt
+// om bij het opslaan te bepalen welke velden in déze sessie zijn gewijzigd,
+// zodat gelijktijdig invullen door voorganger/organist elkaar niet overschrijft.
+let baselineState = null;
 
 const VL_LABELS = {
   vlv: 'Vrijburg laat voorgaan',
@@ -1395,17 +1399,56 @@ async function loadFotoFromStorage(path) {
   }
 }
 
+// Voegt de lokale (mogelijk verouderde) stand samen met de nieuwste stand op
+// de server: een veld wordt alleen overschreven als het in déze sessie is
+// gewijzigd t.o.v. de vorige keer laden/opslaan (baseline). Niet-aangeraakte
+// velden krijgen de nieuwste serverwaarde — zo overschrijft bijvoorbeeld de
+// organist niet per ongeluk de nieuwsbrieftekst die de voorganger intussen
+// heeft opgeslagen (en omgekeerd).
+function mergeStateForSave(baseline, local, serverLatest) {
+  const merged = { ...(serverLatest || {}) };
+  const keys = new Set([
+    ...Object.keys(baseline || {}),
+    ...Object.keys(local || {}),
+    ...Object.keys(serverLatest || {}),
+  ]);
+  keys.forEach((key) => {
+    if (key === 'foto_data') return; // foto loopt apart via Storage
+    const localVal = local ? local[key] : undefined;
+    const baseVal = baseline ? baseline[key] : undefined;
+    const wasChangedLocally = JSON.stringify(localVal) !== JSON.stringify(baseVal);
+    if (wasChangedLocally || !serverLatest || !(key in serverLatest)) {
+      merged[key] = localVal;
+    }
+  });
+  return merged;
+}
+
 async function saveDienstToCloud({ status } = {}) {
   if (!sb) throw new Error('Supabase niet geladen');
 
-  const payload = getCloudPayload();
-  const datum = payload.datum || null;
-  const thema = (payload.thema || '').trim() || null;
-  const fotoCredit = (payload.foto_credit || '').trim() || null;
+  const localPayload = getCloudPayload();
+  let payload = localPayload;
 
   // Eerst short_id bepalen (bestaand of tijdelijk nieuw via insert)
   let row;
   if (currentDienstUuid) {
+    try {
+      const { data: latest, error: fetchErr } = await sb
+        .from('diensten')
+        .select('data')
+        .eq('id', currentDienstUuid)
+        .maybeSingle();
+      if (!fetchErr && latest && latest.data) {
+        payload = mergeStateForSave(baselineState, localPayload, latest.data);
+      }
+    } catch (e) {
+      console.warn('Kon nieuwste stand niet ophalen vóór opslaan, gebruik lokale stand:', e);
+    }
+
+    const datum = payload.datum || null;
+    const thema = (payload.thema || '').trim() || null;
+    const fotoCredit = (payload.foto_credit || '').trim() || null;
     const fotoPath = await uploadFotoToStorage(currentShortId);
     const update = {
       datum,
@@ -1424,6 +1467,9 @@ async function saveDienstToCloud({ status } = {}) {
     if (error) throw error;
     row = data;
   } else {
+    const datum = payload.datum || null;
+    const thema = (payload.thema || '').trim() || null;
+    const fotoCredit = (payload.foto_credit || '').trim() || null;
     const insert = {
       datum,
       thema,
@@ -1454,6 +1500,7 @@ async function saveDienstToCloud({ status } = {}) {
   }
 
   setCurrentDienst(row);
+  baselineState = JSON.parse(JSON.stringify(payload));
   saveDraft();
   return row;
 }
@@ -1479,6 +1526,10 @@ async function loadDienstFromCloud(shortId) {
   }
 
   applyFormState(state);
+  // Baseline = de stand zoals net geladen (zonder foto_data, net als getCloudPayload()),
+  // zodat een latere save alleen echt gewijzigde velden overschrijft.
+  baselineState = { ...(data.data || {}) };
+  delete baselineState.foto_data;
   const rolParam = new URLSearchParams(location.search).get('rol');
   if (rolParam && ROL_CONFIG[rolParam]) setRol(rolParam);
   return data;
