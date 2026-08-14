@@ -710,8 +710,9 @@
             <button type="button" class="btn-small" onclick="copyField('nieuwsbrief', 'Nieuwsbrieftekst gekopieerd')">Kopieer voor nieuwsbrief</button>
             <button type="button" class="btn-small" onclick="copyMailchimpCards()">Kopieer voor Mailchimp cards</button>
             <button type="button" class="btn-small" onclick="openNieuwsbriefPage()">Open nieuwsbrief-app</button>
+            <button type="button" class="btn-small" onclick="meldNieuwsbriefRedactie()">📣 Meld nieuwsbriefredactie</button>
           </div>
-          <p class="comm-hint">Mailchimp-copy is platte tekst met losse card/box-blokken (geen HTML). De aparte nieuwsbrief-app opent dezelfde cloud-<code>id</code> voor nabewerking.</p>
+          <p class="comm-hint">Mailchimp-copy is platte tekst met losse card/box-blokken (geen HTML). De aparte nieuwsbrief-app opent dezelfde cloud-<code>id</code> voor nabewerking. &ldquo;Meld nieuwsbriefredactie&rdquo; slaat op en stuurt de tekst + id per e-mail.</p>
         </div>
       </div>
       <div class="row">
@@ -1019,6 +1020,11 @@ const SUPABASE_FOTO_BUCKET = 'dienst-fotos';
 // mailto-adres als als "to" voor de automatische e-mail via de Edge Function
 // (die op zijn beurt NOTIFY_EMAIL als secret gebruikt — zie supabase/functions/meld-klaar).
 const KLAAR_NOTIFY_EMAIL = 'bureau@vrijburg.nl';
+// Ontvanger van de "meld nieuwsbriefredactie"-knop (zie meldNieuwsbriefRedactie()).
+// Voor nu tijdelijk naar Martijn zodat hij meteen ziet wanneer een
+// nieuwsbrieftekst klaarstaat; later te vervangen door het vaste
+// redactie-adres.
+const NIEUWSBRIEF_REDACTIE_EMAIL = 'martijnroelandse@me.com';
 
 const sb = (() => {
   const lib = (typeof supabase !== 'undefined') ? supabase : null;
@@ -1290,6 +1296,42 @@ function emailOverdenkingNaarBureau() {
     `Met vriendelijke groet`
   );
   window.location.href = `mailto:bureau@vrijburg.nl?subject=${subject}&body=${body}`;
+}
+
+// Slaat op (zodat er een id/link is) en meldt de nieuwsbriefredactie per
+// e-mail dat de nieuwsbrieftekst klaarstaat — inclusief de tekst zelf en de
+// link/id, zodat die niet apart opgezocht hoeft te worden.
+function meldNieuwsbriefRedactie() {
+  const tekst = document.getElementById('nieuwsbrief').value.trim();
+  if (!tekst) {
+    setStatus('Vul eerst de nieuwsbrieftekst in', 'err');
+    document.getElementById('nieuwsbrief').focus();
+    return;
+  }
+  const datum = document.getElementById('datum').value;
+  const datumTekst = datum ? formatDatum(datum) : 'komende dienst';
+  const thema = document.getElementById('thema').value.trim();
+
+  setStatus('Opslaan & nieuwsbriefredactie melden…', '');
+  prepareShareLink().then(async ({ short, cloud }) => {
+    await copyShareLinkRich(short);
+    const body =
+      `Beste redactie,\n\n` +
+      `De nieuwsbrieftekst voor de dienst op ${datumTekst}` +
+      (thema ? ` (${thema})` : '') + ` staat klaar:\n\n` +
+      `${tekst}\n\n` +
+      (cloud ? mailLinkBlock(short) + '\n' : '') +
+      `Met vriendelijke groet`;
+    openMailto({
+      to: NIEUWSBRIEF_REDACTIE_EMAIL,
+      subject: `Nieuwsbriefredactie – ${datumTekst}${thema ? ' – ' + thema : ''}`,
+      body,
+    });
+    setStatus(cloud ? '✓ Nieuwsbriefredactie gemeld (link in mail en op klembord)' : '✓ Nieuwsbriefredactie gemeld', 'ok');
+  }).catch(err => {
+    console.error(err);
+    setStatus('Melden nieuwsbriefredactie mislukt: ' + (err.message || err), 'err');
+  });
 }
 
 function encodeShareState(state) {

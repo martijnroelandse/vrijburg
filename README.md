@@ -80,6 +80,10 @@ Zodra alles is ingevuld, klikt de bureaumedewerker (rol "Bureaumedewerker" of "A
 
 Die e-mail wordt automatisch verstuurd via de Supabase Edge Function `supabase/functions/meld-klaar`, mits de secrets `RESEND_API_KEY`, `RESEND_FROM` en `NOTIFY_EMAIL` zijn ingesteld (zie de comment bovenin dat bestand en `HANDOVER.md`). Zolang dat nog niet is gebeurd, opent de knop in plaats daarvan een kant-en-klare e-mail in uw eigen mailprogramma — de melding gaat dus sowieso de deur uit.
 
+### Los daarvan: "Meld nieuwsbriefredactie" (direct onder het nieuwsbriefveld)
+
+Naast de melding voor de hele dienst (hierboven) staat er ook een knop **📣 Meld nieuwsbriefredactie** direct onder het nieuwsbrief-tekstveld. Die is bedoeld voor de voorganger: zodra de nieuwsbrieftekst zelf klaar is (nog vóórdat de rest van de liturgie compleet is), kan die meteen gemeld worden — de tekst staat namelijk niet per definitie al klaar op het moment dat de rest van de liturgie is afgerond. De knop slaat op (voor een deelbare `id`) en opent een mailto met de nieuwsbrieftekst + link. Adres staat (voorlopig, "voor nu") in de constante `NIEUWSBRIEF_REDACTIE_EMAIL` in `index.html` — momenteel `martijnroelandse@me.com`, later te vervangen door het vaste redactie-adres.
+
 ## Toekomstige uitbreidingen
 
 Zie `HANDOVER.md` voor de volledige lijst. Recent toegevoegd:

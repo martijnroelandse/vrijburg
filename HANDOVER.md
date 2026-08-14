@@ -191,6 +191,11 @@ Nieuwe knop **"📣 Meld: liturgie is klaar"** (zichtbaar voor rol Bureaumedewer
    # → {"ok":false,"error":"Niet geconfigureerd: ..."} (HTTP 501) totdat de secrets zijn gezet
    ```
 
+**7b. "Meld nieuwsbriefredactie" direct onder het nieuwsbriefveld** ✅ *geïmplementeerd (aug 2026)*  
+Aanleiding: in de praktijk staat de nieuwsbrieftekst niet altijd al klaar op het moment dat de rest van de liturgie compleet is (dat was ook de directe oorzaak van het "ik zie geen nieuwsbrieftekst"-signaal — de tekst was simpelweg nog niet ingevuld, geen bug). Losse melding per veld is dus handiger dan wachten op de algemene "klaar"-melding van de hele dienst.
+
+Nieuwe knop **"📣 Meld nieuwsbriefredactie"** naast "Open nieuwsbrief-app" (sectie Thema, foto & communicatie, onder het nieuwsbriefveld): slaat op (`prepareShareLink()`, zodat er een deelbare `id` is) en opent een `mailto:`-link met de nieuwsbrieftekst plus de link, naar het adres in de constante `NIEUWSBRIEF_REDACTIE_EMAIL` bovenin `index.html`. Staat voor nu op `martijnroelandse@me.com` ("voor nu", zoals gevraagd) — pas dit aan naar het definitieve redactie-adres zodra dat bekend is. Gebruikt bewust (nog) geen Edge Function/automatische e-mail: simpele mailto is hier voldoende en werkt zonder verdere configuratie.
+
 ### Lage prioriteit / nice-to-have
 
 - **Opslaan als concept** ✅ *geïmplementeerd* — localStorage zodat een half-ingevuld formulier bewaard blijft bij sluiten
