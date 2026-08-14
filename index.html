@@ -707,12 +707,9 @@
           <label>Nieuwsbrief <span class="opt">– kort stukje voor de wekelijkse email</span></label>
           <textarea id="nieuwsbrief" rows="4" placeholder="Tekst over de komende dienst en het thema, voor in de nieuwsbrief…"></textarea>
           <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px">
-            <button type="button" class="btn-small" onclick="copyField('nieuwsbrief', 'Nieuwsbrieftekst gekopieerd')">Kopieer voor nieuwsbrief</button>
-            <button type="button" class="btn-small" onclick="copyMailchimpCards()">Kopieer voor Mailchimp cards</button>
-            <button type="button" class="btn-small" onclick="openNieuwsbriefPage()">Open nieuwsbrief-app</button>
             <button type="button" class="btn-small" onclick="meldNieuwsbriefRedactie()">📣 Meld nieuwsbriefredactie</button>
           </div>
-          <p class="comm-hint">Mailchimp-copy is platte tekst met losse card/box-blokken (geen HTML). De aparte nieuwsbrief-app opent dezelfde cloud-<code>id</code> voor nabewerking. &ldquo;Meld nieuwsbriefredactie&rdquo; slaat op en stuurt de tekst + id per e-mail.</p>
+          <p class="comm-hint">Slaat op en stuurt de tekst + id per e-mail naar de nieuwsbriefredactie. Zij verwerken de tekst verder in de <a href="nieuwsbrief.html" target="_blank" rel="noopener">nieuwsbrief-app</a> (Mailchimp-cards e.d.).</p>
         </div>
       </div>
       <div class="row">
@@ -1813,87 +1810,6 @@ function terugNaarBureau() {
     console.error(err);
     setStatus('Kon link niet voorbereiden', 'err');
   });
-}
-
-function copyField(id, okMsg) {
-  const text = document.getElementById(id).value.trim();
-  if (!text) {
-    setStatus('Geen tekst om te kopiëren', 'err');
-    return;
-  }
-  navigator.clipboard.writeText(text).then(() => {
-    setStatus('✓ ' + okMsg, 'ok');
-  }).catch(() => prompt('Kopieer deze tekst:', text));
-}
-
-function collectMailchimpCardsText() {
-  const datum = document.getElementById('datum').value;
-  const datumTekst = datum ? formatDatum(datum) : 'komende zondag';
-  const thema = document.getElementById('thema').value.trim();
-  const intro = document.getElementById('intro').value.trim();
-  const nieuwsbrief = document.getElementById('nieuwsbrief').value.trim();
-  const voorganger = document.getElementById('voorganger').value.trim();
-  const organist = document.getElementById('organist').value.trim();
-  const agendaKort = document.getElementById('agenda_kort').value.trim();
-  const agendaVer = document.getElementById('agenda_ver').value.trim();
-
-  const onderdelen = [];
-  onderdelen.push('MAILCHIMP CARDS (plak ieder blok in een aparte box/card)\n');
-
-  onderdelen.push(
-    '[CARD 1] KOP',
-    `Titel: Dienst op ${datumTekst}`,
-    thema ? `Subtitel: Thema: ${thema}` : 'Subtitel:',
-    ''
-  );
-
-  onderdelen.push(
-    '[CARD 2] INTRO / NIEUWSBRIEF',
-    nieuwsbrief || intro || 'Tekst: (nog invullen)',
-    ''
-  );
-
-  const details = [];
-  if (voorganger) details.push(`Voorganger: ${voorganger}`);
-  if (organist) details.push(`Organist: ${organist}`);
-  onderdelen.push('[CARD 3] PRAKTISCH');
-  onderdelen.push(details.length ? details.join('\n') : 'Praktisch: (nog invullen)');
-  onderdelen.push('');
-
-  onderdelen.push('[CARD 4] AGENDA');
-  if (agendaKort) {
-    onderdelen.push('Komende week:');
-    onderdelen.push(agendaKort);
-    onderdelen.push('');
-  }
-  if (agendaVer) {
-    onderdelen.push('Verder weg:');
-    onderdelen.push(agendaVer);
-    onderdelen.push('');
-  }
-  if (!agendaKort && !agendaVer) {
-    onderdelen.push('Agenda: (nog invullen)');
-    onderdelen.push('');
-  }
-
-  return onderdelen.join('\n').replace(/\n{3,}/g, '\n\n').trim();
-}
-
-function copyMailchimpCards() {
-  const text = collectMailchimpCardsText();
-  navigator.clipboard.writeText(text).then(() => {
-    setStatus('✓ Mailchimp cards als platte tekst gekopieerd', 'ok');
-  }).catch(() => prompt('Kopieer deze Mailchimp cards:', text));
-}
-
-function openNieuwsbriefPage() {
-  const url = currentShortId
-    ? `nieuwsbrief.html?id=${encodeURIComponent(currentShortId)}`
-    : 'nieuwsbrief.html';
-  if (!currentShortId) {
-    setStatus('Tip: sla eerst op (☁ Opslaan) voor een gedeelde id', '');
-  }
-  window.open(url, '_blank');
 }
 
 function addOrde(type, content = '') {
