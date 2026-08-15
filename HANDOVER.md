@@ -201,7 +201,7 @@ De drie oorspronkelijke knoppen "Kopieer voor nieuwsbrief", "Kopieer voor Mailch
 ### Lage prioriteit / nice-to-have
 
 - **Opslaan als concept** ✅ *geïmplementeerd* — localStorage zodat een half-ingevuld formulier bewaard blijft bij sluiten
-- **Liedboek Online** — knop opent [liedboek.liedbundels.nu](https://liedboek.liedbundels.nu) en herkent het liednummer. Automatisch downloaden kan niet: inlog + licentie, geen open API. Workflow: zoek op nummer → download liturgie-tekst → plak in formulier. Voor echte koppeling: API-aanvraag bij Kok Boekencentrum / Liedbundels Online.
+- **Liedbundels Online** ([liedbundelsonline.nl](https://liedbundelsonline.nl), gelanceerd juni 2026; vervangt `liedboek.liedbundels.nu`) — knop opent deeplink `/nl/lied/lb-{nummer}` (incl. letter-suffix zoals `23b`). Automatisch importeren van liedteksten kan **niet**: inlog + licentie, geen publieke API. Officiële workflow: zoek/open lied → toevoegen aan liedlijst → download met voorkeur **platte tekst = ja** → `.txt` uit de zip plakken in het formulier. Contact voor API/koppeling: `info@liedbundelsonline.nl` (KokBoekencentrum / BV Liedboek). Zie ook verkenning hieronder.
 - **Foto upload** ✅ *geïmplementeerd* — in .docx op voorkant; download voor website. Bij "Ik ben klaar": auto-download + instructie bijlage in e-mail.
 - **Nieuwsbrief & overdenking** ✅ *geïmplementeerd* — nieuwsbrief met kopieerknop, inclusief Mailchimp card/box-copy als platte tekst (geen HTML); overdenking via mailto naar `bureau@vrijburg.nl` (niet in .docx)
 - **WordPress foto-upload** — direct uploaden naar mediabibliotheek op vrijburg.nl; vereist afstemming met webmaster (Application Password + CORS)
@@ -236,7 +236,22 @@ gebedsveld bij Opening, Overdenking/Afsluiting als vrije lijst.
 - **Liedteksten**: sommige liturgieën bevatten de volledige liedtekst (bijv. lied 773 in de dienst van 14 juni). Dit is optioneel — de dominee voert dit in het tekstgebied in als hij het wil.
 - **Bijzondere diensten**: Kerst, Pasen, Pinksteren hebben soms een afwijkende structuur (avondmaal, doopdienst). Overweeg een "bijzondere dienst" toggle.
 - **Fetch van collectes.json**: werkt via GitHub Pages (HTTPS). Bij lokaal openen van index.html als `file://` werkt de fetch niet — dan moet `COLLECTES` inline in de JS staan. Oplossing: in de catch-handler de data inline fallback plaatsen.
-- **Bijbelvertaling**: de gratis BijbelAPI biedt momenteel alleen Statenvertaling (`sv`), Canisiusbijbel en De Heilige Schrift 1917 aan (`GET /api/versions`) — géén BasisBijbel en géén NBV21 (auteursrechtelijk beschermd door het Nederlands-Vlaams Bijbelgenootschap, geen gratis API). Knop "Tekst ophalen (Statenvertaling)" gebruikt daarom `sv`. Voor NBV21 opent de knop "NBV21 openen" de juiste referentie op debijbel.nl (boeknaam → OSIS-code via `BIJBELBOEK_OSIS`), waarna de tekst handmatig gekopieerd en geplakt moet worden — vergelijkbaar met de "Liedboek Online"-knop.
+- **Bijbelvertaling**: de gratis BijbelAPI biedt momenteel alleen Statenvertaling (`sv`), Canisiusbijbel en De Heilige Schrift 1917 aan (`GET /api/versions`) — géén BasisBijbel en géén NBV21 (auteursrechtelijk beschermd door het Nederlands-Vlaams Bijbelgenootschap, geen gratis API). Knop "Tekst ophalen (Statenvertaling)" gebruikt daarom `sv`. Voor NBV21 opent de knop "NBV21 openen" de juiste referentie op debijbel.nl (boeknaam → OSIS-code via `BIJBELBOEK_OSIS`), waarna de tekst handmatig gekopieerd en geplakt moet worden — vergelijkbaar met de "Liedbundels Online"-knop.
+
+### Verkenning Liedbundels Online (aug 2026)
+
+**Platform:** Laravel-site, sessie-auth (cookies + XSRF). Zoeken (`/nl/lied-zoeken`), liedpagina’s (`/nl/lied/lb-213`), coupletten (`/nl/couplet/lb-213-1`) en liedlijst vereisen inlog. Met `Accept: application/json` geven die routes `401 {"message":"Unauthenticated."}` — er is dus een JSON-backend achter de UI, maar **geen openbare developer-API**.
+
+**Publiek zonder inlog:** catalogus `/nl/bundels/liedboek` (~1386 LB-liederen met nummer + beginregel, bijv. `23b` → "De Heer is mijn herder!"). Sitemap bevat ~16k couplet-URL’s (LB/WK/HH/OTH/GK); de inhoud zelf is achter login.
+
+**Licentie/download (FAQ):** lied toevoegen aan liedlijst → stap 2 voorkeuren → **platte tekst = ja** → zip met `.txt` (alle geselecteerde liederen). Previews hebben watermerk en mogen niet als bron voor liturgie. AV: downloads registreren; na einde licentie mag materiaal niet meer gebruikt worden.
+
+**Wat we wél kunnen (zonder API):**
+1. Deeplink naar het juiste lied (nu geïmplementeerd) — sneller dan handmatig zoeken.
+2. Optioneel later: autocomplete op nummer/beginregel uit de **publieke** catalogus (geen teksten cachen).
+3. Officiële API/export aanvragen bij `info@liedbundelsonline.nl` (platform is nieuw; “komende maanden meer functionaliteit”).
+
+**Wat we niet moeten doen:** scraping van liedteksten/previews (licentievoorwaarden + geen stabiele API).
 - **Supabase-project pauzeert bij inactiviteit** (opgetreden 10 augustus 2026): het gratis Supabase-project pauzeert automatisch na ~1 week zonder API-gebruik. Symptoom in de app: **"Opslaan mislukt: TypeError: Load failed"** (Safari) of "Failed to fetch" (Chrome) bij opslaan/laden/delen via `?id=…`. Herstel: Supabase-dashboard → project → **Restore project** (of via de Supabase MCP-tool `restore_project` met project-ref `iabrbkirzsolwnuknbel`); duurt 1–3 minuten. Preventie: `.github/workflows/keep-supabase-active.yml` doet elke 3 dagen een publieke leesaanvraag om het project actief te houden. Let op: GitHub schakelt scheduled workflows automatisch uit na 60 dagen zonder commits op de repo — bij twijfel de workflow handmatig draaien via **Actions → Houd Supabase-project actief → Run workflow**.
 
 ---
