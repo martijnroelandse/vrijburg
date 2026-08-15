@@ -736,7 +736,7 @@
           <label>Lichtlied <span class="opt">voorganger</span></label>
           <div style="display:flex;gap:8px;align-items:center">
             <input type="text" id="lichtlied" placeholder="bijv. Lied 217: 1 en 3  of  'Licht dat wil ingaan…'" style="flex:1">
-            <button type="button" class="btn-small" onclick="openLiedboekOnlineField('lichtlied')" title="Open Liedboek Online">Liedboek</button>
+            <button type="button" class="btn-small" onclick="openLiedboekOnlineField('lichtlied')" title="Open Liedbundels Online">Liedboek</button>
           </div>
         </div>
       </div>
@@ -772,7 +772,8 @@
         haalt de tekst automatisch op (de enige gratis vertaling die hiervoor beschikbaar is); knop <em>NBV21 openen</em>
         opent debijbel.nl met de juiste referentie — kopieer die tekst zelf en plak hem hier (NBV21 is auteursrechtelijk
         beschermd, er is geen gratis API voor).
-        Bij liederen: knop <em>Liedboek Online</em> (tekst downloaden met Vrijburg-licentie, daarna hier plakken).
+        Bij liederen: knop <em>Liedbundels Online</em> opent het lied direct (inlog Vrijburg).
+        Tekst downloaden via liedlijst met <em>platte tekst = ja</em>, daarna hier plakken.
       </p>
     </div>
   </div>
@@ -1002,7 +1003,10 @@ const NL_DAGEN = ['zondag','maandag','dinsdag','woensdag','donderdag','vrijdag',
 // hs1917 aan (zie GET /api/versions) — geen BasisBijbel of NBV21 (auteursrecht).
 // 'sv' is dus de enige zinvolle waarde hier; voor NBV21 zie de knop "NBV21 openen".
 const BIJBEL_VERSIE = 'sv';
-const LIEDBOEK_URL = 'https://liedboek.liedbundels.nu/site/nl/home/Default.aspx';
+// Nieuw platform (juni 2026). Oude liedboek.liedbundels.nu redirect hierheen.
+// Geen publieke API voor teksten; wel deeplinks per lied (inlog + licentie).
+const LIEDBOEK_BASE = 'https://liedbundelsonline.nl';
+const LIEDBOEK_URL = LIEDBOEK_BASE + '/nl/lied-zoeken?bundles%5B0%5D=LB';
 const STORAGE_KEY = 'vrijburg-liturgie-draft';
 const SESSION_ACTIVE_KEY = 'vrijburg-liturgie-session';
 const VRIJBURG_EVENTS_API = 'https://www.vrijburg.nl/wp-json/wp/v2/evenementen';
@@ -1860,7 +1864,7 @@ function renderOrde() {
       ? `<button class="btn-fetch" onclick="fetchBibleText('${safeId}')" title="Haal bijbeltekst op via BijbelAPI (let op: alleen Statenvertaling beschikbaar)">Tekst ophalen (Statenvertaling)</button>
          <button class="btn-fetch" onclick="openNbv21('${safeId}')" title="Open NBV21 op debijbel.nl — kopieer de tekst zelf (geen gratis API voor deze vertaling)">NBV21 openen</button>`
       : item.type === 'lied'
-      ? `<button class="btn-fetch" onclick="openLiedboekOnline('${safeId}')" title="Open Liedboek Online (inlog vereist)">Liedboek Online</button>`
+      ? `<button class="btn-fetch" onclick="openLiedboekOnline('${safeId}')" title="Open Liedbundels Online (inlog vereist)">Liedbundels Online</button>`
       : '';
     div.innerHTML = `
       <select onchange="updateOrdeType('${safeId}', this.value)">
@@ -1898,13 +1902,21 @@ function updateOrdeContent(id, content) {
 }
 
 // ============================================================
-// LIEDBOEK ONLINE (geen open API — handmatige workflow)
+// LIEDBUNDELS ONLINE (geen open API — handmatige workflow)
+// Platform: liedbundelsonline.nl (vervangt liedbundels.nu, juni 2026).
+// Deeplink /nl/lied/lb-{nr} werkt na inlog; teksten alleen via
+// "Mijn liedlijst" → download met "platte tekst = ja" (.txt in zip).
 // ============================================================
 function parseLiedNummer(text) {
   const first = String(text || '').split('\n')[0].trim();
-  const m = first.match(/(?:lied|psalm|gezang|vlied)\s*#?(\d{1,4})\s*[a-z]?/i)
-    || first.match(/^(\d{1,4})\s*[a-z]?(?:\s*:|$)/i);
-  return m ? m[1] : null;
+  // Inclusief letter-suffix (23b, 100a, …) — slug op het platform is lb-23b
+  const m = first.match(/(?:lied|psalm|gezang|vlied)\s*#?(\d{1,4}[a-z]?)/i)
+    || first.match(/^(\d{1,4}[a-z]?)(?:\s*:|$)/i);
+  return m ? m[1].toLowerCase() : null;
+}
+
+function liedboekSongUrl(nr) {
+  return `${LIEDBOEK_BASE}/nl/lied/lb-${nr}`;
 }
 
 function openLiedboekOnline(id) {
@@ -1915,9 +1927,9 @@ function openLiedboekOnline(id) {
     setStatus('Vul eerst een liednummer in (bijv. Lied 652: 1 en 3)', 'err');
     return;
   }
-  window.open(LIEDBOEK_URL, '_blank', 'noopener');
+  window.open(liedboekSongUrl(nr), '_blank', 'noopener');
   setStatus(
-    `Lied ${nr}: zoek in Liedboek Online op nummer → download liturgie-tekst (.txt) → plak hieronder`,
+    `Lied ${nr}: in Liedbundels Online → toevoegen aan liedlijst → download met platte tekst (.txt) → plak hieronder`,
     'ok'
   );
 }
@@ -1929,8 +1941,8 @@ function openLiedboekOnlineField(fieldId) {
     setStatus('Vul eerst een liednummer in (bijv. Lied 217: 1 en 3)', 'err');
     return;
   }
-  window.open(LIEDBOEK_URL, '_blank', 'noopener');
-  setStatus(`Lied ${nr}: download tekst in Liedboek Online en plak in het veld`, 'ok');
+  window.open(liedboekSongUrl(nr), '_blank', 'noopener');
+  setStatus(`Lied ${nr}: download tekst in Liedbundels Online (platte tekst) en plak in het veld`, 'ok');
 }
 
 // ============================================================
