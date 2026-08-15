@@ -101,7 +101,7 @@ Zie `HANDOVER.md` voor de volledige lijst. Recent toegevoegd:
 - Gelijktijdig invullen door voorganger + organist overschrijft elkaars velden niet meer (samenvoegen bij opslaan)
 - Melding "liturgie is klaar" met e-mail-ping + id (zie hierboven)
 
-Nog open: collectes 2027-2028, liedboek lookup, bijzondere diensten.
+Nog open: collectes 2027-2028, liedtekst-import (geen API; wel deeplink naar Liedbundels Online), bijzondere diensten.
 
 ## Feedback & verbeterplan
 
