@@ -773,7 +773,9 @@
         opent debijbel.nl met de juiste referentie — kopieer die tekst zelf en plak hem hier (NBV21 is auteursrechtelijk
         beschermd, er is geen gratis API voor).
         Bij liederen: knop <em>Liedbundels Online</em> opent het lied direct (inlog Vrijburg).
-        Tekst downloaden via liedlijst met <em>platte tekst = ja</em>, daarna hier plakken.
+        Of: bureaumedewerker downloadt een liedlijst-zip op Liedbundels Online (mét platte tekst)
+        en klikt onderaan op <em>Importeer liedlijst (.zip)</em> — teksten + muziek 1e couplet
+        komen dan in het formulier én in het Word-document.
       </p>
     </div>
   </div>
@@ -918,6 +920,10 @@
 <div class="generate-bar">
   <div class="generate-bar-actions">
     <button class="btn-generate" id="btn-download" onclick="generateDocx()">⬇ Download liturgie (.docx)</button>
+    <label class="btn-secondary" id="btn-import-liedlijst" style="cursor:pointer;display:inline-flex;align-items:center;gap:6px;margin:0">
+      ♪ Importeer liedlijst (.zip)
+      <input type="file" id="liedlijst_zip" accept=".zip,application/zip" hidden onchange="importLiedlijstZip(event)">
+    </label>
     <div class="toolbar">
       <button class="btn-secondary" id="btn-cloud-save" onclick="saveDienstManual()">☁ Opslaan</button>
       <button class="btn-secondary" id="btn-email-voorganger" onclick="emailRol('voorganger')">✉ Link naar voorganger</button>
@@ -940,6 +946,7 @@
 <script src="https://cdn.jsdelivr.net/npm/lz-string@1.5.0/libs/lz-string.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.8/dist/umd/supabase.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
 
 <script>
 // ============================================================
@@ -1183,6 +1190,7 @@ function applyRolUI() {
   // Actieknoppen per rol
   const isSamenvoeger = huidigeRol === 'medewerker' || huidigeRol === 'compleet';
   document.getElementById('btn-download').style.display = isSamenvoeger ? '' : 'none';
+  document.getElementById('btn-import-liedlijst').style.display = isSamenvoeger ? '' : 'none';
   document.getElementById('btn-meld-klaar').style.display = isSamenvoeger ? '' : 'none';
   document.getElementById('btn-email-voorganger').style.display = huidigeRol === 'medewerker' ? '' : 'none';
   document.getElementById('btn-email-organist').style.display = huidigeRol === 'medewerker' ? '' : 'none';
@@ -1204,6 +1212,11 @@ function setupSectionToggles() {
 // ============================================================
 let ordeItems = [];
 let fotoDataUrl = ''; // base64 data URL voor foto in .docx
+// Extra regels + 1e-couplet-muziek voor lichtlied/slotlied (uit liedlijst-zip)
+let lichtliedLyrics = '';
+let slotliedLyrics = '';
+let lichtliedMuziek = []; // data-URL JPG's
+let slotliedMuziek = [];
 
 function onFotoUpload(event) {
   const file = event.target.files?.[0];
@@ -1864,7 +1877,7 @@ function renderOrde() {
       ? `<button class="btn-fetch" onclick="fetchBibleText('${safeId}')" title="Haal bijbeltekst op via BijbelAPI (let op: alleen Statenvertaling beschikbaar)">Tekst ophalen (Statenvertaling)</button>
          <button class="btn-fetch" onclick="openNbv21('${safeId}')" title="Open NBV21 op debijbel.nl — kopieer de tekst zelf (geen gratis API voor deze vertaling)">NBV21 openen</button>`
       : item.type === 'lied'
-      ? `<button class="btn-fetch" onclick="openLiedboekOnline('${safeId}')" title="Open Liedbundels Online (inlog vereist)">Liedbundels Online</button>`
+      ? `<button class="btn-fetch" onclick="openLiedboekOnline('${safeId}')" title="Open Liedbundels Online (inlog vereist)">Liedbundels Online</button>${item.muziek_data?.length ? '<span style="font-size:12px;color:#2e7d32">♪ muziek 1e couplet</span>' : ''}`
       : '';
     div.innerHTML = `
       <select onchange="updateOrdeType('${safeId}', this.value)">
@@ -1902,10 +1915,10 @@ function updateOrdeContent(id, content) {
 }
 
 // ============================================================
-// LIEDBUNDELS ONLINE (geen open API — handmatige workflow)
+// LIEDBUNDELS ONLINE (geen open API — handmatige workflow + zip-import)
 // Platform: liedbundelsonline.nl (vervangt liedbundels.nu, juni 2026).
-// Deeplink /nl/lied/lb-{nr} werkt na inlog; teksten alleen via
-// "Mijn liedlijst" → download met "platte tekst = ja" (.txt in zip).
+// Deeplink /nl/lied/lb-{nr} werkt na inlog; teksten + muziek via
+// "Mijn liedlijst" → download (platte tekst = ja) → Importeer .zip hier.
 // ============================================================
 function parseLiedNummer(text) {
   const first = String(text || '').split('\n')[0].trim();
@@ -1929,7 +1942,7 @@ function openLiedboekOnline(id) {
   }
   window.open(liedboekSongUrl(nr), '_blank', 'noopener');
   setStatus(
-    `Lied ${nr}: in Liedbundels Online → toevoegen aan liedlijst → download met platte tekst (.txt) → plak hieronder`,
+    `Lied ${nr}: in Liedbundels Online → toevoegen aan liedlijst → download zip → Importeer liedlijst`,
     'ok'
   );
 }
@@ -1942,7 +1955,245 @@ function openLiedboekOnlineField(fieldId) {
     return;
   }
   window.open(liedboekSongUrl(nr), '_blank', 'noopener');
-  setStatus(`Lied ${nr}: download tekst in Liedbundels Online (platte tekst) en plak in het veld`, 'ok');
+  setStatus(`Lied ${nr}: download zip in Liedbundels Online en gebruik Importeer liedlijst`, 'ok');
+}
+
+function formatVerseListNl(labels) {
+  const list = (labels || []).map(String);
+  if (!list.length) return '';
+  if (list.length === 1) return list[0];
+  if (list.length === 2) return list[0] + ' en ' + list[1];
+  return list.slice(0, -1).join(', ') + ' en ' + list[list.length - 1];
+}
+
+/** Parseert liedlijst-*-tekst.txt uit Liedbundels Online. */
+function parseLiedlijstTekst(txt) {
+  const lines = String(txt || '').replace(/\r\n/g, '\n').split('\n');
+  const songs = new Map(); // nr -> [{label, lines}]
+  let current = null;
+  const headerRe = /^(\d+[a-z]?):([0-9]+|[A-Za-z]+)\s*$/;
+
+  for (const raw of lines) {
+    const line = raw.replace(/\s+$/, '');
+    const hm = line.match(headerRe);
+    if (hm) {
+      const nr = hm[1].toLowerCase();
+      const label = hm[2];
+      if (!songs.has(nr)) songs.set(nr, []);
+      current = { label, lines: [] };
+      songs.get(nr).push(current);
+      continue;
+    }
+    if (!current) continue;
+    // skip single blank line right after header; keep blanks inside verse
+    if (!current.lines.length && !line.trim()) continue;
+    current.lines.push(line);
+  }
+
+  // trim trailing blanks per verse
+  for (const couplets of songs.values()) {
+    couplets.forEach(c => {
+      while (c.lines.length && !c.lines[c.lines.length - 1].trim()) c.lines.pop();
+    });
+  }
+  return songs;
+}
+
+function buildLiedContentFromCouplets(nr, couplets) {
+  const verseList = formatVerseListNl(couplets.map(c => c.label));
+  const header = verseList ? `Lied ${nr}: ${verseList}` : `Lied ${nr}`;
+  const body = couplets.map(c => {
+    const lyric = c.lines.join('\n').trim();
+    return lyric ? `${c.label}\n${lyric}` : String(c.label);
+  }).join('\n\n');
+  return body ? `${header}\n\n${body}` : header;
+}
+
+function blobToDataUrl(blob) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = () => reject(new Error('Bestand lezen mislukt'));
+    reader.readAsDataURL(blob);
+  });
+}
+
+function compressDataUrlJpeg(dataUrl, maxWidth = 720, quality = 0.72) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => {
+      try {
+        const scale = img.width > maxWidth ? maxWidth / img.width : 1;
+        const w = Math.max(1, Math.round(img.width * scale));
+        const h = Math.max(1, Math.round(img.height * scale));
+        const canvas = document.createElement('canvas');
+        canvas.width = w;
+        canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+        resolve(canvas.toDataURL('image/jpeg', quality));
+      } catch (_) {
+        resolve(dataUrl);
+      }
+    };
+    img.onerror = () => resolve(dataUrl);
+    img.src = dataUrl;
+  });
+}
+
+/**
+ * Kiest alle JPG-pagina's van het eerste couplet/onderdeel per lied.
+ * Bestandsnamen bv.:
+ *   nl-lb-computer-217-muziek-couplet-1-1.jpg
+ *   nl-lb-computer-67b-muziek-1-antifoona-1.jpg
+ */
+function pickFirstCoupletMusicNames(namesForSong) {
+  const names = namesForSong.slice().sort();
+  const couplet1 = names.filter(n => /muziek-couplet-1-\d+/i.test(n));
+  if (couplet1.length) {
+    return couplet1.sort((a, b) => {
+      const pa = +(a.match(/couplet-1-(\d+)/i) || [])[1] || 0;
+      const pb = +(b.match(/couplet-1-(\d+)/i) || [])[1] || 0;
+      return pa - pb;
+    });
+  }
+  // Overige structuur: muziek-{sectie}-{naam}-{pagina}
+  const parsed = names.map(n => {
+    const m = n.match(/muziek-(\d+)-(.+)-(\d+)\.jpe?g$/i);
+    return m ? { name: n, section: +m[1], page: +m[3] } : { name: n, section: 999, page: 0 };
+  });
+  const minSection = Math.min(...parsed.map(p => p.section));
+  return parsed
+    .filter(p => p.section === minSection)
+    .sort((a, b) => a.page - b.page)
+    .map(p => p.name);
+}
+
+async function importLiedlijstZip(event) {
+  const file = event.target?.files?.[0];
+  if (!file) return;
+  if (typeof JSZip === 'undefined') {
+    setStatus('JSZip niet geladen — vernieuw de pagina', 'err');
+    return;
+  }
+  setStatus('Liedlijst-zip wordt gelezen…', '');
+  try {
+    const zip = await JSZip.loadAsync(file);
+    const entries = Object.keys(zip.files).filter(n => !zip.files[n].dir);
+    const baseName = (path) => path.split('/').pop();
+
+    // Tekstbestand: liedlijst-*-tekst.txt (niet de licentie)
+    const tekstEntry = entries.find(n => {
+      const b = baseName(n).toLowerCase();
+      return b.endsWith('-tekst.txt') || (b.startsWith('liedlijst') && b.endsWith('.txt') && !b.includes('licentie'));
+    });
+    if (!tekstEntry) {
+      setStatus('Geen tekstbestand in de zip (zet bij download “platte tekst = ja”)', 'err');
+      event.target.value = '';
+      return;
+    }
+    const tekst = await zip.files[tekstEntry].async('string');
+    const songs = parseLiedlijstTekst(tekst);
+    if (!songs.size) {
+      setStatus('Geen liederen gevonden in het tekstbestand', 'err');
+      event.target.value = '';
+      return;
+    }
+
+    // Muziekbestanden per liednummer
+    const musicByNr = new Map();
+    const musicRe = /^nl-[a-z0-9]+-computer-(\d+[a-z]?)-muziek-/i;
+    for (const path of entries) {
+      const b = baseName(path);
+      if (!/\.jpe?g$/i.test(b) || !/muziek/i.test(b)) continue;
+      const m = b.match(musicRe);
+      if (!m) continue;
+      const nr = m[1].toLowerCase();
+      if (!musicByNr.has(nr)) musicByNr.set(nr, []);
+      musicByNr.get(nr).push(path);
+    }
+
+    const imported = [];
+    for (const [nr, couplets] of songs) {
+      const content = buildLiedContentFromCouplets(nr, couplets);
+      const paths = pickFirstCoupletMusicNames(musicByNr.get(nr) || []);
+      const muziek = [];
+      for (const path of paths) {
+        const blob = await zip.files[path].async('blob');
+        const raw = await blobToDataUrl(blob);
+        muziek.push(await compressDataUrlJpeg(raw));
+      }
+      imported.push({ nr, content, muziek });
+    }
+
+    applyLiedlijstImport(imported);
+    setStatus(
+      `✓ ${imported.length} lied(eren) geïmporteerd` +
+        (imported.some(s => s.muziek.length) ? ' (met muziek 1e couplet)' : '') +
+        ' — download daarna het Word-document',
+      'ok'
+    );
+  } catch (err) {
+    console.error(err);
+    setStatus('Liedlijst importeren mislukt: ' + (err.message || err), 'err');
+  }
+  event.target.value = '';
+}
+
+function applyLiedlijstImport(imported) {
+  const byNr = new Map(imported.map(s => [s.nr, s]));
+  const used = new Set();
+
+  // 1. Lichtlied / slotlied eerst (voorkomt dubbele afdruk in .docx)
+  const applyField = (fieldId, setLyrics, setMuziek) => {
+    const el = document.getElementById(fieldId);
+    const nr = parseLiedNummer(el.value);
+    if (!nr || !byNr.has(nr)) return false;
+    const song = byNr.get(nr);
+    el.value = song.content.split('\n')[0].trim();
+    setLyrics(song.content.split('\n').slice(1).join('\n').replace(/^\n+/, ''));
+    setMuziek(song.muziek.slice());
+    used.add(nr);
+    return true;
+  };
+  applyField('lichtlied', v => { lichtliedLyrics = v; }, v => { lichtliedMuziek = v; });
+  applyField('slotlied', v => { slotliedLyrics = v; }, v => { slotliedMuziek = v; });
+
+  // Verwijder orde-liederen die al als licht-/slotlied zijn gezet
+  if (used.size) {
+    ordeItems = ordeItems.filter(item => {
+      if (!item || item.type !== 'lied') return true;
+      const nr = parseLiedNummer(item.content);
+      return !nr || !used.has(nr);
+    });
+  }
+
+  // 2. Match overige bestaande orde-liederen
+  ordeItems.forEach(item => {
+    if (!item || item.type !== 'lied') return;
+    const nr = parseLiedNummer(item.content);
+    if (!nr || !byNr.has(nr) || used.has(nr)) return;
+    const song = byNr.get(nr);
+    item.content = song.content;
+    item.muziek_data = song.muziek.slice();
+    used.add(nr);
+  });
+
+  // 3. Restant: lege lied-slots vullen of nieuwe items toevoegen
+  for (const song of imported) {
+    if (used.has(song.nr)) continue;
+    const empty = ordeItems.find(i => i.type === 'lied' && !String(i.content || '').trim());
+    if (empty) {
+      empty.content = song.content;
+      empty.muziek_data = song.muziek.slice();
+    } else {
+      const id = `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
+      ordeItems.push({ id, type: 'lied', content: song.content, muziek_data: song.muziek.slice() });
+    }
+    used.add(song.nr);
+  }
+
+  renderOrde();
+  scheduleDraftSave();
 }
 
 // ============================================================
@@ -2252,8 +2503,12 @@ function getFormState() {
     foto_data: fotoDataUrl,
     orgelspel_opening: document.getElementById('orgelspel_opening').value,
     lichtlied: document.getElementById('lichtlied').value,
+    lichtlied_lyrics: lichtliedLyrics,
+    lichtlied_muziek: lichtliedMuziek,
     gebed_opening: document.getElementById('gebed_opening').value,
     slotlied: document.getElementById('slotlied').value,
+    slotlied_lyrics: slotliedLyrics,
+    slotlied_muziek: slotliedMuziek,
     orgelspel_slot: document.getElementById('orgelspel_slot').value,
     bloemen: document.getElementById('bloemen').value,
     c1_thema: document.getElementById('c1_thema').value,
@@ -2322,9 +2577,17 @@ function applyFormState(state) {
   if (Array.isArray(state.orde)) {
     ordeItems = state.orde
       .filter(i => i && i.type)
-      .map(i => ({ ...i, id: i.id != null ? String(i.id) : `${Date.now()}-${Math.random().toString(36).slice(2, 9)}` }));
+      .map(i => ({
+        ...i,
+        id: i.id != null ? String(i.id) : `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
+        muziek_data: Array.isArray(i.muziek_data) ? i.muziek_data : [],
+      }));
     renderOrde();
   }
+  lichtliedLyrics = state.lichtlied_lyrics || '';
+  slotliedLyrics = state.slotlied_lyrics || '';
+  lichtliedMuziek = Array.isArray(state.lichtlied_muziek) ? state.lichtlied_muziek : [];
+  slotliedMuziek = Array.isArray(state.slotlied_muziek) ? state.slotlied_muziek : [];
   if (state.rol) setRol(state.rol);
   else applyRolUI();
   // Geen onDatumChange() hier: dat overschrijft opgeslagen namen met planning.
@@ -2336,8 +2599,15 @@ function applyFormState(state) {
 function getShareUrl(rol) {
   const state = getFormState();
   if (rol) state.rol = rol;
-  // Foto niet meenemen in URL (te groot) — blijft in lokaal concept
+  // Foto / muziekbeelden niet meenemen in URL (te groot)
   delete state.foto_data;
+  delete state.lichtlied_muziek;
+  delete state.slotlied_muziek;
+  delete state.lichtlied_lyrics;
+  delete state.slotlied_lyrics;
+  if (Array.isArray(state.orde)) {
+    state.orde = state.orde.map(({ muziek_data, ...rest }) => rest);
+  }
   const encoded = encodeShareState(state);
   const url = new URL(location.href.split('?')[0]);
   url.searchParams.set('z', encoded);
@@ -2468,8 +2738,12 @@ function emptyFormState() {
     foto_data: '',
     orgelspel_opening: '',
     lichtlied: '',
+    lichtlied_lyrics: '',
+    lichtlied_muziek: [],
     gebed_opening: '',
     slotlied: '',
+    slotlied_lyrics: '',
+    slotlied_muziek: [],
     orgelspel_slot: '',
     bloemen: '',
     c1_thema: '',
@@ -2967,6 +3241,10 @@ async function generateDocxAsync() {
     if (/^refr\.?:?$/i.test(trimmed)) {
       return pr([{ t: trimmed, italic: true }]);
     }
+    // Coupletnummer of antifoon-label (1 / A / B) op eigen regel
+    if (/^(\d+|[A-Za-z])$/.test(trimmed)) {
+      return pr([{ t: trimmed, bold: true }]);
+    }
     const verse = trimmed.match(/^(\d+)\s+(.*)$/);
     if (verse) {
       return pr([{ t: verse[1] + ' ', bold: true }, { t: verse[2] }]);
@@ -2974,24 +3252,35 @@ async function generateDocxAsync() {
     return p(trimmed);
   }
 
-  function pOrgelspel(text) {
-    const idx = text.indexOf(':');
-    if (idx > 0) {
-      return pr([
-        { t: text.slice(0, idx + 1), bold: true },
-        { t: text.slice(idx + 1), italic: true },
-      ]);
+  async function muziekImageParagraphs(dataUrls) {
+    const out = [];
+    for (const dataUrl of (dataUrls || [])) {
+      if (!dataUrl) continue;
+      const para = await buildFotoParagraph(dataUrl, {
+        maxWidth: 520,
+        maxHeight: 680,
+      });
+      if (para) {
+        // Hergebruik buildFotoParagraph maar met iets strakkere spacing
+        out.push(para);
+      }
     }
-    return p(text, { bold: true });
+    return out;
   }
 
-  function beurtzang(lines) {
-    return lines.map(line => p(`${line.wie}: ${line.tekst}`));
+  function appendLiedBody(paragraphs, lines) {
+    if (!lines.length) return;
+    paragraphs.push(p(lines[0], { bold: true, before: 60 }));
+    lines.slice(1).forEach(l => {
+      const para = formatLiedLyricLine(l);
+      if (para) paragraphs.push(para);
+    });
   }
 
-  function renderOrdeItems() {
+  async function renderOrdeItems() {
     const paragraphs = [];
-    ordeItems.forEach((item, index) => {
+    for (let index = 0; index < ordeItems.length; index++) {
+      const item = ordeItems[index];
       const rawLines = item.content.split('\n');
       const lines = [];
       rawLines.forEach(line => {
@@ -2999,16 +3288,12 @@ async function generateDocxAsync() {
           if (part.trim()) lines.push(part.trim());
         });
       });
-      if (!lines.length && item.type !== 'inleiding' && item.type !== 'muziek') return;
+      if (!lines.length && item.type !== 'inleiding' && item.type !== 'muziek') continue;
       if (index > 0 || paragraphs.length) paragraphs.push(empty());
       if (item.type === 'lied') {
-        if (lines.length > 0) {
-          paragraphs.push(p(lines[0], { bold: true, before: 60 }));
-          lines.slice(1).forEach(l => {
-            const para = formatLiedLyricLine(l);
-            if (para) paragraphs.push(para);
-          });
-        }
+        appendLiedBody(paragraphs, lines);
+        const imgs = await muziekImageParagraphs(item.muziek_data);
+        paragraphs.push(...imgs);
       } else if (item.type === 'lezing') {
         if (lines.length > 0) {
           paragraphs.push(p('Lezing: ' + lines[0], { bold: true, before: 60 }));
@@ -3027,8 +3312,23 @@ async function generateDocxAsync() {
       } else {
         lines.forEach((l, i) => paragraphs.push(p(l, { bold: true, before: i === 0 ? 60 : 0 })));
       }
-    });
+    }
     return paragraphs;
+  }
+
+  function pOrgelspel(text) {
+    const idx = text.indexOf(':');
+    if (idx > 0) {
+      return pr([
+        { t: text.slice(0, idx + 1), bold: true },
+        { t: text.slice(idx + 1), italic: true },
+      ]);
+    }
+    return p(text, { bold: true });
+  }
+
+  function beurtzang(lines) {
+    return lines.map(line => p(`${line.wie}: ${line.tekst}`));
   }
 
   async function assetParagraph(path, maxWidthPx, opts = {}) {
@@ -3228,7 +3528,21 @@ async function generateDocxAsync() {
   children.push(p('Aansteken van de kaars en Stilte', { bold: true }));
   children.push(empty());
   children.push(p('De gemeente gaat staan', { italic: true }));
-  children.push(p(lichtlied || 'Lichtlied: Licht dat wil ingaan tegen donkere nachten', { bold: true }));
+  // Lichtlied: titel (+ eventueel geïmporteerde coupletten + muziek 1e couplet)
+  if (lichtlied || lichtliedLyrics || lichtliedMuziek.length) {
+    const lichtLines = [];
+    if (lichtlied) lichtLines.push(lichtlied);
+    if (lichtliedLyrics) {
+      lichtliedLyrics.split('\n').forEach(line => {
+        if (line.trim()) lichtLines.push(line.trim());
+      });
+    }
+    if (lichtLines.length) appendLiedBody(children, lichtLines);
+    else children.push(p('Lichtlied', { bold: true }));
+    children.push(...(await muziekImageParagraphs(lichtliedMuziek)));
+  } else {
+    children.push(p('Lichtlied: Licht dat wil ingaan tegen donkere nachten', { bold: true }));
+  }
 
   // BEMOEDIGING
   children.push(empty());
@@ -3246,7 +3560,7 @@ async function generateDocxAsync() {
 
   // ORDE VAN DIENST
   children.push(empty());
-  children.push(...renderOrdeItems());
+  children.push(...(await renderOrdeItems()));
 
   // OVERDENKING
   children.push(empty());
@@ -3302,7 +3616,22 @@ async function generateDocxAsync() {
   // SLOT
   children.push(empty());
   children.push(p('De gemeente gaat staan', { italic: true, before: 120 }));
-  children.push(p(slotlied ? 'Slotlied ' + slotlied : 'Slotlied', { bold: true }));
+  if (slotlied || slotliedLyrics || slotliedMuziek.length) {
+    const slotLines = [];
+    const slotTitle = slotlied
+      ? (slotlied.match(/^slotlied\b/i) ? slotlied : 'Slotlied ' + slotlied)
+      : 'Slotlied';
+    slotLines.push(slotTitle);
+    if (slotliedLyrics) {
+      slotliedLyrics.split('\n').forEach(line => {
+        if (line.trim()) slotLines.push(line.trim());
+      });
+    }
+    appendLiedBody(children, slotLines);
+    children.push(...(await muziekImageParagraphs(slotliedMuziek)));
+  } else {
+    children.push(p('Slotlied', { bold: true }));
+  }
   children.push(p('Uitzending en zegen', { bold: true }));
   if (orgelSlot) children.push(pOrgelspel('Orgelspel: ' + orgelSlot));
   else            children.push(p('Orgelspel', { bold: true }));

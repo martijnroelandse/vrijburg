@@ -201,7 +201,7 @@ De drie oorspronkelijke knoppen "Kopieer voor nieuwsbrief", "Kopieer voor Mailch
 ### Lage prioriteit / nice-to-have
 
 - **Opslaan als concept** ✅ *geïmplementeerd* — localStorage zodat een half-ingevuld formulier bewaard blijft bij sluiten
-- **Liedbundels Online** ([liedbundelsonline.nl](https://liedbundelsonline.nl), gelanceerd juni 2026; vervangt `liedboek.liedbundels.nu`) — knop opent deeplink `/nl/lied/lb-{nummer}` (incl. letter-suffix zoals `23b`). Automatisch importeren van liedteksten kan **niet**: inlog + licentie, geen publieke API. Officiële workflow: zoek/open lied → toevoegen aan liedlijst → download met voorkeur **platte tekst = ja** → `.txt` uit de zip plakken in het formulier. Contact voor API/koppeling: `info@liedbundelsonline.nl` (KokBoekencentrum / BV Liedboek). Zie ook verkenning hieronder.
+- **Liedbundels Online** ([liedbundelsonline.nl](https://liedbundelsonline.nl), gelanceerd juni 2026; vervangt `liedboek.liedbundels.nu`) — knop opent deeplink `/nl/lied/lb-{nummer}` (incl. letter-suffix zoals `23b`). **Zip-import** ✅: bureaumedewerker downloadt een liedlijst (mét “platte tekst”) en klikt **Importeer liedlijst (.zip)**. De app leest `liedlijst-*-tekst.txt` + de JPG’s; zet coupletteksten in het formulier en plaatst de **muziek van het eerste couplet** (eventueel meerdere pagina’s, bijv. antifoon) in het Word-document. Geen publieke API; contact voor koppeling: `info@liedbundelsonline.nl`.
 - **Foto upload** ✅ *geïmplementeerd* — in .docx op voorkant; download voor website. Bij "Ik ben klaar": auto-download + instructie bijlage in e-mail.
 - **Nieuwsbrief & overdenking** ✅ *geïmplementeerd* — nieuwsbrief met kopieerknop, inclusief Mailchimp card/box-copy als platte tekst (geen HTML); overdenking via mailto naar `bureau@vrijburg.nl` (niet in .docx)
 - **WordPress foto-upload** — direct uploaden naar mediabibliotheek op vrijburg.nl; vereist afstemming met webmaster (Application Password + CORS)
@@ -247,9 +247,10 @@ gebedsveld bij Opening, Overdenking/Afsluiting als vrije lijst.
 **Licentie/download (FAQ):** lied toevoegen aan liedlijst → stap 2 voorkeuren → **platte tekst = ja** → zip met `.txt` (alle geselecteerde liederen). Previews hebben watermerk en mogen niet als bron voor liturgie. AV: downloads registreren; na einde licentie mag materiaal niet meer gebruikt worden.
 
 **Wat we wél kunnen (zonder API):**
-1. Deeplink naar het juiste lied (nu geïmplementeerd) — sneller dan handmatig zoeken.
-2. Optioneel later: autocomplete op nummer/beginregel uit de **publieke** catalogus (geen teksten cachen).
-3. Officiële API/export aanvragen bij `info@liedbundelsonline.nl` (platform is nieuw; “komende maanden meer functionaliteit”).
+1. Deeplink naar het juiste lied — geïmplementeerd.
+2. **Liedlijst-zip importeren** ✅ — tekst + muziek 1e couplet naar formulier/.docx (aug 2026).
+3. Optioneel later: autocomplete op nummer/beginregel uit de **publieke** catalogus.
+4. Officiële API/export aanvragen bij `info@liedbundelsonline.nl`.
 
 **Wat we niet moeten doen:** scraping van liedteksten/previews (licentievoorwaarden + geen stabiele API).
 - **Supabase-project pauzeert bij inactiviteit** (opgetreden 10 augustus 2026): het gratis Supabase-project pauzeert automatisch na ~1 week zonder API-gebruik. Symptoom in de app: **"Opslaan mislukt: TypeError: Load failed"** (Safari) of "Failed to fetch" (Chrome) bij opslaan/laden/delen via `?id=…`. Herstel: Supabase-dashboard → project → **Restore project** (of via de Supabase MCP-tool `restore_project` met project-ref `iabrbkirzsolwnuknbel`); duurt 1–3 minuten. Preventie: `.github/workflows/keep-supabase-active.yml` doet elke 3 dagen een publieke leesaanvraag om het project actief te houden. Let op: GitHub schakelt scheduled workflows automatisch uit na 60 dagen zonder commits op de repo — bij twijfel de workflow handmatig draaien via **Actions → Houd Supabase-project actief → Run workflow**.
