@@ -3260,21 +3260,61 @@ async function generateDocxAsync() {
         maxWidth: 520,
         maxHeight: 680,
       });
-      if (para) {
-        // Hergebruik buildFotoParagraph maar met iets strakkere spacing
-        out.push(para);
-      }
+      if (para) out.push(para);
     }
     return out;
   }
 
-  function appendLiedBody(paragraphs, lines) {
+  /** Splits liedregels in titel + coupletblokken (label 1/A/… op eigen regel). */
+  function splitLiedCouplets(lines) {
+    const title = lines[0] || '';
+    const body = lines.slice(1);
+    const labelRe = /^(\d+|[A-Za-z])$/;
+    const couplets = [];
+    let current = null;
+    let structured = false;
+    for (const line of body) {
+      const t = line.trim();
+      if (labelRe.test(t)) {
+        structured = true;
+        current = { label: t, lines: [t] };
+        couplets.push(current);
+      } else if (current) {
+        current.lines.push(line);
+      } else {
+        current = { label: null, lines: [line] };
+        couplets.push(current);
+      }
+    }
+    return { title, couplets, structured };
+  }
+
+  /**
+   * Met muziek-JPG van het 1e couplet: titel → muziek → tekst couplet 2…n
+   * (couplet 1 staat al in de muziekafbeelding). Zonder muziek: titel + alle tekst.
+   */
+  async function appendLiedWithOptionalMusic(paragraphs, lines, muziekData) {
     if (!lines.length) return;
     paragraphs.push(p(lines[0], { bold: true, before: 60 }));
-    lines.slice(1).forEach(l => {
-      const para = formatLiedLyricLine(l);
-      if (para) paragraphs.push(para);
-    });
+    const hasMusic = Array.isArray(muziekData) && muziekData.length > 0;
+    if (hasMusic) {
+      paragraphs.push(...(await muziekImageParagraphs(muziekData)));
+      const { couplets, structured } = splitLiedCouplets(lines);
+      // Met muziek: couplet 1 zit in de JPG → alleen 2…n als tekst.
+      // Ongestructureerde tekst (geen coupletlabels): alles behouden na de JPG.
+      const toPrint = structured ? couplets.slice(1) : couplets;
+      toPrint.forEach(c => {
+        c.lines.forEach(l => {
+          const para = formatLiedLyricLine(l);
+          if (para) paragraphs.push(para);
+        });
+      });
+    } else {
+      lines.slice(1).forEach(l => {
+        const para = formatLiedLyricLine(l);
+        if (para) paragraphs.push(para);
+      });
+    }
   }
 
   async function renderOrdeItems() {
@@ -3291,9 +3331,7 @@ async function generateDocxAsync() {
       if (!lines.length && item.type !== 'inleiding' && item.type !== 'muziek') continue;
       if (index > 0 || paragraphs.length) paragraphs.push(empty());
       if (item.type === 'lied') {
-        appendLiedBody(paragraphs, lines);
-        const imgs = await muziekImageParagraphs(item.muziek_data);
-        paragraphs.push(...imgs);
+        await appendLiedWithOptionalMusic(paragraphs, lines, item.muziek_data);
       } else if (item.type === 'lezing') {
         if (lines.length > 0) {
           paragraphs.push(p('Lezing: ' + lines[0], { bold: true, before: 60 }));
@@ -3528,7 +3566,7 @@ async function generateDocxAsync() {
   children.push(p('Aansteken van de kaars en Stilte', { bold: true }));
   children.push(empty());
   children.push(p('De gemeente gaat staan', { italic: true }));
-  // Lichtlied: titel (+ eventueel geïmporteerde coupletten + muziek 1e couplet)
+  // Lichtlied: titel → muziek 1e couplet → tekst overige coupletten
   if (lichtlied || lichtliedLyrics || lichtliedMuziek.length) {
     const lichtLines = [];
     if (lichtlied) lichtLines.push(lichtlied);
@@ -3537,9 +3575,12 @@ async function generateDocxAsync() {
         if (line.trim()) lichtLines.push(line.trim());
       });
     }
-    if (lichtLines.length) appendLiedBody(children, lichtLines);
-    else children.push(p('Lichtlied', { bold: true }));
-    children.push(...(await muziekImageParagraphs(lichtliedMuziek)));
+    if (lichtLines.length) {
+      await appendLiedWithOptionalMusic(children, lichtLines, lichtliedMuziek);
+    } else {
+      children.push(p('Lichtlied', { bold: true }));
+      children.push(...(await muziekImageParagraphs(lichtliedMuziek)));
+    }
   } else {
     children.push(p('Lichtlied: Licht dat wil ingaan tegen donkere nachten', { bold: true }));
   }
@@ -3627,8 +3668,7 @@ async function generateDocxAsync() {
         if (line.trim()) slotLines.push(line.trim());
       });
     }
-    appendLiedBody(children, slotLines);
-    children.push(...(await muziekImageParagraphs(slotliedMuziek)));
+    await appendLiedWithOptionalMusic(children, slotLines, slotliedMuziek);
   } else {
     children.push(p('Slotlied', { bold: true }));
   }
