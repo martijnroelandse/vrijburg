@@ -3400,11 +3400,13 @@ async function generateDocxAsync() {
     const rightLabel = qrType === 'bijzonder' ? 'vrijburg.nl/bijzonderecollecte' : `vrijburg.nl/collecte${qrType}`;
     const rightUrl = qrType === 'bijzonder' ? 'https://www.vrijburg.nl/bijzonderecollecte' : `https://www.vrijburg.nl/collecte${qrType}`;
     try {
-      const left = await preparePngImage(DOCX_ASSETS.qr1, 110);
-      const right = await preparePngImage(rightPath, 110);
+      // Handmatige liturgie toont QR-codes ~5,6 cm breed; 210px @ 96dpi ≈ dat formaat.
+      const qrMaxPx = 210;
+      const left = await preparePngImage(DOCX_ASSETS.qr1, qrMaxPx);
+      const right = await preparePngImage(rightPath, qrMaxPx);
       const cell = (img, label, url) => new TableCell({
         borders: noBorders,
-        width: { size: 3500, type: WidthType.DXA },
+        width: { size: 4200, type: WidthType.DXA },
         children: [
           new Paragraph({
             children: [
@@ -3419,15 +3421,16 @@ async function generateDocxAsync() {
             spacing: { before: 60, after: 40, line: 240, lineRule: 'auto' },
           }),
           new Paragraph({
-            children: [hyperlink(label, url, { sz: szSmall })],
+            // Zelfde corps als bodytekst (16pt), niet szSmall — zoals in handmatige liturgie
+            children: [hyperlink(label, url, { sz: szBody })],
             alignment: AlignmentType.CENTER,
             spacing: { before: 0, after: 0, line: 240, lineRule: 'auto' },
           }),
         ],
       });
       return new Table({
-        width: { size: 7000, type: WidthType.DXA },
-        columnWidths: [3500, 3500],
+        width: { size: 8400, type: WidthType.DXA },
+        columnWidths: [4200, 4200],
         rows: [
           new TableRow({
             children: [
@@ -3441,9 +3444,9 @@ async function generateDocxAsync() {
       console.warn('QR-codes niet geladen:', e);
       return new Paragraph({
         children: [
-          hyperlink('vrijburg.nl/collecte1', 'https://www.vrijburg.nl/collecte1', { sz: szSmall }),
-          textRun('\t\t', { sz: szSmall }),
-          hyperlink(rightLabel, rightUrl, { sz: szSmall }),
+          hyperlink('vrijburg.nl/collecte1', 'https://www.vrijburg.nl/collecte1', { sz: szBody }),
+          textRun('\t\t', { sz: szBody }),
+          hyperlink(rightLabel, rightUrl, { sz: szBody }),
         ],
         ...paragraphOpts(),
       });
@@ -3646,11 +3649,11 @@ async function generateDocxAsync() {
   const qrLabel = qrType === 'bijzonder' ? 'vrijburg.nl/bijzonderecollecte' : `vrijburg.nl/collecte${qrType}`;
   const qrUrl = qrType === 'bijzonder' ? 'https://www.vrijburg.nl/bijzonderecollecte' : `https://www.vrijburg.nl/collecte${qrType}`;
   children.push(pr([
-    { t: 'Voor digitaal collecteren maken wij gebruik van een algemene QR-code. Deze kunt u niet met uw eigen bank-app lezen maar wel met een algemene QR-code reader (bv Lens op Android of Camera op iPhone). U kunt ook in uw internetapplicatie naar ', sz: szSmall },
-    { t: 'vrijburg.nl/collecte1', sz: szSmall, hyperlink: 'https://www.vrijburg.nl/collecte1' },
-    { t: ' en ', sz: szSmall },
-    { t: qrLabel, sz: szSmall, hyperlink: qrUrl },
-    { t: ' gaan. In alle gevallen wordt u dan doorverwezen naar de ING Betaalverzoekpagina van Vrijburg.', sz: szSmall },
+    { t: 'Voor digitaal collecteren maken wij gebruik van een algemene QR-code. Deze kunt u niet met uw eigen bank-app lezen maar wel met een algemene QR-code reader (bv Lens op Android of Camera op iPhone). U kunt ook in uw internetapplicatie naar ', sz: szBody },
+    { t: 'vrijburg.nl/collecte1', sz: szBody, hyperlink: 'https://www.vrijburg.nl/collecte1' },
+    { t: ' en ', sz: szBody },
+    { t: qrLabel, sz: szBody, hyperlink: qrUrl },
+    { t: ' gaan. In alle gevallen wordt u dan doorverwezen naar de ING Betaalverzoekpagina van Vrijburg.', sz: szBody },
   ]));
   children.push(await buildQrBlock(qrType));
 
