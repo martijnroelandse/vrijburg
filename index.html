@@ -3256,9 +3256,10 @@ async function generateDocxAsync() {
     const out = [];
     for (const dataUrl of (dataUrls || [])) {
       if (!dataUrl) continue;
+      // Handmatige liturgie zet muziek ~pagina-breed (~17,5 cm). 660px @ 96dpi ≈ dat formaat.
       const para = await buildFotoParagraph(dataUrl, {
-        maxWidth: 520,
-        maxHeight: 680,
+        maxWidth: 660,
+        maxHeight: 900,
       });
       if (para) out.push(para);
     }
