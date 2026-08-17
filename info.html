@@ -138,7 +138,19 @@
       font-size: 13px;
       color: var(--muted);
     }
-    footer a { color: var(--brand-dark); }
+    .download-list {
+      list-style: none;
+      padding-left: 0;
+      margin: 12px 0 16px;
+    }
+    .download-list li {
+      margin-bottom: 12px;
+      padding: 10px 12px;
+      background: var(--brand-light);
+      border-radius: 4px;
+    }
+    .download-list a { font-weight: 600; }
+    .download-list .muted { margin: 4px 0 0; }
   </style>
 </head>
 <body>
@@ -162,6 +174,7 @@
 
   <nav class="page-nav" aria-label="Op deze pagina">
     <a href="#handleiding">Handleiding</a>
+    <a href="#gastpredikant">Gastpredikant</a>
     <a href="#over">Over deze tool</a>
     <a href="#credits">Credits</a>
     <a href="#privacy-tool">Privacy (tool)</a>
@@ -202,7 +215,7 @@
         <li><strong>Volgorde voorganger/organist</strong> — inhoudelijk maakt de volgorde niet uit; wel belangrijk dat iedereen dezelfde cloud-link gebruikt.</li>
         <li><strong>Bemoediging, Groet &amp; Gebed</strong> — de tekst van de Bemoediging en Groet staat als voorbeeld in sectie "Opening van de dienst", zodat u ziet dat die al automatisch in de liturgie komt (niet apart invullen). Wilt u zelf een openingsgebed woordelijk afdrukken, vul dat dan in bij het veld "Gebed" — laat het leeg voor alleen het kopje "Gebed".</li>
         <li><strong>Lezingen</strong> — knop <em>Tekst ophalen (Statenvertaling)</em> haalt automatisch tekst op (de enige gratis beschikbare vertaling); knop <em>NBV21 openen</em> opent de juiste plek op debijbel.nl om de NBV21-tekst zelf te kopiëren en te plakken (geen gratis API voor NBV21 beschikbaar).</li>
-        <li><strong>Liederen</strong> — gebruik de knop bij een liednummer om Liedbundels Online te openen (eigen inlog Vrijburg).</li>
+        <li><strong>Liederen</strong> — gebruik de knop bij een liednummer om Liedbundels Online te openen (eigen inlog Vrijburg). Het bureau kan een liedlijst-zip importeren.</li>
         <li><strong>Foto</strong> — alleen uploaden als Vrijburg de rechten heeft (liturgie, socials FB/Insta, eventueel website). Vul altijd de foto credit / bron in. De foto wordt mee opgeslagen in de cloud en staat in het .docx.</li>
         <li><strong>Nieuwsbrief</strong> — aparte pagina <a href="nieuwsbrief.html">Nieuwsbrief / Mailchimp</a> opent dezelfde <code>?id=…</code> en toont platte-tekst cards om in Mailchimp te plakken. Optioneel wordt de laatste <em>Vrijzinnige Miniatuur</em> (SoundCloud + pagina op vrijburg.nl) als aparte card toegevoegd, inclusief <strong>download van de illustratie</strong> en copyright/bronvermelding.</li>
         <li><strong>Lokaal concept</strong> — bij een refresh in dezelfde tab kan de browser een tussentijds concept herstellen. Een nieuwe tab of kale link blijft leeg.</li>
@@ -210,6 +223,40 @@
         <li><strong>Bijzondere collecte</strong> — voor een eenmalige bestemming die niet in de vaste diaconie-/gemeentecollecte past (bijv. een noodhulpactie), kiest u bij de tweede collecte "Bijzondere collecte" en vult u zelf naam, beschrijving en rekeningnummer in.</li>
         <li><strong>"Opslaan mislukt" / "Load failed"</strong> — dit betekent meestal dat de cloud-opslag heel even niet bereikbaar is. Wacht een minuut en probeer opnieuw; uw ingevulde tekst blijft ondertussen ook lokaal in deze browser bewaard (concept). Blijft het misgaan, neem contact op met het bureau.</li>
       </ul>
+    </div>
+  </div>
+
+  <div class="card" id="gastpredikant">
+    <div class="card-header">Voor gastpredikanten</div>
+    <div class="card-body">
+      <p>
+        Zo ziet een dienst in Vrijburg in de basis uit, en zo levert u uw onderdeel aan.
+        Het bureau (Gigi) maakt daarna het gedrukte liturgieboekje.
+      </p>
+      <ul class="download-list">
+        <li>
+          <a href="downloads/basisliturgie-calibri-mrt2026.docx" download>Basisliturgie (Word)</a>
+          <p class="muted">Voorbeeld van de opbouw: opening, bemoediging, groet, liederen, lezingen, overdenking, voorbeden, collecten, slot. U mag hiervan afwijken; dit is de standaard.</p>
+        </li>
+        <li>
+          <a href="downloads/declaratieformulier-preekbeurt-nov2024.docx" download>Declaratieformulier preekbeurt</a>
+          <p class="muted">Invullen en mailen naar <a href="mailto:info@vrijburg.nl">info@vrijburg.nl</a>, het liefst samen met de preek (max. circa 2 pagina’s).</p>
+        </li>
+        <li>
+          <a href="downloads/brief-gastpredikant.docx" download>Brief gastpredikant (sjabloon)</a>
+          <p class="muted">Zelfde briefpapier als voorheen, tekst afgestemd op de Liturgie Generator. Het bureau kan dezelfde tekst vanuit de app versturen via <em>Brief gastpredikant</em> — dan zit de generator-link erin. Velden tussen haakjes [zo] vult u zelf in.</p>
+        </li>
+      </ul>
+      <h3>Hoe werkt de generator voor u?</h3>
+      <ol>
+        <li>U ontvangt van het bureau een <strong>link</strong> naar de Liturgie Generator (uw naam, de datum en vaak al organist/lector staan erin).</li>
+        <li>U vult thema, orde van dienst, liednummers, lezingen, foto en nieuwsbrieftekst in. Klik op <strong>Ik ben klaar</strong>.</li>
+        <li>Uiterlijk de <strong>dinsdag voor de dienst</strong> klaar voor de liturgie; nieuwsbrieftekst + foto liefst de <strong>donderdag daarvoor</strong>.</li>
+      </ol>
+      <p class="muted">
+        Eigen predikanten van Vrijburg hebben deze brief en het declaratieformulier niet nodig.
+        Terug naar de <a href="index.html">generator</a>.
+      </p>
     </div>
   </div>
 

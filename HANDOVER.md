@@ -14,10 +14,10 @@ Een statische webapplicatie (GitHub Pages) waarmee medewerkers van Vrijburg Amst
 Vrijburg is een vrijzinnig-christelijk centrum in Amsterdam. Elke week wordt er een liturgie-document gemaakt (`.docx`, geprint en uitgedeeld in de kerk). Dat kostte vroeger veel handmatig werk: vaste teksten kopiëren, collecte opzoeken, alles opmaken.
 
 **De twee input-workflows van dominees:**
-1. **Gastvoorganger vult zelf in** — Vrijburg stuurt een `basisliturgie.docx` template mee, de dominee stuurt het ingevulde terug (bijv. Petra Galama, 14 juni 2026)
-2. **Informele email** — Dominee stuurt een plain-text email met de orde van dienst (bijv. Peter Kattenberg, 26 april 2026: "Lied 213: alle verzen / Lezing: Psalm 23 / ...")
+1. **Gastvoorganger via de generator** — het bureau stuurt de knop *Brief gastpredikant* (generator-link + downloads van basisliturgie en declaratieformulier). De gast vult in de tool in; het bureau downloadt daarna de `.docx`.
+2. **Informele email** — Dominee stuurt een plain-text email met de orde van dienst (bijv. Peter Kattenberg, 26 april 2026: "Lied 213: alle verzen / Lezing: Psalm 23 / ...") — het bureau zet dat in de generator.
 
-De medewerker (Gon Homburg of Hiltje Wuite-Harmsma) vertaalt dit naar de volledige liturgie.
+De bureaumedewerker (Gigi Calkoen, di–do) rondt af en downloadt de liturgie. Bestanden voor gastpredikanten staan in `downloads/` en op `info.html#gastpredikant`.
 
 ---
 
@@ -48,6 +48,8 @@ Geen enkel veld is verplicht — ieder vult alleen zijn eigen onderdeel in. De g
 
 ```
 ├── index.html           # Volledige app (HTML + CSS + JS in één bestand)
+├── info.html            # Handleiding, gastpredikant-downloads, privacy
+├── downloads/           # Basisliturgie, declaratieformulier, brief gastpredikant
 ├── collectes.json       # Collectes 2026-2027 (55 entries, per datum)
 ├── dienstplanning.json  # Dienstplanning (predikant, organist, lector, cantorij, etc.)
 ├── README.md            # Gebruikersdocumentatie
@@ -273,13 +275,20 @@ gebedsveld bij Opening, Overdenking/Afsluiting als vrije lijst.
 
 ---
 
-## Referentiebestanden (niet in repo maar beschikbaar)
+## Referentiebestanden
 
-Deze bestanden staan lokaal bij Martijn en zijn gebruikt als bron:
+Op de site (`downloads/` + `info.html#gastpredikant`):
 
 | Bestand | Inhoud |
 |---|---|
-| `basisliturgie Calibri mrt2026.docx` | Het Word-template dat Vrijburg meestuurt naar dominees |
+| `downloads/basisliturgie-calibri-mrt2026.docx` | Basisliturgie voor gastpredikanten (Calibri, maart 2026) |
+| `downloads/declaratieformulier-preekbeurt-nov2024.docx` | Declaratieformulier preekbeurt (nov 2024) |
+| `downloads/brief-gastpredikant.docx` | Brief op Vrijburg-briefpapier, afgestemd op de generator (placeholders tussen [haakjes]). Bureau kan dezelfde tekst vanuit de app mailen via *Brief gastpredikant*. |
+
+Lokaal bij Martijn (niet in repo):
+
+| Bestand | Inhoud |
+|---|---|
 | `collectes 2026 - 2027 teksten voor de liturgie.txt` | Bronbestand voor collectes.json |
 | `Liturgien/MMDD.docx` | 25 voltooide liturgieën van 2026 als referentie voor opmaak en structuur |
 | `Re_ Preekbeurt 26 april 2026 in Vrijburg.eml` | Voorbeeld informele email van dominee (Kattenberg) |
