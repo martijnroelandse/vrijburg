@@ -515,6 +515,22 @@
       line-height: 1.6;
     }
     .vaste-tekst-preview strong { color: var(--text); }
+    .download-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .download-list a {
+      display: inline-flex;
+      align-items: flex-start;
+      gap: 8px;
+      color: var(--brand-dark);
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .download-list a:hover { text-decoration: underline; }
+    .download-list span { font-weight: 400; color: var(--muted); font-size: 13px; }
   </style>
 </head>
 <body>
@@ -562,6 +578,16 @@
         <input type="checkbox" id="toon-alles" onchange="applyRolUI()">
         Toon ook onderdelen van anderen (ter referentie)
       </label>
+      <p class="comm-hint" style="margin-top:12px">
+        Voor gastpredikanten:
+        <a href="downloads/basisliturgie-calibri-mrt2026.docx" download>Basisliturgie</a>
+        ·
+        <a href="downloads/declaratieformulier-preekbeurt-nov2024.docx" download>Declaratieformulier</a>
+        ·
+        <a href="downloads/brief-gastpredikant.docx" download>Brief (sjabloon)</a>
+        — of knop <em>Brief gastpredikant</em> onderaan (mail met generator-link).
+        Meer uitleg op de <a href="info.html#gastpredikant">infopagina</a>.
+      </p>
     </div>
   </div>
 
@@ -927,6 +953,7 @@
     <div class="toolbar">
       <button class="btn-secondary" id="btn-cloud-save" onclick="saveDienstManual()">☁ Opslaan</button>
       <button class="btn-secondary" id="btn-email-voorganger" onclick="emailRol('voorganger')">✉ Link naar voorganger</button>
+      <button class="btn-secondary" id="btn-email-gastpredikant" onclick="emailGastpredikantBrief()" title="Volledige brief voor een gastpredikant, met generator-link en downloads">✉ Brief gastpredikant</button>
       <button class="btn-secondary" id="btn-email-organist" onclick="emailRol('organist')">✉ Link naar organist</button>
       <button class="btn-secondary" onclick="copyShareLink()">🔗 Kopieer link</button>
       <button class="btn-secondary" id="btn-klaar" onclick="terugNaarBureau()">✓ Ik ben klaar – stuur naar bureau</button>
@@ -1193,6 +1220,7 @@ function applyRolUI() {
   document.getElementById('btn-import-liedlijst').style.display = isSamenvoeger ? '' : 'none';
   document.getElementById('btn-meld-klaar').style.display = isSamenvoeger ? '' : 'none';
   document.getElementById('btn-email-voorganger').style.display = huidigeRol === 'medewerker' ? '' : 'none';
+  document.getElementById('btn-email-gastpredikant').style.display = huidigeRol === 'medewerker' ? '' : 'none';
   document.getElementById('btn-email-organist').style.display = huidigeRol === 'medewerker' ? '' : 'none';
   document.getElementById('btn-klaar').style.display = (huidigeRol === 'voorganger' || huidigeRol === 'organist') ? '' : 'none';
   document.getElementById('generate-hint').textContent = isSamenvoeger
@@ -2685,6 +2713,103 @@ async function emailRol(rol) {
     body,
   });
   setStatus(cloud ? '✓ Cloud-link in mail en op klembord' : '✓ Korte link in mail en op klembord', 'ok');
+}
+
+function siteFileUrl(relPath) {
+  const base = location.href.split('?')[0].replace(/[^/]*$/, '');
+  return base + relPath;
+}
+
+function addDaysYmd(ymd, days) {
+  if (!ymd) return '';
+  const d = new Date(ymd + 'T12:00:00');
+  d.setDate(d.getDate() + days);
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+}
+
+function organistVoorBrief() {
+  const name = document.getElementById('organist').value.trim();
+  if (!name) return { label: 'onze organist', email: '' };
+  const lower = name.toLowerCase();
+  const email = (lower.includes('jan pieter') || lower.includes('lanooy'))
+    ? 'jptlanooy@gmail.com'
+    : '';
+  return { label: name, email };
+}
+
+async function emailGastpredikantBrief() {
+  const datum = document.getElementById('datum').value;
+  const datumTekst = datum ? formatDatum(datum) : 'zondag [datum dienst]';
+  const voorganger = document.getElementById('voorganger').value.trim() || '[naam]';
+  const org = organistVoorBrief();
+  const organistZin = org.email
+    ? `Onze organist, ${org.label}, ${org.email}, adviseert u graag en oefent voorafgaand aan de dienst desgewenst de liederen.`
+    : `Onze organist, ${org.label}, adviseert u graag en oefent voorafgaand aan de dienst desgewenst de liederen.`;
+  const lector = document.getElementById('lector').value.trim() || '[lector]';
+  // Dienst is doorgaans zondag; inhoud uiterlijk de dinsdag ervoor, nieuwsbrief donderdag ervoor.
+  const dinsdag = datum ? formatDatum(addDaysYmd(datum, -5)) : '[dinsdag voor de dienst]';
+  const donderdag = datum ? formatDatum(addDaysYmd(datum, -3)) : '[donderdag voor de dienst]';
+
+  setStatus('Opslaan & brief maken…', '');
+  const { short, cloud } = await prepareShareLink('voorganger');
+  await copyShareLinkRich(short);
+
+  const basisUrl = siteFileUrl('downloads/basisliturgie-calibri-mrt2026.docx');
+  const declUrl = siteFileUrl('downloads/declaratieformulier-preekbeurt-nov2024.docx');
+  const infoUrl = siteFileUrl('info.html#gastpredikant');
+
+  const aanhef = voorganger && voorganger !== '[naam]'
+    ? `Geachte ${voorganger},`
+    : 'Geachte [naam],';
+
+  const body =
+    `${aanhef}\n\n` +
+    `Hartelijk dank dat u op ${datumTekst} bij ons voor wilt gaan.\n\n` +
+    `Voor het samenstellen van de liturgie gebruiken we de Liturgie Generator. ` +
+    `Via onderstaande link vult u thema, orde van dienst (liederen en lezingen), lichtlied/slotlied, ` +
+    `foto en een kort stukje voor de nieuwsbrief in. U hoeft niet alles in één keer te doen; ` +
+    `klik op “Ik ben klaar” als uw deel gereed is.\n\n` +
+    mailLinkBlock(short) + '\n' +
+    `Ter oriëntatie kunt u de basisliturgie downloaden — zo ziet u hoe de dienst in de basis is opgebouwd. ` +
+    `Daarop kunt u natuurlijk variëren (bijvoorbeeld een ander lichtlied uit het Liedboek). ` +
+    `${organistZin}\n\n` +
+    `Basisliturgie: ${basisUrl}\n` +
+    `Declaratieformulier: ${declUrl}\n` +
+    `Korte uitleg: ${infoUrl}\n\n` +
+    `De (Bijbel)teksten in uw dienst worden gelezen door ${lector}.\n\n` +
+    `Het is prettig als u voor een passend plaatje kunt zorgen voor het voorblad (rechtenvrij — bijv. unsplash.com). ` +
+    `U kunt dat in de generator uploaden; het komt ook in de aankondiging in onze wekelijkse Nieuwsbrief.\n\n` +
+    `Wilt u uw onderdeel in de generator uiterlijk ${dinsdag} afronden (knop “Ik ben klaar”)? ` +
+    `Het bureau (bureau@vrijburg.nl / info@vrijburg.nl) ontvangt dan uw invoer. ` +
+    `Stem liederen gerust af met de organist${org.email ? ` (${org.label}, ${org.email})` : ` (${org.label})`}.\n\n` +
+    `Op donderdag of vrijdag gaat onze Nieuwsbrief uit. Wilt u daartoe uiterlijk ${donderdag} ` +
+    `het korte stukje over het thema (inclusief foto) in de generator invullen? ` +
+    `U kunt daar ook “Meld nieuwsbriefredactie” gebruiken.\n\n` +
+    `Het declaratieformulier kunt u naar info@vrijburg.nl mailen. Hopelijk kunt u tegelijk ook uw preek mailen? ` +
+    `Het liefst op maximaal 2 bladzijden, of opgemaakt in Word. Wij sturen onze preken per post naar ` +
+    `leden zonder internet en willen de porti graag in de hand houden.\n\n` +
+    `Voor inhoudelijke vragen: Rachelle van Andel, rachellevanandel@vrijburg.nl.\n` +
+    `Voor algemene vragen: info@vrijburg.nl.\n\n` +
+    `Kunt u op de ochtend van uw dienst om uiterlijk 10 uur aanwezig zijn?\n` +
+    `Wij kijken uit naar uw komst.\n\n` +
+    `Met een hartelijke groet,\n` +
+    `namens het bestuur van Vrijburg,\n\n` +
+    `Gigi Calkoen\n` +
+    `Bureau Vrijburg`;
+
+  openMailto({
+    subject: `Preekbeurt Vrijburg – ${datumTekst}`,
+    body,
+  });
+  setStatus(
+    cloud
+      ? '✓ Brief gastpredikant in mail (generator-link + downloads op klembord)'
+      : '✓ Brief gastpredikant in mail — voeg desgewenst de Word-bijlagen uit “downloads” toe',
+    'ok'
+  );
 }
 
 // ============================================================
