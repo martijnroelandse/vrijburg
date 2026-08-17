@@ -141,7 +141,7 @@
     .download-list {
       list-style: none;
       padding-left: 0;
-      margin: 12px 0 16px;
+      margin: 12px 0 8px;
     }
     .download-list li {
       margin-bottom: 12px;
@@ -162,7 +162,7 @@
     </a>
     <div>
       <h1>Liturgie Generator</h1>
-      <p>Uitleg, credits &amp; privacy</p>
+      <p>Uitleg &amp; privacy</p>
     </div>
   </div>
   <nav class="header-nav">
@@ -175,53 +175,61 @@
   <nav class="page-nav" aria-label="Op deze pagina">
     <a href="#handleiding">Handleiding</a>
     <a href="#gastpredikant">Gastpredikant</a>
-    <a href="#over">Over deze tool</a>
     <a href="#credits">Credits</a>
-    <a href="#privacy-tool">Privacy (tool)</a>
-    <a href="#privacy-vrijburg">Privacy (Vrijburg)</a>
+    <a href="#privacy">Privacy</a>
   </nav>
 
   <div class="card" id="handleiding">
-    <div class="card-header">Korte handleiding</div>
+    <div id="over"></div>
+    <div class="card-header">Handleiding</div>
     <div class="card-body">
-      <p>De liturgie wordt door meerdere mensen ingevuld. Iedereen werkt aan hetzelfde concept via een korte gedeelde link (<code>?id=…</code>), die in de cloud wordt bewaard.</p>
+      <p>
+        De Liturgie Generator maakt de wekelijkse liturgie als Word-document (.docx).
+        Voorganger, organist en bureau vullen elk hun deel in via dezelfde cloud-link
+        (<code>?id=…</code>).
+      </p>
 
       <ol class="steps">
         <li>
-          <strong>Bureaumedewerker</strong> — kies <em>Bureaumedewerker</em>, zet de datum en controleer dienstplanning, collecte en agenda.
+          <strong>Bureau</strong> — kies <em>Bureaumedewerker</em>, zet de datum en controleer dienstplanning, collecte en agenda.
         </li>
         <li>
-          Klik <strong>☁ Opslaan</strong> of <em>Link naar voorganger</em>. De app bewaart alles in de cloud en maakt een korte link met <code>?id=…</code>.
+          Sla op en stuur de link: <em>Link naar voorganger</em> (eigen predikant) of
+          <em>Brief gastpredikant</em> (gast, met downloads).
         </li>
         <li>
-          <strong>Voorganger</strong> — open die link, vul thema, orde van dienst, liederen, lezingen, communicatie en eventueel foto/nieuwsbrief/overdenking in. Klik op <strong>Ik ben klaar</strong> om naar <a href="mailto:bureau@vrijburg.nl">bureau@vrijburg.nl</a> te sturen (opnieuw met dezelfde cloud-link).
+          <strong>Voorganger</strong> — vul thema, orde van dienst, liederen, lezingen, foto en nieuwsbrief in.
+          Klik op <strong>Ik ben klaar</strong> (gaat naar <a href="mailto:bureau@vrijburg.nl">bureau@vrijburg.nl</a>).
         </li>
         <li>
-          Het bureau stuurt dezelfde link (of de bijgewerkte mail) door naar de <strong>organist</strong> (<em>Link naar organist</em>). Iedereen opent dus hetzelfde <code>?id=…</code>.
+          <strong>Bureau</strong> stuurt dezelfde link naar de organist.
         </li>
         <li>
-          <strong>Organist</strong> — vul orgelspel en muziek in. Klik op <strong>Ik ben klaar</strong> als u klaar bent.
+          <strong>Organist</strong> — vul orgelspel en muziek in, daarna <strong>Ik ben klaar</strong>.
         </li>
         <li>
-          <strong>Bureaumedewerker</strong> — open dezelfde link, controleer alles en download de liturgie als <strong>.docx</strong>.
+          <strong>Bureau</strong> — controleer alles en download de liturgie als <strong>.docx</strong>.
         </li>
       </ol>
+      <p class="muted">De volgorde voorganger/organist maakt inhoudelijk niet uit, zolang iedereen dezelfde link gebruikt.</p>
 
-      <h3>Handige tips</h3>
+      <h3>Invullen</h3>
       <ul>
-        <li><strong>Cloud-link</strong> — onderin ziet u na het opslaan <em>"bewaar deze link om later verder te werken"</em>. Klik erop (of bewaar hem in uw favorieten) om op een later moment verder te gaan met dezelfde liturgie.</li>
-        <li><strong>Kale URL</strong> (zonder <code>id</code>) — start met een leeg formulier. Handig voor een nieuwe dienst.</li>
-        <li><strong>Wis concept</strong> — wist alle velden, het lokale concept én de cloud-koppeling in de URL (formulier wordt leeg).</li>
-        <li><strong>Volgorde voorganger/organist</strong> — inhoudelijk maakt de volgorde niet uit; wel belangrijk dat iedereen dezelfde cloud-link gebruikt.</li>
-        <li><strong>Bemoediging, Groet &amp; Gebed</strong> — de tekst van de Bemoediging en Groet staat als voorbeeld in sectie "Opening van de dienst", zodat u ziet dat die al automatisch in de liturgie komt (niet apart invullen). Wilt u zelf een openingsgebed woordelijk afdrukken, vul dat dan in bij het veld "Gebed" — laat het leeg voor alleen het kopje "Gebed".</li>
-        <li><strong>Lezingen</strong> — knop <em>Tekst ophalen (Statenvertaling)</em> haalt automatisch tekst op (de enige gratis beschikbare vertaling); knop <em>NBV21 openen</em> opent de juiste plek op debijbel.nl om de NBV21-tekst zelf te kopiëren en te plakken (geen gratis API voor NBV21 beschikbaar).</li>
-        <li><strong>Liederen</strong> — gebruik de knop bij een liednummer om Liedbundels Online te openen (eigen inlog Vrijburg). Het bureau kan een liedlijst-zip importeren.</li>
-        <li><strong>Foto</strong> — alleen uploaden als Vrijburg de rechten heeft (liturgie, socials FB/Insta, eventueel website). Vul altijd de foto credit / bron in. De foto wordt mee opgeslagen in de cloud en staat in het .docx.</li>
-        <li><strong>Nieuwsbrief</strong> — aparte pagina <a href="nieuwsbrief.html">Nieuwsbrief / Mailchimp</a> opent dezelfde <code>?id=…</code> en toont platte-tekst cards om in Mailchimp te plakken. Optioneel wordt de laatste <em>Vrijzinnige Miniatuur</em> (SoundCloud + pagina op vrijburg.nl) als aparte card toegevoegd, inclusief <strong>download van de illustratie</strong> en copyright/bronvermelding.</li>
-        <li><strong>Lokaal concept</strong> — bij een refresh in dezelfde tab kan de browser een tussentijds concept herstellen. Een nieuwe tab of kale link blijft leeg.</li>
-        <li><strong>Voorbeden / Onze Vader</strong> — standaard sluit de liturgie de voorbeden af met de vaste tekst van het Onze Vader. Wijkt de voorganger hiervan af (bijv. eigen gebedstekst of een acclamatie)? Vul dat in bij sectie "Voorbeden" en vink daar desgewenst "Geen standaard Onze Vader" aan.</li>
-        <li><strong>Bijzondere collecte</strong> — voor een eenmalige bestemming die niet in de vaste diaconie-/gemeentecollecte past (bijv. een noodhulpactie), kiest u bij de tweede collecte "Bijzondere collecte" en vult u zelf naam, beschrijving en rekeningnummer in.</li>
-        <li><strong>"Opslaan mislukt" / "Load failed"</strong> — dit betekent meestal dat de cloud-opslag heel even niet bereikbaar is. Wacht een minuut en probeer opnieuw; uw ingevulde tekst blijft ondertussen ook lokaal in deze browser bewaard (concept). Blijft het misgaan, neem contact op met het bureau.</li>
+        <li><strong>Bemoediging en Groet</strong> staan vast in de liturgie (niet apart invullen). Openingsgebed alleen invullen als de tekst afgedrukt moet worden.</li>
+        <li><strong>Lezingen</strong> — <em>Tekst ophalen</em> gebruikt de Statenvertaling; <em>NBV21 openen</em> opent debijbel.nl om zelf te kopiëren.</li>
+        <li><strong>Liederen</strong> — knop bij het nummer opent Liedbundels Online (inlog Vrijburg). Het bureau kan een liedlijst-zip importeren.</li>
+        <li><strong>Foto</strong> — alleen als Vrijburg de rechten heeft (liturgie, socials, eventueel website). Credit/bron is verplicht.</li>
+        <li><strong>Nieuwsbrief</strong> — <a href="nieuwsbrief.html">Nieuwsbrief / Mailchimp</a> toont platte-tekst cards bij dezelfde <code>?id=…</code>.</li>
+        <li><strong>Voorbeden</strong> — standaard met Onze Vader; vink anders “Geen standaard Onze Vader” aan.</li>
+        <li><strong>Bijzondere collecte</strong> — bij de tweede collecte, voor een eenmalige bestemming.</li>
+      </ul>
+
+      <h3>Links en opslaan</h3>
+      <ul>
+        <li>Bewaar de cloud-link onderin om later verder te gaan. Een kale URL (zonder <code>id</code>) is een leeg formulier.</li>
+        <li><strong>Wis concept</strong> leegt het formulier, het lokale concept én de cloud-koppeling in de URL.</li>
+        <li>Een refresh in dezelfde tab kan een lokaal concept herstellen; een nieuwe tab of kale link blijft leeg.</li>
+        <li><em>Opslaan mislukt</em> — meestal even niet bereikbaar. Wacht een minuut; uw tekst blijft lokaal bewaard. Blijft het mis: bureau.</li>
       </ul>
     </div>
   </div>
@@ -230,62 +238,33 @@
     <div class="card-header">Voor gastpredikanten</div>
     <div class="card-body">
       <p>
-        Zo ziet een dienst in Vrijburg in de basis uit, en zo levert u uw onderdeel aan.
-        Het bureau (Gigi) maakt daarna het gedrukte liturgieboekje.
+        U ontvangt van het bureau een <strong>link</strong> naar de generator.
+        Vul daar uw onderdeel in en klik op <strong>Ik ben klaar</strong>.
+        Het bureau (Gigi) maakt daarna het gedrukte boekje.
       </p>
+      <ul>
+        <li>Liturgie: uiterlijk de <strong>dinsdag</strong> voor de dienst</li>
+        <li>Nieuwsbrieftekst + foto: liefst de <strong>donderdag</strong> daarvoor</li>
+      </ul>
       <ul class="download-list">
         <li>
           <a href="downloads/basisliturgie-calibri-mrt2026.docx" download>Basisliturgie (Word)</a>
-          <p class="muted">Voorbeeld van de opbouw: opening, bemoediging, groet, liederen, lezingen, overdenking, voorbeden, collecten, slot. U mag hiervan afwijken; dit is de standaard.</p>
+          <p class="muted">Voorbeeld van de standaardopbouw. U mag hiervan afwijken.</p>
         </li>
         <li>
           <a href="downloads/declaratieformulier-preekbeurt-nov2024.docx" download>Declaratieformulier preekbeurt</a>
-          <p class="muted">Invullen en mailen naar <a href="mailto:info@vrijburg.nl">info@vrijburg.nl</a>, het liefst samen met de preek (max. circa 2 pagina’s).</p>
-        </li>
-        <li>
-          <a href="downloads/brief-gastpredikant.docx" download>Brief gastpredikant (sjabloon)</a>
-          <p class="muted">Zelfde briefpapier als voorheen, tekst afgestemd op de Liturgie Generator. Het bureau kan dezelfde tekst vanuit de app versturen via <em>Brief gastpredikant</em> — dan zit de generator-link erin. Velden tussen haakjes [zo] vult u zelf in.</p>
+          <p class="muted">Mailen naar <a href="mailto:info@vrijburg.nl">info@vrijburg.nl</a>, het liefst samen met de preek (max. circa 2 pagina’s). Eigen predikanten van Vrijburg hebben dit niet nodig.</p>
         </li>
       </ul>
-      <h3>Hoe werkt de generator voor u?</h3>
-      <ol>
-        <li>U ontvangt van het bureau een <strong>link</strong> naar de Liturgie Generator (uw naam, de datum en vaak al organist/lector staan erin).</li>
-        <li>U vult thema, orde van dienst, liednummers, lezingen, foto en nieuwsbrieftekst in. Klik op <strong>Ik ben klaar</strong>.</li>
-        <li>Uiterlijk de <strong>dinsdag voor de dienst</strong> klaar voor de liturgie; nieuwsbrieftekst + foto liefst de <strong>donderdag daarvoor</strong>.</li>
-      </ol>
       <p class="muted">
-        Eigen predikanten van Vrijburg hebben deze brief en het declaratieformulier niet nodig.
-        Terug naar de <a href="index.html">generator</a>.
-      </p>
-    </div>
-  </div>
-
-  <div class="card" id="over">
-    <div class="card-header">Over deze tool</div>
-    <div class="card-body">
-      <p>
-        De Liturgie Generator helpt medewerkers en voorgangers van Vrijburg Amsterdam bij het
-        samenstellen van de wekelijkse kerkdienst-liturgie als Word-document (.docx).
-      </p>
-      <p>
-        De interface draait in uw browser (GitHub Pages). Concepten worden gedeeld via korte links
-        en opgeslagen in de cloud (Supabase), zodat voorganger, organist en bureau aan dezelfde dienst werken.
-      </p>
-      <h3>Wie vult wat in?</h3>
-      <ul>
-        <li><strong>Bureaumedewerker</strong> — datum, dienstplanning, collecte, agenda</li>
-        <li><strong>Voorganger</strong> — thema, orde van dienst, liederen, lezingen, communicatie</li>
-        <li><strong>Organist</strong> — orgelspel en muziek</li>
-      </ul>
-      <p class="muted">
-        Via een gedeelde cloud-link (<code>?id=…</code>) komen de onderdelen bij elkaar.
-        De voorganger stuurt het resultaat naar <a href="mailto:bureau@vrijburg.nl">bureau@vrijburg.nl</a>.
+        Bureau: knop <em>Brief gastpredikant</em> in de generator vult de mail (met link).
+        Sjabloon: <a href="downloads/brief-gastpredikant.docx" download>brief-gastpredikant.docx</a>.
       </p>
     </div>
   </div>
 
   <div class="card" id="credits">
-    <div class="card-header">Credits &amp; externe diensten</div>
+    <div class="card-header">Credits</div>
     <div class="card-body">
       <table class="credits">
         <thead>
@@ -293,113 +272,46 @@
         </thead>
         <tbody>
           <tr><td>Hosting</td><td><a href="https://pages.github.com/" target="_blank" rel="noopener">GitHub Pages</a></td></tr>
-          <tr><td>Cloud-opslag</td><td><a href="https://supabase.com/" target="_blank" rel="noopener">Supabase</a> (diensten + foto’s)</td></tr>
+          <tr><td>Cloud-opslag</td><td><a href="https://supabase.com/" target="_blank" rel="noopener">Supabase</a></td></tr>
           <tr><td>Word-document</td><td><a href="https://docx.js.org/" target="_blank" rel="noopener">docx.js</a></td></tr>
-          <tr><td>Bijbelteksten</td><td><a href="https://www.bijbelapi.com/" target="_blank" rel="noopener">BijbelAPI</a> (BasisBijbel)</td></tr>
-          <tr><td>Agenda</td><td><a href="https://www.vrijburg.nl" target="_blank" rel="noopener">vrijburg.nl</a> (WordPress API)</td></tr>
-          <tr><td>Dienstplanning &amp; collectes</td><td>Statische bestanden in deze repository</td></tr>
-          <tr><td>Liedteksten</td><td><a href="https://liedbundelsonline.nl/nl/lied-zoeken?bundles%5B0%5D=LB" target="_blank" rel="noopener">Liedbundels Online</a> — download liedlijst-zip (platte tekst aan) en gebruik <em>Importeer liedlijst (.zip)</em> in de app; teksten + muziek 1e couplet komen in het Word-document</td></tr>
-          <tr><td>Lettertype</td><td>Roboto (Google Fonts), Calibri in .docx</td></tr>
+          <tr><td>Bijbelteksten</td><td><a href="https://www.bijbelapi.com/" target="_blank" rel="noopener">BijbelAPI</a> (Statenvertaling)</td></tr>
+          <tr><td>Agenda</td><td><a href="https://www.vrijburg.nl" target="_blank" rel="noopener">vrijburg.nl</a> (WordPress)</td></tr>
+          <tr><td>Dienstplanning &amp; collectes</td><td>Bestanden in deze repository</td></tr>
+          <tr><td>Liedteksten</td><td><a href="https://liedbundelsonline.nl/nl/lied-zoeken?bundles%5B0%5D=LB" target="_blank" rel="noopener">Liedbundels Online</a> (liedlijst-zip importeren in de app)</td></tr>
+          <tr><td>Lettertype</td><td>Roboto (Google Fonts); Calibri in .docx</td></tr>
         </tbody>
       </table>
       <p class="muted" style="margin-top:14px">
-        Ontwikkeld voor Vrijburg Amsterdam. Broncode:
-        <a href="https://github.com/martijnroelandse/vrijburg" target="_blank" rel="noopener">github.com/martijnroelandse/vrijburg</a>
+        Ontwikkeld voor Vrijburg Amsterdam.
+        <a href="https://github.com/martijnroelandse/vrijburg" target="_blank" rel="noopener">Broncode op GitHub</a>
       </p>
     </div>
   </div>
 
-  <div class="card" id="privacy-tool">
-    <div class="card-header">Privacy bij gebruik van deze tool</div>
+  <div class="card" id="privacy">
+    <div id="privacy-tool"></div>
+    <div class="card-header">Privacy</div>
     <div class="card-body">
       <p>
-        Deze pagina beschrijft de privacy bij het gebruik van de <strong>Liturgie Generator</strong>.
-        Voor de algemene privacyverklaring van Vrijburg als organisatie, zie
+        Deze tool bewaart alleen wat u zelf invult (namen, thema, orde van dienst, foto’s, enzovoort).
+      </p>
+      <ul>
+        <li><strong>Cloud (Supabase)</strong> — bij opslaan/delen onder een korte <code>id</code>. Wie de link heeft, kan de gegevens openen. Deel links alleen met betrokkenen.</li>
+        <li><strong>Browser</strong> — tussentijds lokaal concept (<code>localStorage</code>), vooral na een refresh.</li>
+        <li><strong>Foto’s</strong> — in Supabase Storage en in het .docx.</li>
+      </ul>
+      <p>
+        Bij sommige knoppen raadpleegt de browser externe diensten (Supabase, BijbelAPI, vrijburg.nl, Liedbundels Online).
+        Zie <a href="#credits">Credits</a>. Er worden geen wachtwoorden in deze tool opgeslagen.
+        De generator zelf plaatst geen cookies; GitHub Pages en Google Fonts kunnen verkeer loggen.
+      </p>
+      <p>
+        Wissen: knop <strong>Wis concept</strong> (formulier + lokaal concept + link).
+        Cloud-records: via het Supabase-dashboard (beheerder).
+      </p>
+      <p id="privacy-vrijburg">
+        Privacy van Vrijburg als organisatie:
         <a href="https://www.vrijburg.nl/privacy/" target="_blank" rel="noopener">vrijburg.nl/privacy</a>.
-      </p>
-
-      <h3>Welke gegevens verwerkt deze tool?</h3>
-      <p>Alleen wat u zelf invult: namen, thema, orde van dienst, collecte, agenda, foto’s, enzovoort.</p>
-      <ul>
-        <li><strong>In de cloud (Supabase)</strong> — bij Opslaan / delen wordt het concept bewaard onder een korte <code>id</code>. Wie de link heeft, kan die gegevens openen. Deel links alleen met betrokkenen.</li>
-        <li><strong>In uw browser</strong> — tussentijds kan een lokaal concept worden bewaard (<code>localStorage</code>), vooral voor herstel na een refresh.</li>
-        <li><strong>Foto’s</strong> — bij cloud-opslag mee in Supabase Storage; ook in het gedownloade .docx.</li>
-        <li><strong>Oude lange links</strong> (<code>?z=…</code>) — kunnen nog werken als fallback; daarin staat tekst gecodeerd in de URL.</li>
-      </ul>
-
-      <h3>Externe diensten</h3>
-      <p>Bij gebruik van bepaalde knoppen raadpleegt uw browser externe sites:</p>
-      <ul>
-        <li>Supabase — opslaan en laden van concepten en foto’s</li>
-        <li>BijbelAPI — bijbelreferentie voor tekstophaling</li>
-        <li>vrijburg.nl — agenda-import</li>
-        <li>Liedbundels Online — opent het lied in een nieuw venster (eigen inlog Vrijburg)</li>
-      </ul>
-      <p class="muted">Deze diensten hebben eigen privacyvoorwaarden. Er worden geen wachtwoorden in deze tool opgeslagen.</p>
-
-      <h3>Cookies</h3>
-      <p>De Liturgie Generator zelf plaatst geen cookies. GitHub Pages en Google Fonts (lettertype) kunnen wel verkeer loggen volgens hun eigen beleid.</p>
-
-      <h3>Gegevens wissen</h3>
-      <ul>
-        <li>Formulier + lokaal concept + cloud-koppeling in de URL: knop <strong>Wis concept</strong></li>
-        <li>Browsergegevens: wis sitegegevens voor deze pagina in uw browserinstellingen</li>
-        <li>Cloud-records in Supabase: via het Supabase-dashboard (beheerder)</li>
-      </ul>
-    </div>
-  </div>
-
-  <div class="card" id="privacy-vrijburg">
-    <div class="card-header">Privacyverklaring Vrijburg</div>
-    <div class="card-body">
-      <p>
-        Vrijburg verwerkt persoonsgegevens in het kader van lidmaatschap, nieuwsbrieven, betalingen en
-        dienstverlening. Hieronder een verkorte weergave; de volledige tekst staat op
-        <a href="https://www.vrijburg.nl/privacy/" target="_blank" rel="noopener">vrijburg.nl/privacy</a>.
-      </p>
-
-      <h3>Contact</h3>
-      <p>
-        Herman Gorterstraat 31, 1077 WE Amsterdam<br>
-        Telefoon: (020) 671 42 77<br>
-        E-mail: <a href="mailto:administratie@vrijburg.nl">administratie@vrijburg.nl</a>
-      </p>
-      <p>
-        Voor wijziging van uw persoonsgegevens: Brigitte Kristel via bovenstaande gegevens.<br>
-        Vragen over de website: <a href="mailto:webmaster@vrijburg.nl">webmaster@vrijburg.nl</a>
-      </p>
-
-      <h3>Persoonsgegevens die Vrijburg verwerkt</h3>
-      <ul>
-        <li>Voor- en achternaam, geboortedatum, adresgegevens</li>
-        <li>Telefoonnummer en e-mailadres</li>
-        <li>Lidmaatschapsgegevens (doop-, belijdenis- of vriendschapslid)</li>
-      </ul>
-
-      <h3>Doelen</h3>
-      <ul>
-        <li>Afhandeling van betalingen</li>
-        <li>Verzending van nieuwsbrief en maandblad</li>
-        <li>Contact voor dienstverlening</li>
-      </ul>
-
-      <h3>Uw rechten</h3>
-      <p>
-        U heeft recht op inzage, correctie, verwijdering en gegevensoverdraagbaarheid.
-        Verzoeken kunt u sturen naar <a href="mailto:info@vrijburg.nl">info@vrijburg.nl</a>.
-        Klachten bij de <a href="https://autoriteitpersoonsgegevens.nl/" target="_blank" rel="noopener">Autoriteit Persoonsgegevens</a> zijn mogelijk.
-      </p>
-
-      <h3>Beveiliging</h3>
-      <p>
-        Vrijburg neemt passende maatregelen om misbruik en onbevoegde toegang tegen te gaan.
-        Bij zorgen: <a href="mailto:administratie@vrijburg.nl">administratie@vrijburg.nl</a> of
-        <a href="mailto:webmaster@vrijburg.nl">webmaster@vrijburg.nl</a>.
-      </p>
-
-      <p class="muted">
-        Bron: <a href="https://www.vrijburg.nl/privacy/" target="_blank" rel="noopener">Privacyverklaring Vrijburg</a>
-        (samenvatting; bij verschil prevaleert de officiële pagina).
       </p>
     </div>
   </div>
