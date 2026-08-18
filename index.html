@@ -3209,8 +3209,8 @@ function resolveCoverLogo(vlv, vlh, vlz) {
   if (vlv) return { path: DOCX_ASSETS.logoVlv, title: VL_LABELS.vlv, maxWidth: 160, kind: 'vl', key: 'vlv' };
   if (vlh) return { path: DOCX_ASSETS.logoVlh, title: VL_LABELS.vlh, maxWidth: 160, kind: 'vl', key: 'vlh' };
   if (vlz) return { path: DOCX_ASSETS.logoVlz, title: VL_LABELS.vlz, maxWidth: 100, kind: 'vl', key: 'vlz' };
-  // Vierkant blauw logo, groter dan de eerdere 130px, zonder overlap over de titel.
-  return { path: DOCX_ASSETS.logo, title: 'Vrijburg logo', maxWidth: 220, kind: 'vrijburg', key: null };
+  // Vierkant blauw logo (Vrijburg-logo blauw XL), groter, eigen regel rechtsboven.
+  return { path: DOCX_ASSETS.logo, title: 'Vrijburg logo', maxWidth: 240, kind: 'vrijburg', key: null };
 }
 
 function dataUrlToBytes(dataUrl) {
