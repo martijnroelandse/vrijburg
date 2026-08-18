@@ -990,11 +990,11 @@
       <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M5 20h14v-2H5v2zm7-3 5-5h-3V4h-4v8H7l5 5z"/></svg>
       Download liturgie (.docx)
     </button>
-    <label class="btn-secondary" id="btn-import-liedlijst" style="cursor:pointer;margin:0">
+    <button type="button" class="btn-secondary" id="btn-import-liedlijst" style="cursor:pointer;margin:0" onclick="document.getElementById('liedlijst_zip').click()">
       <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
       Importeer liedlijst (.zip)
-      <input type="file" id="liedlijst_zip" accept=".zip,application/zip" hidden onchange="importLiedlijstZip(event)">
-    </label>
+    </button>
+    <input type="file" id="liedlijst_zip" accept=".zip,application/zip" hidden onchange="importLiedlijstZip(event)">
     <div class="btn-cluster">
       <button class="btn-secondary" id="btn-cloud-save" onclick="saveDienstManual()">
         <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"/></svg>
@@ -3143,7 +3143,7 @@ function formatDatum(val) {
 // DOCX GENERATOR
 // ============================================================
 const DOCX_ASSETS = {
-  logo: 'assets/Vrijburg-logo blauw XL.png',
+  logo: 'assets/logo-vrijburg-xl.png',
   logoVlv: 'assets/Logo Vrijburg laat voorgaan.png',
   logoVlh: 'assets/Logo Vrijburg laat horen.png',
   logoVlz: 'assets/Logo Vrijburg laat zien.png',
