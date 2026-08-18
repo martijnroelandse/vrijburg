@@ -14,10 +14,10 @@ Een statische webapplicatie (GitHub Pages) waarmee medewerkers van Vrijburg Amst
 Vrijburg is een vrijzinnig-christelijk centrum in Amsterdam. Elke week wordt er een liturgie-document gemaakt (`.docx`, geprint en uitgedeeld in de kerk). Dat kostte vroeger veel handmatig werk: vaste teksten kopiëren, collecte opzoeken, alles opmaken.
 
 **De twee input-workflows van dominees:**
-1. **Gastvoorganger vult zelf in** — Vrijburg stuurt een `basisliturgie.docx` template mee, de dominee stuurt het ingevulde terug (bijv. Petra Galama, 14 juni 2026)
-2. **Informele email** — Dominee stuurt een plain-text email met de orde van dienst (bijv. Peter Kattenberg, 26 april 2026: "Lied 213: alle verzen / Lezing: Psalm 23 / ...")
+1. **Gastvoorganger via de generator** — het bureau stuurt de knop *Brief gastpredikant* (generator-link + downloads van basisliturgie en declaratieformulier). De gast vult in de tool in; het bureau downloadt daarna de `.docx`.
+2. **Informele email** — Dominee stuurt een plain-text email met de orde van dienst (bijv. Peter Kattenberg, 26 april 2026: "Lied 213: alle verzen / Lezing: Psalm 23 / ...") — het bureau zet dat in de generator.
 
-De medewerker (Gon Homburg of Hiltje Wuite-Harmsma) vertaalt dit naar de volledige liturgie.
+De bureaumedewerker (Gigi Calkoen, di–do) rondt af en downloadt de liturgie. Bestanden voor gastpredikanten staan in `downloads/` en op `info.html#gastpredikant`.
 
 ---
 
@@ -48,6 +48,8 @@ Geen enkel veld is verplicht — ieder vult alleen zijn eigen onderdeel in. De g
 
 ```
 ├── index.html           # Volledige app (HTML + CSS + JS in één bestand)
+├── info.html            # Handleiding, gastpredikant-downloads, privacy
+├── downloads/           # Basisliturgie, declaratieformulier, brief gastpredikant
 ├── collectes.json       # Collectes 2026-2027 (55 entries, per datum)
 ├── dienstplanning.json  # Dienstplanning (predikant, organist, lector, cantorij, etc.)
 ├── README.md            # Gebruikersdocumentatie
@@ -201,7 +203,7 @@ De drie oorspronkelijke knoppen "Kopieer voor nieuwsbrief", "Kopieer voor Mailch
 ### Lage prioriteit / nice-to-have
 
 - **Opslaan als concept** ✅ *geïmplementeerd* — localStorage zodat een half-ingevuld formulier bewaard blijft bij sluiten
-- **Liedbundels Online** ([liedbundelsonline.nl](https://liedbundelsonline.nl), gelanceerd juni 2026; vervangt `liedboek.liedbundels.nu`) — knop opent deeplink `/nl/lied/lb-{nummer}` (incl. letter-suffix zoals `23b`). Automatisch importeren van liedteksten kan **niet**: inlog + licentie, geen publieke API. Officiële workflow: zoek/open lied → toevoegen aan liedlijst → download met voorkeur **platte tekst = ja** → `.txt` uit de zip plakken in het formulier. Contact voor API/koppeling: `info@liedbundelsonline.nl` (KokBoekencentrum / BV Liedboek). Zie ook verkenning hieronder.
+- **Liedbundels Online** ([liedbundelsonline.nl](https://liedbundelsonline.nl), gelanceerd juni 2026; vervangt `liedboek.liedbundels.nu`) — knop opent deeplink `/nl/lied/lb-{nummer}` (incl. letter-suffix zoals `23b`). **Zip-import** ✅: bureaumedewerker downloadt een liedlijst (mét “platte tekst”) en klikt **Importeer liedlijst (.zip)**. De app leest `liedlijst-*-tekst.txt` + de JPG’s; zet coupletteksten in het formulier en plaatst de **muziek van het eerste couplet** (eventueel meerdere pagina’s, bijv. antifoon) in het Word-document. Geen publieke API; contact voor koppeling: `info@liedbundelsonline.nl`.
 - **Foto upload** ✅ *geïmplementeerd* — in .docx op voorkant; download voor website. Bij "Ik ben klaar": auto-download + instructie bijlage in e-mail.
 - **Nieuwsbrief & overdenking** ✅ *geïmplementeerd* — nieuwsbrief met kopieerknop, inclusief Mailchimp card/box-copy als platte tekst (geen HTML); overdenking via mailto naar `bureau@vrijburg.nl` (niet in .docx)
 - **WordPress foto-upload** — direct uploaden naar mediabibliotheek op vrijburg.nl; vereist afstemming met webmaster (Application Password + CORS)
@@ -247,9 +249,10 @@ gebedsveld bij Opening, Overdenking/Afsluiting als vrije lijst.
 **Licentie/download (FAQ):** lied toevoegen aan liedlijst → stap 2 voorkeuren → **platte tekst = ja** → zip met `.txt` (alle geselecteerde liederen). Previews hebben watermerk en mogen niet als bron voor liturgie. AV: downloads registreren; na einde licentie mag materiaal niet meer gebruikt worden.
 
 **Wat we wél kunnen (zonder API):**
-1. Deeplink naar het juiste lied (nu geïmplementeerd) — sneller dan handmatig zoeken.
-2. Optioneel later: autocomplete op nummer/beginregel uit de **publieke** catalogus (geen teksten cachen).
-3. Officiële API/export aanvragen bij `info@liedbundelsonline.nl` (platform is nieuw; “komende maanden meer functionaliteit”).
+1. Deeplink naar het juiste lied — geïmplementeerd.
+2. **Liedlijst-zip importeren** ✅ — tekst + muziek 1e couplet naar formulier/.docx (aug 2026).
+3. Optioneel later: autocomplete op nummer/beginregel uit de **publieke** catalogus.
+4. Officiële API/export aanvragen bij `info@liedbundelsonline.nl`.
 
 **Wat we niet moeten doen:** scraping van liedteksten/previews (licentievoorwaarden + geen stabiele API).
 - **Supabase-project pauzeert bij inactiviteit** (opgetreden 10 augustus 2026): het gratis Supabase-project pauzeert automatisch na ~1 week zonder API-gebruik. Symptoom in de app: **"Opslaan mislukt: TypeError: Load failed"** (Safari) of "Failed to fetch" (Chrome) bij opslaan/laden/delen via `?id=…`. Herstel: Supabase-dashboard → project → **Restore project** (of via de Supabase MCP-tool `restore_project` met project-ref `iabrbkirzsolwnuknbel`); duurt 1–3 minuten. Preventie: `.github/workflows/keep-supabase-active.yml` doet elke 3 dagen een publieke leesaanvraag om het project actief te houden. Let op: GitHub schakelt scheduled workflows automatisch uit na 60 dagen zonder commits op de repo — bij twijfel de workflow handmatig draaien via **Actions → Houd Supabase-project actief → Run workflow**.
@@ -272,13 +275,20 @@ gebedsveld bij Opening, Overdenking/Afsluiting als vrije lijst.
 
 ---
 
-## Referentiebestanden (niet in repo maar beschikbaar)
+## Referentiebestanden
 
-Deze bestanden staan lokaal bij Martijn en zijn gebruikt als bron:
+Op de site (`downloads/` + `info.html#gastpredikant`):
 
 | Bestand | Inhoud |
 |---|---|
-| `basisliturgie Calibri mrt2026.docx` | Het Word-template dat Vrijburg meestuurt naar dominees |
+| `downloads/basisliturgie-calibri-mrt2026.docx` | Basisliturgie voor gastpredikanten (Calibri, maart 2026) |
+| `downloads/declaratieformulier-preekbeurt-nov2024.docx` | Declaratieformulier preekbeurt (nov 2024) |
+| `downloads/brief-gastpredikant.docx` | Brief op Vrijburg-briefpapier, afgestemd op de generator (placeholders tussen [haakjes]). Bureau kan dezelfde tekst vanuit de app mailen via *Brief gastpredikant*. |
+
+Lokaal bij Martijn (niet in repo):
+
+| Bestand | Inhoud |
+|---|---|
 | `collectes 2026 - 2027 teksten voor de liturgie.txt` | Bronbestand voor collectes.json |
 | `Liturgien/MMDD.docx` | 25 voltooide liturgieën van 2026 als referentie voor opmaak en structuur |
 | `Re_ Preekbeurt 26 april 2026 in Vrijburg.eml` | Voorbeeld informele email van dominee (Kattenberg) |

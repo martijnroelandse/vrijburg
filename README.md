@@ -12,7 +12,7 @@ Webformulier waarmee medewerkers (of dominees zelf) de wekelijkse liturgie kunne
 ### Typische workflow
 
 1. **Bureaumedewerker** zet datum → predikant, organist, lector en cantorij worden ingevuld vanuit de dienstplanning
-2. **Bureaumedewerker** stuurt link naar voorganger en organist
+2. **Bureaumedewerker** stuurt *Link naar voorganger* (eigen predikant) of *Brief gastpredikant* (gast, met downloads)
 2. **Voorganger** vult thema, foto, nieuwsbrief, overdenking en orde van dienst in, stuurt link terug
 3. **Organist** vult orgelspel en muziek in, stuurt link terug
 4. **Bureaumedewerker** controleert agenda en collecte, downloadt de liturgie
@@ -36,6 +36,7 @@ Zie `HANDOVER.md` voor technische details.
 | `dienstplanning-2026.csv` | Bronbestand voor dienstplanning (export uit Google Sheet) |
 | `HANDOVER.md` | Technische documentatie en doorontwikkelingsprioriteiten |
 | `README.md` | Dit bestand |
+| `downloads/` | Basisliturgie, declaratieformulier en brief-sjabloon voor gastpredikanten |
 
 ## Collectes bijwerken
 
@@ -101,7 +102,8 @@ Zie `HANDOVER.md` voor de volledige lijst. Recent toegevoegd:
 - Gelijktijdig invullen door voorganger + organist overschrijft elkaars velden niet meer (samenvoegen bij opslaan)
 - Melding "liturgie is klaar" met e-mail-ping + id (zie hierboven)
 
-Nog open: collectes 2027-2028, liedtekst-import (geen API; wel deeplink naar Liedbundels Online), bijzondere diensten.
+Nog open: collectes 2027-2028, bijzondere diensten.
+Liedbundels: deeplink + zip-import (tekst + muziek 1e couplet) beschikbaar.
 
 ## Feedback & verbeterplan
 

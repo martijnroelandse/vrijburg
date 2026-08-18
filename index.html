@@ -236,6 +236,18 @@
       align-items: center;
       gap: 8px;
     }
+    .btn-cluster {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px;
+    }
+    .generate-bar .ico {
+      width: 17px;
+      height: 17px;
+      flex-shrink: 0;
+      display: block;
+    }
 
     .generate-bar-footer {
       display: flex;
@@ -265,12 +277,17 @@
       color: white;
       border: none;
       border-radius: var(--radius);
-      padding: 9px 20px;
+      padding: 0 16px;
+      min-height: 40px;
       font-size: 14px;
       font-weight: 600;
       cursor: pointer;
       transition: background 0.15s;
       flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      line-height: 1.2;
     }
 
     .btn-generate:hover { background: var(--brand-dark); }
@@ -301,6 +318,24 @@
     }
     .btn-secondary:hover { background: var(--brand-light); }
     .btn-secondary:disabled { opacity: 0.5; cursor: not-allowed; }
+    .generate-bar .btn-secondary {
+      padding: 0 12px;
+      min-height: 40px;
+      font-size: 13px;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      line-height: 1.2;
+    }
+    .generate-bar .btn-quiet {
+      color: var(--muted);
+      border-color: var(--border);
+    }
+    .generate-bar .btn-quiet:hover {
+      color: var(--brand-dark);
+      border-color: var(--brand);
+      background: var(--brand-light);
+    }
 
     .btn-fetch {
       background: white;
@@ -315,7 +350,6 @@
     .btn-fetch:hover { background: var(--brand-light); }
     .btn-fetch:disabled { opacity: 0.5; cursor: wait; }
 
-    .toolbar { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; flex: 1; }
     .draft-notice {
       font-size: 12px;
       color: var(--muted);
@@ -515,6 +549,22 @@
       line-height: 1.6;
     }
     .vaste-tekst-preview strong { color: var(--text); }
+    .download-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .download-list a {
+      display: inline-flex;
+      align-items: flex-start;
+      gap: 8px;
+      color: var(--brand-dark);
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .download-list a:hover { text-decoration: underline; }
+    .download-list span { font-weight: 400; color: var(--muted); font-size: 13px; }
   </style>
 </head>
 <body>
@@ -562,6 +612,16 @@
         <input type="checkbox" id="toon-alles" onchange="applyRolUI()">
         Toon ook onderdelen van anderen (ter referentie)
       </label>
+      <p class="comm-hint" style="margin-top:12px">
+        Voor gastpredikanten:
+        <a href="downloads/basisliturgie-calibri-mrt2026.docx" download>Basisliturgie</a>
+        ·
+        <a href="downloads/declaratieformulier-preekbeurt-nov2024.docx" download>Declaratieformulier</a>
+        ·
+        <a href="downloads/brief-gastpredikant.docx" download>Brief (sjabloon)</a>
+        — of knop <em>Brief gastpredikant</em> onderaan (mail met generator-link).
+        Meer uitleg op de <a href="info.html#gastpredikant">infopagina</a>.
+      </p>
     </div>
   </div>
 
@@ -773,7 +833,9 @@
         opent debijbel.nl met de juiste referentie — kopieer die tekst zelf en plak hem hier (NBV21 is auteursrechtelijk
         beschermd, er is geen gratis API voor).
         Bij liederen: knop <em>Liedbundels Online</em> opent het lied direct (inlog Vrijburg).
-        Tekst downloaden via liedlijst met <em>platte tekst = ja</em>, daarna hier plakken.
+        Of: bureaumedewerker downloadt een liedlijst-zip op Liedbundels Online (mét platte tekst)
+        en klikt onderaan op <em>Importeer liedlijst (.zip)</em> — teksten + muziek 1e couplet
+        komen dan in het formulier én in het Word-document.
       </p>
     </div>
   </div>
@@ -917,15 +979,51 @@
 
 <div class="generate-bar">
   <div class="generate-bar-actions">
-    <button class="btn-generate" id="btn-download" onclick="generateDocx()">⬇ Download liturgie (.docx)</button>
-    <div class="toolbar">
-      <button class="btn-secondary" id="btn-cloud-save" onclick="saveDienstManual()">☁ Opslaan</button>
-      <button class="btn-secondary" id="btn-email-voorganger" onclick="emailRol('voorganger')">✉ Link naar voorganger</button>
-      <button class="btn-secondary" id="btn-email-organist" onclick="emailRol('organist')">✉ Link naar organist</button>
-      <button class="btn-secondary" onclick="copyShareLink()">🔗 Kopieer link</button>
-      <button class="btn-secondary" id="btn-klaar" onclick="terugNaarBureau()">✓ Ik ben klaar – stuur naar bureau</button>
-      <button class="btn-secondary" id="btn-meld-klaar" onclick="meldDienstKlaar()" title="Zet de status op 'klaar' en stuurt automatisch een e-mail-melding met de id, zodat de nieuwsbrief gemaakt kan worden">📣 Meld: liturgie is klaar</button>
-      <button class="btn-secondary" onclick="clearDraft()">Wis concept</button>
+    <button class="btn-generate" id="btn-download" onclick="generateDocx()">
+      <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M5 20h14v-2H5v2zm7-3 5-5h-3V4h-4v8H7l5 5z"/></svg>
+      Download liturgie (.docx)
+    </button>
+    <label class="btn-secondary" id="btn-import-liedlijst" style="cursor:pointer;margin:0">
+      <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+      Importeer liedlijst (.zip)
+      <input type="file" id="liedlijst_zip" accept=".zip,application/zip" hidden onchange="importLiedlijstZip(event)">
+    </label>
+    <div class="btn-cluster">
+      <button class="btn-secondary" id="btn-cloud-save" onclick="saveDienstManual()">
+        <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"/></svg>
+        Opslaan
+      </button>
+      <button class="btn-secondary" onclick="copyShareLink()">
+        <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg>
+        Kopieer link
+      </button>
+    </div>
+    <div class="btn-cluster">
+      <button class="btn-secondary" id="btn-email-voorganger" onclick="emailRol('voorganger')">
+        <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/></svg>
+        Link naar voorganger
+      </button>
+      <button class="btn-secondary" id="btn-email-gastpredikant" onclick="emailGastpredikantBrief()" title="Volledige brief voor een gastpredikant, met generator-link en downloads">
+        <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/></svg>
+        Brief gastpredikant
+      </button>
+      <button class="btn-secondary" id="btn-email-organist" onclick="emailRol('organist')">
+        <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/></svg>
+        Link naar organist
+      </button>
+    </div>
+    <div class="btn-cluster">
+      <button class="btn-secondary" id="btn-klaar" onclick="terugNaarBureau()">
+        <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+        Ik ben klaar – stuur naar bureau
+      </button>
+      <button class="btn-secondary" id="btn-meld-klaar" onclick="meldDienstKlaar()" title="Zet de status op 'klaar' en stuurt automatisch een e-mail-melding met de id, zodat de nieuwsbrief gemaakt kan worden">
+        <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 8H4a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h1v3a1 1 0 0 0 1.7.7L10.4 16H12l6 3V5l-6 3zm8 1.5v5a1.5 1.5 0 0 0 0-5z"/></svg>
+        Meld: liturgie is klaar
+      </button>
+      <button class="btn-secondary btn-quiet" onclick="clearDraft()">
+        Wis concept
+      </button>
     </div>
   </div>
   <div class="generate-bar-footer">
@@ -940,6 +1038,7 @@
 <script src="https://cdn.jsdelivr.net/npm/lz-string@1.5.0/libs/lz-string.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.8/dist/umd/supabase.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
 
 <script>
 // ============================================================
@@ -1183,8 +1282,10 @@ function applyRolUI() {
   // Actieknoppen per rol
   const isSamenvoeger = huidigeRol === 'medewerker' || huidigeRol === 'compleet';
   document.getElementById('btn-download').style.display = isSamenvoeger ? '' : 'none';
+  document.getElementById('btn-import-liedlijst').style.display = isSamenvoeger ? '' : 'none';
   document.getElementById('btn-meld-klaar').style.display = isSamenvoeger ? '' : 'none';
   document.getElementById('btn-email-voorganger').style.display = huidigeRol === 'medewerker' ? '' : 'none';
+  document.getElementById('btn-email-gastpredikant').style.display = huidigeRol === 'medewerker' ? '' : 'none';
   document.getElementById('btn-email-organist').style.display = huidigeRol === 'medewerker' ? '' : 'none';
   document.getElementById('btn-klaar').style.display = (huidigeRol === 'voorganger' || huidigeRol === 'organist') ? '' : 'none';
   document.getElementById('generate-hint').textContent = isSamenvoeger
@@ -1204,6 +1305,11 @@ function setupSectionToggles() {
 // ============================================================
 let ordeItems = [];
 let fotoDataUrl = ''; // base64 data URL voor foto in .docx
+// Extra regels + 1e-couplet-muziek voor lichtlied/slotlied (uit liedlijst-zip)
+let lichtliedLyrics = '';
+let slotliedLyrics = '';
+let lichtliedMuziek = []; // data-URL JPG's
+let slotliedMuziek = [];
 
 function onFotoUpload(event) {
   const file = event.target.files?.[0];
@@ -1864,7 +1970,7 @@ function renderOrde() {
       ? `<button class="btn-fetch" onclick="fetchBibleText('${safeId}')" title="Haal bijbeltekst op via BijbelAPI (let op: alleen Statenvertaling beschikbaar)">Tekst ophalen (Statenvertaling)</button>
          <button class="btn-fetch" onclick="openNbv21('${safeId}')" title="Open NBV21 op debijbel.nl — kopieer de tekst zelf (geen gratis API voor deze vertaling)">NBV21 openen</button>`
       : item.type === 'lied'
-      ? `<button class="btn-fetch" onclick="openLiedboekOnline('${safeId}')" title="Open Liedbundels Online (inlog vereist)">Liedbundels Online</button>`
+      ? `<button class="btn-fetch" onclick="openLiedboekOnline('${safeId}')" title="Open Liedbundels Online (inlog vereist)">Liedbundels Online</button>${item.muziek_data?.length ? '<span style="font-size:12px;color:#2e7d32">♪ muziek 1e couplet</span>' : ''}`
       : '';
     div.innerHTML = `
       <select onchange="updateOrdeType('${safeId}', this.value)">
@@ -1902,10 +2008,10 @@ function updateOrdeContent(id, content) {
 }
 
 // ============================================================
-// LIEDBUNDELS ONLINE (geen open API — handmatige workflow)
+// LIEDBUNDELS ONLINE (geen open API — handmatige workflow + zip-import)
 // Platform: liedbundelsonline.nl (vervangt liedbundels.nu, juni 2026).
-// Deeplink /nl/lied/lb-{nr} werkt na inlog; teksten alleen via
-// "Mijn liedlijst" → download met "platte tekst = ja" (.txt in zip).
+// Deeplink /nl/lied/lb-{nr} werkt na inlog; teksten + muziek via
+// "Mijn liedlijst" → download (platte tekst = ja) → Importeer .zip hier.
 // ============================================================
 function parseLiedNummer(text) {
   const first = String(text || '').split('\n')[0].trim();
@@ -1929,7 +2035,7 @@ function openLiedboekOnline(id) {
   }
   window.open(liedboekSongUrl(nr), '_blank', 'noopener');
   setStatus(
-    `Lied ${nr}: in Liedbundels Online → toevoegen aan liedlijst → download met platte tekst (.txt) → plak hieronder`,
+    `Lied ${nr}: in Liedbundels Online → toevoegen aan liedlijst → download zip → Importeer liedlijst`,
     'ok'
   );
 }
@@ -1942,7 +2048,245 @@ function openLiedboekOnlineField(fieldId) {
     return;
   }
   window.open(liedboekSongUrl(nr), '_blank', 'noopener');
-  setStatus(`Lied ${nr}: download tekst in Liedbundels Online (platte tekst) en plak in het veld`, 'ok');
+  setStatus(`Lied ${nr}: download zip in Liedbundels Online en gebruik Importeer liedlijst`, 'ok');
+}
+
+function formatVerseListNl(labels) {
+  const list = (labels || []).map(String);
+  if (!list.length) return '';
+  if (list.length === 1) return list[0];
+  if (list.length === 2) return list[0] + ' en ' + list[1];
+  return list.slice(0, -1).join(', ') + ' en ' + list[list.length - 1];
+}
+
+/** Parseert liedlijst-*-tekst.txt uit Liedbundels Online. */
+function parseLiedlijstTekst(txt) {
+  const lines = String(txt || '').replace(/\r\n/g, '\n').split('\n');
+  const songs = new Map(); // nr -> [{label, lines}]
+  let current = null;
+  const headerRe = /^(\d+[a-z]?):([0-9]+|[A-Za-z]+)\s*$/;
+
+  for (const raw of lines) {
+    const line = raw.replace(/\s+$/, '');
+    const hm = line.match(headerRe);
+    if (hm) {
+      const nr = hm[1].toLowerCase();
+      const label = hm[2];
+      if (!songs.has(nr)) songs.set(nr, []);
+      current = { label, lines: [] };
+      songs.get(nr).push(current);
+      continue;
+    }
+    if (!current) continue;
+    // skip single blank line right after header; keep blanks inside verse
+    if (!current.lines.length && !line.trim()) continue;
+    current.lines.push(line);
+  }
+
+  // trim trailing blanks per verse
+  for (const couplets of songs.values()) {
+    couplets.forEach(c => {
+      while (c.lines.length && !c.lines[c.lines.length - 1].trim()) c.lines.pop();
+    });
+  }
+  return songs;
+}
+
+function buildLiedContentFromCouplets(nr, couplets) {
+  const verseList = formatVerseListNl(couplets.map(c => c.label));
+  const header = verseList ? `Lied ${nr}: ${verseList}` : `Lied ${nr}`;
+  const body = couplets.map(c => {
+    const lyric = c.lines.join('\n').trim();
+    return lyric ? `${c.label}\n${lyric}` : String(c.label);
+  }).join('\n\n');
+  return body ? `${header}\n\n${body}` : header;
+}
+
+function blobToDataUrl(blob) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = () => reject(new Error('Bestand lezen mislukt'));
+    reader.readAsDataURL(blob);
+  });
+}
+
+function compressDataUrlJpeg(dataUrl, maxWidth = 720, quality = 0.72) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => {
+      try {
+        const scale = img.width > maxWidth ? maxWidth / img.width : 1;
+        const w = Math.max(1, Math.round(img.width * scale));
+        const h = Math.max(1, Math.round(img.height * scale));
+        const canvas = document.createElement('canvas');
+        canvas.width = w;
+        canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+        resolve(canvas.toDataURL('image/jpeg', quality));
+      } catch (_) {
+        resolve(dataUrl);
+      }
+    };
+    img.onerror = () => resolve(dataUrl);
+    img.src = dataUrl;
+  });
+}
+
+/**
+ * Kiest alle JPG-pagina's van het eerste couplet/onderdeel per lied.
+ * Bestandsnamen bv.:
+ *   nl-lb-computer-217-muziek-couplet-1-1.jpg
+ *   nl-lb-computer-67b-muziek-1-antifoona-1.jpg
+ */
+function pickFirstCoupletMusicNames(namesForSong) {
+  const names = namesForSong.slice().sort();
+  const couplet1 = names.filter(n => /muziek-couplet-1-\d+/i.test(n));
+  if (couplet1.length) {
+    return couplet1.sort((a, b) => {
+      const pa = +(a.match(/couplet-1-(\d+)/i) || [])[1] || 0;
+      const pb = +(b.match(/couplet-1-(\d+)/i) || [])[1] || 0;
+      return pa - pb;
+    });
+  }
+  // Overige structuur: muziek-{sectie}-{naam}-{pagina}
+  const parsed = names.map(n => {
+    const m = n.match(/muziek-(\d+)-(.+)-(\d+)\.jpe?g$/i);
+    return m ? { name: n, section: +m[1], page: +m[3] } : { name: n, section: 999, page: 0 };
+  });
+  const minSection = Math.min(...parsed.map(p => p.section));
+  return parsed
+    .filter(p => p.section === minSection)
+    .sort((a, b) => a.page - b.page)
+    .map(p => p.name);
+}
+
+async function importLiedlijstZip(event) {
+  const file = event.target?.files?.[0];
+  if (!file) return;
+  if (typeof JSZip === 'undefined') {
+    setStatus('JSZip niet geladen — vernieuw de pagina', 'err');
+    return;
+  }
+  setStatus('Liedlijst-zip wordt gelezen…', '');
+  try {
+    const zip = await JSZip.loadAsync(file);
+    const entries = Object.keys(zip.files).filter(n => !zip.files[n].dir);
+    const baseName = (path) => path.split('/').pop();
+
+    // Tekstbestand: liedlijst-*-tekst.txt (niet de licentie)
+    const tekstEntry = entries.find(n => {
+      const b = baseName(n).toLowerCase();
+      return b.endsWith('-tekst.txt') || (b.startsWith('liedlijst') && b.endsWith('.txt') && !b.includes('licentie'));
+    });
+    if (!tekstEntry) {
+      setStatus('Geen tekstbestand in de zip (zet bij download “platte tekst = ja”)', 'err');
+      event.target.value = '';
+      return;
+    }
+    const tekst = await zip.files[tekstEntry].async('string');
+    const songs = parseLiedlijstTekst(tekst);
+    if (!songs.size) {
+      setStatus('Geen liederen gevonden in het tekstbestand', 'err');
+      event.target.value = '';
+      return;
+    }
+
+    // Muziekbestanden per liednummer
+    const musicByNr = new Map();
+    const musicRe = /^nl-[a-z0-9]+-computer-(\d+[a-z]?)-muziek-/i;
+    for (const path of entries) {
+      const b = baseName(path);
+      if (!/\.jpe?g$/i.test(b) || !/muziek/i.test(b)) continue;
+      const m = b.match(musicRe);
+      if (!m) continue;
+      const nr = m[1].toLowerCase();
+      if (!musicByNr.has(nr)) musicByNr.set(nr, []);
+      musicByNr.get(nr).push(path);
+    }
+
+    const imported = [];
+    for (const [nr, couplets] of songs) {
+      const content = buildLiedContentFromCouplets(nr, couplets);
+      const paths = pickFirstCoupletMusicNames(musicByNr.get(nr) || []);
+      const muziek = [];
+      for (const path of paths) {
+        const blob = await zip.files[path].async('blob');
+        const raw = await blobToDataUrl(blob);
+        muziek.push(await compressDataUrlJpeg(raw));
+      }
+      imported.push({ nr, content, muziek });
+    }
+
+    applyLiedlijstImport(imported);
+    setStatus(
+      `✓ ${imported.length} lied(eren) geïmporteerd` +
+        (imported.some(s => s.muziek.length) ? ' (met muziek 1e couplet)' : '') +
+        ' — download daarna het Word-document',
+      'ok'
+    );
+  } catch (err) {
+    console.error(err);
+    setStatus('Liedlijst importeren mislukt: ' + (err.message || err), 'err');
+  }
+  event.target.value = '';
+}
+
+function applyLiedlijstImport(imported) {
+  const byNr = new Map(imported.map(s => [s.nr, s]));
+  const used = new Set();
+
+  // 1. Lichtlied / slotlied eerst (voorkomt dubbele afdruk in .docx)
+  const applyField = (fieldId, setLyrics, setMuziek) => {
+    const el = document.getElementById(fieldId);
+    const nr = parseLiedNummer(el.value);
+    if (!nr || !byNr.has(nr)) return false;
+    const song = byNr.get(nr);
+    el.value = song.content.split('\n')[0].trim();
+    setLyrics(song.content.split('\n').slice(1).join('\n').replace(/^\n+/, ''));
+    setMuziek(song.muziek.slice());
+    used.add(nr);
+    return true;
+  };
+  applyField('lichtlied', v => { lichtliedLyrics = v; }, v => { lichtliedMuziek = v; });
+  applyField('slotlied', v => { slotliedLyrics = v; }, v => { slotliedMuziek = v; });
+
+  // Verwijder orde-liederen die al als licht-/slotlied zijn gezet
+  if (used.size) {
+    ordeItems = ordeItems.filter(item => {
+      if (!item || item.type !== 'lied') return true;
+      const nr = parseLiedNummer(item.content);
+      return !nr || !used.has(nr);
+    });
+  }
+
+  // 2. Match overige bestaande orde-liederen
+  ordeItems.forEach(item => {
+    if (!item || item.type !== 'lied') return;
+    const nr = parseLiedNummer(item.content);
+    if (!nr || !byNr.has(nr) || used.has(nr)) return;
+    const song = byNr.get(nr);
+    item.content = song.content;
+    item.muziek_data = song.muziek.slice();
+    used.add(nr);
+  });
+
+  // 3. Restant: lege lied-slots vullen of nieuwe items toevoegen
+  for (const song of imported) {
+    if (used.has(song.nr)) continue;
+    const empty = ordeItems.find(i => i.type === 'lied' && !String(i.content || '').trim());
+    if (empty) {
+      empty.content = song.content;
+      empty.muziek_data = song.muziek.slice();
+    } else {
+      const id = `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
+      ordeItems.push({ id, type: 'lied', content: song.content, muziek_data: song.muziek.slice() });
+    }
+    used.add(song.nr);
+  }
+
+  renderOrde();
+  scheduleDraftSave();
 }
 
 // ============================================================
@@ -2252,8 +2596,12 @@ function getFormState() {
     foto_data: fotoDataUrl,
     orgelspel_opening: document.getElementById('orgelspel_opening').value,
     lichtlied: document.getElementById('lichtlied').value,
+    lichtlied_lyrics: lichtliedLyrics,
+    lichtlied_muziek: lichtliedMuziek,
     gebed_opening: document.getElementById('gebed_opening').value,
     slotlied: document.getElementById('slotlied').value,
+    slotlied_lyrics: slotliedLyrics,
+    slotlied_muziek: slotliedMuziek,
     orgelspel_slot: document.getElementById('orgelspel_slot').value,
     bloemen: document.getElementById('bloemen').value,
     c1_thema: document.getElementById('c1_thema').value,
@@ -2322,9 +2670,17 @@ function applyFormState(state) {
   if (Array.isArray(state.orde)) {
     ordeItems = state.orde
       .filter(i => i && i.type)
-      .map(i => ({ ...i, id: i.id != null ? String(i.id) : `${Date.now()}-${Math.random().toString(36).slice(2, 9)}` }));
+      .map(i => ({
+        ...i,
+        id: i.id != null ? String(i.id) : `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
+        muziek_data: Array.isArray(i.muziek_data) ? i.muziek_data : [],
+      }));
     renderOrde();
   }
+  lichtliedLyrics = state.lichtlied_lyrics || '';
+  slotliedLyrics = state.slotlied_lyrics || '';
+  lichtliedMuziek = Array.isArray(state.lichtlied_muziek) ? state.lichtlied_muziek : [];
+  slotliedMuziek = Array.isArray(state.slotlied_muziek) ? state.slotlied_muziek : [];
   if (state.rol) setRol(state.rol);
   else applyRolUI();
   // Geen onDatumChange() hier: dat overschrijft opgeslagen namen met planning.
@@ -2336,8 +2692,15 @@ function applyFormState(state) {
 function getShareUrl(rol) {
   const state = getFormState();
   if (rol) state.rol = rol;
-  // Foto niet meenemen in URL (te groot) — blijft in lokaal concept
+  // Foto / muziekbeelden niet meenemen in URL (te groot)
   delete state.foto_data;
+  delete state.lichtlied_muziek;
+  delete state.slotlied_muziek;
+  delete state.lichtlied_lyrics;
+  delete state.slotlied_lyrics;
+  if (Array.isArray(state.orde)) {
+    state.orde = state.orde.map(({ muziek_data, ...rest }) => rest);
+  }
   const encoded = encodeShareState(state);
   const url = new URL(location.href.split('?')[0]);
   url.searchParams.set('z', encoded);
@@ -2417,6 +2780,103 @@ async function emailRol(rol) {
   setStatus(cloud ? '✓ Cloud-link in mail en op klembord' : '✓ Korte link in mail en op klembord', 'ok');
 }
 
+function siteFileUrl(relPath) {
+  const base = location.href.split('?')[0].replace(/[^/]*$/, '');
+  return base + relPath;
+}
+
+function addDaysYmd(ymd, days) {
+  if (!ymd) return '';
+  const d = new Date(ymd + 'T12:00:00');
+  d.setDate(d.getDate() + days);
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+}
+
+function organistVoorBrief() {
+  const name = document.getElementById('organist').value.trim();
+  if (!name) return { label: 'onze organist', email: '' };
+  const lower = name.toLowerCase();
+  const email = (lower.includes('jan pieter') || lower.includes('lanooy'))
+    ? 'jptlanooy@gmail.com'
+    : '';
+  return { label: name, email };
+}
+
+async function emailGastpredikantBrief() {
+  const datum = document.getElementById('datum').value;
+  const datumTekst = datum ? formatDatum(datum) : 'zondag [datum dienst]';
+  const voorganger = document.getElementById('voorganger').value.trim() || '[naam]';
+  const org = organistVoorBrief();
+  const organistZin = org.email
+    ? `Onze organist, ${org.label}, ${org.email}, adviseert u graag en oefent voorafgaand aan de dienst desgewenst de liederen.`
+    : `Onze organist, ${org.label}, adviseert u graag en oefent voorafgaand aan de dienst desgewenst de liederen.`;
+  const lector = document.getElementById('lector').value.trim() || '[lector]';
+  // Dienst is doorgaans zondag; inhoud uiterlijk de dinsdag ervoor, nieuwsbrief donderdag ervoor.
+  const dinsdag = datum ? formatDatum(addDaysYmd(datum, -5)) : '[dinsdag voor de dienst]';
+  const donderdag = datum ? formatDatum(addDaysYmd(datum, -3)) : '[donderdag voor de dienst]';
+
+  setStatus('Opslaan & brief maken…', '');
+  const { short, cloud } = await prepareShareLink('voorganger');
+  await copyShareLinkRich(short);
+
+  const basisUrl = siteFileUrl('downloads/basisliturgie-calibri-mrt2026.docx');
+  const declUrl = siteFileUrl('downloads/declaratieformulier-preekbeurt-nov2024.docx');
+  const infoUrl = siteFileUrl('info.html#gastpredikant');
+
+  const aanhef = voorganger && voorganger !== '[naam]'
+    ? `Geachte ${voorganger},`
+    : 'Geachte [naam],';
+
+  const body =
+    `${aanhef}\n\n` +
+    `Hartelijk dank dat u op ${datumTekst} bij ons voor wilt gaan.\n\n` +
+    `Voor het samenstellen van de liturgie gebruiken we de Liturgie Generator. ` +
+    `Via onderstaande link vult u thema, orde van dienst (liederen en lezingen), lichtlied/slotlied, ` +
+    `foto en een kort stukje voor de nieuwsbrief in. U hoeft niet alles in één keer te doen; ` +
+    `klik op “Ik ben klaar” als uw deel gereed is.\n\n` +
+    mailLinkBlock(short) + '\n' +
+    `Ter oriëntatie kunt u de basisliturgie downloaden — zo ziet u hoe de dienst in de basis is opgebouwd. ` +
+    `Daarop kunt u natuurlijk variëren (bijvoorbeeld een ander lichtlied uit het Liedboek). ` +
+    `${organistZin}\n\n` +
+    `Basisliturgie: ${basisUrl}\n` +
+    `Declaratieformulier: ${declUrl}\n` +
+    `Korte uitleg: ${infoUrl}\n\n` +
+    `De (Bijbel)teksten in uw dienst worden gelezen door ${lector}.\n\n` +
+    `Het is prettig als u voor een passend plaatje kunt zorgen voor het voorblad (rechtenvrij — bijv. unsplash.com). ` +
+    `U kunt dat in de generator uploaden; het komt ook in de aankondiging in onze wekelijkse Nieuwsbrief.\n\n` +
+    `Wilt u uw onderdeel in de generator uiterlijk ${dinsdag} afronden (knop “Ik ben klaar”)? ` +
+    `Het bureau (bureau@vrijburg.nl / info@vrijburg.nl) ontvangt dan uw invoer. ` +
+    `Stem liederen gerust af met de organist${org.email ? ` (${org.label}, ${org.email})` : ` (${org.label})`}.\n\n` +
+    `Op donderdag of vrijdag gaat onze Nieuwsbrief uit. Wilt u daartoe uiterlijk ${donderdag} ` +
+    `het korte stukje over het thema (inclusief foto) in de generator invullen? ` +
+    `U kunt daar ook “Meld nieuwsbriefredactie” gebruiken.\n\n` +
+    `Het declaratieformulier kunt u naar info@vrijburg.nl mailen. Hopelijk kunt u tegelijk ook uw preek mailen? ` +
+    `Het liefst op maximaal 2 bladzijden, of opgemaakt in Word. Wij sturen onze preken per post naar ` +
+    `leden zonder internet en willen de porti graag in de hand houden.\n\n` +
+    `Voor inhoudelijke vragen: Rachelle van Andel, rachellevanandel@vrijburg.nl.\n` +
+    `Voor algemene vragen: info@vrijburg.nl.\n\n` +
+    `Kunt u op de ochtend van uw dienst om uiterlijk 10 uur aanwezig zijn?\n` +
+    `Wij kijken uit naar uw komst.\n\n` +
+    `Met een hartelijke groet,\n` +
+    `namens het bestuur van Vrijburg,\n\n` +
+    `Gigi Calkoen\n` +
+    `Bureau Vrijburg`;
+
+  openMailto({
+    subject: `Preekbeurt Vrijburg – ${datumTekst}`,
+    body,
+  });
+  setStatus(
+    cloud
+      ? '✓ Brief gastpredikant in mail (generator-link + downloads op klembord)'
+      : '✓ Brief gastpredikant in mail — voeg desgewenst de Word-bijlagen uit “downloads” toe',
+    'ok'
+  );
+}
+
 // ============================================================
 // CONCEPT OPSLAAN (localStorage)
 // ============================================================
@@ -2468,8 +2928,12 @@ function emptyFormState() {
     foto_data: '',
     orgelspel_opening: '',
     lichtlied: '',
+    lichtlied_lyrics: '',
+    lichtlied_muziek: [],
     gebed_opening: '',
     slotlied: '',
+    slotlied_lyrics: '',
+    slotlied_muziek: [],
     orgelspel_slot: '',
     bloemen: '',
     c1_thema: '',
@@ -2967,6 +3431,10 @@ async function generateDocxAsync() {
     if (/^refr\.?:?$/i.test(trimmed)) {
       return pr([{ t: trimmed, italic: true }]);
     }
+    // Coupletnummer of antifoon-label (1 / A / B) op eigen regel
+    if (/^(\d+|[A-Za-z])$/.test(trimmed)) {
+      return pr([{ t: trimmed, bold: true }]);
+    }
     const verse = trimmed.match(/^(\d+)\s+(.*)$/);
     if (verse) {
       return pr([{ t: verse[1] + ' ', bold: true }, { t: verse[2] }]);
@@ -2974,24 +3442,76 @@ async function generateDocxAsync() {
     return p(trimmed);
   }
 
-  function pOrgelspel(text) {
-    const idx = text.indexOf(':');
-    if (idx > 0) {
-      return pr([
-        { t: text.slice(0, idx + 1), bold: true },
-        { t: text.slice(idx + 1), italic: true },
-      ]);
+  async function muziekImageParagraphs(dataUrls) {
+    const out = [];
+    for (const dataUrl of (dataUrls || [])) {
+      if (!dataUrl) continue;
+      // Handmatige liturgie zet muziek ~pagina-breed (~17,5 cm). 660px @ 96dpi ≈ dat formaat.
+      const para = await buildFotoParagraph(dataUrl, {
+        maxWidth: 660,
+        maxHeight: 900,
+      });
+      if (para) out.push(para);
     }
-    return p(text, { bold: true });
+    return out;
   }
 
-  function beurtzang(lines) {
-    return lines.map(line => p(`${line.wie}: ${line.tekst}`));
+  /** Splits liedregels in titel + coupletblokken (label 1/A/… op eigen regel). */
+  function splitLiedCouplets(lines) {
+    const title = lines[0] || '';
+    const body = lines.slice(1);
+    const labelRe = /^(\d+|[A-Za-z])$/;
+    const couplets = [];
+    let current = null;
+    let structured = false;
+    for (const line of body) {
+      const t = line.trim();
+      if (labelRe.test(t)) {
+        structured = true;
+        current = { label: t, lines: [t] };
+        couplets.push(current);
+      } else if (current) {
+        current.lines.push(line);
+      } else {
+        current = { label: null, lines: [line] };
+        couplets.push(current);
+      }
+    }
+    return { title, couplets, structured };
   }
 
-  function renderOrdeItems() {
+  /**
+   * Met muziek-JPG van het 1e couplet: titel → muziek → tekst couplet 2…n
+   * (couplet 1 staat al in de muziekafbeelding). Zonder muziek: titel + alle tekst.
+   */
+  async function appendLiedWithOptionalMusic(paragraphs, lines, muziekData) {
+    if (!lines.length) return;
+    paragraphs.push(p(lines[0], { bold: true, before: 60 }));
+    const hasMusic = Array.isArray(muziekData) && muziekData.length > 0;
+    if (hasMusic) {
+      paragraphs.push(...(await muziekImageParagraphs(muziekData)));
+      const { couplets, structured } = splitLiedCouplets(lines);
+      // Met muziek: couplet 1 zit in de JPG → alleen 2…n als tekst.
+      // Ongestructureerde tekst (geen coupletlabels): alles behouden na de JPG.
+      const toPrint = structured ? couplets.slice(1) : couplets;
+      toPrint.forEach(c => {
+        c.lines.forEach(l => {
+          const para = formatLiedLyricLine(l);
+          if (para) paragraphs.push(para);
+        });
+      });
+    } else {
+      lines.slice(1).forEach(l => {
+        const para = formatLiedLyricLine(l);
+        if (para) paragraphs.push(para);
+      });
+    }
+  }
+
+  async function renderOrdeItems() {
     const paragraphs = [];
-    ordeItems.forEach((item, index) => {
+    for (let index = 0; index < ordeItems.length; index++) {
+      const item = ordeItems[index];
       const rawLines = item.content.split('\n');
       const lines = [];
       rawLines.forEach(line => {
@@ -2999,16 +3519,10 @@ async function generateDocxAsync() {
           if (part.trim()) lines.push(part.trim());
         });
       });
-      if (!lines.length && item.type !== 'inleiding' && item.type !== 'muziek') return;
+      if (!lines.length && item.type !== 'inleiding' && item.type !== 'muziek') continue;
       if (index > 0 || paragraphs.length) paragraphs.push(empty());
       if (item.type === 'lied') {
-        if (lines.length > 0) {
-          paragraphs.push(p(lines[0], { bold: true, before: 60 }));
-          lines.slice(1).forEach(l => {
-            const para = formatLiedLyricLine(l);
-            if (para) paragraphs.push(para);
-          });
-        }
+        await appendLiedWithOptionalMusic(paragraphs, lines, item.muziek_data);
       } else if (item.type === 'lezing') {
         if (lines.length > 0) {
           paragraphs.push(p('Lezing: ' + lines[0], { bold: true, before: 60 }));
@@ -3027,8 +3541,23 @@ async function generateDocxAsync() {
       } else {
         lines.forEach((l, i) => paragraphs.push(p(l, { bold: true, before: i === 0 ? 60 : 0 })));
       }
-    });
+    }
     return paragraphs;
+  }
+
+  function pOrgelspel(text) {
+    const idx = text.indexOf(':');
+    if (idx > 0) {
+      return pr([
+        { t: text.slice(0, idx + 1), bold: true },
+        { t: text.slice(idx + 1), italic: true },
+      ]);
+    }
+    return p(text, { bold: true });
+  }
+
+  function beurtzang(lines) {
+    return lines.map(line => p(`${line.wie}: ${line.tekst}`));
   }
 
   async function assetParagraph(path, maxWidthPx, opts = {}) {
@@ -3062,11 +3591,13 @@ async function generateDocxAsync() {
     const rightLabel = qrType === 'bijzonder' ? 'vrijburg.nl/bijzonderecollecte' : `vrijburg.nl/collecte${qrType}`;
     const rightUrl = qrType === 'bijzonder' ? 'https://www.vrijburg.nl/bijzonderecollecte' : `https://www.vrijburg.nl/collecte${qrType}`;
     try {
-      const left = await preparePngImage(DOCX_ASSETS.qr1, 110);
-      const right = await preparePngImage(rightPath, 110);
+      // Handmatige liturgie toont QR-codes ~5,6 cm breed; 210px @ 96dpi ≈ dat formaat.
+      const qrMaxPx = 210;
+      const left = await preparePngImage(DOCX_ASSETS.qr1, qrMaxPx);
+      const right = await preparePngImage(rightPath, qrMaxPx);
       const cell = (img, label, url) => new TableCell({
         borders: noBorders,
-        width: { size: 3500, type: WidthType.DXA },
+        width: { size: 4200, type: WidthType.DXA },
         children: [
           new Paragraph({
             children: [
@@ -3081,15 +3612,16 @@ async function generateDocxAsync() {
             spacing: { before: 60, after: 40, line: 240, lineRule: 'auto' },
           }),
           new Paragraph({
-            children: [hyperlink(label, url, { sz: szSmall })],
+            // Zelfde corps als bodytekst (16pt), niet szSmall — zoals in handmatige liturgie
+            children: [hyperlink(label, url, { sz: szBody })],
             alignment: AlignmentType.CENTER,
             spacing: { before: 0, after: 0, line: 240, lineRule: 'auto' },
           }),
         ],
       });
       return new Table({
-        width: { size: 7000, type: WidthType.DXA },
-        columnWidths: [3500, 3500],
+        width: { size: 8400, type: WidthType.DXA },
+        columnWidths: [4200, 4200],
         rows: [
           new TableRow({
             children: [
@@ -3103,9 +3635,9 @@ async function generateDocxAsync() {
       console.warn('QR-codes niet geladen:', e);
       return new Paragraph({
         children: [
-          hyperlink('vrijburg.nl/collecte1', 'https://www.vrijburg.nl/collecte1', { sz: szSmall }),
-          textRun('\t\t', { sz: szSmall }),
-          hyperlink(rightLabel, rightUrl, { sz: szSmall }),
+          hyperlink('vrijburg.nl/collecte1', 'https://www.vrijburg.nl/collecte1', { sz: szBody }),
+          textRun('\t\t', { sz: szBody }),
+          hyperlink(rightLabel, rightUrl, { sz: szBody }),
         ],
         ...paragraphOpts(),
       });
@@ -3228,7 +3760,24 @@ async function generateDocxAsync() {
   children.push(p('Aansteken van de kaars en Stilte', { bold: true }));
   children.push(empty());
   children.push(p('De gemeente gaat staan', { italic: true }));
-  children.push(p(lichtlied || 'Lichtlied: Licht dat wil ingaan tegen donkere nachten', { bold: true }));
+  // Lichtlied: titel → muziek 1e couplet → tekst overige coupletten
+  if (lichtlied || lichtliedLyrics || lichtliedMuziek.length) {
+    const lichtLines = [];
+    if (lichtlied) lichtLines.push(lichtlied);
+    if (lichtliedLyrics) {
+      lichtliedLyrics.split('\n').forEach(line => {
+        if (line.trim()) lichtLines.push(line.trim());
+      });
+    }
+    if (lichtLines.length) {
+      await appendLiedWithOptionalMusic(children, lichtLines, lichtliedMuziek);
+    } else {
+      children.push(p('Lichtlied', { bold: true }));
+      children.push(...(await muziekImageParagraphs(lichtliedMuziek)));
+    }
+  } else {
+    children.push(p('Lichtlied: Licht dat wil ingaan tegen donkere nachten', { bold: true }));
+  }
 
   // BEMOEDIGING
   children.push(empty());
@@ -3246,7 +3795,7 @@ async function generateDocxAsync() {
 
   // ORDE VAN DIENST
   children.push(empty());
-  children.push(...renderOrdeItems());
+  children.push(...(await renderOrdeItems()));
 
   // OVERDENKING
   children.push(empty());
@@ -3291,18 +3840,32 @@ async function generateDocxAsync() {
   const qrLabel = qrType === 'bijzonder' ? 'vrijburg.nl/bijzonderecollecte' : `vrijburg.nl/collecte${qrType}`;
   const qrUrl = qrType === 'bijzonder' ? 'https://www.vrijburg.nl/bijzonderecollecte' : `https://www.vrijburg.nl/collecte${qrType}`;
   children.push(pr([
-    { t: 'Voor digitaal collecteren maken wij gebruik van een algemene QR-code. Deze kunt u niet met uw eigen bank-app lezen maar wel met een algemene QR-code reader (bv Lens op Android of Camera op iPhone). U kunt ook in uw internetapplicatie naar ', sz: szSmall },
-    { t: 'vrijburg.nl/collecte1', sz: szSmall, hyperlink: 'https://www.vrijburg.nl/collecte1' },
-    { t: ' en ', sz: szSmall },
-    { t: qrLabel, sz: szSmall, hyperlink: qrUrl },
-    { t: ' gaan. In alle gevallen wordt u dan doorverwezen naar de ING Betaalverzoekpagina van Vrijburg.', sz: szSmall },
+    { t: 'Voor digitaal collecteren maken wij gebruik van een algemene QR-code. Deze kunt u niet met uw eigen bank-app lezen maar wel met een algemene QR-code reader (bv Lens op Android of Camera op iPhone). U kunt ook in uw internetapplicatie naar ', sz: szBody },
+    { t: 'vrijburg.nl/collecte1', sz: szBody, hyperlink: 'https://www.vrijburg.nl/collecte1' },
+    { t: ' en ', sz: szBody },
+    { t: qrLabel, sz: szBody, hyperlink: qrUrl },
+    { t: ' gaan. In alle gevallen wordt u dan doorverwezen naar de ING Betaalverzoekpagina van Vrijburg.', sz: szBody },
   ]));
   children.push(await buildQrBlock(qrType));
 
   // SLOT
   children.push(empty());
   children.push(p('De gemeente gaat staan', { italic: true, before: 120 }));
-  children.push(p(slotlied ? 'Slotlied ' + slotlied : 'Slotlied', { bold: true }));
+  if (slotlied || slotliedLyrics || slotliedMuziek.length) {
+    const slotLines = [];
+    const slotTitle = slotlied
+      ? (slotlied.match(/^slotlied\b/i) ? slotlied : 'Slotlied ' + slotlied)
+      : 'Slotlied';
+    slotLines.push(slotTitle);
+    if (slotliedLyrics) {
+      slotliedLyrics.split('\n').forEach(line => {
+        if (line.trim()) slotLines.push(line.trim());
+      });
+    }
+    await appendLiedWithOptionalMusic(children, slotLines, slotliedMuziek);
+  } else {
+    children.push(p('Slotlied', { bold: true }));
+  }
   children.push(p('Uitzending en zegen', { bold: true }));
   if (orgelSlot) children.push(pOrgelspel('Orgelspel: ' + orgelSlot));
   else            children.push(p('Orgelspel', { bold: true }));
