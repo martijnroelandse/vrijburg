@@ -177,6 +177,7 @@
     .btn-icon.del:hover { background: #ffeaea; border-color: #ffaaaa; color: #c00; }
 
     .orde-add-row { display: flex; gap: 8px; flex-wrap: wrap; }
+    #orde-organist-ui { margin-top: 12px; }
 
     .btn-add {
       background: white;
@@ -653,15 +654,15 @@
       </div>
       <div class="row">
         <div class="field" data-owner="medewerker">
-          <label>Voorganger / predikant <span class="opt">uit dienstplanning</span></label>
+          <label>Voorgang(st)er / predikant <span class="opt">uit dienstplanning</span></label>
           <input type="text" id="voorganger" placeholder="bijv. ds. Rachelle van Andel">
         </div>
         <div class="field" data-owner="medewerker">
-          <label>Organist <span class="opt">uit dienstplanning</span></label>
+          <label>Organist(e) <span class="opt">uit dienstplanning</span></label>
           <input type="text" id="organist" placeholder="bijv. Jan Pieter Lanooy">
         </div>
         <div class="field" data-owner="medewerker">
-          <label>Lector <span class="opt">bureaumedewerker vult in</span></label>
+          <label>Lector <span class="opt">bureaumedewerk(st)er vult in</span></label>
           <input type="text" id="lector" placeholder="bijv. Gon Homburg">
         </div>
       </div>
@@ -722,7 +723,7 @@
 
   <!-- 2. THEMA & COMMUNICATIE -->
   <div class="section" id="section-thema" data-section="thema">
-    <div class="section-header">2. Thema, foto &amp; communicatie</div>
+    <div class="section-header">2. Thema, afbeelding &amp; communicatie</div>
     <div class="section-body">
       <div class="row">
         <div class="field" style="grid-column: 1/-1">
@@ -738,25 +739,25 @@
       </div>
       <div class="row">
         <div class="field" style="grid-column: 1/-1">
-          <label>Foto <span class="opt">– liturgie, socials en website</span></label>
+          <label>Afbeelding op voorblad <span class="opt">– liturgie, socials en website</span></label>
           <div class="foto-upload-row">
             <div class="foto-preview-wrap">
-              <img id="foto-preview" class="foto-preview" alt="Voorbeeld foto">
-              <div id="foto-placeholder" class="foto-placeholder">Nog geen foto</div>
+              <img id="foto-preview" class="foto-preview" alt="Voorbeeld afbeelding op voorblad">
+              <div id="foto-placeholder" class="foto-placeholder">Nog geen afbeelding</div>
             </div>
             <div style="flex:1;min-width:200px">
               <input type="file" id="foto_file" accept="image/jpeg,image/png,image/webp" onchange="onFotoUpload(event)">
               <div class="foto-actions">
-                <button type="button" class="btn-small" onclick="downloadFoto()">Download foto</button>
-                <button type="button" class="btn-small" onclick="clearFoto()">Foto verwijderen</button>
+                <button type="button" class="btn-small" onclick="downloadFoto()">Download afbeelding</button>
+                <button type="button" class="btn-small" onclick="clearFoto()">Afbeelding verwijderen</button>
               </div>
               <p class="comm-hint" style="color:var(--brand-dark)">
-                <strong>Rechten verplicht:</strong> lever alleen een foto waarvan Vrijburg de rechten heeft voor gebruik op de liturgie, socials (Facebook/Instagram) en eventueel vrijburg.nl.
+                <strong>Rechten verplicht:</strong> lever alleen een afbeelding waarvan Vrijburg de rechten heeft voor gebruik op de liturgie, socials (Facebook/Instagram) en eventueel vrijburg.nl.
               </p>
               <p class="comm-hint">
-                <strong>Liturgie (.docx):</strong> de foto wordt automatisch op de voorkant geplaatst.<br>
-                <strong>Socials &amp; website:</strong> het bureau gebruikt de foto voor promotie van de dienst (FB/Insta) en soms op vrijburg.nl.<br>
-                <strong>E-mail naar bureau:</strong> bij &ldquo;Ik ben klaar&rdquo; wordt de foto gedownload — voeg die handmatig toe als bijlage (paperclip in uw mailprogramma).
+                <strong>Liturgie (.docx):</strong> de afbeelding wordt automatisch op de voorkant geplaatst.<br>
+                <strong>Socials &amp; website:</strong> het bureau gebruikt de afbeelding voor promotie van de dienst (FB/Insta) en soms op vrijburg.nl.<br>
+                <strong>E-mail naar bureau:</strong> bij &ldquo;Ik ben klaar&rdquo; wordt de afbeelding gedownload — voeg die handmatig toe als bijlage (paperclip in uw mailprogramma).
               </p>
             </div>
           </div>
@@ -764,9 +765,9 @@
       </div>
       <div class="row">
         <div class="field" style="grid-column: 1/-1">
-          <label>Foto credit <span class="opt">– naam fotograaf / bron (verplicht bij upload)</span></label>
+          <label>Bronvermelding afbeelding <span class="opt">– naam fotograaf / bron (verplicht bij upload)</span></label>
           <input type="text" id="foto_credit" placeholder="bijv. Foto ammoniet: Petra Galama">
-          <p class="comm-hint">Vermeld altijd de bron of fotograaf als u een foto uploadt.</p>
+          <p class="comm-hint">Vermeld altijd de bron of fotograaf als u een afbeelding uploadt.</p>
         </div>
       </div>
       <div class="row">
@@ -796,11 +797,11 @@
     <div class="section-body">
       <div class="row">
         <div class="field field-mine" data-owner="organist">
-          <label>Orgelspel opening <span class="opt">organist</span></label>
+          <label>Orgelspel opening <span class="opt">organist(e)</span></label>
           <input type="text" id="orgelspel_opening" placeholder="bijv. Präludium in C-dur BWV 545, J.S. Bach">
         </div>
         <div class="field field-mine" data-owner="voorganger">
-          <label>Lichtlied <span class="opt">voorganger</span></label>
+          <label>Lichtlied <span class="opt">voorgang(st)er</span></label>
           <div style="display:flex;gap:8px;align-items:center">
             <input type="text" id="lichtlied" placeholder="bijv. Lied 217: 1 en 3  of  'Licht dat wil ingaan…'" style="flex:1">
             <button type="button" class="btn-small" onclick="openLiedboekOnlineField('lichtlied')" title="Open Liedbundels Online">Liedboek</button>
@@ -824,8 +825,9 @@
 
   <!-- 4. ORDE VAN DIENST -->
   <div class="section" id="section-orde" data-section="orde">
-    <div class="section-header">4. Orde van dienst <span style="font-weight:400;font-size:12px;color:#888">– in volgorde zoals de dominee die aanlevert</span></div>
+    <div class="section-header" id="orde-header">4. Orde van dienst <span style="font-weight:400;font-size:12px;color:#888">– in volgorde zoals de voorgang(st)er die aanlevert</span></div>
     <div class="section-body">
+      <div id="orde-voorganger-ui">
       <div class="orde-list" id="orde-list"></div>
       <div class="orde-add-row">
         <button class="btn-add" onclick="addOrde('lied')">+ Lied</button>
@@ -840,10 +842,19 @@
         opent debijbel.nl met de juiste referentie — kopieer die tekst zelf en plak hem hier (NBV21 is auteursrechtelijk
         beschermd, er is geen gratis API voor).
         Bij liederen: knop <em>Liedbundels Online</em> opent het lied direct (inlog Vrijburg).
-        Of: bureaumedewerker downloadt een liedlijst-zip op Liedbundels Online (mét platte tekst)
+        Of: bureaumedewerk(st)er downloadt een liedlijst-zip op Liedbundels Online (mét platte tekst)
         en klikt onderaan op <em>Importeer liedlijst (.zip)</em> — teksten + muziek 1e couplet
         komen dan in het formulier én in het Word-document.
       </p>
+      </div>
+      <div class="field field-mine" id="orde-organist-ui" data-owner="organist" style="grid-column:1/-1">
+        <label>Muziek na de overdenking <span class="opt">organist(e)</span></label>
+        <input type="text" id="muziek_overdenking" placeholder="bijv. Improvisatie">
+        <p class="comm-hint">
+          Dit komt in de liturgie na Overdenking → Stilte. De liederen van de voorgang(st)er ziet u via de rol
+          Voorgang(st)er of Alles bekijken.
+        </p>
+      </div>
     </div>
   </div>
 
@@ -876,11 +887,11 @@
     <div class="section-body">
       <div class="row">
         <div class="field field-mine" data-owner="voorganger">
-          <label>Slotlied <span class="opt">voorganger</span></label>
+          <label>Slotlied <span class="opt">voorgang(st)er</span></label>
           <input type="text" id="slotlied" placeholder="bijv. Lied 675">
         </div>
         <div class="field field-mine" data-owner="organist">
-          <label>Orgelspel slot <span class="opt">organist</span></label>
+          <label>Orgelspel slot <span class="opt">organist(e)</span></label>
           <input type="text" id="orgelspel_slot" placeholder="bijv. Fuge in C-dur BWV 545, J.S. Bach">
         </div>
       </div>
@@ -1000,13 +1011,9 @@
         <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"/></svg>
         Opslaan
       </button>
-      <button class="btn-secondary" onclick="copyShareLink()">
-        <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg>
-        Kopieer link
-      </button>
       <button class="btn-secondary" onclick="mailMijDeLink()">
         <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/></svg>
-        Mail mij deze link
+        Mail me de link
       </button>
     </div>
     <div class="btn-cluster">
@@ -1105,7 +1112,8 @@ const GEMEENTE_REK = 'NL 51 INGB 0008 3745 67 t.n.v. St. Vrijzinnig Centrum Vrij
 
 const QR_TEKST = 'Voor digitaal collecteren maken wij gebruik van een algemene QR-code. Deze kunt u niet met uw eigen bank-app lezen maar wel met een algemene QR-code reader (bv Lens op Android of Camera op iPhone). U kunt ook in uw internetapplicatie naar vrijburg.nl/collecte1 en vrijburg.nl/collecte{type} gaan. In alle gevallen wordt u dan doorverwezen naar de ING Betaalverzoekpagina van Vrijburg.';
 
-const FOOTER = 'Voorgangers van Vrijburg zijn ds. Rachelle van Andel en ds. Rosaliene Israël.\nRachelle van Andel\nrachellevanandel@vrijburg.nl        rosaliene.israel@vrijburg.nl\n\nVrijburg is een vrijzinnige christelijke geloofsgemeenschap, gevormd door Remonstranten en Vrijzinnige Protestanten.\nVrijheid, verdraagzaamheid, verantwoordelijkheid en ruimte voor ieders persoonlijk geloof zijn belangrijke uitgangspunten die terugkomen in kerkdiensten, gespreksgroepen en overige activiteiten.\nVoor de verschillende Nieuwsbrieven kunt u zich aanmelden via onze website: www.vrijburg.nl.';
+const FOOTER_LINE = '=============================================================';
+const FOOTER = 'Voorgangers van Vrijburg zijn ds. Rachelle van Andel en ds. Rosaliene Israël.\nds. Rachelle van Andel\nrachellevanandel@vrijburg.nl\nds. Rosaliene Israël\nrosaliene.israel@vrijburg.nl\n\nAlgemeen\nVrijburg is een vrijzinnige christelijke geloofsgemeenschap, gevormd door Remonstranten en Vrijzinnige Protestanten.\nVrijheid, verdraagzaamheid, verantwoordelijkheid en ruimte voor ieders persoonlijk geloof zijn belangrijke uitgangspunten die terugkomen in kerkdiensten, gespreksgroepen en overige activiteiten.\nVoor de verschillende Nieuwsbrieven kunt u zich aanmelden via onze website: www.vrijburg.nl.';
 
 const NL_MAANDEN = ['januari','februari','maart','april','mei','juni','juli','augustus','september','oktober','november','december'];
 const NL_MAANDEN_CAP = ['Januari','Februari','Maart','April','Mei','Juni','Juli','Augustus','September','Oktober','November','December'];
@@ -1230,19 +1238,19 @@ const ROL_CONFIG = {
   voorganger: {
     label: 'Voorgang(st)er',
     primary: ['thema', 'opening', 'orde', 'voorbeden', 'slot'],
-    hint: 'Vul thema, beschrijving, foto, nieuwsbrief en overdenking in. Vul de orde van dienst in (liederen, lezingen) en lichtlied/slotlied. Wijkt u af van het standaardgebed? Vul dat in bij Voorbeden. Klik op <strong>Ik ben klaar</strong> om alles naar bureau@vrijburg.nl te sturen.',
+    hint: 'Vul thema, tekst op voorblad, afbeelding, nieuwsbrief en overdenking in. Vul de orde van dienst in (liederen, lezingen) en lichtlied/slotlied. Wijkt u af van het standaardgebed? Vul dat in bij Voorbeden. Klik op <strong>Ik ben klaar</strong> om alles naar bureau@vrijburg.nl te sturen.',
     emailAan: 'voorganger',
   },
   organist: {
     label: 'Organist(e)',
     primary: ['opening', 'orde', 'slot'],
-    hint: 'Vul orgelspel (opening en slot) en muziek in de orde van dienst in. Liederen en lezingen zijn door de voorganger aangeleverd — die kunt u ter referentie bekijken. Klik op <strong>Ik ben klaar</strong> als u klaar bent.',
+    hint: 'Vul orgelspel (opening en slot) en de muziek na de overdenking in. Liederen en lezingen vult de voorgang(st)er in — die ziet u via de rol Voorgang(st)er of Alles bekijken. Klik op <strong>Ik ben klaar</strong> als u klaar bent.',
     emailAan: 'organist',
   },
   medewerker: {
     label: 'Bureaumedewerk(st)er',
     primary: ['dienst', 'collecte', 'agenda'],
-    hint: 'Zet datum — predikant, organist, lector, cantorij en kinderkerk worden ingevuld vanuit de dienstplanning. Controleer agenda en collecte. Stuur links naar voorganger en organist. Download de liturgie als alles binnen is.',
+    hint: 'Zet datum — predikant, organist(e), lector, cantorij en kinderkerk worden ingevuld vanuit de dienstplanning. Controleer agenda en collecte. Stuur links naar voorgang(st)er en organist(e). Download de liturgie als alles binnen is.',
     emailAan: null,
   },
   compleet: {
@@ -1306,6 +1314,21 @@ function applyRolUI() {
   document.getElementById('generate-hint').textContent = isSamenvoeger
     ? 'Download wanneer alle onderdelen zijn ingevuld'
     : 'Stuur uw ingevulde gegevens naar bureau@vrijburg.nl als u klaar bent';
+
+  const organistAlleenOrde = huidigeRol === 'organist' && !toonAlles;
+  const ordeVoorgangerUi = document.getElementById('orde-voorganger-ui');
+  const ordeOrganistUi = document.getElementById('orde-organist-ui');
+  const ordeHeader = document.getElementById('orde-header');
+  if (ordeVoorgangerUi) ordeVoorgangerUi.style.display = organistAlleenOrde ? 'none' : '';
+  if (ordeOrganistUi) {
+    const toonMuziek = huidigeRol === 'organist' || huidigeRol === 'medewerker' || huidigeRol === 'compleet' || toonAlles;
+    ordeOrganistUi.style.display = toonMuziek ? '' : 'none';
+  }
+  if (ordeHeader) {
+    ordeHeader.innerHTML = organistAlleenOrde
+      ? '4. Muziek na de overdenking'
+      : '4. Orde van dienst <span style="font-weight:400;font-size:12px;color:#888">– in volgorde zoals de voorgang(st)er die aanlevert</span>';
+  }
 }
 
 function setupSectionToggles() {
@@ -2648,6 +2671,7 @@ function getFormState() {
     lichtlied_lyrics: lichtliedLyrics,
     lichtlied_muziek: lichtliedMuziek,
     gebed_opening: document.getElementById('gebed_opening').value,
+    muziek_overdenking: document.getElementById('muziek_overdenking').value,
     slotlied: document.getElementById('slotlied').value,
     slotlied_lyrics: slotliedLyrics,
     slotlied_muziek: slotliedMuziek,
@@ -2694,7 +2718,7 @@ function applyFormState(state) {
   if (!state) return;
   const fields = ['datum','aanvangstijd','bijzondere_dienst','kinderkerk','bijzonderheden',
     'voorganger','organist','lector','thema','intro','nieuwsbrief','overdenking_email','foto_credit',
-    'orgelspel_opening','lichtlied','gebed_opening','slotlied','orgelspel_slot','bloemen',
+    'orgelspel_opening','lichtlied','gebed_opening','muziek_overdenking','slotlied','orgelspel_slot','bloemen',
     'c1_thema','c1_naam','c1_tekst','c1_rekening','c2_type','c2_naam','c2_tekst','c2_rekening',
     'voorbeden_tekst',
     'agenda_kort','agenda_ver','avondmaal'];
@@ -2815,29 +2839,55 @@ async function mailMijDeLink() {
   setStatus(cloud ? '✓ Cloud-link in mail' : '✓ Link in mail', 'ok');
 }
 
+function voornaamUitNaam(name) {
+  const cleaned = String(name || '').replace(/^ds\.?\s+/i, '').trim();
+  if (!cleaned) return '';
+  return cleaned.split(/\s+/)[0];
+}
+
+function aanhefVasteVoorganger() {
+  const raw = document.getElementById('voorganger').value.trim();
+  if (!raw) return 'Beste Rachelle, beste Rosaliene,';
+  const hasR = /rachelle/i.test(raw);
+  const hasRo = /rosaliene/i.test(raw);
+  if (hasR && hasRo) return 'Beste Rachelle, beste Rosaliene,';
+  const first = voornaamUitNaam(raw);
+  return first ? `Beste ${first},` : 'Beste Rachelle, beste Rosaliene,';
+}
+
 async function emailRol(rol) {
   const datum = document.getElementById('datum').value;
   const datumTekst = datum ? formatDatum(datum) : 'komende dienst';
-  const namen = { voorganger: 'voorganger', organist: 'organist' };
-  const taken = {
-    voorganger: 'thema, foto, nieuwsbrief, overdenking, orde van dienst (liederen en lezingen) en lichtlied/slotlied',
-    organist: 'orgelspel en muziek in de dienst',
-  };
   setStatus('Opslaan & link maken…', '');
   const { short, cloud } = await prepareShareLink(rol);
   await copyShareLinkRich(short);
-  const body =
-    `Beste ${namen[rol]},\n\n` +
-    `Via onderstaande link kunt u uw onderdeel invullen voor de dienst op ${datumTekst}:\n` +
-    `${taken[rol]}.\n\n` +
-    mailLinkBlock(short) + '\n' +
-    `U hoeft niet alles in te vullen — alleen uw eigen onderdeel. ` +
-    `Klik op "Ik ben klaar" om uw ingevulde gegevens naar bureau@vrijburg.nl te sturen.\n\n` +
-    `Met vriendelijke groet,\nVrijburg Amsterdam`;
-  openMailto({
-    subject: `Liturgie Vrijburg – ${datumTekst} (${namen[rol]})`,
-    body,
-  });
+
+  let subject;
+  let body;
+  if (rol === 'voorganger') {
+    subject = `Liturgie Vrijburg – ${datumTekst}`;
+    body =
+      `${aanhefVasteVoorganger()}\n\n` +
+      `Hier is de link naar de liturgie van ${datumTekst}. ` +
+      `Kun je thema, orde van dienst (liederen en lezingen), lichtlied en slotlied, ` +
+      `een afbeelding voor het voorblad en een kort stukje voor de nieuwsbrief invullen?\n\n` +
+      mailLinkBlock(short) + '\n' +
+      `Je hoeft niet alles in één keer te doen. Als je klaar bent, klik je op “Ik ben klaar” — ` +
+      `dan komt het bij het bureau terecht.\n\n` +
+      `Hartelijke groet,\nGigi`;
+  } else {
+    const orgNaam = voornaamUitNaam(document.getElementById('organist').value) || 'organist';
+    subject = `Liturgie Vrijburg – ${datumTekst} (orgelspel)`;
+    body =
+      `Beste ${orgNaam},\n\n` +
+      `Hier is de link naar de liturgie van ${datumTekst}. ` +
+      `Kun je orgelspel (opening en slot) en de muziek na de overdenking invullen?\n\n` +
+      mailLinkBlock(short) + '\n' +
+      `Als je klaar bent, klik je op “Ik ben klaar”.\n\n` +
+      `Hartelijke groet,\nGigi`;
+  }
+
+  openMailto({ subject, body });
   setStatus(cloud ? '✓ Cloud-link in mail en op klembord' : '✓ Korte link in mail en op klembord', 'ok');
 }
 
@@ -2992,6 +3042,7 @@ function emptyFormState() {
     lichtlied_lyrics: '',
     lichtlied_muziek: [],
     gebed_opening: '',
+    muziek_overdenking: '',
     slotlied: '',
     slotlied_lyrics: '',
     slotlied_muziek: [],
@@ -3143,7 +3194,7 @@ function formatDatum(val) {
 // DOCX GENERATOR
 // ============================================================
 const DOCX_ASSETS = {
-  logo: 'assets/logo-vrijburg-xl.png',
+  logo: 'assets/logo-vrijburg-cover.jpg',
   logoVlv: 'assets/Logo Vrijburg laat voorgaan.png',
   logoVlh: 'assets/Logo Vrijburg laat horen.png',
   logoVlz: 'assets/Logo Vrijburg laat zien.png',
@@ -3158,8 +3209,8 @@ function resolveCoverLogo(vlv, vlh, vlz) {
   if (vlv) return { path: DOCX_ASSETS.logoVlv, title: VL_LABELS.vlv, maxWidth: 160, kind: 'vl', key: 'vlv' };
   if (vlh) return { path: DOCX_ASSETS.logoVlh, title: VL_LABELS.vlh, maxWidth: 160, kind: 'vl', key: 'vlh' };
   if (vlz) return { path: DOCX_ASSETS.logoVlz, title: VL_LABELS.vlz, maxWidth: 100, kind: 'vl', key: 'vlz' };
-  // Groter en scherper hoofdlogo op het voorblad (hogere bronresolutie).
-  return { path: DOCX_ASSETS.logo, title: 'Vrijburg logo', maxWidth: 130, kind: 'vrijburg', key: null };
+  // Zelfde formaat als de handmatige liturgie: 2,50" × 1,75" linksboven.
+  return { path: DOCX_ASSETS.logo, title: 'Vrijburg logo', maxWidth: 240, maxHeight: 168, kind: 'vrijburg', key: null };
 }
 
 function dataUrlToBytes(dataUrl) {
@@ -3179,16 +3230,21 @@ function loadImageElement(src) {
   });
 }
 
-async function preparePngImage(src, maxWidthPx) {
+async function preparePngImage(src, maxWidthPx, maxHeightPx) {
   const img = await loadImageElement(src);
-  const scale = img.width > maxWidthPx ? maxWidthPx / img.width : 1;
+  const scaleW = maxWidthPx ? maxWidthPx / img.width : 1;
+  const scaleH = maxHeightPx ? maxHeightPx / img.height : 1;
+  const scale = Math.min(scaleW, scaleH, 1);
   const width = Math.max(1, Math.round(img.width * scale));
   const height = Math.max(1, Math.round(img.height * scale));
   const canvas = document.createElement('canvas');
   canvas.width = width;
   canvas.height = height;
   canvas.getContext('2d').drawImage(img, 0, 0, width, height);
-  return { bytes: dataUrlToBytes(canvas.toDataURL('image/png')), width, height };
+  const isJpeg = /\.jpe?g$/i.test(src) && !src.startsWith('data:image/png');
+  const mime = isJpeg ? 'image/jpeg' : 'image/png';
+  const type = isJpeg ? 'jpg' : 'png';
+  return { bytes: dataUrlToBytes(canvas.toDataURL(mime, 0.92)), width, height, type };
 }
 
 async function buildCornerLogoParagraph(logo) {
@@ -3199,29 +3255,31 @@ async function buildCornerLogoParagraph(logo) {
     VerticalPositionRelativeFrom, VerticalPositionAlign,
   } = docx;
   try {
-    const { bytes, width, height } = await preparePngImage(logo.path, logo.maxWidth);
+    const { bytes, width, height, type } = await preparePngImage(logo.path, logo.maxWidth, logo.maxHeight);
+    const isVrijburg = logo.kind === 'vrijburg';
     return new Paragraph({
       children: [
         new ImageRun({
           data: bytes,
           transformation: { width, height },
-          type: 'png',
+          type: type || 'png',
           altText: { title: logo.title, description: logo.title, name: 'cover-logo' },
           floating: {
             horizontalPosition: {
               relative: HorizontalPositionRelativeFrom.MARGIN,
-              align: HorizontalPositionAlign.RIGHT,
+              align: isVrijburg ? HorizontalPositionAlign.LEFT : HorizontalPositionAlign.RIGHT,
             },
             verticalPosition: {
               relative: VerticalPositionRelativeFrom.MARGIN,
               align: VerticalPositionAlign.TOP,
             },
             wrap: {
-              type: TextWrappingType.SQUARE,
-              side: TextWrappingSide.LEFT,
+              // Overlay zoals in de handmatige liturgie: titel blijft gecentreerd.
+              type: isVrijburg ? TextWrappingType.THROUGH : TextWrappingType.SQUARE,
+              side: isVrijburg ? TextWrappingSide.BOTH_SIDES : TextWrappingSide.LEFT,
             },
-            allowOverlap: false,
-            margins: { top: 0, bottom: 60000, left: 100000, right: 0 },
+            allowOverlap: isVrijburg,
+            margins: { top: 0, bottom: 60000, left: 0, right: isVrijburg ? 100000 : 0 },
           },
         }),
       ],
@@ -3250,7 +3308,7 @@ function estimateCoverTextHeightPx({
   // Conservatief houden we een veiligheidsmarge onderaan.
   const line = (pt, factor = 1.2) => Math.ceil(pt * (96 / 72) * factor);
   let h = 0;
-  if (hasLogo) h += 36; // floating logo dekt deels titel, maar reserveer iets
+  if (hasLogo) h += 8; // floating logo ligt over de titel, geen extra witruimte
   h += line(24, 1.25); // titel "Dienst …"
   if (hasDienstExtra) h += line(16);
   if (thema) h += line(20);
@@ -3381,6 +3439,7 @@ async function generateDocxAsync() {
   const orgelOpen  = document.getElementById('orgelspel_opening').value.trim();
   const lichtlied  = document.getElementById('lichtlied').value.trim();
   const gebedOpening = document.getElementById('gebed_opening').value.trim();
+  const muziekOverdenking = document.getElementById('muziek_overdenking').value.trim();
   const slotlied   = document.getElementById('slotlied').value.trim();
   const orgelSlot  = document.getElementById('orgelspel_slot').value.trim();
   const bloemen    = document.getElementById('bloemen').value.trim();
@@ -3623,13 +3682,13 @@ async function generateDocxAsync() {
 
   async function assetParagraph(path, maxWidthPx, opts = {}) {
     try {
-      const { bytes, width, height } = await preparePngImage(path, maxWidthPx);
+      const { bytes, width, height, type } = await preparePngImage(path, maxWidthPx);
       return new Paragraph({
         children: [
           new ImageRun({
             data: bytes,
             transformation: { width, height },
-            type: 'png',
+            type: type || 'png',
             altText: { title: opts.title || 'Afbeelding', description: opts.title || 'Afbeelding', name: opts.name || 'img' },
           }),
         ],
@@ -3856,7 +3915,8 @@ async function generateDocxAsync() {
   children.push(empty());
   children.push(p('Overdenking', { bold: true, before: 120 }));
   children.push(p('Stilte', { bold: true }));
-  children.push(p('Muziek', { bold: true }));
+  if (muziekOverdenking) children.push(pOrgelspel('Muziek: ' + muziekOverdenking));
+  else children.push(p('Muziek', { bold: true }));
 
   // VOORBEDEN
   children.push(empty());
@@ -3930,23 +3990,16 @@ async function generateDocxAsync() {
   // AGENDA
   children.push(empty());
   children.push(sectie('Agenda'));
-  children.push(p('[Aankondiging van evenementen in Vrijburg. Zie voor meer informatie altijd de website van Vrijburg en/of het meest recente (digitale) Maandblad]', { italic: true, sz: szSmall }));
+  children.push(p('[Aankondiging van evenementen in Vrijburg. Zie voor meer informatie altijd de website van Vrijburg en/of het meest recente (digitale) Maandblad]', { italic: true }));
   const agendaGezamenlijk = [agendaKort, agendaVer].filter(Boolean).join('\n\n');
   if (agendaGezamenlijk) {
     children.push(empty());
     children.push(...multiline(agendaGezamenlijk));
   }
 
-  // FOOTER met één enkele scheidingslijn (niet aflopend naar nieuwe regel)
+  // FOOTER: dezelfde ==== -regel en 16-punts tekst als in de handmatige liturgie
   children.push(empty());
-  children.push(new Paragraph({
-    ...paragraphOpts({ after: 120 }),
-    border: {
-      bottom: { style: BorderStyle.SINGLE, size: 6, color: '000000', space: 1 },
-    },
-    children: [textRun('', { sz: szSmall })],
-  }));
-  children.push(empty());
+  children.push(p(FOOTER_LINE));
   FOOTER.split('\n').forEach(line => {
     const trimmed = line.trim();
     if (!trimmed) {
@@ -3956,12 +4009,12 @@ async function generateDocxAsync() {
     if (trimmed.includes('www.vrijburg.nl')) {
       const parts = trimmed.split('www.vrijburg.nl');
       children.push(pr([
-        { t: parts[0], sz: szSmall },
-        { t: 'www.vrijburg.nl', sz: szSmall, hyperlink: 'https://www.vrijburg.nl' },
-        { t: parts.slice(1).join('www.vrijburg.nl'), sz: szSmall },
+        { t: parts[0] },
+        { t: 'www.vrijburg.nl', hyperlink: 'https://www.vrijburg.nl' },
+        { t: parts.slice(1).join('www.vrijburg.nl') },
       ]));
     } else {
-      children.push(p(trimmed, { sz: szSmall }));
+      children.push(p(trimmed));
     }
   });
 

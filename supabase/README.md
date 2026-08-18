@@ -62,14 +62,14 @@ Dat is bewust voor een snelle interne start. Later aanscherpen met:
 
 ## Volgende stappen in de app
 
-1. ✅ Liturgie: **Opslaan / laden** via `short_id` (`?id=...`) — knop **☁ Opslaan**, en automatisch bij “Kopieer link” / mail-delen
+1. ✅ Liturgie: **Opslaan / laden** via `short_id` (`?id=...`) — knop **☁ Opslaan**, en automatisch bij “Mail me de link” / mail-delen
 2. ✅ Nieuwsbrief-pagina (`nieuwsbrief.html`): zelfde `short_id` openen → Mailchimp-cards
 3. ✅ Foto uploaden naar Storage i.p.v. in de link stoppen
 
 ## Gebruik in de liturgie-app
 
 - **☁ Opslaan** — schrijft het formulier naar Supabase
-- **🔗 Kopieer link** / mail-knoppen — slaan eerst op, daarna korte link `?id=abcd1234`
+- **🔗 Mail me de link** / mail-knoppen — slaan eerst op, daarna korte link `?id=abcd1234`
 - Oude lange `?z=`-links blijven werken als fallback
 - Onderin zie je `☁ id=...` als er een cloud-record actief is
 
