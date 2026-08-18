@@ -12,9 +12,9 @@ Webformulier waarmee medewerkers (of dominees zelf) de wekelijkse liturgie kunne
 ### Typische workflow
 
 1. **Bureaumedewerker** zet datum → predikant, organist, lector en cantorij worden ingevuld vanuit de dienstplanning
-2. **Bureaumedewerker** stuurt *Link naar voorganger* (eigen predikant) of *Brief gastpredikant* (gast, met downloads)
-2. **Voorganger** vult thema, foto, nieuwsbrief, overdenking en orde van dienst in, stuurt link terug
-3. **Organist** vult orgelspel en muziek in, stuurt link terug
+2. **Bureaumedewerk(st)er** stuurt *Link vaste voorganger* (eigen predikant, informele mail) of *Brief gastpredikant* (gast, met downloads)
+2. **Voorgang(st)er** vult thema, afbeelding, nieuwsbrief, overdenking en orde van dienst in, stuurt link terug
+3. **Organist(e)** vult orgelspel en muziek na de overdenking in, stuurt link terug
 4. **Bureaumedewerker** controleert agenda en collecte, downloadt de liturgie
 
 Zie `HANDOVER.md` voor technische details.
