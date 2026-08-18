@@ -1,0 +1,52 @@
+[
+  {
+    "match": ["vrijburglunch"],
+    "beschrijving": "Iedereen van harte welkom! Gastheer is Maarten Lubbers en de predikant is in principe ook aanwezig. Bijdrage per lunch is minimaal € 7,50.",
+    "opgave": "Geef u s.v.p. uiterlijk twee dagen van tevoren op via info@vrijburg.nl of 020-671 42 77."
+  },
+  {
+    "match": ["kring oost"],
+    "beschrijving": "Samen eten en praten. Deze gesprekskring bestaat uit een diverse groep mensen qua achtergrond, leeftijd en levenservaring. Nieuwe deelnemers welkom.",
+    "contact": "Margriet: margrietdvg@gmail.com"
+  },
+  {
+    "match": ["smeltkroes"],
+    "beschrijving": "Maandelijkse bespreking van artikelen of een boek over geloof en hoe we tegen de wereld aankijken.",
+    "contact": "Annemieke van der Veen, tel. 06-22077098"
+  },
+  {
+    "match": ["bijbelkring", "klaas vos"],
+    "beschrijving": "We lezen samen de Bijbel in diverse vertalingen. Iedereen hartelijk welkom om mee te lezen en te praten.",
+    "contact": "Polona Offerhaus, 06 306 984 64 of offerhaus@tiscali.nl"
+  },
+  {
+    "match": ["heilige bronnen"],
+    "beschrijving": "Kring over inspiratie uit andere religieuze tradities, begeleid door Tina Geels.",
+    "contact": "Jan Sytse Stilma, j.stilma@upcmail.nl"
+  },
+  {
+    "match": ["toneelleeskring"],
+    "beschrijving": "Voorbereiding van het eerstvolgende theaterbezoek.",
+    "contact": "Wiep Wegenwijs, tel. 020 6137935 of wegenwijswiepkje@gmail.com"
+  },
+  {
+    "match": ["leeskring"],
+    "beschrijving": "We bespreken samen een boek.",
+    "contact": "Jet van Koppen, henriette.gerda.winters@gmail.com"
+  },
+  {
+    "match": ["kring centrum"],
+    "beschrijving": "Gesprekskring, open voor nieuwe leden.",
+    "contact": "Romée Lubbers, tel. 020-6256503/06-49838953, romeelubbers@planet.nl"
+  },
+  {
+    "match": ["filosofie"],
+    "beschrijving": "Jaarlijkse filosofie-tweedaagse, georganiseerd door Pieter Jan André en Margriet Dijkmans van Gunst.",
+    "contact": "Margriet: margrietdvg@gmail.com"
+  },
+  {
+    "match": ["vrijburgreis"],
+    "beschrijving": "Jaarlijkse meerdaagse Vrijburgreis.",
+    "contact": "Carolien Morée, carmoree@kpnmail.nl"
+  }
+]
