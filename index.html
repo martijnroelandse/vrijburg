@@ -222,31 +222,32 @@
       position: sticky;
       bottom: 0;
       background: white;
-      border-top: 1px solid var(--border);
-      padding: 10px 20px 8px;
+      border-top: 1px solid #e6edf2;
+      padding: 7px 12px 6px;
       display: flex;
       flex-direction: column;
-      gap: 6px;
-      box-shadow: 0 -2px 8px rgba(0,0,0,0.06);
+      gap: 4px;
+      box-shadow: 0 -1px 4px rgba(0,0,0,0.04);
     }
 
     .generate-bar-actions {
       display: flex;
       flex-wrap: wrap;
       align-items: center;
-      gap: 8px;
+      gap: 5px;
     }
     .btn-cluster {
       display: flex;
       flex-wrap: wrap;
       align-items: center;
-      gap: 6px;
+      gap: 4px;
     }
     .generate-bar .ico {
-      width: 17px;
-      height: 17px;
+      width: 14px;
+      height: 14px;
       flex-shrink: 0;
       display: block;
+      opacity: 0.9;
     }
 
     .generate-bar-footer {
@@ -277,16 +278,16 @@
       color: white;
       border: none;
       border-radius: var(--radius);
-      padding: 0 16px;
-      min-height: 40px;
-      font-size: 14px;
+      padding: 0 12px;
+      min-height: 34px;
+      font-size: 12px;
       font-weight: 600;
       cursor: pointer;
       transition: background 0.15s;
       flex-shrink: 0;
       display: inline-flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
       line-height: 1.2;
     }
 
@@ -294,6 +295,11 @@
     .btn-generate:disabled { background: #aaa; cursor: not-allowed; }
 
     .generate-hint { flex: 1; min-width: 140px; }
+    .generate-version {
+      font-size: 11px;
+      color: #8a97a3;
+      white-space: nowrap;
+    }
 
     .status-msg {
       font-size: 12px;
@@ -319,13 +325,14 @@
     .btn-secondary:hover { background: var(--brand-light); }
     .btn-secondary:disabled { opacity: 0.5; cursor: not-allowed; }
     .generate-bar .btn-secondary {
-      padding: 0 12px;
-      min-height: 40px;
-      font-size: 13px;
+      padding: 0 9px;
+      min-height: 34px;
+      font-size: 12px;
       display: inline-flex;
       align-items: center;
-      gap: 7px;
+      gap: 5px;
       line-height: 1.2;
+      border-color: #8ecde2;
     }
     .generate-bar .btn-quiet {
       color: var(--muted);
@@ -1033,6 +1040,7 @@
   <div class="generate-bar-footer">
     <span class="generate-hint" id="generate-hint">Het document is direct klaar om te printen</span>
     <span id="cloud-id-hint" class="generate-hint" style="display:none"></span>
+    <span class="generate-version" id="ui-version"></span>
     <span id="status-msg"></span>
     <a href="info.html" class="generate-bar-info">Handleiding, credits &amp; privacy</a>
   </div>
@@ -1050,6 +1058,7 @@
 // ============================================================
 const COLLECTES = []; // Filled from collectes.json below
 const DIENSTPLANNING = []; // Filled from dienstplanning.json
+const UI_VERSION = 'v2026-08-18';
 
 // ============================================================
 // VASTE TEKSTEN
@@ -1486,6 +1495,12 @@ function updateCloudHint() {
       ? `nieuwsbrief.html?id=${encodeURIComponent(currentShortId)}`
       : 'nieuwsbrief.html';
   }
+}
+
+function renderUiVersion() {
+  const el = document.getElementById('ui-version');
+  if (!el) return;
+  el.textContent = UI_VERSION;
 }
 
 function getCloudPayload() {
@@ -2556,8 +2571,27 @@ function findAgendaTemplate(title) {
   return AGENDA_TEMPLATES.find(t => t.match.some(m => lower.includes(m)));
 }
 
+function agendaKerkdienstVoorganger(ev) {
+  const raw = ev.excerpt?.rendered || ev.content?.rendered || '';
+  const text = decodeHtmlEntities(raw);
+  if (!text) return '';
+  const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
+  for (const line of lines) {
+    const clean = line.replace(/^[\W_]+/, '').trim();
+    if (!clean) continue;
+    if (/\b(uur|kerkdienst|vrijburg)\b/i.test(clean)) continue;
+    if (/https?:\/\//i.test(clean) || clean.includes('@')) continue;
+    if (clean.length > 80) continue;
+    return clean;
+  }
+  return '';
+}
+
 function agendaItemBlurb(ev) {
   const title = decodeHtmlEntities(ev.title?.rendered || '');
+  if (/kerkdienst/i.test(title)) {
+    return agendaKerkdienstVoorganger(ev);
+  }
   const tpl = findAgendaTemplate(title);
   if (tpl) {
     const parts = [tpl.beschrijving];
@@ -3109,7 +3143,7 @@ function formatDatum(val) {
 // DOCX GENERATOR
 // ============================================================
 const DOCX_ASSETS = {
-  logo: 'assets/logo-vrijburg-xl.png',
+  logo: 'assets/Vrijburg-logo blauw XL.png',
   logoVlv: 'assets/Logo Vrijburg laat voorgaan.png',
   logoVlh: 'assets/Logo Vrijburg laat horen.png',
   logoVlz: 'assets/Logo Vrijburg laat zien.png',
@@ -3124,8 +3158,8 @@ function resolveCoverLogo(vlv, vlh, vlz) {
   if (vlv) return { path: DOCX_ASSETS.logoVlv, title: VL_LABELS.vlv, maxWidth: 160, kind: 'vl', key: 'vlv' };
   if (vlh) return { path: DOCX_ASSETS.logoVlh, title: VL_LABELS.vlh, maxWidth: 160, kind: 'vl', key: 'vlh' };
   if (vlz) return { path: DOCX_ASSETS.logoVlz, title: VL_LABELS.vlz, maxWidth: 100, kind: 'vl', key: 'vlz' };
-  // ~50% van de eerdere 160px
-  return { path: DOCX_ASSETS.logo, title: 'Vrijburg logo', maxWidth: 80, kind: 'vrijburg', key: null };
+  // Groter en scherper hoofdlogo op het voorblad (hogere bronresolutie).
+  return { path: DOCX_ASSETS.logo, title: 'Vrijburg logo', maxWidth: 130, kind: 'vrijburg', key: null };
 }
 
 function dataUrlToBytes(dataUrl) {
@@ -3638,12 +3672,6 @@ async function generateDocxAsync() {
             alignment: AlignmentType.CENTER,
             spacing: { before: 60, after: 40, line: 240, lineRule: 'auto' },
           }),
-          new Paragraph({
-            // Zelfde corps als bodytekst (16pt), niet szSmall — zoals in handmatige liturgie
-            children: [hyperlink(label, url, { sz: szBody })],
-            alignment: AlignmentType.CENTER,
-            spacing: { before: 0, after: 0, line: 240, lineRule: 'auto' },
-          }),
         ],
       });
       return new Table({
@@ -3996,6 +4024,7 @@ function initApp() {
   setupAutoSave();
   setupSectionToggles();
   updateCloudHint();
+  renderUiVersion();
   renderVasteTekstOpeningPreview();
 
   loadFromUrlOrCloud().then(loaded => {
