@@ -3194,7 +3194,7 @@ function formatDatum(val) {
 // DOCX GENERATOR
 // ============================================================
 const DOCX_ASSETS = {
-  logo: 'assets/logo-vrijburg-cover.jpg',
+  logo: 'assets/logo-vrijburg-xl.png',
   logoVlv: 'assets/Logo Vrijburg laat voorgaan.png',
   logoVlh: 'assets/Logo Vrijburg laat horen.png',
   logoVlz: 'assets/Logo Vrijburg laat zien.png',
@@ -3209,8 +3209,8 @@ function resolveCoverLogo(vlv, vlh, vlz) {
   if (vlv) return { path: DOCX_ASSETS.logoVlv, title: VL_LABELS.vlv, maxWidth: 160, kind: 'vl', key: 'vlv' };
   if (vlh) return { path: DOCX_ASSETS.logoVlh, title: VL_LABELS.vlh, maxWidth: 160, kind: 'vl', key: 'vlh' };
   if (vlz) return { path: DOCX_ASSETS.logoVlz, title: VL_LABELS.vlz, maxWidth: 100, kind: 'vl', key: 'vlz' };
-  // Zelfde formaat als de handmatige liturgie: 2,50" × 1,75" linksboven.
-  return { path: DOCX_ASSETS.logo, title: 'Vrijburg logo', maxWidth: 240, maxHeight: 168, kind: 'vrijburg', key: null };
+  // Vierkant blauw logo, groter dan de eerdere 130px, zonder overlap over de titel.
+  return { path: DOCX_ASSETS.logo, title: 'Vrijburg logo', maxWidth: 220, kind: 'vrijburg', key: null };
 }
 
 function dataUrlToBytes(dataUrl) {
@@ -3249,41 +3249,43 @@ async function preparePngImage(src, maxWidthPx, maxHeightPx) {
 
 async function buildCornerLogoParagraph(logo) {
   const {
-    Paragraph, ImageRun,
+    Paragraph, ImageRun, AlignmentType,
     TextWrappingType, TextWrappingSide,
     HorizontalPositionRelativeFrom, HorizontalPositionAlign,
     VerticalPositionRelativeFrom, VerticalPositionAlign,
   } = docx;
   try {
     const { bytes, width, height, type } = await preparePngImage(logo.path, logo.maxWidth, logo.maxHeight);
-    const isVrijburg = logo.kind === 'vrijburg';
+    const imageOpts = {
+      data: bytes,
+      transformation: { width, height },
+      type: type || 'png',
+      altText: { title: logo.title, description: logo.title, name: 'cover-logo' },
+    };
+    // Vrijburg-logo: eigen regel rechtsboven, niet zwevend over de titel.
+    // VL-logo's blijven rechts zweven (vervangen het Vrijburg-logo).
+    if (logo.kind !== 'vrijburg') {
+      imageOpts.floating = {
+        horizontalPosition: {
+          relative: HorizontalPositionRelativeFrom.MARGIN,
+          align: HorizontalPositionAlign.RIGHT,
+        },
+        verticalPosition: {
+          relative: VerticalPositionRelativeFrom.MARGIN,
+          align: VerticalPositionAlign.TOP,
+        },
+        wrap: {
+          type: TextWrappingType.SQUARE,
+          side: TextWrappingSide.LEFT,
+        },
+        allowOverlap: false,
+        margins: { top: 0, bottom: 60000, left: 100000, right: 0 },
+      };
+    }
     return new Paragraph({
-      children: [
-        new ImageRun({
-          data: bytes,
-          transformation: { width, height },
-          type: type || 'png',
-          altText: { title: logo.title, description: logo.title, name: 'cover-logo' },
-          floating: {
-            horizontalPosition: {
-              relative: HorizontalPositionRelativeFrom.MARGIN,
-              align: isVrijburg ? HorizontalPositionAlign.LEFT : HorizontalPositionAlign.RIGHT,
-            },
-            verticalPosition: {
-              relative: VerticalPositionRelativeFrom.MARGIN,
-              align: VerticalPositionAlign.TOP,
-            },
-            wrap: {
-              // Overlay zoals in de handmatige liturgie: titel blijft gecentreerd.
-              type: isVrijburg ? TextWrappingType.THROUGH : TextWrappingType.SQUARE,
-              side: isVrijburg ? TextWrappingSide.BOTH_SIDES : TextWrappingSide.LEFT,
-            },
-            allowOverlap: isVrijburg,
-            margins: { top: 0, bottom: 60000, left: 0, right: isVrijburg ? 100000 : 0 },
-          },
-        }),
-      ],
-      spacing: { before: 0, after: 0, line: 240, lineRule: 'auto' },
+      children: [new ImageRun(imageOpts)],
+      alignment: logo.kind === 'vrijburg' ? AlignmentType.RIGHT : undefined,
+      spacing: { before: 0, after: logo.kind === 'vrijburg' ? 80 : 0, line: 240, lineRule: 'auto' },
     });
   } catch (e) {
     console.warn('Cover-logo niet geladen:', e);
@@ -3308,7 +3310,7 @@ function estimateCoverTextHeightPx({
   // Conservatief houden we een veiligheidsmarge onderaan.
   const line = (pt, factor = 1.2) => Math.ceil(pt * (96 / 72) * factor);
   let h = 0;
-  if (hasLogo) h += 8; // floating logo ligt over de titel, geen extra witruimte
+  if (hasLogo) h += 230; // vierkant logo op eigen regel rechtsboven
   h += line(24, 1.25); // titel "Dienst …"
   if (hasDienstExtra) h += line(16);
   if (thema) h += line(20);
