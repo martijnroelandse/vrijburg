@@ -222,31 +222,32 @@
       position: sticky;
       bottom: 0;
       background: white;
-      border-top: 1px solid var(--border);
-      padding: 10px 20px 8px;
+      border-top: 1px solid #e6edf2;
+      padding: 8px 16px 7px;
       display: flex;
       flex-direction: column;
-      gap: 6px;
-      box-shadow: 0 -2px 8px rgba(0,0,0,0.06);
+      gap: 5px;
+      box-shadow: 0 -1px 4px rgba(0,0,0,0.04);
     }
 
     .generate-bar-actions {
       display: flex;
       flex-wrap: wrap;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
     }
     .btn-cluster {
       display: flex;
       flex-wrap: wrap;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
     }
     .generate-bar .ico {
-      width: 17px;
-      height: 17px;
+      width: 15px;
+      height: 15px;
       flex-shrink: 0;
       display: block;
+      opacity: 0.9;
     }
 
     .generate-bar-footer {
@@ -277,17 +278,19 @@
       color: white;
       border: none;
       border-radius: var(--radius);
-      padding: 0 16px;
-      min-height: 40px;
-      font-size: 14px;
+      padding: 0 14px;
+      min-height: 36px;
+      font-size: 13px;
       font-weight: 600;
       cursor: pointer;
       transition: background 0.15s;
       flex-shrink: 0;
       display: inline-flex;
       align-items: center;
-      gap: 8px;
+      gap: 7px;
       line-height: 1.2;
+      text-transform: none;
+      letter-spacing: 0;
     }
 
     .btn-generate:hover { background: var(--brand-dark); }
@@ -319,13 +322,17 @@
     .btn-secondary:hover { background: var(--brand-light); }
     .btn-secondary:disabled { opacity: 0.5; cursor: not-allowed; }
     .generate-bar .btn-secondary {
-      padding: 0 12px;
-      min-height: 40px;
-      font-size: 13px;
+      padding: 0 10px;
+      min-height: 36px;
+      font-size: 12px;
       display: inline-flex;
       align-items: center;
-      gap: 7px;
+      gap: 6px;
       line-height: 1.2;
+      border-color: #8ecde2;
+      font-weight: 500;
+      text-transform: none;
+      letter-spacing: 0;
     }
     .generate-bar .btn-quiet {
       color: var(--muted);
@@ -2556,8 +2563,27 @@ function findAgendaTemplate(title) {
   return AGENDA_TEMPLATES.find(t => t.match.some(m => lower.includes(m)));
 }
 
+function agendaKerkdienstVoorganger(ev) {
+  const raw = ev.excerpt?.rendered || ev.content?.rendered || '';
+  const text = decodeHtmlEntities(raw);
+  if (!text) return '';
+  const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
+  for (const line of lines) {
+    const clean = line.replace(/^[\W_]+/, '').trim();
+    if (!clean) continue;
+    if (/\b(uur|kerkdienst|vrijburg)\b/i.test(clean)) continue;
+    if (/https?:\/\//i.test(clean) || clean.includes('@')) continue;
+    if (clean.length > 80) continue;
+    return clean;
+  }
+  return '';
+}
+
 function agendaItemBlurb(ev) {
   const title = decodeHtmlEntities(ev.title?.rendered || '');
+  if (/kerkdienst/i.test(title)) {
+    return agendaKerkdienstVoorganger(ev);
+  }
   const tpl = findAgendaTemplate(title);
   if (tpl) {
     const parts = [tpl.beschrijving];
