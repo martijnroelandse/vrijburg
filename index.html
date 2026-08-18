@@ -1096,7 +1096,7 @@ const GEMEENTE_REK = 'NL 51 INGB 0008 3745 67 t.n.v. St. Vrijzinnig Centrum Vrij
 
 const QR_TEKST = 'Voor digitaal collecteren maken wij gebruik van een algemene QR-code. Deze kunt u niet met uw eigen bank-app lezen maar wel met een algemene QR-code reader (bv Lens op Android of Camera op iPhone). U kunt ook in uw internetapplicatie naar vrijburg.nl/collecte1 en vrijburg.nl/collecte{type} gaan. In alle gevallen wordt u dan doorverwezen naar de ING Betaalverzoekpagina van Vrijburg.';
 
-const FOOTER = 'Voorgangers van Vrijburg zijn ds. Rachelle van Andel en ds. Rosaliene Israël.\n\nAlgemeen\nVrijburg is een vrijzinnige christelijke geloofsgemeenschap, gevormd door Remonstranten en Vrijzinnige Protestanten.\nVrijheid, verdraagzaamheid, verantwoordelijkheid en ruimte voor ieders persoonlijk geloof zijn belangrijke uitgangspunten die terugkomen in kerkdiensten, gespreksgroepen en overige activiteiten.\nVoor de verschillende Nieuwsbrieven kunt u zich aanmelden via onze website: www.vrijburg.nl.';
+const FOOTER = 'Voorgangers van Vrijburg zijn ds. Rachelle van Andel en ds. Rosaliene Israël.\nRachelle van Andel\nrachellevanandel@vrijburg.nl        rosaliene.israel@vrijburg.nl\n\nVrijburg is een vrijzinnige christelijke geloofsgemeenschap, gevormd door Remonstranten en Vrijzinnige Protestanten.\nVrijheid, verdraagzaamheid, verantwoordelijkheid en ruimte voor ieders persoonlijk geloof zijn belangrijke uitgangspunten die terugkomen in kerkdiensten, gespreksgroepen en overige activiteiten.\nVoor de verschillende Nieuwsbrieven kunt u zich aanmelden via onze website: www.vrijburg.nl.';
 
 const NL_MAANDEN = ['januari','februari','maart','april','mei','juni','juli','augustus','september','oktober','november','december'];
 const NL_MAANDEN_CAP = ['Januari','Februari','Maart','April','Mei','Juni','Juli','Augustus','September','Oktober','November','December'];
@@ -3909,9 +3909,15 @@ async function generateDocxAsync() {
     children.push(...multiline(agendaGezamenlijk));
   }
 
-  // FOOTER met ==== scheidingslijn (conform handwerk)
+  // FOOTER met één enkele scheidingslijn (niet aflopend naar nieuwe regel)
   children.push(empty());
-  children.push(p('════════════════════════════════════════════════════════════════════════════', { sz: szSmall }));
+  children.push(new Paragraph({
+    ...paragraphOpts({ after: 120 }),
+    border: {
+      bottom: { style: BorderStyle.SINGLE, size: 6, color: '000000', space: 1 },
+    },
+    children: [textRun('', { sz: szSmall })],
+  }));
   children.push(empty());
   FOOTER.split('\n').forEach(line => {
     const trimmed = line.trim();
