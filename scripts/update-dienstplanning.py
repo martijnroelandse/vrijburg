@@ -8,6 +8,8 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
+# Live sheet (tab 2026: gid=525780643). CSV-export:
+# https://docs.google.com/spreadsheets/d/1imjMr9ELUHGV9331mYIoTOUc-DizOysV/gviz/tq?tqx=out:csv&gid=525780643
 CSV_URL = (
     "https://docs.google.com/spreadsheets/d/"
     "1imjMr9ELUHGV9331mYIoTOUc-DizOysV/edit?usp=sharing"

@@ -4,6 +4,8 @@ Gespreksstuk: open vragen + de collectelijst die de Liturgie Generator gebruikt 
 
 **Doel:** hoe maken we wekelijks een printbare liturgie als Hiltje stopt, met Gigi Calkoen (bureau, di–do) als afronder.
 
+**Update 26 augustus 2026:** de omkering gemeente/diaconie in de generator is verwijderd. `type` in `collectes.json` is weer letterlijk de 2e collecte. Colombia/Cuba als bijzondere collecte volgt op het rooster van Gon/Gloria (nog niet ingeladen).
+
 ---
 
 ## 1. Besluiten (eerst dit)

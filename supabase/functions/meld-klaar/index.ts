@@ -2,9 +2,8 @@
 //
 // Stuurt een e-mail-ping wanneer een liturgie in de Liturgie Generator wordt
 // gemarkeerd als "klaar" (knop "📣 Meld: liturgie is klaar" in index.html).
-// Zo weet degene die de nieuwsbrief maakt (of de bureaumedewerker) meteen dát
-// een dienst compleet is én wat de id (?id=...) is, zonder dat daarvoor apart
-// gevraagd hoeft te worden.
+// Zo weet de liturgiemaker (Gon) en het bureau (info@) meteen dát een dienst
+// compleet is én wat de id (?id=...) is.
 //
 // Gebruikt de Resend API (https://resend.com, gratis tot 100 mails/dag,
 // 3000/maand) omdat dat vanuit een Edge Function met één fetch-call werkt,
@@ -16,16 +15,16 @@
 //   supabase secrets set --project-ref iabrbkirzsolwnuknbel \
 //     RESEND_API_KEY=re_xxx \
 //     RESEND_FROM="Liturgie Vrijburg <liturgie@vrijburg.nl>" \
-//     NOTIFY_EMAIL="bureau@vrijburg.nl"
+//     NOTIFY_EMAIL="gon.homburg@gmail.com,info@vrijburg.nl"
 //
 // - RESEND_API_KEY : API-key van Resend.
 // - RESEND_FROM     : afzenderadres. Moet een domein zijn dat bij Resend is
 //                      geverifieerd (of gebruik tijdelijk hun test-afzender
 //                      "onboarding@resend.dev" tijdens het instellen).
-// - NOTIFY_EMAIL    : ontvanger(s) van de "klaar"-melding, kommagescheiden
-//                      voor meerdere adressen.
+// - NOTIFY_EMAIL    : optioneel extra adressen, kommagescheiden. De vaste
+//                      ontvangers (Gon + info@) krijgen de mail altijd.
 //
-// Zolang deze secrets niet zijn ingesteld antwoordt de functie met
+// Zolang RESEND_API_KEY niet is ingesteld antwoordt de functie met
 // { ok: false, error: '...' } (HTTP 501) — de app in index.html valt dan
 // automatisch terug op een kant-en-klare mailto-link, zodat de melding
 // hoe dan ook verstuurd kan worden.
@@ -33,7 +32,8 @@ import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
 const RESEND_FROM = Deno.env.get("RESEND_FROM") || "Liturgie Vrijburg <onboarding@resend.dev>";
-const NOTIFY_EMAIL = Deno.env.get("NOTIFY_EMAIL");
+const BASE_NOTIFY = ["gon.homburg@gmail.com", "info@vrijburg.nl"];
+const EXTRA_NOTIFY = Deno.env.get("NOTIFY_EMAIL") || "";
 
 const CORS_HEADERS = {
   "Access-Control-Allow-Origin": "*",
@@ -48,6 +48,11 @@ function jsonResponse(body: unknown, status = 200) {
   });
 }
 
+function recipients() {
+  const extra = EXTRA_NOTIFY.split(",").map((s) => s.trim()).filter(Boolean);
+  return [...new Set([...BASE_NOTIFY, ...extra])];
+}
+
 Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: CORS_HEADERS });
@@ -57,12 +62,12 @@ Deno.serve(async (req: Request) => {
     return jsonResponse({ ok: false, error: "Alleen POST wordt ondersteund" }, 405);
   }
 
-  if (!RESEND_API_KEY || !NOTIFY_EMAIL) {
+  if (!RESEND_API_KEY) {
     return jsonResponse(
       {
         ok: false,
         error:
-          "Niet geconfigureerd: RESEND_API_KEY en/of NOTIFY_EMAIL ontbreken als Edge Function secret. Zie de comment bovenin meld-klaar/index.ts.",
+          "Niet geconfigureerd: RESEND_API_KEY ontbreekt als Edge Function secret. Zie de comment bovenin meld-klaar/index.ts.",
       },
       501,
     );
@@ -96,8 +101,6 @@ Deno.serve(async (req: Request) => {
     nieuwsbriefUrl ? `Nieuwsbrief-app: ${nieuwsbriefUrl}` : "",
   ].filter((line) => line !== "");
 
-  const recipients = NOTIFY_EMAIL.split(",").map((s) => s.trim()).filter(Boolean);
-
   try {
     const res = await fetch("https://api.resend.com/emails", {
       method: "POST",
@@ -107,7 +110,7 @@ Deno.serve(async (req: Request) => {
       },
       body: JSON.stringify({
         from: RESEND_FROM,
-        to: recipients,
+        to: recipients(),
         subject,
         text: lines.join("\n"),
       }),

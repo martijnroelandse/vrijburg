@@ -64,7 +64,7 @@ Geen enkel veld is verplicht — ieder vult alleen zijn eigen onderdeel in. De g
 
 Secties:
 1. **Dienst** — datum, voorganger, organist, lector
-2. **Thema, foto & communicatie** — thema, beschrijving liturgie (voorkant .docx), foto-upload (in .docx + download voor website), foto credit, nieuwsbrief (kopieerknop), overdenking (mailto naar bureau@vrijburg.nl)
+2. **Thema, foto & communicatie** — thema, beschrijving liturgie (voorkant .docx), foto-upload (in .docx + download voor website), foto credit, nieuwsbrief (kopieerknop), overdenking (mailto naar info@vrijburg.nl)
 3. **Opening** — lichtlied, orgelspel opening
 4. **Orde van dienst** — dynamische lijst: lied / lezing / inleiding / muziek / overig, in volgorde rangschikken met ↑↓
 5. **Afsluiting** — slotlied, orgelspel slot
@@ -180,10 +180,10 @@ Nieuwe knop **"📣 Meld: liturgie is klaar"** (zichtbaar voor rol Bureaumedewer
    supabase secrets set --project-ref iabrbkirzsolwnuknbel \
      RESEND_API_KEY=re_xxx \
      RESEND_FROM="Liturgie Vrijburg <liturgie@vrijburg.nl>" \
-     NOTIFY_EMAIL="bureau@vrijburg.nl"
+     NOTIFY_EMAIL="gon.homburg@gmail.com,info@vrijburg.nl"
    ```
    (Resend: gratis account, 100 mails/dag; `RESEND_FROM` moet een bij Resend geverifieerd domein zijn — gebruik tijdelijk `onboarding@resend.dev` als testafzender tot dat geregeld is.)
-4. **Zolang deze secrets niet zijn ingesteld** antwoordt de functie met `{ ok: false, error: '...' }` (HTTP 501) en valt `index.html` automatisch terug op een kant-en-klare **mailto**-link naar `KLAAR_NOTIFY_EMAIL` (constante bovenin `index.html`, standaard `bureau@vrijburg.nl` — pas aan naar wie de nieuwsbrief maakt). De melding gaat dus in beide gevallen de deur uit; het verschil is alleen automatisch versus één klik op "verstuur" in het eigen mailprogramma.
+4. **Zolang RESEND_API_KEY niet is ingesteld** antwoordt de functie met `{ ok: false, error: '...' }` (HTTP 501) en valt `index.html` automatisch terug op een kant-en-klare **mailto**-link naar `KLAAR_NOTIFY_EMAIL` (Gon + `info@vrijburg.nl`). De melding gaat dus in beide gevallen de deur uit; het verschil is alleen automatisch versus één klik op "verstuur" in het eigen mailprogramma. De Edge Function mailt Gon en info@ altijd; `NOTIFY_EMAIL` mag extra adressen toevoegen.
 5. De functie is al gedeployed op het live project (`iabrbkirzsolwnuknbel`) via de Supabase MCP-tool; alleen de secrets ontbreken nog. Testen zonder secrets:
    ```bash
    curl -X POST "https://iabrbkirzsolwnuknbel.supabase.co/functions/v1/meld-klaar" \
@@ -203,9 +203,9 @@ De drie oorspronkelijke knoppen "Kopieer voor nieuwsbrief", "Kopieer voor Mailch
 ### Lage prioriteit / nice-to-have
 
 - **Opslaan als concept** ✅ *geïmplementeerd* — localStorage zodat een half-ingevuld formulier bewaard blijft bij sluiten
-- **Liedbundels Online** ([liedbundelsonline.nl](https://liedbundelsonline.nl), gelanceerd juni 2026; vervangt `liedboek.liedbundels.nu`) — knop opent deeplink `/nl/lied/lb-{nummer}` (incl. letter-suffix zoals `23b`). **Zip-import** ✅: bureaumedewerker downloadt een liedlijst (mét “platte tekst”) en klikt **Importeer liedlijst (.zip)**. De app leest `liedlijst-*-tekst.txt` + de JPG’s; zet coupletteksten in het formulier en plaatst de **muziek van het eerste couplet** (eventueel meerdere pagina’s, bijv. antifoon) in het Word-document. Geen publieke API; contact voor koppeling: `info@liedbundelsonline.nl`.
+- **Liedbundels Online** ([liedbundelsonline.nl](https://liedbundelsonline.nl), gelanceerd juni 2026; vervangt `liedboek.liedbundels.nu`) — knop opent deeplink `/nl/lied/lb-{nummer}` (incl. letter-suffix zoals `23b`). **Zip-import** ✅: bureaumedewerker downloadt een liedlijst (mét “platte tekst”) en klikt **Importeer liedlijst (.zip)**. De app leest `liedlijst-*-tekst.txt` + de JPG’s; zet coupletteksten in het formulier (zichtbaar in de orde van dienst, lichtlied en slotlied) en plaatst de **muziek van het eerste couplet** in het Word-document. Geen publieke API; contact voor koppeling: `info@liedbundelsonline.nl`.
 - **Foto upload** ✅ *geïmplementeerd* — in .docx op voorkant; download voor website. Bij "Ik ben klaar": auto-download + instructie bijlage in e-mail.
-- **Nieuwsbrief & overdenking** ✅ *geïmplementeerd* — nieuwsbrief met kopieerknop, inclusief Mailchimp card/box-copy als platte tekst (geen HTML); overdenking via mailto naar `bureau@vrijburg.nl` (niet in .docx)
+- **Nieuwsbrief & overdenking** ✅ *geïmplementeerd* — nieuwsbrief met kopieerknop, inclusief Mailchimp card/box-copy als platte tekst (geen HTML); overdenking via mailto naar `info@vrijburg.nl` (niet in .docx)
 - **WordPress foto-upload** — direct uploaden naar mediabibliotheek op vrijburg.nl; vereist afstemming met webmaster (Application Password + CORS)
 - **Digitale versie** — naast het .docx ook een HTML-versie genereren voor op de website
 - **Meerdere diensten per week** — soms zijn er bijzondere diensten (Kerstavond, Pasen) met een afwijkende structuur
