@@ -161,6 +161,20 @@
       min-height: 50px;
     }
 
+    .import-banner {
+      display: none;
+      background: #e8f5e9;
+      border: 1px solid #a5d6a7;
+      color: #1b5e20;
+      padding: 10px 14px;
+      border-radius: 4px;
+      font-size: 14px;
+      line-height: 1.45;
+      white-space: pre-wrap;
+    }
+    .import-banner.visible { display: block; }
+    .generate-bar .import-banner { margin: 0 0 6px; }
+
     .btn-icon {
       background: none;
       border: 1px solid var(--border);
@@ -782,9 +796,9 @@
       </div>
       <div class="row">
         <div class="field" style="grid-column: 1/-1">
-          <label>Overdenking <span class="opt">– voor bureau@vrijburg.nl (emaillijst na de dienst)</span></label>
+          <label>Overdenking <span class="opt">– voor info@vrijburg.nl (emaillijst na de dienst)</span></label>
           <textarea id="overdenking_email" rows="6" placeholder="Schrijf hier de overdenking. Stuur deze naar het bureau — zij plaatsen het op de emaillijst…"></textarea>
-          <button type="button" class="btn-small" style="margin-top:8px" onclick="emailOverdenkingNaarBureau()">✉ Stuur naar bureau@vrijburg.nl</button>
+          <button type="button" class="btn-small" style="margin-top:8px" onclick="emailOverdenkingNaarBureau()">✉ Stuur naar info@vrijburg.nl</button>
           <p class="comm-hint">Dit veld komt niet in het Word-document. In de liturgie blijft het vaste blok Overdenking → Stilte → Muziek staan.</p>
         </div>
       </div>
@@ -806,6 +820,8 @@
             <input type="text" id="lichtlied" placeholder="bijv. Lied 217: 1 en 3  of  'Licht dat wil ingaan…'" style="flex:1">
             <button type="button" class="btn-small" onclick="openLiedboekOnlineField('lichtlied')" title="Open Liedbundels Online">Liedboek</button>
           </div>
+          <textarea id="lichtlied_lyrics" rows="6" style="display:none;margin-top:8px" placeholder="Couplettekst na import van de liedlijst" oninput="lichtliedLyrics=this.value;scheduleDraftSave()"></textarea>
+          <p class="comm-hint" id="lichtlied-muziek-hint" style="display:none">♪ Muziek 1e couplet meegenomen voor het Word-document</p>
         </div>
       </div>
       <div class="row">
@@ -846,6 +862,7 @@
         en klikt onderaan op <em>Importeer liedlijst (.zip)</em> — teksten + muziek 1e couplet
         komen dan in het formulier én in het Word-document.
       </p>
+      <div id="liedlijst-import-result" class="import-banner" style="margin-top:12px"></div>
       </div>
       <div class="field field-mine" id="orde-organist-ui" data-owner="organist" style="grid-column:1/-1">
         <label>Muziek na de overdenking <span class="opt">organist(e)</span></label>
@@ -889,6 +906,8 @@
         <div class="field field-mine" data-owner="voorganger">
           <label>Slotlied <span class="opt">voorgang(st)er</span></label>
           <input type="text" id="slotlied" placeholder="bijv. Lied 675">
+          <textarea id="slotlied_lyrics" rows="6" style="display:none;margin-top:8px" placeholder="Couplettekst na import van de liedlijst" oninput="slotliedLyrics=this.value;scheduleDraftSave()"></textarea>
+          <p class="comm-hint" id="slotlied-muziek-hint" style="display:none">♪ Muziek 1e couplet meegenomen voor het Word-document</p>
         </div>
         <div class="field field-mine" data-owner="organist">
           <label>Orgelspel slot <span class="opt">organist(e)</span></label>
@@ -966,9 +985,9 @@
           </div>
         </div>
         <p class="comm-hint" id="c2-bijzonder-hint" style="display:none">
-          Bij een bijzondere collecte (bijv. een eenmalig doel i.p.v. de vaste diaconie- of gemeentecollecte) wordt
-          een aparte QR-code gebruikt (<code>vrijburg.nl/bijzonderecollecte</code>). Zorg dat deze bestemming ook op
-          de website/ING-betaalpagina staat.
+          Bij een bijzondere collecte (bijv. Cuba of Colombia i.p.v. de vaste diaconie- of gemeentecollecte) wordt
+          één QR-code gebruikt (<code>vrijburg.nl/bijzonderecollecte</code>) — dezelfde pagina voor elk bijzonder doel.
+          Zorg dat die bestemming op de website/ING-betaalpagina staat (nu: bijgewerkt tot 28 september 2026).
         </p>
       </div>
     </div>
@@ -996,6 +1015,7 @@
 </main>
 
 <div class="generate-bar">
+  <div id="liedlijst-import-banner" class="import-banner"></div>
   <div class="generate-bar-actions">
     <button class="btn-generate" id="btn-download" onclick="generateDocx()">
       <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M5 20h14v-2H5v2zm7-3 5-5h-3V4h-4v8H7l5 5z"/></svg>
@@ -1033,7 +1053,7 @@
     <div class="btn-cluster">
       <button class="btn-secondary" id="btn-klaar" onclick="terugNaarBureau()">
         <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-        Ik ben klaar – stuur naar bureau
+        Ik ben klaar – stuur naar liturgie
       </button>
       <button class="btn-secondary" id="btn-meld-klaar" onclick="meldDienstKlaar()" title="Zet de status op 'klaar' en stuurt automatisch een e-mail-melding met de id, zodat de nieuwsbrief gemaakt kan worden">
         <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 8H4a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h1v3a1 1 0 0 0 1.7.7L10.4 16H12l6 3V5l-6 3zm8 1.5v5a1.5 1.5 0 0 0 0-5z"/></svg>
@@ -1137,12 +1157,11 @@ fetch('agenda_templates.json').then(r => r.ok ? r.json() : []).then(d => { AGEND
 const SUPABASE_URL = 'https://iabrbkirzsolwnuknbel.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlhYnJia2lyenNvbHdudWtuYmVsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ3OTU4MDIsImV4cCI6MjEwMDM3MTgwMn0.ojjiiwwAwb3eITwThJPXGgOk_XynghQUNZ_snDDe6iQ';
 const SUPABASE_FOTO_BUCKET = 'dienst-fotos';
-// Ontvanger van de "klaar"-melding (zie meldDienstKlaar()). Pas dit adres aan
-// naar wie de nieuwsbrief samenstelt (of degene die wil weten wanneer een
-// liturgie compleet is en wat de id is). Wordt zowel gebruikt als fallback
-// mailto-adres als als "to" voor de automatische e-mail via de Edge Function
-// (die op zijn beurt NOTIFY_EMAIL als secret gebruikt — zie supabase/functions/meld-klaar).
-const KLAAR_NOTIFY_EMAIL = 'bureau@vrijburg.nl';
+// Ontvangers van "Ik ben klaar" en de klaar-melding. Gon maakt de liturgie;
+// info@ is de gedeelde bureau-inbox (iedereen met toegang tot die mailbox).
+const LITURGIE_MAKER_EMAIL = 'gon.homburg@gmail.com';
+const BUREAU_EMAIL = 'info@vrijburg.nl';
+const KLAAR_NOTIFY_EMAIL = `${LITURGIE_MAKER_EMAIL},${BUREAU_EMAIL}`;
 // Ontvanger van de "meld nieuwsbriefredactie"-knop (zie meldNieuwsbriefRedactie()).
 // Voor nu tijdelijk naar Martijn zodat hij meteen ziet wanneer een
 // nieuwsbrieftekst klaarstaat; later te vervangen door het vaste
@@ -1238,7 +1257,7 @@ const ROL_CONFIG = {
   voorganger: {
     label: 'Voorgang(st)er',
     primary: ['thema', 'opening', 'orde', 'voorbeden', 'slot'],
-    hint: 'Vul thema, tekst op voorblad, afbeelding, nieuwsbrief en overdenking in. Vul de orde van dienst in (liederen, lezingen) en lichtlied/slotlied. Wijkt u af van het standaardgebed? Vul dat in bij Voorbeden. Klik op <strong>Ik ben klaar</strong> om alles naar bureau@vrijburg.nl te sturen.',
+    hint: 'Vul thema, tekst op voorblad, afbeelding, nieuwsbrief en overdenking in. Vul de orde van dienst in (liederen, lezingen) en lichtlied/slotlied. Wijkt u af van het standaardgebed? Vul dat in bij Voorbeden. Klik op <strong>Ik ben klaar</strong> om alles naar de liturgiemaker en info@vrijburg.nl te sturen.',
     emailAan: 'voorganger',
   },
   organist: {
@@ -1313,7 +1332,7 @@ function applyRolUI() {
   document.getElementById('btn-klaar').style.display = (huidigeRol === 'voorganger' || huidigeRol === 'organist') ? '' : 'none';
   document.getElementById('generate-hint').textContent = isSamenvoeger
     ? 'Download wanneer alle onderdelen zijn ingevuld'
-    : 'Stuur uw ingevulde gegevens naar bureau@vrijburg.nl als u klaar bent';
+    : 'Stuur uw ingevulde gegevens naar de liturgiemaker en info@vrijburg.nl als u klaar bent';
 
   const organistAlleenOrde = huidigeRol === 'organist' && !toonAlles;
   const ordeVoorgangerUi = document.getElementById('orde-voorganger-ui');
@@ -1440,7 +1459,7 @@ function emailOverdenkingNaarBureau() {
     `${text}\n\n` +
     `Met vriendelijke groet`
   );
-  window.location.href = `mailto:bureau@vrijburg.nl?subject=${subject}&body=${body}`;
+  window.location.href = `mailto:${BUREAU_EMAIL}?subject=${subject}&body=${body}`;
 }
 
 // Slaat op (zodat er een id/link is) en meldt de nieuwsbriefredactie per
@@ -1755,10 +1774,10 @@ async function saveDienstManual() {
 // ============================================================
 // Probeert een automatische e-mail-ping te sturen via een Supabase Edge
 // Function (supabase/functions/meld-klaar). Die functie stuurt pas echt een
-// e-mail als de secrets RESEND_API_KEY en NOTIFY_EMAIL zijn ingesteld op het
-// Supabase-project — zie HANDOVER.md. Zolang dat niet is gebeurd (of de
-// functie niet bereikbaar is), valt meldDienstKlaar() terug op een
-// kant-en-klare mailto-link, zodat de melding sowieso verstuurd kan worden.
+// e-mail als RESEND_API_KEY is ingesteld op het Supabase-project — zie
+// HANDOVER.md. Ontvangers: Gon + info@vrijburg.nl (plus optioneel NOTIFY_EMAIL).
+// Zolang dat niet lukt, valt meldDienstKlaar() terug op een kant-en-klare
+// mailto-link, zodat de melding sowieso verstuurd kan worden.
 async function pingKlaarNotificatie({ shortId, datumTekst, thema, liturgieUrl, nieuwsbriefUrl }) {
   if (!sb) return { ok: false, reason: 'Geen Supabase-verbinding' };
   try {
@@ -1889,8 +1908,10 @@ async function copyShareLinkRich(url, label = SHARE_LINK_LABEL) {
 }
 
 function openMailto({ to = '', subject, body }) {
-  const href = to
-    ? `mailto:${encodeURIComponent(to)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
+  const addrs = String(to).split(',').map(s => s.trim()).filter(Boolean);
+  const toPart = addrs.map(a => encodeURIComponent(a)).join(',');
+  const href = toPart
+    ? `mailto:${toPart}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
     : `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   window.location.href = href;
 }
@@ -1951,7 +1972,7 @@ function terugNaarBureau() {
     body += `\nMet vriendelijke groet`;
 
     openMailto({
-      to: 'bureau@vrijburg.nl',
+      to: KLAAR_NOTIFY_EMAIL,
       subject: `Liturgie Vrijburg – ${datumTekst} – ${rolLabel}`,
       body,
     });
@@ -2034,7 +2055,10 @@ function renderOrde() {
       </div>
       <button class="btn-icon del" onclick="removeOrde('${safeId}')" title="Verwijder">✕</button>
     `;
-    div.querySelector('textarea').value = item.content || '';
+    const ta = div.querySelector('textarea');
+    ta.value = item.content || '';
+    const lines = String(item.content || '').split('\n').length;
+    ta.rows = Math.max(2, Math.min(16, lines + 1));
     list.appendChild(div);
   });
   scheduleDraftSave();
@@ -2155,6 +2179,36 @@ function blobToDataUrl(blob) {
   });
 }
 
+function syncLiedLyricsFields() {
+  const setField = (id, text, hintId, hasMusic) => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.value = text || '';
+      el.style.display = text ? '' : 'none';
+      el.rows = Math.max(4, Math.min(12, String(text || '').split('\n').length + 1));
+    }
+    const hint = document.getElementById(hintId);
+    if (hint) hint.style.display = hasMusic ? '' : 'none';
+  };
+  setField('lichtlied_lyrics', lichtliedLyrics, 'lichtlied-muziek-hint', lichtliedMuziek.length > 0);
+  setField('slotlied_lyrics', slotliedLyrics, 'slotlied-muziek-hint', slotliedMuziek.length > 0);
+}
+
+function showLiedlijstImportResult(text) {
+  ['liedlijst-import-banner', 'liedlijst-import-result'].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.textContent = text;
+    el.classList.toggle('visible', !!text);
+  });
+}
+
+function revealSection(id) {
+  const sec = document.getElementById(id);
+  if (!sec) return;
+  sec.classList.remove('collapsed');
+}
+
 function compressDataUrlJpeg(dataUrl, maxWidth = 720, quality = 0.72) {
   return new Promise((resolve) => {
     const img = new Image();
@@ -2259,14 +2313,24 @@ async function importLiedlijstZip(event) {
         const raw = await blobToDataUrl(blob);
         muziek.push(await compressDataUrlJpeg(raw));
       }
-      imported.push({ nr, content, muziek });
+      imported.push({ nr, content, muziek, coupletten: couplets.length });
     }
 
     applyLiedlijstImport(imported);
+    const samenvatting = imported.map(s => {
+      const n = s.coupletten || 0;
+      return `Lied ${s.nr}` + (n ? ` (${n} couplet${n === 1 ? '' : 'ten'})` : '')
+        + (s.muziek.length ? ', met muziek 1e couplet' : '');
+    }).join('\n');
+    const msg = `✓ ${imported.length} lied${imported.length === 1 ? '' : 'eren'} in het formulier:\n${samenvatting}\n\nCoupletten staan bij de liederen in de orde van dienst (en bij lichtlied/slotlied).`;
+    showLiedlijstImportResult(msg);
+    revealSection('section-orde');
+    revealSection('section-opening');
+    revealSection('section-slot');
+    const ordeSec = document.getElementById('section-orde');
+    if (ordeSec) ordeSec.scrollIntoView({ behavior: 'smooth', block: 'start' });
     setStatus(
-      `✓ ${imported.length} lied(eren) geïmporteerd` +
-        (imported.some(s => s.muziek.length) ? ' (met muziek 1e couplet)' : '') +
-        ' — download daarna het Word-document',
+      `✓ ${imported.length} lied${imported.length === 1 ? '' : 'eren'} in het formulier — coupletten zijn nu zichtbaar`,
       'ok'
     );
   } catch (err) {
@@ -2330,6 +2394,7 @@ function applyLiedlijstImport(imported) {
   }
 
   renderOrde();
+  syncLiedLyricsFields();
   scheduleDraftSave();
 }
 
@@ -2754,6 +2819,7 @@ function applyFormState(state) {
   slotliedLyrics = state.slotlied_lyrics || '';
   lichtliedMuziek = Array.isArray(state.lichtlied_muziek) ? state.lichtlied_muziek : [];
   slotliedMuziek = Array.isArray(state.slotlied_muziek) ? state.slotlied_muziek : [];
+  syncLiedLyricsFields();
   if (state.rol) setRol(state.rol);
   else applyRolUI();
   // Geen onDatumChange() hier: dat overschrijft opgeslagen namen met planning.
@@ -2873,7 +2939,7 @@ async function emailRol(rol) {
       `een afbeelding voor het voorblad en een kort stukje voor de nieuwsbrief invullen?\n\n` +
       mailLinkBlock(short) + '\n' +
       `Je hoeft niet alles in één keer te doen. Als je klaar bent, klik je op “Ik ben klaar” — ` +
-      `dan komt het bij het bureau terecht.\n\n` +
+      `dan komt het bij de liturgiemaker terecht (info@vrijburg.nl).\n\n` +
       `Hartelijke groet,\nGigi`;
   } else {
     const orgNaam = voornaamUitNaam(document.getElementById('organist').value) || 'organist';
@@ -2916,6 +2982,16 @@ function organistVoorBrief() {
   return { label: name, email };
 }
 
+function gastAanhef(voorganger) {
+  const raw = String(voorganger || '').replace(/\s+/g, ' ').trim();
+  if (!raw || raw === '[naam]') return 'Geachte heer/mevrouw,';
+  if (/\sen\s/i.test(raw)) return `Geachte ${raw},`;
+  const name = raw.replace(/^(ds\.?|dr\.?|prof\.?)\s+/i, '').trim();
+  const parts = name.split(' ').filter(Boolean);
+  if (parts.length === 1) return `Beste ${parts[0]},`;
+  return `Geachte heer/mevrouw ${parts.slice(1).join(' ')},`;
+}
+
 async function emailGastpredikantBrief() {
   const datum = document.getElementById('datum').value;
   const datumTekst = datum ? formatDatum(datum) : 'zondag [datum dienst]';
@@ -2937,9 +3013,7 @@ async function emailGastpredikantBrief() {
   const declUrl = siteFileUrl('downloads/declaratieformulier-preekbeurt-nov2024.docx');
   const infoUrl = siteFileUrl('info.html#gastpredikant');
 
-  const aanhef = voorganger && voorganger !== '[naam]'
-    ? `Geachte ${voorganger},`
-    : 'Geachte [naam],';
+  const aanhef = gastAanhef(voorganger);
 
   const body =
     `${aanhef}\n\n` +
@@ -2959,7 +3033,7 @@ async function emailGastpredikantBrief() {
     `Het is prettig als u voor een passend plaatje kunt zorgen voor het voorblad (rechtenvrij — bijv. unsplash.com). ` +
     `U kunt dat in de generator uploaden; het komt ook in de aankondiging in onze wekelijkse Nieuwsbrief.\n\n` +
     `Wilt u uw onderdeel in de generator uiterlijk ${dinsdag} afronden (knop “Ik ben klaar”)? ` +
-    `Het bureau (bureau@vrijburg.nl / info@vrijburg.nl) ontvangt dan uw invoer. ` +
+    `De liturgie komt dan binnen bij info@vrijburg.nl (en de liturgiemaker). ` +
     `Stem liederen gerust af met de organist${org.email ? ` (${org.label}, ${org.email})` : ` (${org.label})`}.\n\n` +
     `Op donderdag of vrijdag gaat onze Nieuwsbrief uit. Wilt u daartoe uiterlijk ${donderdag} ` +
     `het korte stukje over het thema (inclusief foto) in de generator invullen? ` +
@@ -3091,6 +3165,8 @@ function clearDraft() {
     try { sessionStorage.removeItem(SESSION_ACTIVE_KEY); } catch (_) {}
     clearCloudBinding({ updateUrl: true });
     resetFormToEmpty();
+    showLiedlijstImportResult('');
+    syncLiedLyricsFields();
   } finally {
     suppressDraftSave = false;
   }
@@ -3144,11 +3220,22 @@ function onDatumChange() {
     document.getElementById('c1_naam').value = entry.naam || '';
     document.getElementById('c1_tekst').value = entry.tekst || '';
     document.getElementById('c1_rekening').value = entry.rekening || '';
-    document.getElementById('c2_type').value = entry.type === 'gemeente' ? 'diaconie' : 'gemeente';
+    const type = String(entry.type || '').toLowerCase();
+    const allowed = ['gemeente', 'diaconie', 'bijzonder'];
+    document.getElementById('c2_type').value = allowed.includes(type) ? type : 'diaconie';
     onC2TypeChange();
+    if (type === 'bijzonder') {
+      document.getElementById('c2_naam').value = entry.c2_naam || '';
+      if (entry.c2_tekst) document.getElementById('c2_tekst').value = entry.c2_tekst;
+      if (entry.c2_rekening) document.getElementById('c2_rekening').value = entry.c2_rekening;
+      syncC2NaamVisibility();
+    }
     const notice = document.getElementById('collecte-notice');
     notice.style.display = 'block';
-    notice.textContent = `✓ Collecte automatisch ingevuld op basis van ${dag} ${maand.toLowerCase()}`;
+    notice.style.background = '';
+    notice.style.color = '';
+    const typeLabel = document.getElementById('c2_type').selectedOptions[0]?.text || type;
+    notice.textContent = `✓ Collecte automatisch ingevuld op basis van ${dag} ${maand.toLowerCase()} — 2e collecte: ${typeLabel}`;
   } else {
     const notice = document.getElementById('collecte-notice');
     notice.style.display = 'block';

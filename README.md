@@ -54,9 +54,19 @@ Zie `HANDOVER.md` voor technische details.
 }
 ```
 
-`type` is de **tweede** collecte (diaconie of gemeente) — de eerste collecte is altijd de genoemde organisatie.
+`type` is de **tweede** collecte (`gemeente`, `diaconie` of `bijzonder`) — de app
+vult dat letterlijk in, zonder omkering. De eerste collecte is altijd de genoemde
+organisatie. Voor een bijzondere 2e collecte in het rooster:
 
-Voor een nieuw seizoen: vervang `collectes.json` met de nieuwe gegevens.
+```json
+"type": "bijzonder",
+"c2_naam": "Wederopbouw Colombia",
+"c2_tekst": "…",
+"c2_rekening": "…"
+```
+
+Er is één bijzondere QR (`vrijburg.nl/bijzonderecollecte`); Cuba en Colombia
+delen die pagina. Voor een nieuw seizoen: vervang `collectes.json`.
 
 ### Bijzondere collecte (bijv. eenmalig doel i.p.v. diaconie/gemeente)
 
@@ -77,9 +87,9 @@ De vaste teksten (Bemoediging, Groet, Onze Vader, QR-code tekst, footer) staan b
 Zodra alles is ingevuld, klikt de bureaumedewerker (rol "Bureaumedewerker" of "Alles bekijken") op **📣 Meld: liturgie is klaar**. Dat doet twee dingen:
 
 1. Slaat de dienst op met status `klaar` (zichtbaar naast de cloud-link onderin het formulier).
-2. Stuurt een e-mail-ping met de datum, het thema en de `id` naar het adres in `KLAAR_NOTIFY_EMAIL` (bovenin `index.html`) — zodat degene die de nieuwsbrief maakt niet zelf hoeft te checken of/wanneer een liturgie compleet is.
+2. Stuurt een e-mail-ping met de datum, het thema en de `id` naar `KLAAR_NOTIFY_EMAIL` (Gon + info@vrijburg.nl) — zodat de liturgiemaker niet zelf hoeft te checken of/wanneer een liturgie compleet is.
 
-Die e-mail wordt automatisch verstuurd via de Supabase Edge Function `supabase/functions/meld-klaar`, mits de secrets `RESEND_API_KEY`, `RESEND_FROM` en `NOTIFY_EMAIL` zijn ingesteld (zie de comment bovenin dat bestand en `HANDOVER.md`). Zolang dat nog niet is gebeurd, opent de knop in plaats daarvan een kant-en-klare e-mail in uw eigen mailprogramma — de melding gaat dus sowieso de deur uit.
+Die e-mail wordt automatisch verstuurd via de Supabase Edge Function `supabase/functions/meld-klaar`, mits `RESEND_API_KEY` is ingesteld (zie de comment bovenin dat bestand en `HANDOVER.md`). De vaste ontvangers zijn Gon (`gon.homburg@gmail.com`) en `info@vrijburg.nl`. Zolang de automatische ping niet lukt, opent de knop een kant-en-klare e-mail in uw eigen mailprogramma.
 
 ### Los daarvan: "Meld nieuwsbriefredactie" (direct onder het nieuwsbriefveld)
 
@@ -97,7 +107,7 @@ Zie `HANDOVER.md` voor de volledige lijst. Recent toegevoegd:
 - Concept opslaan in de browser (localStorage)
 - Nieuwsbrief-tekstveld met kopieerknop
 - Mailchimp cards-copy als platte tekst (zonder HTML, per card/box)
-- Overdenking naar bureau@vrijburg.nl (mailto)
+- Overdenking naar info@vrijburg.nl (mailto)
 - Foto in liturgie (.docx) + download voor website
 - Gelijktijdig invullen door voorganger + organist overschrijft elkaars velden niet meer (samenvoegen bij opslaan)
 - Melding "liturgie is klaar" met e-mail-ping + id (zie hierboven)
