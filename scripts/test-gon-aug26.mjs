@@ -43,9 +43,13 @@ if (!html.includes("allowed.includes(type) ? type : 'diaconie'")) {
   throw new Error('Letterlijke c2_type-toewijzing ontbreekt');
 }
 
-const aug30 = collectes.find(c => c.dag === 30 && c.maand === 'Augustus');
-if (!aug30 || aug30.type !== 'diaconie') {
-  throw new Error('30 augustus moet type diaconie hebben in collectes.json (tot Colombia-rooster binnen is)');
+const sept13 = collectes.find(c => c.dag === 13 && c.maand === 'September');
+if (!sept13 || sept13.type !== 'bijzonder' || !sept13.c2_naam?.includes('Colombia')) {
+  throw new Error('13 september moet type bijzonder (Colombia) hebben in collectes.json');
+}
+const okt25 = collectes.find(c => c.dag === 25 && c.maand === 'Oktober');
+if (!okt25 || okt25.type !== 'bijzonder' || !okt25.c2_naam?.includes('Colombia')) {
+  throw new Error('25 oktober moet type bijzonder (Colombia) hebben in collectes.json');
 }
 
 const dienst = planning.find(d => d.datum === '2026-08-30');
