@@ -869,7 +869,9 @@
         <button class="btn-add" onclick="addOrde('overig')">+ Overig</button>
       </div>
       <p style="font-size:12px;color:#aaa;margin-top:10px;">
-        Tip: voor een lied voer je bijv. in "Lied 652: 1, 3 en 5". Bij lezingen: knop <em>Tekst ophalen (Statenvertaling)</em>
+        Tip: de volgorde van de lijst is de volgorde in de liturgie. Nieuw item komt onder het geselecteerde blok (of onderaan);
+        verplaats met <strong>↑↓</strong> zodat liederen tussen de lezingen staan — niet allemaal onderaan.
+        Voor een lied: bijv. "Lied 652: 1, 3 en 5". Bij lezingen: knop <em>Tekst ophalen (Statenvertaling)</em>
         haalt de tekst automatisch op (de enige gratis vertaling die hiervoor beschikbaar is); knop <em>NBV21 openen</em>
         opent debijbel.nl met de juiste referentie — kopieer die tekst zelf en plak hem hier (NBV21 is auteursrechtelijk
         beschermd, er is geen gratis API voor).
@@ -884,8 +886,15 @@
         <label>Muziek na de overdenking <span class="opt">organist(e)</span></label>
         <input type="text" id="muziek_overdenking" placeholder="Leeg = niet afgedrukt — titel muziekstuk">
         <p class="comm-hint">
-          Dit komt in de liturgie na Overdenking → Stilte. De liederen van de voorgang(st)er ziet u via de rol
-          Voorgang(st)er of Alles bekijken.
+          Dit komt in de liturgie na Overdenking → Stilte.
+        </p>
+      </div>
+      <div class="field field-mine" data-owner="voorganger" style="grid-column:1/-1;margin-top:12px">
+        <label>Lied na overdenking / muziek <span class="opt">optioneel — tussen muziek en voorbeden</span></label>
+        <textarea id="lied_na_overdenking" rows="3" placeholder="Lied …&#10;Eerste regel = titel; volgende regels = coupletten (optioneel)" oninput="scheduleDraftSave()"></textarea>
+        <p class="comm-hint">
+          Gebruik dit veld als er ná de overdenking (en orgelmuziek) nog een lied komt, vóór de voorbeden.
+          Zet dit <em>niet</em> onderaan in de orde van dienst — die blokken komen altijd <em>vóór</em> de overdenking.
         </p>
       </div>
     </div>
@@ -903,10 +912,9 @@
       </div>
       <div class="row">
         <div class="field field-mine" data-owner="voorganger" style="grid-column: 1/-1">
-          <label>Acclamatie / lied bij voorbeden <span class="opt">optioneel, komt onder de voorbeden in de liturgie</span></label>
-          <input type="text" id="acclamatie_lied" placeholder="Lied … (alleen titelregel, of titel + coupletten onder elkaar)">
-          <textarea id="acclamatie_lied_lyrics" rows="4" style="display:none;margin-top:8px" placeholder="Couplettekst na import of handmatig" oninput="scheduleDraftSave()"></textarea>
-          <p class="comm-hint">Gebruik dit veld voor een acclamatie-lied dat <em>bij de voorbeden</em> hoort — niet als lied in de orde van dienst (dat komt na de lezingen).</p>
+          <label>Acclamatie / lied bij voorbeden <span class="opt">optioneel — komt in de liturgie onder de voorbedentekst, vóór het Onze Vader</span></label>
+          <textarea id="acclamatie_lied" rows="3" placeholder="Lied …&#10;Eerste regel = titel; volgende regels = coupletten (optioneel)" oninput="scheduleDraftSave()"></textarea>
+          <p class="comm-hint">Alleen voor een acclamatie <em>bij de voorbeden</em>. Liederen tussen lezingen zet u in de <strong>orde van dienst</strong> (met ↑↓ op de juiste plek). Een lied ná de overdenking/muziek heeft een eigen veld hieronder bij de overdenking-sectie.</p>
         </div>
       </div>
       <div class="row">
@@ -1117,7 +1125,7 @@
 // ============================================================
 const COLLECTES = []; // Filled from collectes.json below
 const DIENSTPLANNING = []; // Filled from dienstplanning.json
-const UI_VERSION = 'v2026-09-09';
+const UI_VERSION = 'v2026-09-09b';
 
 // ============================================================
 // VASTE TEKSTEN
@@ -1865,16 +1873,25 @@ async function meldDienstKlaar() {
       setStatus(`✓ Liturgie gemeld als klaar — e-mail verstuurd (id=${shortId})`, 'ok');
     } else {
       console.warn('Automatische e-mail-ping (nog) niet gelukt:', ping.reason);
-      openMailto({
-        to: LITURGIE_KLAAR_NOTIFY_EMAIL,
-        subject: `Liturgie klaar – ${datumTekst}${thema ? ' – ' + thema : ''} (id=${shortId})`,
-        body:
+      const klaarBody =
           `De liturgie voor ${datumTekst}${thema ? ' (' + thema + ')' : ''} is compleet en gemarkeerd als klaar.\n\n` +
           `id: ${shortId}\n\n` +
           `Liturgie: ${liturgieUrl}\n` +
-          `Nieuwsbrief-app: ${nieuwsbriefUrl.toString()}\n`,
+          `Nieuwsbrief-app: ${nieuwsbriefUrl.toString()}\n`;
+      const klaarSubject = `Liturgie klaar – ${datumTekst}${thema ? ' – ' + thema : ''} (id=${shortId})`;
+      await copyPlainText(
+        `Aan: ${LITURGIE_KLAAR_NOTIFY_EMAIL}\nOnderwerp: ${klaarSubject}\n\n${klaarBody}`
+      );
+      const mail = openMailto({
+        to: LITURGIE_KLAAR_NOTIFY_EMAIL,
+        subject: klaarSubject,
+        body: klaarBody,
       });
-      setStatus(`✓ Gemarkeerd als klaar (id=${shortId}) — e-mail geopend in uw mailprogramma, verstuur die nog even (automatische ping is nog niet ingesteld, zie HANDOVER.md)`, 'ok');
+      if (mail && mail.ok === false) {
+        setStatus(`✓ Gemarkeerd als klaar (id=${shortId}) — bericht op klembord; plak in Gmail (mailto te lang/onbetrouwbaar voor Outlook)`, 'ok');
+      } else {
+        setStatus(`✓ Gemarkeerd als klaar (id=${shortId}) — e-mail geopend in uw mailprogramma, verstuur die nog even (automatische ping is nog niet ingesteld, zie HANDOVER.md)`, 'ok');
+      }
     }
   } catch (err) {
     console.error(err);
@@ -1946,16 +1963,23 @@ async function copyShareLinkRich(url, label = SHARE_LINK_LABEL) {
 }
 
 function openMailto({ to = '', cc = '', subject, body }) {
-  const encodeList = (value) =>
-    String(value).split(',').map(s => s.trim()).filter(Boolean).map(a => encodeURIComponent(a)).join(',');
-  const toPart = encodeList(to);
-  const ccPart = encodeList(cc);
+  // Adressen NIET encoden: Outlook/Windows breekt op gon.homburg%40gmail.com.
+  const listAddrs = (value) =>
+    String(value).split(',').map(s => s.trim()).filter(Boolean).join(',');
+  const toPart = listAddrs(to);
+  const ccPart = listAddrs(cc);
   const params = [];
   if (ccPart) params.push(`cc=${ccPart}`);
   params.push(`subject=${encodeURIComponent(subject)}`);
   params.push(`body=${encodeURIComponent(body)}`);
   const query = params.join('&');
-  window.location.href = toPart ? `mailto:${toPart}?${query}` : `mailto:?${query}`;
+  const href = toPart ? `mailto:${toPart}?${query}` : `mailto:?${query}`;
+  // Windows/Outlook knipt lange mailto-URL's (~2000 tekens) → vreemde compose.
+  if (href.length > 1800) {
+    return { ok: false, reason: 'mailto-te-lang', href };
+  }
+  window.location.href = href;
+  return { ok: true, href };
 }
 
 async function copyPlainText(text) {
@@ -2085,26 +2109,44 @@ function terugNaarBureau({ copyOnly = false } = {}) {
 
     // Nieuwsbriefredactie in CC: zo heeft die meteen de id voor nieuwsbrief.html
     // zonder te wachten op de latere bureau-knop "Meld: liturgie is klaar".
-    openMailto({
+    const mail = openMailto({
       to: KLAAR_NOTIFY_EMAIL,
       cc: NIEUWSBRIEF_REDACTIE_EMAIL,
       subject,
       body,
     });
 
-    const msg = cloud
-      ? '✓ Opgeslagen. Klaar-bericht staat op klembord. Als e-mail niet opent: plak in Gmail naar liturgiemaker + info@vrijburg.nl'
-      : '✓ Klaar-bericht op klembord. Als e-mail niet opent: plak in Gmail (voeg foto als bijlage toe indien nodig)';
-    setStatus(msg, 'ok');
+    if (mail && mail.ok === false) {
+      setStatus(
+        '✓ Opgeslagen. Bericht staat op klembord — e-mailprogramma opent niet betrouwbaar (Outlook/lange mail). Plak in Gmail naar liturgiemaker + info@vrijburg.nl.',
+        'ok',
+      );
+    } else {
+      const msg = cloud
+        ? '✓ Opgeslagen. Klaar-bericht staat op klembord. Als e-mail niet opent: plak in Gmail naar liturgiemaker + info@vrijburg.nl'
+        : '✓ Klaar-bericht op klembord. Als e-mail niet opent: plak in Gmail (voeg foto als bijlage toe indien nodig)';
+      setStatus(msg, 'ok');
+    }
   }).catch(err => {
     console.error(err);
     setStatus('Kon link niet voorbereiden', 'err');
   });
 }
 
+let focusedOrdeId = null;
+
 function addOrde(type, content = '') {
   const id = `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
-  ordeItems.push({ id, type, content });
+  const item = { id, type, content };
+  const focusIdx = focusedOrdeId ? findOrdeIndex(focusedOrdeId) : -1;
+  if (focusIdx >= 0) {
+    // Nieuw blok direct onder het geselecteerde item — voorkomt dat alle
+    // nieuwe liederen onderaan (na alle lezingen) belanden.
+    ordeItems.splice(focusIdx + 1, 0, item);
+  } else {
+    ordeItems.push(item);
+  }
+  focusedOrdeId = id;
   renderOrde();
 }
 
@@ -2144,7 +2186,7 @@ function renderOrde() {
       overig:    '',
     };
     const div = document.createElement('div');
-    div.className = 'orde-item';
+    div.className = 'orde-item' + (String(item.id) === String(focusedOrdeId) ? ' is-focused' : '');
     const safeId = String(item.id).replace(/\\/g, '\\\\').replace(/'/g, "\\'");
     const fetchBtn = item.type === 'lezing'
       ? `<button class="btn-fetch" onclick="fetchBibleText('${safeId}')" title="Haal bijbeltekst op via BijbelAPI (let op: alleen Statenvertaling beschikbaar)">Tekst ophalen (Statenvertaling)</button>
@@ -2160,6 +2202,7 @@ function renderOrde() {
       </select>
       <div style="display:flex;flex-direction:column;gap:6px">
         <textarea placeholder="${placeholders[item.type]||''}"
+                  onfocus="focusedOrdeId='${safeId}'; document.querySelectorAll('.orde-item').forEach(el=>el.classList.remove('is-focused')); this.closest('.orde-item').classList.add('is-focused')"
                   onchange="updateOrdeContent('${safeId}', this.value)"
                   oninput="updateOrdeContent('${safeId}', this.value)"></textarea>
         ${fetchBtn}
@@ -2187,6 +2230,7 @@ function updateOrdeType(id, type) {
 function updateOrdeContent(id, content) {
   const item = ordeItems[findOrdeIndex(id)];
   if (item) item.content = content;
+  focusedOrdeId = id;
   scheduleDraftSave();
 }
 
@@ -2494,7 +2538,8 @@ function applyLiedlijstImport(imported) {
     used.add(nr);
   });
 
-  // 3. Restant: lege lied-slots vullen of nieuwe items toevoegen
+  // 3. Restant: lege lied-slots vullen, anders invoegen vóór een lezing
+  // die nog geen lied er vlak voor heeft — nooit blind onderaan na alle lezingen.
   for (const song of imported) {
     if (used.has(song.nr)) continue;
     const empty = ordeItems.find(i => i.type === 'lied' && !String(i.content || '').trim());
@@ -2503,7 +2548,15 @@ function applyLiedlijstImport(imported) {
       empty.muziek_data = song.muziek.slice();
     } else {
       const id = `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
-      ordeItems.push({ id, type: 'lied', content: song.content, muziek_data: song.muziek.slice() });
+      const item = { id, type: 'lied', content: song.content, muziek_data: song.muziek.slice() };
+      let insertAt = ordeItems.findIndex((it, i) =>
+        it && it.type === 'lezing' && (i === 0 || !ordeItems[i - 1] || ordeItems[i - 1].type !== 'lied')
+      );
+      if (insertAt < 0) {
+        insertAt = ordeItems.findIndex(it => it && it.type === 'lezing');
+        if (insertAt < 0) insertAt = ordeItems.length;
+      }
+      ordeItems.splice(insertAt, 0, item);
     }
     used.add(song.nr);
   }
@@ -2868,6 +2921,7 @@ function getFormState() {
     c2_rekening: document.getElementById('c2_rekening').value,
     voorbeden_tekst: document.getElementById('voorbeden_tekst').value,
     acclamatie_lied: document.getElementById('acclamatie_lied').value,
+    lied_na_overdenking: document.getElementById('lied_na_overdenking').value,
     geen_onze_vader: document.getElementById('geen_onze_vader').checked,
     agenda_kort: document.getElementById('agenda_kort').value,
     agenda_ver: document.getElementById('agenda_ver').value,
@@ -2902,7 +2956,7 @@ function applyFormState(state) {
     'voorganger','organist','lector','bestuurslid','thema','intro','nieuwsbrief','overdenking_email','foto_credit',
     'orgelspel_opening','lichtlied','gebed_opening','muziek_overdenking','slotlied','orgelspel_slot','bloemen',
     'c1_thema','c1_naam','c1_tekst','c1_rekening','c2_type','c2_naam','c2_tekst','c2_rekening',
-    'voorbeden_tekst','acclamatie_lied',
+    'voorbeden_tekst','acclamatie_lied','lied_na_overdenking',
     'agenda_kort','agenda_ver','avondmaal'];
   fields.forEach(id => {
     if (state[id] !== undefined) document.getElementById(id).value = state[id];
@@ -3250,6 +3304,7 @@ function emptyFormState() {
     c2_rekening: '',
     voorbeden_tekst: '',
     acclamatie_lied: '',
+    lied_na_overdenking: '',
     geen_onze_vader: false,
     agenda_kort: '',
     agenda_ver: '',
@@ -3671,6 +3726,7 @@ async function generateDocxAsync() {
   const c2Rek      = document.getElementById('c2_rekening').value.trim();
   const voorbedenTekst  = document.getElementById('voorbeden_tekst').value.trim();
   const acclamatieLied  = document.getElementById('acclamatie_lied').value.trim();
+  const liedNaOverdenking = document.getElementById('lied_na_overdenking').value.trim();
   const geenOnzeVader   = document.getElementById('geen_onze_vader').checked;
   const agendaKort = document.getElementById('agenda_kort').value.trim();
   const agendaVer  = document.getElementById('agenda_ver').value.trim();
@@ -4158,6 +4214,12 @@ async function generateDocxAsync() {
   children.push(p('Stilte', { bold: true }));
   if (muziekOverdenking) children.push(pOrgelspel('Muziek: ' + muziekOverdenking));
   else children.push(p('Muziek', { bold: true }));
+
+  if (liedNaOverdenking) {
+    children.push(empty());
+    const liedNaLines = liedNaOverdenking.split('\n').map(l => l.trim()).filter(Boolean);
+    await appendLiedWithOptionalMusic(children, liedNaLines, null);
+  }
 
   // VOORBEDEN (+ optioneel acclamatie-lied onder de voorbeden)
   children.push(empty());
