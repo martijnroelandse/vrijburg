@@ -175,15 +175,15 @@ Feedback: er was geen signaal wanneer een liturgie echt compleet was en geen man
 Nieuwe knop **"📣 Meld: liturgie is klaar"** (zichtbaar voor rol Bureaumedewerker / Alles bekijken, naast de downloadknop):
 1. Slaat de dienst op met `status = 'klaar'` (kolom bestond al in `diensten`, werd tot nu toe nooit gezet).
 2. Roept de Supabase Edge Function `supabase/functions/meld-klaar` aan (`sb.functions.invoke('meld-klaar', …)`) met `short_id`, datum, thema en de liturgie-/nieuwsbrief-link.
-3. Die functie verstuurt een e-mail via de [Resend](https://resend.com) API naar het adres in de secret `NOTIFY_EMAIL`. Vereiste secrets op het Supabase-project (Dashboard → Edge Functions → `meld-klaar` → Secrets, of via CLI):
+3. Die functie verstuurt een e-mail via de [Resend](https://resend.com) API naar vaste ontvangers Gon + `info@vrijburg.nl` + nieuwsbriefredactie, plus optioneel extra adressen in secret `NOTIFY_EMAIL`. Vereiste secrets op het Supabase-project (Dashboard → Edge Functions → `meld-klaar` → Secrets, of via CLI):
    ```bash
    supabase secrets set --project-ref iabrbkirzsolwnuknbel \
      RESEND_API_KEY=re_xxx \
      RESEND_FROM="Liturgie Vrijburg <liturgie@vrijburg.nl>" \
-     NOTIFY_EMAIL="gon.homburg@gmail.com,info@vrijburg.nl"
+     NOTIFY_EMAIL="extra@voorbeeld.nl"
    ```
    (Resend: gratis account, 100 mails/dag; `RESEND_FROM` moet een bij Resend geverifieerd domein zijn — gebruik tijdelijk `onboarding@resend.dev` als testafzender tot dat geregeld is.)
-4. **Zolang RESEND_API_KEY niet is ingesteld** antwoordt de functie met `{ ok: false, error: '...' }` (HTTP 501) en valt `index.html` automatisch terug op een kant-en-klare **mailto**-link naar `KLAAR_NOTIFY_EMAIL` (Gon + `info@vrijburg.nl`). De melding gaat dus in beide gevallen de deur uit; het verschil is alleen automatisch versus één klik op "verstuur" in het eigen mailprogramma. De Edge Function mailt Gon en info@ altijd; `NOTIFY_EMAIL` mag extra adressen toevoegen.
+4. **Zolang RESEND_API_KEY niet is ingesteld** antwoordt de functie met `{ ok: false, error: '...' }` (HTTP 501) en valt `index.html` automatisch terug op een kant-en-klare **mailto**-link naar `LITURGIE_KLAAR_NOTIFY_EMAIL` (Gon + `info@vrijburg.nl` + nieuwsbriefredactie). De melding gaat dus in beide gevallen de deur uit; het verschil is alleen automatisch versus één klik op "verstuur" in het eigen mailprogramma.
 5. De functie is al gedeployed op het live project (`iabrbkirzsolwnuknbel`) via de Supabase MCP-tool; alleen de secrets ontbreken nog. Testen zonder secrets:
    ```bash
    curl -X POST "https://iabrbkirzsolwnuknbel.supabase.co/functions/v1/meld-klaar" \
@@ -192,6 +192,25 @@ Nieuwe knop **"📣 Meld: liturgie is klaar"** (zichtbaar voor rol Bureaumedewer
      -d '{"short_id":"test1234","datum":"zondag 1 januari 2027","thema":"Test"}'
    # → {"ok":false,"error":"Niet geconfigureerd: ..."} (HTTP 501) totdat de secrets zijn gezet
    ```
+
+**7a. Nieuwsbriefredactie in CC bij "Ik ben klaar"** ✅ *sep 2026*  
+Aanleiding: de nieuwsbrief-maker (Martijn) wist niet welke `id` de liturgie van zondag had en kon de nieuwsbrief-tool niet openen, omdat "Ik ben klaar" alleen naar Gon + info@ ging.
+
+Bij **Ik ben klaar** (voorganger/organist) staat de nieuwsbriefredactie (`NIEUWSBRIEF_REDACTIE_EMAIL`) nu in **CC** van dezelfde mailto; onderwerp en body vermelden expliciet `id=…` plus de link naar `nieuwsbrief.html?id=…`. Zo krijgt de redactie het seintje zodra de dominee terugstuurt, zonder te wachten op de latere bureau-knop.
+
+**7a-bis. Kopieer-alternatief als e-mail niet werkt** ✅ *sep 2026*  
+Aanleiding: een voorganger had geen mailto-client geconfigureerd (Firefox-dialoog “Kies een toepassing…”) en dacht dat er niets gebeurde.
+
+- Knop **Kopieer link** (alle rollen): slaat op en zet alleen de cloud-link op het klembord.
+- Knop **Ik ben klaar – kopieer bericht** (voorganger/organist): zelfde inhoud als de klaar-mail (Aan/CC/onderwerp/tekst + link), zonder e-mailprogramma te openen — plakken in Gmail.
+- De gewone **Ik ben klaar – stuur naar liturgie** zet het klaar-bericht óók op het klembord vóór de mailto, met statushint als e-mail niet opent.
+
+**7c. Bureau-feedback sep 2026** ✅  
+- Placeholders zonder verwarrend voorvoegsel “bijv.”; orgelvelden zeggen expliciet “Leeg = niet afgedrukt”.
+- Acclamatie-/liedveld onder Voorbeden → komt in de .docx tussen voorbedentekst en Onze Vader.
+- Agenda-template Heilige/Hemelse Bronnen: begeleid door ds. Rachelle van Andel (was Tina Geels).
+- .docx: Normal-stijl + pageBreak met expliciete Calibri 16pt (minder Helvetica 11 bij nawerk in Word).
+- Dienstdoende bestuurder op voorblad; kolom `bestuurslid` in `dienstplanning.json` (uit Jet’s Q3-rooster). Google Sheet kolom Bestuurslid nog handmatig bijwerken met `downloads/bestuurslid-q3-2026-voor-sheet.tsv`.
 
 **7b. "Meld nieuwsbriefredactie" direct onder het nieuwsbriefveld** ✅ *geïmplementeerd (aug 2026)*  
 Aanleiding: in de praktijk staat de nieuwsbrieftekst niet altijd al klaar op het moment dat de rest van de liturgie compleet is (dat was ook de directe oorzaak van het "ik zie geen nieuwsbrieftekst"-signaal — de tekst was simpelweg nog niet ingevuld, geen bug). Losse melding per veld is dus handiger dan wachten op de algemene "klaar"-melding van de hele dienst.

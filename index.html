@@ -119,6 +119,17 @@
       width: 100%;
       transition: border-color 0.15s;
     }
+    input::placeholder, textarea::placeholder {
+      color: #9aa3ad;
+      font-style: italic;
+      opacity: 1;
+    }
+    /* Ingevulde velden: geen grijze “voorbeeld”-uitstraling meer */
+    input:not(:placeholder-shown), textarea:not(:placeholder-shown) {
+      font-style: normal;
+      border-color: #c5ced6;
+      background: #fcfdfe;
+    }
 
     input:focus, textarea:focus, select:focus {
       outline: none;
@@ -659,25 +670,29 @@
         </div>
         <div class="field" data-owner="medewerker">
           <label>Afwijkende aanvangstijd <span class="opt">optioneel</span></label>
-          <input type="text" id="aanvangstijd" placeholder="bijv. 14.30 of 19.30">
+          <input type="text" id="aanvangstijd" placeholder="14.30 of 19.30">
         </div>
         <div class="field" data-owner="medewerker">
           <label>Bijzondere dienst <span class="opt">uit dienstplanning</span></label>
-          <input type="text" id="bijzondere_dienst" placeholder="bijv. Pasen, Pinksteren, Kerstavond">
+          <input type="text" id="bijzondere_dienst" placeholder="Pasen, Pinksteren, Kerstavond">
         </div>
       </div>
       <div class="row">
         <div class="field" data-owner="medewerker">
           <label>Voorgang(st)er / predikant <span class="opt">uit dienstplanning</span></label>
-          <input type="text" id="voorganger" placeholder="bijv. ds. Rachelle van Andel">
+          <input type="text" id="voorganger" placeholder="ds. Rachelle van Andel">
         </div>
         <div class="field" data-owner="medewerker">
           <label>Organist(e) <span class="opt">uit dienstplanning</span></label>
-          <input type="text" id="organist" placeholder="bijv. Jan Pieter Lanooy">
+          <input type="text" id="organist" placeholder="Jan Pieter Lanooy">
         </div>
         <div class="field" data-owner="medewerker">
           <label>Lector <span class="opt">bureaumedewerk(st)er vult in</span></label>
-          <input type="text" id="lector" placeholder="bijv. Gon Homburg">
+          <input type="text" id="lector" placeholder="Gon Homburg">
+        </div>
+        <div class="field" data-owner="medewerker">
+          <label>Dienstdoende bestuurder <span class="opt">uit dienstenrooster</span></label>
+          <input type="text" id="bestuurslid" placeholder="Roelandse">
         </div>
       </div>
       <div class="row">
@@ -687,7 +702,7 @@
         </div>
         <div class="field" data-owner="medewerker">
           <label>Kinderkerk <span class="opt">optioneel</span></label>
-          <input type="text" id="kinderkerk" placeholder="bijv. ja">
+          <input type="text" id="kinderkerk" placeholder="ja">
         </div>
       </div>
       <div class="vl-grid" data-owner="medewerker">
@@ -726,11 +741,12 @@
       <div class="row">
         <div class="field" data-owner="medewerker" style="grid-column: 1/-1">
           <label>Overige bijzonderheden <span class="opt">locatie, opmerkingen</span></label>
-          <textarea id="bijzonderheden" rows="2" placeholder="bijv. Locatie: Thomaskerk"></textarea>
+          <textarea id="bijzonderheden" rows="2" placeholder="Locatie: Thomaskerk"></textarea>
         </div>
       </div>
       <p style="font-size:12px;color:#aaa;margin-top:8px">
-        Namen en VLV/VLH/VLZ komen uit de <a href="https://docs.google.com/spreadsheets/d/1imjMr9ELUHGV9331mYIoTOUc-DizOysV/edit" target="_blank" rel="noopener">dienstplanning</a>.
+        Namen, lector en dienstdoende bestuurder komen uit de <a href="https://docs.google.com/spreadsheets/d/1imjMr9ELUHGV9331mYIoTOUc-DizOysV/edit" target="_blank" rel="noopener">dienstplanning</a>
+        (kolom Bestuurslid; Q3-2026 gevuld vanuit Jet’s dienstenrooster).
       </p>
     </div>
   </div>
@@ -742,7 +758,7 @@
       <div class="row">
         <div class="field" style="grid-column: 1/-1">
           <label>Thema <span class="opt">– bovenkop van de dienst</span></label>
-          <input type="text" id="thema" placeholder="bijv. Liefde en wonden">
+          <input type="text" id="thema" placeholder="Liefde en wonden">
         </div>
       </div>
       <div class="row">
@@ -780,7 +796,7 @@
       <div class="row">
         <div class="field" style="grid-column: 1/-1">
           <label>Bronvermelding afbeelding <span class="opt">– naam fotograaf / bron (verplicht bij upload)</span></label>
-          <input type="text" id="foto_credit" placeholder="bijv. Foto ammoniet: Petra Galama">
+          <input type="text" id="foto_credit" placeholder="Foto ammoniet: Petra Galama">
           <p class="comm-hint">Vermeld altijd de bron of fotograaf als u een afbeelding uploadt.</p>
         </div>
       </div>
@@ -812,12 +828,12 @@
       <div class="row">
         <div class="field field-mine" data-owner="organist">
           <label>Orgelspel opening <span class="opt">organist(e)</span></label>
-          <input type="text" id="orgelspel_opening" placeholder="bijv. Präludium in C-dur BWV 545, J.S. Bach">
+          <input type="text" id="orgelspel_opening" placeholder="Leeg = niet afgedrukt — titel orgelwerk">
         </div>
         <div class="field field-mine" data-owner="voorganger">
           <label>Lichtlied <span class="opt">voorgang(st)er</span></label>
           <div style="display:flex;gap:8px;align-items:center">
-            <input type="text" id="lichtlied" placeholder="bijv. Lied 217: 1 en 3  of  'Licht dat wil ingaan…'" style="flex:1">
+            <input type="text" id="lichtlied" placeholder="Lied 217: 1 en 3  of  'Licht dat wil ingaan…'" style="flex:1">
             <button type="button" class="btn-small" onclick="openLiedboekOnlineField('lichtlied')" title="Open Liedbundels Online">Liedboek</button>
           </div>
           <textarea id="lichtlied_lyrics" rows="6" style="display:none;margin-top:8px" placeholder="Couplettekst na import van de liedlijst" oninput="lichtliedLyrics=this.value;scheduleDraftSave()"></textarea>
@@ -866,7 +882,7 @@
       </div>
       <div class="field field-mine" id="orde-organist-ui" data-owner="organist" style="grid-column:1/-1">
         <label>Muziek na de overdenking <span class="opt">organist(e)</span></label>
-        <input type="text" id="muziek_overdenking" placeholder="bijv. Improvisatie">
+        <input type="text" id="muziek_overdenking" placeholder="Leeg = niet afgedrukt — titel muziekstuk">
         <p class="comm-hint">
           Dit komt in de liturgie na Overdenking → Stilte. De liederen van de voorgang(st)er ziet u via de rol
           Voorgang(st)er of Alles bekijken.
@@ -882,7 +898,15 @@
       <div class="row">
         <div class="field field-mine" data-owner="voorganger" style="grid-column: 1/-1">
           <label>Voorbeden <span class="opt">eigen tekst, acclamaties (optioneel)</span></label>
-          <textarea id="voorbeden_tekst" rows="4" placeholder="Laat leeg voor de standaardtekst &quot;Stil gebed, afgesloten met Onze Vader:&quot;.&#10;Vul hier bijv. eigen voorbeden met acclamaties in, zoals:&#10;Voorganger: Zo bidden wij…&#10;Allen: Heer, hoor ons gebed."></textarea>
+          <textarea id="voorbeden_tekst" rows="4" placeholder="Laat leeg voor de standaardtekst &quot;Stil gebed, afgesloten met Onze Vader:&quot;.&#10;Vul hier eigen voorbeden met acclamaties in, zoals:&#10;Voorganger: Zo bidden wij…&#10;Allen: Heer, hoor ons gebed."></textarea>
+        </div>
+      </div>
+      <div class="row">
+        <div class="field field-mine" data-owner="voorganger" style="grid-column: 1/-1">
+          <label>Acclamatie / lied bij voorbeden <span class="opt">optioneel, komt onder de voorbeden in de liturgie</span></label>
+          <input type="text" id="acclamatie_lied" placeholder="Lied … (alleen titelregel, of titel + coupletten onder elkaar)">
+          <textarea id="acclamatie_lied_lyrics" rows="4" style="display:none;margin-top:8px" placeholder="Couplettekst na import of handmatig" oninput="scheduleDraftSave()"></textarea>
+          <p class="comm-hint">Gebruik dit veld voor een acclamatie-lied dat <em>bij de voorbeden</em> hoort — niet als lied in de orde van dienst (dat komt na de lezingen).</p>
         </div>
       </div>
       <div class="row">
@@ -905,13 +929,13 @@
       <div class="row">
         <div class="field field-mine" data-owner="voorganger">
           <label>Slotlied <span class="opt">voorgang(st)er</span></label>
-          <input type="text" id="slotlied" placeholder="bijv. Lied 675">
+          <input type="text" id="slotlied" placeholder="Lied 675">
           <textarea id="slotlied_lyrics" rows="6" style="display:none;margin-top:8px" placeholder="Couplettekst na import van de liedlijst" oninput="slotliedLyrics=this.value;scheduleDraftSave()"></textarea>
           <p class="comm-hint" id="slotlied-muziek-hint" style="display:none">♪ Muziek 1e couplet meegenomen voor het Word-document</p>
         </div>
         <div class="field field-mine" data-owner="organist">
           <label>Orgelspel slot <span class="opt">organist(e)</span></label>
-          <input type="text" id="orgelspel_slot" placeholder="bijv. Fuge in C-dur BWV 545, J.S. Bach">
+          <input type="text" id="orgelspel_slot" placeholder="Leeg = niet afgedrukt — titel orgelwerk">
         </div>
       </div>
     </div>
@@ -935,11 +959,11 @@
         <div class="row">
           <div class="field">
             <label>Collectethema</label>
-            <input type="text" id="c1_thema" placeholder="bijv. Vluchtelingen">
+            <input type="text" id="c1_thema" placeholder="Vluchtelingen">
           </div>
           <div class="field">
             <label>Naam organisatie</label>
-            <input type="text" id="c1_naam" placeholder="bijv. Stichting NAOMI">
+            <input type="text" id="c1_naam" placeholder="Stichting NAOMI">
           </div>
         </div>
         <div class="row">
@@ -969,7 +993,7 @@
           </div>
           <div class="field" id="c2-naam-field" style="display:none">
             <label>Naam / bestemming</label>
-            <input type="text" id="c2_naam" placeholder="bijv. Wederopbouw Cuba" oninput="scheduleDraftSave()">
+            <input type="text" id="c2_naam" placeholder="Wederopbouw Cuba" oninput="scheduleDraftSave()">
           </div>
         </div>
         <div class="row">
@@ -1003,11 +1027,11 @@
       </div>
       <div class="field" style="margin-bottom:16px">
         <label>Activiteiten komende week <span class="opt">– voor activiteiten die binnenkort plaatsvinden</span></label>
-        <textarea id="agenda_kort" rows="8" placeholder="bijv. Donderdag 2 juli 12:30 uur – Vrijburglunch – Vrijburg&#10;Schuif aan bij de maandelijkse gezellige Vrijburglunch!…"></textarea>
+        <textarea id="agenda_kort" rows="8" placeholder="Donderdag 2 juli 12:30 uur – Vrijburglunch – Vrijburg&#10;Schuif aan bij de maandelijkse gezellige Vrijburglunch!…"></textarea>
       </div>
       <div class="field">
         <label>Aankondigingen verder weg <span class="opt">optioneel</span></label>
-        <textarea id="agenda_ver" rows="8" placeholder="bijv. Zondag 13 juli 10:30 uur – kerkdienst met ds. …&#10;Korte omschrijving van de activiteit…"></textarea>
+        <textarea id="agenda_ver" rows="8" placeholder="Zondag 13 juli 10:30 uur – kerkdienst met ds. …&#10;Korte omschrijving van de activiteit…"></textarea>
       </div>
     </div>
   </div>
@@ -1030,6 +1054,10 @@
       <button class="btn-secondary" id="btn-cloud-save" onclick="saveDienstManual()">
         <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"/></svg>
         Opslaan
+      </button>
+      <button class="btn-secondary" id="btn-copy-link" onclick="copyShareLink()" title="Slaat op en kopieert de cloud-link naar het klembord — handig als e-mail niet is geconfigureerd">
+        <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+        Kopieer link
       </button>
       <button class="btn-secondary" onclick="mailMijDeLink()">
         <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/></svg>
@@ -1054,6 +1082,10 @@
       <button class="btn-secondary" id="btn-klaar" onclick="terugNaarBureau()">
         <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
         Ik ben klaar – stuur naar liturgie
+      </button>
+      <button class="btn-secondary" id="btn-klaar-copy" onclick="terugNaarBureau({ copyOnly: true })" title="Zelfde als Ik ben klaar, maar opent geen e-mailprogramma: kopieert het klaar-bericht (met link) naar het klembord zodat u het zelf in Gmail of een andere mail kunt plakken">
+        <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+        Ik ben klaar – kopieer bericht
       </button>
       <button class="btn-secondary" id="btn-meld-klaar" onclick="meldDienstKlaar()" title="Zet de status op 'klaar' en stuurt automatisch een e-mail-melding met de id, zodat de nieuwsbrief gemaakt kan worden">
         <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 8H4a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h1v3a1 1 0 0 0 1.7.7L10.4 16H12l6 3V5l-6 3zm8 1.5v5a1.5 1.5 0 0 0 0-5z"/></svg>
@@ -1085,7 +1117,7 @@
 // ============================================================
 const COLLECTES = []; // Filled from collectes.json below
 const DIENSTPLANNING = []; // Filled from dienstplanning.json
-const UI_VERSION = 'v2026-08-18';
+const UI_VERSION = 'v2026-09-09';
 
 // ============================================================
 // VASTE TEKSTEN
@@ -1161,12 +1193,15 @@ const SUPABASE_FOTO_BUCKET = 'dienst-fotos';
 // info@ is de gedeelde bureau-inbox (iedereen met toegang tot die mailbox).
 const LITURGIE_MAKER_EMAIL = 'gon.homburg@gmail.com';
 const BUREAU_EMAIL = 'info@vrijburg.nl';
-const KLAAR_NOTIFY_EMAIL = `${LITURGIE_MAKER_EMAIL},${BUREAU_EMAIL}`;
-// Ontvanger van de "meld nieuwsbriefredactie"-knop (zie meldNieuwsbriefRedactie()).
-// Voor nu tijdelijk naar Martijn zodat hij meteen ziet wanneer een
-// nieuwsbrieftekst klaarstaat; later te vervangen door het vaste
-// redactie-adres.
+// Ontvanger van de "meld nieuwsbriefredactie"-knop (zie meldNieuwsbriefRedactie())
+// én CC bij "Ik ben klaar" / mee op de bureau-klaar-ping — zodat de redactie
+// meteen de short_id heeft voor nieuwsbrief.html?id=…
+// Voor nu tijdelijk naar Martijn; later te vervangen door het vaste redactie-adres.
 const NIEUWSBRIEF_REDACTIE_EMAIL = 'martijnroelandse@me.com';
+// To bij "Ik ben klaar" (dominee/organist) en fallback van "Meld: liturgie is klaar".
+const KLAAR_NOTIFY_EMAIL = `${LITURGIE_MAKER_EMAIL},${BUREAU_EMAIL}`;
+// Bureau-klaar-ping: Gon + info@ + nieuwsbriefredactie (allen hebben de id nodig).
+const LITURGIE_KLAAR_NOTIFY_EMAIL = `${KLAAR_NOTIFY_EMAIL},${NIEUWSBRIEF_REDACTIE_EMAIL}`;
 
 const sb = (() => {
   const lib = (typeof supabase !== 'undefined') ? supabase : null;
@@ -1257,13 +1292,13 @@ const ROL_CONFIG = {
   voorganger: {
     label: 'Voorgang(st)er',
     primary: ['thema', 'opening', 'orde', 'voorbeden', 'slot'],
-    hint: 'Vul thema, tekst op voorblad, afbeelding, nieuwsbrief en overdenking in. Vul de orde van dienst in (liederen, lezingen) en lichtlied/slotlied. Wijkt u af van het standaardgebed? Vul dat in bij Voorbeden. Klik op <strong>Ik ben klaar</strong> om alles naar de liturgiemaker en info@vrijburg.nl te sturen.',
+    hint: 'Vul thema, tekst op voorblad, afbeelding, nieuwsbrief en overdenking in. Vul de orde van dienst in (liederen, lezingen) en lichtlied/slotlied. Wijkt u af van het standaardgebed? Vul dat in bij Voorbeden. Klik op <strong>Ik ben klaar</strong> om alles naar de liturgiemaker en info@vrijburg.nl te sturen (nieuwsbriefredactie ontvangt de id in CC). Werkt uw e-mail niet? Gebruik <strong>Ik ben klaar – kopieer bericht</strong> of <strong>Kopieer link</strong>.',
     emailAan: 'voorganger',
   },
   organist: {
     label: 'Organist(e)',
     primary: ['opening', 'orde', 'slot'],
-    hint: 'Vul orgelspel (opening en slot) en de muziek na de overdenking in. Liederen en lezingen vult de voorgang(st)er in — die ziet u via de rol Voorgang(st)er of Alles bekijken. Klik op <strong>Ik ben klaar</strong> als u klaar bent.',
+    hint: 'Vul orgelspel (opening en slot) en de muziek na de overdenking in. Liederen en lezingen vult de voorgang(st)er in — die ziet u via de rol Voorgang(st)er of Alles bekijken. Klik op <strong>Ik ben klaar</strong> als u klaar bent (of <strong>Ik ben klaar – kopieer bericht</strong> als e-mail niet werkt).',
     emailAan: 'organist',
   },
   medewerker: {
@@ -1329,10 +1364,12 @@ function applyRolUI() {
   document.getElementById('btn-email-voorganger').style.display = huidigeRol === 'medewerker' ? '' : 'none';
   document.getElementById('btn-email-gastpredikant').style.display = huidigeRol === 'medewerker' ? '' : 'none';
   document.getElementById('btn-email-organist').style.display = huidigeRol === 'medewerker' ? '' : 'none';
-  document.getElementById('btn-klaar').style.display = (huidigeRol === 'voorganger' || huidigeRol === 'organist') ? '' : 'none';
+  const isInvuller = huidigeRol === 'voorganger' || huidigeRol === 'organist';
+  document.getElementById('btn-klaar').style.display = isInvuller ? '' : 'none';
+  document.getElementById('btn-klaar-copy').style.display = isInvuller ? '' : 'none';
   document.getElementById('generate-hint').textContent = isSamenvoeger
     ? 'Download wanneer alle onderdelen zijn ingevuld'
-    : 'Stuur uw ingevulde gegevens naar de liturgiemaker en info@vrijburg.nl als u klaar bent';
+    : 'Stuur uw ingevulde gegevens naar de liturgiemaker en info@vrijburg.nl als u klaar bent (of gebruik “Kopieer bericht” als e-mail niet werkt)';
 
   const organistAlleenOrde = huidigeRol === 'organist' && !toonAlles;
   const ordeVoorgangerUi = document.getElementById('orde-voorganger-ui');
@@ -1775,9 +1812,10 @@ async function saveDienstManual() {
 // Probeert een automatische e-mail-ping te sturen via een Supabase Edge
 // Function (supabase/functions/meld-klaar). Die functie stuurt pas echt een
 // e-mail als RESEND_API_KEY is ingesteld op het Supabase-project — zie
-// HANDOVER.md. Ontvangers: Gon + info@vrijburg.nl (plus optioneel NOTIFY_EMAIL).
-// Zolang dat niet lukt, valt meldDienstKlaar() terug op een kant-en-klare
-// mailto-link, zodat de melding sowieso verstuurd kan worden.
+// HANDOVER.md. Ontvangers: Gon + info@vrijburg.nl + nieuwsbriefredactie
+// (plus optioneel NOTIFY_EMAIL). Zolang dat niet lukt, valt meldDienstKlaar()
+// terug op een kant-en-klare mailto-link, zodat de melding sowieso verstuurd
+// kan worden.
 async function pingKlaarNotificatie({ shortId, datumTekst, thema, liturgieUrl, nieuwsbriefUrl }) {
   if (!sb) return { ok: false, reason: 'Geen Supabase-verbinding' };
   try {
@@ -1828,7 +1866,7 @@ async function meldDienstKlaar() {
     } else {
       console.warn('Automatische e-mail-ping (nog) niet gelukt:', ping.reason);
       openMailto({
-        to: KLAAR_NOTIFY_EMAIL,
+        to: LITURGIE_KLAAR_NOTIFY_EMAIL,
         subject: `Liturgie klaar – ${datumTekst}${thema ? ' – ' + thema : ''} (id=${shortId})`,
         body:
           `De liturgie voor ${datumTekst}${thema ? ' (' + thema + ')' : ''} is compleet en gemarkeerd als klaar.\n\n` +
@@ -1907,16 +1945,94 @@ async function copyShareLinkRich(url, label = SHARE_LINK_LABEL) {
   }
 }
 
-function openMailto({ to = '', subject, body }) {
-  const addrs = String(to).split(',').map(s => s.trim()).filter(Boolean);
-  const toPart = addrs.map(a => encodeURIComponent(a)).join(',');
-  const href = toPart
-    ? `mailto:${toPart}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
-    : `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-  window.location.href = href;
+function openMailto({ to = '', cc = '', subject, body }) {
+  const encodeList = (value) =>
+    String(value).split(',').map(s => s.trim()).filter(Boolean).map(a => encodeURIComponent(a)).join(',');
+  const toPart = encodeList(to);
+  const ccPart = encodeList(cc);
+  const params = [];
+  if (ccPart) params.push(`cc=${ccPart}`);
+  params.push(`subject=${encodeURIComponent(subject)}`);
+  params.push(`body=${encodeURIComponent(body)}`);
+  const query = params.join('&');
+  window.location.href = toPart ? `mailto:${toPart}?${query}` : `mailto:?${query}`;
 }
 
-function terugNaarBureau() {
+async function copyPlainText(text) {
+  try {
+    if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(text);
+      return true;
+    }
+  } catch (_) { /* fallback */ }
+  try {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed';
+    ta.style.left = '-9999px';
+    document.body.appendChild(ta);
+    ta.select();
+    const ok = document.execCommand('copy');
+    document.body.removeChild(ta);
+    return ok;
+  } catch {
+    prompt('Kopieer deze tekst:', text);
+    return false;
+  }
+}
+
+function buildKlaarBericht({ short, cloud, datumTekst, rolLabel, shortId, nieuwsbriefUrl, heeftFoto, fotoCredit, fotoBestand, overdenking }) {
+  let body =
+    `Beste,\n\n` +
+    `Hierbij mijn ingevulde onderdeel voor de liturgie op ${datumTekst} (${rolLabel}).\n\n` +
+    mailLinkBlock(short);
+
+  if (shortId) {
+    body +=
+      `\nid: ${shortId}\n` +
+      `Nieuwsbrief-app: ${nieuwsbriefUrl}\n`;
+  }
+
+  if (heeftFoto && cloud && currentFotoPath) {
+    body +=
+      `\nDe foto is meegeslagen in de cloud-opslag bij deze link` +
+      (fotoCredit ? ` (credit: ${fotoCredit})` : '') +
+      `.\n` +
+      `Vrijburg mag deze foto gebruiken voor liturgie, socials (FB/Insta) en eventueel de website.\n` +
+      `Het bureau kan de foto ook in het Word-document (.docx) zien.\n`;
+  } else if (heeftFoto) {
+    downloadFoto(true);
+    body +=
+      `\n` +
+      `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+      `⚠ BIJLAGE NODIG: FOTO\n` +
+      `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n` +
+      `Ik heb een foto geüpload` +
+      (fotoCredit ? ` (credit: ${fotoCredit})` : '') +
+      `. Die zit niet in de link.\n` +
+      `Vrijburg mag deze foto gebruiken voor liturgie, socials (FB/Insta) en eventueel de website.\n\n` +
+      `Stappen:\n` +
+      `1. Het bestand "${fotoBestand}" is zojuist naar uw Downloads-map gedownload.\n` +
+      `2. Voeg dit bestand toe als bijlage aan deze e-mail (paperclip in uw mailprogramma).\n` +
+      `3. Het bureau kan de foto voor socials/website gebruiken.\n\n` +
+      `De foto staat ook in het Word-document (.docx) als het bureau dat downloadt.\n`;
+  }
+
+  if (overdenking && huidigeRol === 'voorganger') {
+    body += `\n--- Overdenking (voor emaillijst) ---\n${overdenking}\n`;
+  }
+
+  body += `\nMet vriendelijke groet`;
+
+  const subject = shortId
+    ? `Liturgie Vrijburg – ${datumTekst} – ${rolLabel} (id=${shortId})`
+    : `Liturgie Vrijburg – ${datumTekst} – ${rolLabel}`;
+
+  return { subject, body };
+}
+
+function terugNaarBureau({ copyOnly = false } = {}) {
   const datum = document.getElementById('datum').value;
   const datumTekst = datum ? formatDatum(datum) : 'komende dienst';
   const rolLabel = ROL_CONFIG[huidigeRol]?.label || 'medewerker';
@@ -1931,55 +2047,54 @@ function terugNaarBureau() {
     return;
   }
 
-  setStatus('Opslaan & link maken…', '');
+  setStatus(copyOnly ? 'Opslaan & klaar-bericht kopiëren…' : 'Opslaan & link maken…', '');
 
   prepareShareLink().then(async ({ short, cloud }) => {
-    await copyShareLinkRich(short);
-    let body =
-      `Beste,\n\n` +
-      `Hierbij mijn ingevulde onderdeel voor de liturgie op ${datumTekst} (${rolLabel}).\n\n` +
-      mailLinkBlock(short);
+    const shortId = cloud && currentShortId ? currentShortId : '';
+    const nieuwsbriefUrl = shortId
+      ? (() => {
+          const u = new URL('nieuwsbrief.html', location.href.split('?')[0]);
+          u.searchParams.set('id', shortId);
+          return u.toString();
+        })()
+      : '';
 
-    if (heeftFoto && cloud && currentFotoPath) {
-      body +=
-        `\nDe foto is meegeslagen in de cloud-opslag bij deze link` +
-        (fotoCredit ? ` (credit: ${fotoCredit})` : '') +
-        `.\n` +
-        `Vrijburg mag deze foto gebruiken voor liturgie, socials (FB/Insta) en eventueel de website.\n` +
-        `Het bureau kan de foto ook in het Word-document (.docx) zien.\n`;
-    } else if (heeftFoto) {
-      downloadFoto(true);
-      body +=
-        `\n` +
-        `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
-        `⚠ BIJLAGE NODIG: FOTO\n` +
-        `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n` +
-        `Ik heb een foto geüpload` +
-        (fotoCredit ? ` (credit: ${fotoCredit})` : '') +
-        `. Die zit niet in de link.\n` +
-        `Vrijburg mag deze foto gebruiken voor liturgie, socials (FB/Insta) en eventueel de website.\n\n` +
-        `Stappen:\n` +
-        `1. Het bestand "${fotoBestand}" is zojuist naar uw Downloads-map gedownload.\n` +
-        `2. Voeg dit bestand toe als bijlage aan deze e-mail (paperclip in uw mailprogramma).\n` +
-        `3. Het bureau kan de foto voor socials/website gebruiken.\n\n` +
-        `De foto staat ook in het Word-document (.docx) als het bureau dat downloadt.\n`;
+    const { subject, body } = buildKlaarBericht({
+      short, cloud, datumTekst, rolLabel, shortId, nieuwsbriefUrl,
+      heeftFoto, fotoCredit, fotoBestand, overdenking,
+    });
+
+    // Altijd klaar-bericht + link op klembord: helpt als mailto faalt (Firefox-
+    // dialoog "kies een toepassing" zonder geconfigureerde mailclient).
+    const clipboardText =
+      `Aan: ${KLAAR_NOTIFY_EMAIL}\n` +
+      `CC: ${NIEUWSBRIEF_REDACTIE_EMAIL}\n` +
+      `Onderwerp: ${subject}\n\n` +
+      body;
+    await copyPlainText(clipboardText);
+
+    if (copyOnly) {
+      setStatus(
+        cloud
+          ? '✓ Klaar-bericht gekopieerd (Aan/CC/onderwerp/tekst + link). Plak het in Gmail of een andere mail en verstuur.'
+          : '✓ Klaar-bericht gekopieerd. Plak het in Gmail of een andere mail en verstuur.',
+        'ok',
+      );
+      return;
     }
 
-    if (overdenking && huidigeRol === 'voorganger') {
-      body += `\n--- Overdenking (voor emaillijst) ---\n${overdenking}\n`;
-    }
-
-    body += `\nMet vriendelijke groet`;
-
+    // Nieuwsbriefredactie in CC: zo heeft die meteen de id voor nieuwsbrief.html
+    // zonder te wachten op de latere bureau-knop "Meld: liturgie is klaar".
     openMailto({
       to: KLAAR_NOTIFY_EMAIL,
-      subject: `Liturgie Vrijburg – ${datumTekst} – ${rolLabel}`,
+      cc: NIEUWSBRIEF_REDACTIE_EMAIL,
+      subject,
       body,
     });
 
     const msg = cloud
-      ? (heeftFoto ? '✓ Cloud-link in mail + klembord (foto meegeslagen)' : '✓ Cloud-link in mail en op klembord')
-      : (heeftFoto ? '✓ Link in mail + klembord — voeg foto als bijlage toe' : '✓ Link in mail en op klembord');
+      ? '✓ Opgeslagen. Klaar-bericht staat op klembord. Als e-mail niet opent: plak in Gmail naar liturgiemaker + info@vrijburg.nl'
+      : '✓ Klaar-bericht op klembord. Als e-mail niet opent: plak in Gmail (voeg foto als bijlage toe indien nodig)';
     setStatus(msg, 'ok');
   }).catch(err => {
     console.error(err);
@@ -2725,6 +2840,7 @@ function getFormState() {
     voorganger: document.getElementById('voorganger').value,
     organist: document.getElementById('organist').value,
     lector: document.getElementById('lector').value,
+    bestuurslid: document.getElementById('bestuurslid').value,
     thema: document.getElementById('thema').value,
     intro: document.getElementById('intro').value,
     nieuwsbrief: document.getElementById('nieuwsbrief').value,
@@ -2751,6 +2867,7 @@ function getFormState() {
     c2_tekst: document.getElementById('c2_tekst').value,
     c2_rekening: document.getElementById('c2_rekening').value,
     voorbeden_tekst: document.getElementById('voorbeden_tekst').value,
+    acclamatie_lied: document.getElementById('acclamatie_lied').value,
     geen_onze_vader: document.getElementById('geen_onze_vader').checked,
     agenda_kort: document.getElementById('agenda_kort').value,
     agenda_ver: document.getElementById('agenda_ver').value,
@@ -2782,10 +2899,10 @@ function applyPlanningVl(planning) {
 function applyFormState(state) {
   if (!state) return;
   const fields = ['datum','aanvangstijd','bijzondere_dienst','kinderkerk','bijzonderheden',
-    'voorganger','organist','lector','thema','intro','nieuwsbrief','overdenking_email','foto_credit',
+    'voorganger','organist','lector','bestuurslid','thema','intro','nieuwsbrief','overdenking_email','foto_credit',
     'orgelspel_opening','lichtlied','gebed_opening','muziek_overdenking','slotlied','orgelspel_slot','bloemen',
     'c1_thema','c1_naam','c1_tekst','c1_rekening','c2_type','c2_naam','c2_tekst','c2_rekening',
-    'voorbeden_tekst',
+    'voorbeden_tekst','acclamatie_lied',
     'agenda_kort','agenda_ver','avondmaal'];
   fields.forEach(id => {
     if (state[id] !== undefined) document.getElementById(id).value = state[id];
@@ -3105,6 +3222,7 @@ function emptyFormState() {
     voorganger: '',
     organist: '',
     lector: '',
+    bestuurslid: '',
     thema: '',
     intro: '',
     nieuwsbrief: '',
@@ -3131,6 +3249,7 @@ function emptyFormState() {
     c2_tekst: '',
     c2_rekening: '',
     voorbeden_tekst: '',
+    acclamatie_lied: '',
     geen_onze_vader: false,
     agenda_kort: '',
     agenda_ver: '',
@@ -3197,6 +3316,7 @@ function onDatumChange() {
     document.getElementById('voorganger').value = planning.predikant || '';
     document.getElementById('organist').value = planning.organist || '';
     document.getElementById('lector').value = planning.lector || '';
+    document.getElementById('bestuurslid').value = planning.bestuurslid || '';
     document.getElementById('aanvangstijd').value = planning.aanvangstijd || '';
     document.getElementById('bijzondere_dienst').value = planning.bijzondere_dienst || '';
     document.getElementById('cantorij').checked = !!planning.cantorij;
@@ -3205,7 +3325,8 @@ function onDatumChange() {
     planningNotice.style.display = 'block';
     planningNotice.style.background = '#e8f5e9';
     planningNotice.style.color = '#2e7d32';
-    planningNotice.textContent = `✓ Dienstplanning ingevuld voor ${formatDatum(val)}`;
+    planningNotice.textContent = `✓ Dienstplanning ingevuld voor ${formatDatum(val)}`
+      + (planning.bestuurslid ? ` (bestuurder: ${planning.bestuurslid})` : '');
   } else {
     planningNotice.style.display = 'block';
     planningNotice.style.background = '#fff3e0';
@@ -3528,6 +3649,7 @@ async function generateDocxAsync() {
   const voorganger = document.getElementById('voorganger').value.trim();
   const organist   = document.getElementById('organist').value.trim();
   const lector     = document.getElementById('lector').value.trim();
+  const bestuurslid = document.getElementById('bestuurslid').value.trim();
   const thema      = document.getElementById('thema').value.trim();
   const intro      = document.getElementById('intro').value.trim();
   const foto       = document.getElementById('foto_credit').value.trim();
@@ -3547,6 +3669,7 @@ async function generateDocxAsync() {
   const c2Tekst    = document.getElementById('c2_tekst').value.trim();
   const c2Rek      = document.getElementById('c2_rekening').value.trim();
   const voorbedenTekst  = document.getElementById('voorbeden_tekst').value.trim();
+  const acclamatieLied  = document.getElementById('acclamatie_lied').value.trim();
   const geenOnzeVader   = document.getElementById('geen_onze_vader').checked;
   const agendaKort = document.getElementById('agenda_kort').value.trim();
   const agendaVer  = document.getElementById('agenda_ver').value.trim();
@@ -3623,7 +3746,12 @@ async function generateDocxAsync() {
   }
 
   function pageBreak() {
-    return new Paragraph({ children: [new PageBreak()] });
+    // Expliciete rPr (Calibri 16) zodat Word na download op die regel
+    // niet terugvalt op Normal/Helvetica 11.
+    return new Paragraph({
+      children: [textRun(''), new PageBreak()],
+      spacing: { before: 0, after: 0, line: 276, lineRule: 'auto' },
+    });
   }
 
   function sectie(text) {
@@ -3867,6 +3995,7 @@ async function generateDocxAsync() {
   if (voorganger) coverRoleLines++;
   if (organist) coverRoleLines++;
   if (lector) coverRoleLines++;
+  if (bestuurslid) coverRoleLines++;
   if (cantorij) coverRoleLines++;
   if (kinderkerk && !dienstExtraPreview.includes('kinderkerk')) coverRoleLines++;
 
@@ -3937,6 +4066,7 @@ async function generateDocxAsync() {
   if (voorganger) children.push(p(`${voorgangerLabel}: ${voorganger}`));
   if (organist) children.push(p(`Organist: ${organist}`));
   if (lector) children.push(p(`Lector${/\s+en\s+/i.test(lector) ? 'en' : ''}: ${lector}`));
+  if (bestuurslid) children.push(p(`Dienstdoende bestuurder: ${bestuurslid}`));
   if (cantorij) children.push(p('Cantorij'));
   if (kinderkerk && !dienstExtra.includes('kinderkerk')) {
     children.push(p(`Kinderkerk: ${kinderkerk}`));
@@ -4028,13 +4158,18 @@ async function generateDocxAsync() {
   if (muziekOverdenking) children.push(pOrgelspel('Muziek: ' + muziekOverdenking));
   else children.push(p('Muziek', { bold: true }));
 
-  // VOORBEDEN
+  // VOORBEDEN (+ optioneel acclamatie-lied onder de voorbeden)
   children.push(empty());
   children.push(p('Voorbeden', { bold: true, before: 120 }));
   if (voorbedenTekst) {
     children.push(...multiline(voorbedenTekst));
   } else {
     children.push(p('Stil gebed, afgesloten met Onze Vader:'));
+  }
+  if (acclamatieLied) {
+    children.push(empty());
+    const acclamatieLines = acclamatieLied.split('\n').map(l => l.trim()).filter(Boolean);
+    await appendLiedWithOptionalMusic(children, acclamatieLines, null);
   }
   if (!geenOnzeVader) {
     ONZE_VADER.forEach(regel => children.push(p(regel, { indent: 0.5 })));
@@ -4135,7 +4270,18 @@ async function generateDocxAsync() {
         document: {
           run: { font: 'Calibri', size: szBody }
         }
-      }
+      },
+      paragraphStyles: [
+        {
+          id: 'Normal',
+          name: 'Normal',
+          quickStyle: true,
+          run: { font: 'Calibri', size: szBody },
+          paragraph: {
+            spacing: { before: 0, after: 0, line: 276, lineRule: 'auto' },
+          },
+        },
+      ],
     },
     sections: [{
       properties: {

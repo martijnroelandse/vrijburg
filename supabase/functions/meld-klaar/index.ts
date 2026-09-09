@@ -2,8 +2,8 @@
 //
 // Stuurt een e-mail-ping wanneer een liturgie in de Liturgie Generator wordt
 // gemarkeerd als "klaar" (knop "📣 Meld: liturgie is klaar" in index.html).
-// Zo weet de liturgiemaker (Gon) en het bureau (info@) meteen dát een dienst
-// compleet is én wat de id (?id=...) is.
+// Zo weten de liturgiemaker (Gon), het bureau (info@) en de nieuwsbriefredactie
+// meteen dát een dienst compleet is én wat de id (?id=...) is.
 //
 // Gebruikt de Resend API (https://resend.com, gratis tot 100 mails/dag,
 // 3000/maand) omdat dat vanuit een Edge Function met één fetch-call werkt,
@@ -15,14 +15,15 @@
 //   supabase secrets set --project-ref iabrbkirzsolwnuknbel \
 //     RESEND_API_KEY=re_xxx \
 //     RESEND_FROM="Liturgie Vrijburg <liturgie@vrijburg.nl>" \
-//     NOTIFY_EMAIL="gon.homburg@gmail.com,info@vrijburg.nl"
+//     NOTIFY_EMAIL="extra@voorbeeld.nl"
 //
 // - RESEND_API_KEY : API-key van Resend.
 // - RESEND_FROM     : afzenderadres. Moet een domein zijn dat bij Resend is
 //                      geverifieerd (of gebruik tijdelijk hun test-afzender
 //                      "onboarding@resend.dev" tijdens het instellen).
 // - NOTIFY_EMAIL    : optioneel extra adressen, kommagescheiden. De vaste
-//                      ontvangers (Gon + info@) krijgen de mail altijd.
+//                      ontvangers (Gon + info@ + nieuwsbriefredactie) krijgen
+//                      de mail altijd.
 //
 // Zolang RESEND_API_KEY niet is ingesteld antwoordt de functie met
 // { ok: false, error: '...' } (HTTP 501) — de app in index.html valt dan
@@ -32,7 +33,11 @@ import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
 const RESEND_FROM = Deno.env.get("RESEND_FROM") || "Liturgie Vrijburg <onboarding@resend.dev>";
-const BASE_NOTIFY = ["gon.homburg@gmail.com", "info@vrijburg.nl"];
+const BASE_NOTIFY = [
+  "gon.homburg@gmail.com",
+  "info@vrijburg.nl",
+  "martijnroelandse@me.com", // nieuwsbriefredactie (tijdelijk; zie NIEUWSBRIEF_REDACTIE_EMAIL in index.html)
+];
 const EXTRA_NOTIFY = Deno.env.get("NOTIFY_EMAIL") || "";
 
 const CORS_HEADERS = {

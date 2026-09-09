@@ -124,6 +124,7 @@ def convert(csv_path: Path) -> list:
                 "cantorij": flag(get_col(r, "Cantorij ♫♫ ")),
                 "kinderkerk": kk,
                 "lector": get_col(r, "Lector"),
+                "bestuurslid": get_col(r, "Bestuurslid ", "Bestuurslid"),
                 "vlv": vl["vlv"],
                 "vlh": vl["vlh"],
                 "vlz": vl["vlz"],
