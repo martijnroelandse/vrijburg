@@ -212,6 +212,11 @@ Aanleiding: een voorganger had geen mailto-client geconfigureerd (Firefox-dialoo
 - .docx: Normal-stijl + pageBreak met expliciete Calibri 16pt (minder Helvetica 11 bij nawerk in Word).
 - Dienstdoende bestuurder op voorblad; kolom `bestuurslid` in `dienstplanning.json` (uit Jet’s Q3-rooster). Google Sheet kolom Bestuurslid nog handmatig bijwerken met `downloads/bestuurslid-q3-2026-voor-sheet.tsv`.
 
+**7d. Lied na overdenking + orde-volgorde + Outlook-mailto** ✅ *sep 2026*  
+- Nieuw veld **Lied na overdenking / muziek** (tussen orgelmuziek en voorbeden in de .docx).
+- Orde: nieuw item komt onder het geselecteerde blok (niet altijd onderaan); tip over ↑↓; zip-import plakt restliederen niet meer blind na alle lezingen.
+- `openMailto`: e-mailadressen niet meer `%40`-encoden (breekt Outlook); te lange mailto → klembord i.p.v. kapotte compose.
+
 **7b. "Meld nieuwsbriefredactie" direct onder het nieuwsbriefveld** ✅ *geïmplementeerd (aug 2026)*  
 Aanleiding: in de praktijk staat de nieuwsbrieftekst niet altijd al klaar op het moment dat de rest van de liturgie compleet is (dat was ook de directe oorzaak van het "ik zie geen nieuwsbrieftekst"-signaal — de tekst was simpelweg nog niet ingevuld, geen bug). Losse melding per veld is dus handiger dan wachten op de algemene "klaar"-melding van de hele dienst.
 
