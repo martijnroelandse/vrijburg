@@ -3417,8 +3417,9 @@ function resolveCoverLogo(vlv, vlh, vlz) {
   if (vlv) return { path: DOCX_ASSETS.logoVlv, title: VL_LABELS.vlv, maxWidth: 160, kind: 'vl', key: 'vlv' };
   if (vlh) return { path: DOCX_ASSETS.logoVlh, title: VL_LABELS.vlh, maxWidth: 160, kind: 'vl', key: 'vlh' };
   if (vlz) return { path: DOCX_ASSETS.logoVlz, title: VL_LABELS.vlz, maxWidth: 100, kind: 'vl', key: 'vlz' };
-  // Vierkant blauw logo (Vrijburg-logo blauw XL), groter, eigen regel rechtsboven.
-  return { path: DOCX_ASSETS.logo, title: 'Vrijburg logo', maxWidth: 240, kind: 'vrijburg', key: null };
+  // Vierkant blauw logo (Vrijburg-logo blauw XL), 3×3 cm op eigen regel rechtsboven.
+  // 3 cm @ 96 dpi ≈ 113 px (was 240 px ≈ 6,35 cm).
+  return { path: DOCX_ASSETS.logo, title: 'Vrijburg logo', maxWidth: 113, kind: 'vrijburg', key: null };
 }
 
 function dataUrlToBytes(dataUrl) {
@@ -3518,7 +3519,7 @@ function estimateCoverTextHeightPx({
   // Conservatief houden we een veiligheidsmarge onderaan.
   const line = (pt, factor = 1.2) => Math.ceil(pt * (96 / 72) * factor);
   let h = 0;
-  if (hasLogo) h += 230; // vierkant logo op eigen regel rechtsboven
+  if (hasLogo) h += 120; // vierkant logo 3×3 cm op eigen regel rechtsboven
   h += line(24, 1.25); // titel "Dienst …"
   h += line(16); // ademruimte onder titel (zoals handmatige liturgie)
   if (hasDienstExtra) h += line(16);
