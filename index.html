@@ -1031,6 +1031,10 @@
         <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"/></svg>
         Opslaan
       </button>
+      <button class="btn-secondary" id="btn-copy-link" onclick="copyShareLink()" title="Slaat op en kopieert de cloud-link naar het klembord — handig als e-mail niet is geconfigureerd">
+        <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+        Kopieer link
+      </button>
       <button class="btn-secondary" onclick="mailMijDeLink()">
         <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/></svg>
         Mail me de link
@@ -1054,6 +1058,10 @@
       <button class="btn-secondary" id="btn-klaar" onclick="terugNaarBureau()">
         <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
         Ik ben klaar – stuur naar liturgie
+      </button>
+      <button class="btn-secondary" id="btn-klaar-copy" onclick="terugNaarBureau({ copyOnly: true })" title="Zelfde als Ik ben klaar, maar opent geen e-mailprogramma: kopieert het klaar-bericht (met link) naar het klembord zodat u het zelf in Gmail of een andere mail kunt plakken">
+        <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+        Ik ben klaar – kopieer bericht
       </button>
       <button class="btn-secondary" id="btn-meld-klaar" onclick="meldDienstKlaar()" title="Zet de status op 'klaar' en stuurt automatisch een e-mail-melding met de id, zodat de nieuwsbrief gemaakt kan worden">
         <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 8H4a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h1v3a1 1 0 0 0 1.7.7L10.4 16H12l6 3V5l-6 3zm8 1.5v5a1.5 1.5 0 0 0 0-5z"/></svg>
@@ -1260,13 +1268,13 @@ const ROL_CONFIG = {
   voorganger: {
     label: 'Voorgang(st)er',
     primary: ['thema', 'opening', 'orde', 'voorbeden', 'slot'],
-    hint: 'Vul thema, tekst op voorblad, afbeelding, nieuwsbrief en overdenking in. Vul de orde van dienst in (liederen, lezingen) en lichtlied/slotlied. Wijkt u af van het standaardgebed? Vul dat in bij Voorbeden. Klik op <strong>Ik ben klaar</strong> om alles naar de liturgiemaker en info@vrijburg.nl te sturen (nieuwsbriefredactie ontvangt de id in CC).',
+    hint: 'Vul thema, tekst op voorblad, afbeelding, nieuwsbrief en overdenking in. Vul de orde van dienst in (liederen, lezingen) en lichtlied/slotlied. Wijkt u af van het standaardgebed? Vul dat in bij Voorbeden. Klik op <strong>Ik ben klaar</strong> om alles naar de liturgiemaker en info@vrijburg.nl te sturen (nieuwsbriefredactie ontvangt de id in CC). Werkt uw e-mail niet? Gebruik <strong>Ik ben klaar – kopieer bericht</strong> of <strong>Kopieer link</strong>.',
     emailAan: 'voorganger',
   },
   organist: {
     label: 'Organist(e)',
     primary: ['opening', 'orde', 'slot'],
-    hint: 'Vul orgelspel (opening en slot) en de muziek na de overdenking in. Liederen en lezingen vult de voorgang(st)er in — die ziet u via de rol Voorgang(st)er of Alles bekijken. Klik op <strong>Ik ben klaar</strong> als u klaar bent.',
+    hint: 'Vul orgelspel (opening en slot) en de muziek na de overdenking in. Liederen en lezingen vult de voorgang(st)er in — die ziet u via de rol Voorgang(st)er of Alles bekijken. Klik op <strong>Ik ben klaar</strong> als u klaar bent (of <strong>Ik ben klaar – kopieer bericht</strong> als e-mail niet werkt).',
     emailAan: 'organist',
   },
   medewerker: {
@@ -1332,10 +1340,12 @@ function applyRolUI() {
   document.getElementById('btn-email-voorganger').style.display = huidigeRol === 'medewerker' ? '' : 'none';
   document.getElementById('btn-email-gastpredikant').style.display = huidigeRol === 'medewerker' ? '' : 'none';
   document.getElementById('btn-email-organist').style.display = huidigeRol === 'medewerker' ? '' : 'none';
-  document.getElementById('btn-klaar').style.display = (huidigeRol === 'voorganger' || huidigeRol === 'organist') ? '' : 'none';
+  const isInvuller = huidigeRol === 'voorganger' || huidigeRol === 'organist';
+  document.getElementById('btn-klaar').style.display = isInvuller ? '' : 'none';
+  document.getElementById('btn-klaar-copy').style.display = isInvuller ? '' : 'none';
   document.getElementById('generate-hint').textContent = isSamenvoeger
     ? 'Download wanneer alle onderdelen zijn ingevuld'
-    : 'Stuur uw ingevulde gegevens naar de liturgiemaker en info@vrijburg.nl als u klaar bent';
+    : 'Stuur uw ingevulde gegevens naar de liturgiemaker en info@vrijburg.nl als u klaar bent (of gebruik “Kopieer bericht” als e-mail niet werkt)';
 
   const organistAlleenOrde = huidigeRol === 'organist' && !toonAlles;
   const ordeVoorgangerUi = document.getElementById('orde-voorganger-ui');
@@ -1924,7 +1934,81 @@ function openMailto({ to = '', cc = '', subject, body }) {
   window.location.href = toPart ? `mailto:${toPart}?${query}` : `mailto:?${query}`;
 }
 
-function terugNaarBureau() {
+async function copyPlainText(text) {
+  try {
+    if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(text);
+      return true;
+    }
+  } catch (_) { /* fallback */ }
+  try {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed';
+    ta.style.left = '-9999px';
+    document.body.appendChild(ta);
+    ta.select();
+    const ok = document.execCommand('copy');
+    document.body.removeChild(ta);
+    return ok;
+  } catch {
+    prompt('Kopieer deze tekst:', text);
+    return false;
+  }
+}
+
+function buildKlaarBericht({ short, cloud, datumTekst, rolLabel, shortId, nieuwsbriefUrl, heeftFoto, fotoCredit, fotoBestand, overdenking }) {
+  let body =
+    `Beste,\n\n` +
+    `Hierbij mijn ingevulde onderdeel voor de liturgie op ${datumTekst} (${rolLabel}).\n\n` +
+    mailLinkBlock(short);
+
+  if (shortId) {
+    body +=
+      `\nid: ${shortId}\n` +
+      `Nieuwsbrief-app: ${nieuwsbriefUrl}\n`;
+  }
+
+  if (heeftFoto && cloud && currentFotoPath) {
+    body +=
+      `\nDe foto is meegeslagen in de cloud-opslag bij deze link` +
+      (fotoCredit ? ` (credit: ${fotoCredit})` : '') +
+      `.\n` +
+      `Vrijburg mag deze foto gebruiken voor liturgie, socials (FB/Insta) en eventueel de website.\n` +
+      `Het bureau kan de foto ook in het Word-document (.docx) zien.\n`;
+  } else if (heeftFoto) {
+    downloadFoto(true);
+    body +=
+      `\n` +
+      `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+      `⚠ BIJLAGE NODIG: FOTO\n` +
+      `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n` +
+      `Ik heb een foto geüpload` +
+      (fotoCredit ? ` (credit: ${fotoCredit})` : '') +
+      `. Die zit niet in de link.\n` +
+      `Vrijburg mag deze foto gebruiken voor liturgie, socials (FB/Insta) en eventueel de website.\n\n` +
+      `Stappen:\n` +
+      `1. Het bestand "${fotoBestand}" is zojuist naar uw Downloads-map gedownload.\n` +
+      `2. Voeg dit bestand toe als bijlage aan deze e-mail (paperclip in uw mailprogramma).\n` +
+      `3. Het bureau kan de foto voor socials/website gebruiken.\n\n` +
+      `De foto staat ook in het Word-document (.docx) als het bureau dat downloadt.\n`;
+  }
+
+  if (overdenking && huidigeRol === 'voorganger') {
+    body += `\n--- Overdenking (voor emaillijst) ---\n${overdenking}\n`;
+  }
+
+  body += `\nMet vriendelijke groet`;
+
+  const subject = shortId
+    ? `Liturgie Vrijburg – ${datumTekst} – ${rolLabel} (id=${shortId})`
+    : `Liturgie Vrijburg – ${datumTekst} – ${rolLabel}`;
+
+  return { subject, body };
+}
+
+function terugNaarBureau({ copyOnly = false } = {}) {
   const datum = document.getElementById('datum').value;
   const datumTekst = datum ? formatDatum(datum) : 'komende dienst';
   const rolLabel = ROL_CONFIG[huidigeRol]?.label || 'medewerker';
@@ -1939,10 +2023,9 @@ function terugNaarBureau() {
     return;
   }
 
-  setStatus('Opslaan & link maken…', '');
+  setStatus(copyOnly ? 'Opslaan & klaar-bericht kopiëren…' : 'Opslaan & link maken…', '');
 
   prepareShareLink().then(async ({ short, cloud }) => {
-    await copyShareLinkRich(short);
     const shortId = cloud && currentShortId ? currentShortId : '';
     const nieuwsbriefUrl = shortId
       ? (() => {
@@ -1952,62 +2035,42 @@ function terugNaarBureau() {
         })()
       : '';
 
-    let body =
-      `Beste,\n\n` +
-      `Hierbij mijn ingevulde onderdeel voor de liturgie op ${datumTekst} (${rolLabel}).\n\n` +
-      mailLinkBlock(short);
+    const { subject, body } = buildKlaarBericht({
+      short, cloud, datumTekst, rolLabel, shortId, nieuwsbriefUrl,
+      heeftFoto, fotoCredit, fotoBestand, overdenking,
+    });
 
-    if (shortId) {
-      body +=
-        `\nid: ${shortId}\n` +
-        `Nieuwsbrief-app: ${nieuwsbriefUrl}\n`;
+    // Altijd klaar-bericht + link op klembord: helpt als mailto faalt (Firefox-
+    // dialoog "kies een toepassing" zonder geconfigureerde mailclient).
+    const clipboardText =
+      `Aan: ${KLAAR_NOTIFY_EMAIL}\n` +
+      `CC: ${NIEUWSBRIEF_REDACTIE_EMAIL}\n` +
+      `Onderwerp: ${subject}\n\n` +
+      body;
+    await copyPlainText(clipboardText);
+
+    if (copyOnly) {
+      setStatus(
+        cloud
+          ? '✓ Klaar-bericht gekopieerd (Aan/CC/onderwerp/tekst + link). Plak het in Gmail of een andere mail en verstuur.'
+          : '✓ Klaar-bericht gekopieerd. Plak het in Gmail of een andere mail en verstuur.',
+        'ok',
+      );
+      return;
     }
-
-    if (heeftFoto && cloud && currentFotoPath) {
-      body +=
-        `\nDe foto is meegeslagen in de cloud-opslag bij deze link` +
-        (fotoCredit ? ` (credit: ${fotoCredit})` : '') +
-        `.\n` +
-        `Vrijburg mag deze foto gebruiken voor liturgie, socials (FB/Insta) en eventueel de website.\n` +
-        `Het bureau kan de foto ook in het Word-document (.docx) zien.\n`;
-    } else if (heeftFoto) {
-      downloadFoto(true);
-      body +=
-        `\n` +
-        `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
-        `⚠ BIJLAGE NODIG: FOTO\n` +
-        `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n` +
-        `Ik heb een foto geüpload` +
-        (fotoCredit ? ` (credit: ${fotoCredit})` : '') +
-        `. Die zit niet in de link.\n` +
-        `Vrijburg mag deze foto gebruiken voor liturgie, socials (FB/Insta) en eventueel de website.\n\n` +
-        `Stappen:\n` +
-        `1. Het bestand "${fotoBestand}" is zojuist naar uw Downloads-map gedownload.\n` +
-        `2. Voeg dit bestand toe als bijlage aan deze e-mail (paperclip in uw mailprogramma).\n` +
-        `3. Het bureau kan de foto voor socials/website gebruiken.\n\n` +
-        `De foto staat ook in het Word-document (.docx) als het bureau dat downloadt.\n`;
-    }
-
-    if (overdenking && huidigeRol === 'voorganger') {
-      body += `\n--- Overdenking (voor emaillijst) ---\n${overdenking}\n`;
-    }
-
-    body += `\nMet vriendelijke groet`;
 
     // Nieuwsbriefredactie in CC: zo heeft die meteen de id voor nieuwsbrief.html
     // zonder te wachten op de latere bureau-knop "Meld: liturgie is klaar".
     openMailto({
       to: KLAAR_NOTIFY_EMAIL,
       cc: NIEUWSBRIEF_REDACTIE_EMAIL,
-      subject: shortId
-        ? `Liturgie Vrijburg – ${datumTekst} – ${rolLabel} (id=${shortId})`
-        : `Liturgie Vrijburg – ${datumTekst} – ${rolLabel}`,
+      subject,
       body,
     });
 
     const msg = cloud
-      ? (heeftFoto ? '✓ Cloud-link in mail + klembord (foto meegeslagen; redactie in CC)' : '✓ Cloud-link in mail en op klembord (redactie in CC)')
-      : (heeftFoto ? '✓ Link in mail + klembord — voeg foto als bijlage toe' : '✓ Link in mail en op klembord');
+      ? '✓ Opgeslagen. Klaar-bericht staat op klembord. Als e-mail niet opent: plak in Gmail naar liturgiemaker + info@vrijburg.nl'
+      : '✓ Klaar-bericht op klembord. Als e-mail niet opent: plak in Gmail (voeg foto als bijlage toe indien nodig)';
     setStatus(msg, 'ok');
   }).catch(err => {
     console.error(err);

@@ -198,6 +198,13 @@ Aanleiding: de nieuwsbrief-maker (Martijn) wist niet welke `id` de liturgie van 
 
 Bij **Ik ben klaar** (voorganger/organist) staat de nieuwsbriefredactie (`NIEUWSBRIEF_REDACTIE_EMAIL`) nu in **CC** van dezelfde mailto; onderwerp en body vermelden expliciet `id=…` plus de link naar `nieuwsbrief.html?id=…`. Zo krijgt de redactie het seintje zodra de dominee terugstuurt, zonder te wachten op de latere bureau-knop.
 
+**7a-bis. Kopieer-alternatief als e-mail niet werkt** ✅ *sep 2026*  
+Aanleiding: een voorganger had geen mailto-client geconfigureerd (Firefox-dialoog “Kies een toepassing…”) en dacht dat er niets gebeurde.
+
+- Knop **Kopieer link** (alle rollen): slaat op en zet alleen de cloud-link op het klembord.
+- Knop **Ik ben klaar – kopieer bericht** (voorganger/organist): zelfde inhoud als de klaar-mail (Aan/CC/onderwerp/tekst + link), zonder e-mailprogramma te openen — plakken in Gmail.
+- De gewone **Ik ben klaar – stuur naar liturgie** zet het klaar-bericht óók op het klembord vóór de mailto, met statushint als e-mail niet opent.
+
 **7b. "Meld nieuwsbriefredactie" direct onder het nieuwsbriefveld** ✅ *geïmplementeerd (aug 2026)*  
 Aanleiding: in de praktijk staat de nieuwsbrieftekst niet altijd al klaar op het moment dat de rest van de liturgie compleet is (dat was ook de directe oorzaak van het "ik zie geen nieuwsbrieftekst"-signaal — de tekst was simpelweg nog niet ingevuld, geen bug). Losse melding per veld is dus handiger dan wachten op de algemene "klaar"-melding van de hele dienst.
 
