@@ -35,12 +35,14 @@ De liturgie wordt door **meerdere mensen** aangeleverd. In de app kiest ieder bo
 ### Hoe het samenkomt
 
 1. Bureaumedewerker zet datum en stuurt link naar **voorganger** (`?rol=voorganger`)
-2. Voorganger vult zijn/haar onderdeel in → klikt **Ik ben klaar** → stuurt link terug
-3. Bureaumedewerker stuurt link naar **organist** (`?rol=organist`)
-4. Organist vult muziek in → stuurt link terug
-5. Bureaumedewerker controleert agenda en collecte, kiest **Alles bekijken**, downloadt .docx
+2. Voorganger vult zijn/haar onderdeel in (orde + eventuele `+ Muziek`-blokken) → klikt **Ik ben klaar** → stuurt link terug
+3. Bureaumedewerker stuurt **dezelfde cloud-link** (zelfde `id`) naar **organist** (`?rol=organist`)
+4. Organist ziet de orde van de voorganger, vult orgelspel + muziekblokken in → stuurt link terug
+5. Bureaumedewerker opent die ene link, controleert agenda en collecte, kiest **Alles bekijken**, downloadt .docx
 
-Geen enkel veld is verplicht — ieder vult alleen zijn eigen onderdeel in. De gedeelde link bevat alle reeds ingevulde gegevens; bij terugsturen worden nieuwe invoer samengevoegd.
+Geen enkel veld is verplicht — ieder vult alleen zijn eigen onderdeel in. De gedeelde link bevat alle reeds ingevulde gegevens; bij terugsturen worden nieuwe invoer samengevoegd. **Zelfde id = zelfde liturgie** — zo hoeft het bureau niets handmatig over te typen tussen “link van de dominee” en “klaar-mail van de organist”.
+
+**Zichtbaarheid tussen rollen:** voorganger en organist zien elkaars bijdrage in sectie 4 (dienstoverzicht + orde). De organist mag muziek-blokken bewerken; liederen/lezingen zijn ter referentie. Orgelspel en muziek na overdenking zijn voor beiden zichtbaar.
 
 ---
 

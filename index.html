@@ -204,6 +204,57 @@
     .orde-add-row { display: flex; gap: 8px; flex-wrap: wrap; }
     #orde-organist-ui { margin-top: 12px; }
 
+    .dienst-overzicht {
+      background: #f7fafc;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 12px 14px;
+      margin-bottom: 14px;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+    .dienst-overzicht h4 {
+      margin: 0 0 8px;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      color: var(--brand-dark);
+    }
+    .dienst-overzicht ol {
+      margin: 0;
+      padding-left: 1.2em;
+    }
+    .dienst-overzicht li {
+      margin: 2px 0;
+    }
+    .dienst-overzicht .ov-empty { color: var(--muted); font-style: italic; }
+    .dienst-overzicht .ov-mine { color: var(--brand-dark); font-weight: 500; }
+    .dienst-overzicht .ov-open { color: #b45309; }
+    .dienst-overzicht .ov-hint {
+      margin: 8px 0 0;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .orde-item.orde-readonly {
+      background: #f5f5f5;
+      border-color: #ddd;
+      opacity: 0.92;
+    }
+    .orde-item.orde-organist-edit {
+      background: #eef8ff;
+      border-color: var(--brand);
+    }
+    .orde-collab-banner {
+      font-size: 13px;
+      color: #0c4a6e;
+      background: #e0f2fe;
+      border: 1px solid #7dd3fc;
+      border-radius: 4px;
+      padding: 8px 12px;
+      margin-bottom: 12px;
+      line-height: 1.4;
+    }
+
     .btn-add {
       background: white;
       border: 1px dashed var(--brand);
@@ -619,8 +670,9 @@
     <div class="section-header">Wie vult wat in?</div>
     <div class="section-body">
       <p class="workflow-intro">
-        De liturgie wordt door meerdere mensen aangeleverd. Kies uw rol — u ziet dan vooral de onderdelen die bij u horen.
-        Niet alles hoeft in één keer ingevuld; via een gedeelde link komt het uiteindelijk bij elkaar.
+        De liturgie wordt door meerdere mensen aangeleverd via <strong>één gedeelde cloud-link</strong> (zelfde <code>id</code>).
+        Kies uw rol — u ziet dan vooral uw eigen velden, plus ter referentie wat de ander al heeft ingevuld
+        (orde van dienst, muziek, liederen). Zo kunnen voorgang(st)er en organist(e) op elkaar afstemmen.
       </p>
       <div class="role-cards" id="role-cards">
         <button type="button" class="role-card" data-role="voorganger" onclick="setRol('voorganger')">
@@ -859,9 +911,11 @@
   <div class="section" id="section-orde" data-section="orde">
     <div class="section-header" id="orde-header">4. Orde van dienst <span style="font-weight:400;font-size:12px;color:#888">– in volgorde zoals de voorgang(st)er die aanlevert</span></div>
     <div class="section-body">
+      <div id="dienst-overzicht" class="dienst-overzicht" aria-live="polite"></div>
+      <div id="orde-collab-banner" class="orde-collab-banner" style="display:none"></div>
       <div id="orde-voorganger-ui">
       <div class="orde-list" id="orde-list"></div>
-      <div class="orde-add-row">
+      <div class="orde-add-row" id="orde-add-row">
         <button class="btn-add" onclick="addOrde('lied')">+ Lied</button>
         <button class="btn-add" onclick="addOrde('lezing')">+ Lezing</button>
         <button class="btn-add" onclick="addOrde('inleiding')">+ Inleiding</button>
@@ -1300,19 +1354,19 @@ const ROL_CONFIG = {
   voorganger: {
     label: 'Voorgang(st)er',
     primary: ['thema', 'opening', 'orde', 'voorbeden', 'slot'],
-    hint: 'Vul thema, tekst op voorblad, afbeelding, nieuwsbrief en overdenking in. Vul de orde van dienst in (liederen, lezingen) en lichtlied/slotlied. Wijkt u af van het standaardgebed? Vul dat in bij Voorbeden. Klik op <strong>Ik ben klaar</strong> om alles naar de liturgiemaker en info@vrijburg.nl te sturen (nieuwsbriefredactie ontvangt de id in CC). Werkt uw e-mail niet? Gebruik <strong>Ik ben klaar – kopieer bericht</strong> of <strong>Kopieer link</strong>.',
+    hint: 'Vul thema, tekst op voorblad, afbeelding, nieuwsbrief en overdenking in. Vul de orde van dienst in (liederen, lezingen) en lichtlied/slotlied. Zet een <strong>+ Muziek</strong>-blok waar de organist(e) iets speelt (bijv. tussen liederen) — die ziet uw orde en vult de titel in. Orgelspel en muziek na overdenking van de organist(e) ziet u hieronder ter referentie. Stem desgewenst af. Klik op <strong>Ik ben klaar</strong> (nieuwsbriefredactie ontvangt de id in CC). Werkt e-mail niet? Gebruik <strong>Ik ben klaar – kopieer bericht</strong>.',
     emailAan: 'voorganger',
   },
   organist: {
     label: 'Organist(e)',
     primary: ['opening', 'orde', 'slot'],
-    hint: 'Vul orgelspel (opening en slot) en de muziek na de overdenking in. Liederen en lezingen vult de voorgang(st)er in — die ziet u via de rol Voorgang(st)er of Alles bekijken. Klik op <strong>Ik ben klaar</strong> als u klaar bent (of <strong>Ik ben klaar – kopieer bericht</strong> als e-mail niet werkt).',
+    hint: 'Vul orgelspel (opening en slot) en de muziek na de overdenking in. U ziet ook de <strong>orde van dienst</strong> van de voorgang(st)er — vul daar de <strong>Muziek</strong>-blokken in (liederen/lezingen zijn ter referentie). Stem desgewenst met de voorgang(st)er af wat er moet klinken. Klik op <strong>Ik ben klaar</strong> als u klaar bent.',
     emailAan: 'organist',
   },
   medewerker: {
     label: 'Bureaumedewerk(st)er',
     primary: ['dienst', 'collecte', 'agenda'],
-    hint: 'Zet datum — predikant, organist(e), lector, cantorij en kinderkerk worden ingevuld vanuit de dienstplanning. Controleer agenda en collecte. Stuur links naar voorgang(st)er en organist(e). Download de liturgie als alles binnen is.',
+    hint: 'Zet datum — predikant, organist(e), lector, cantorij en kinderkerk worden ingevuld vanuit de dienstplanning. Controleer agenda en collecte. Stuur <strong>dezelfde cloud-link</strong> (zelfde id) naar voorgang(st)er én organist(e), zodat hun onderdelen in één liturgie samenkomen. Download als alles binnen is.',
     emailAan: null,
   },
   compleet: {
@@ -1379,20 +1433,43 @@ function applyRolUI() {
     ? 'Download wanneer alle onderdelen zijn ingevuld'
     : 'Stuur uw ingevulde gegevens naar de liturgiemaker en info@vrijburg.nl als u klaar bent (of gebruik “Kopieer bericht” als e-mail niet werkt)';
 
-  const organistAlleenOrde = huidigeRol === 'organist' && !toonAlles;
+  // Orde: voorganger én organist zien elkaars bijdrage in één sectie.
+  // Organist zonder "toon alles" mag muziek-blokken bewerken; liederen/lezingen zijn ter referentie.
+  const organistRefMode = huidigeRol === 'organist' && !toonAlles;
   const ordeVoorgangerUi = document.getElementById('orde-voorganger-ui');
   const ordeOrganistUi = document.getElementById('orde-organist-ui');
   const ordeHeader = document.getElementById('orde-header');
-  if (ordeVoorgangerUi) ordeVoorgangerUi.style.display = organistAlleenOrde ? 'none' : '';
-  if (ordeOrganistUi) {
-    const toonMuziek = huidigeRol === 'organist' || huidigeRol === 'medewerker' || huidigeRol === 'compleet' || toonAlles;
-    ordeOrganistUi.style.display = toonMuziek ? '' : 'none';
-  }
+  const ordeAddRow = document.getElementById('orde-add-row');
+  const ordeCollabBanner = document.getElementById('orde-collab-banner');
+  if (ordeVoorgangerUi) ordeVoorgangerUi.style.display = '';
+  if (ordeOrganistUi) ordeOrganistUi.style.display = '';
+  if (ordeAddRow) ordeAddRow.style.display = organistRefMode ? 'none' : '';
   if (ordeHeader) {
-    ordeHeader.innerHTML = organistAlleenOrde
-      ? '4. Muziek na de overdenking'
+    ordeHeader.innerHTML = organistRefMode
+      ? '4. Orde van dienst &amp; muziek <span style="font-weight:400;font-size:12px;color:#888">– vul muziek in; liederen/lezingen ter referentie</span>'
       : '4. Orde van dienst <span style="font-weight:400;font-size:12px;color:#888">– in volgorde zoals de voorgang(st)er die aanlevert</span>';
   }
+  if (ordeCollabBanner) {
+    if (organistRefMode) {
+      ordeCollabBanner.style.display = '';
+      ordeCollabBanner.innerHTML =
+        'U werkt in <strong>dezelfde liturgie</strong> als de voorgang(st)er. ' +
+        'Bekijk hieronder de volgorde (lied → lezing → …). Waar een <strong>Muziek</strong>-blok staat, vult u de titel in. ' +
+        'Orgelspel en “muziek na de overdenking” staan apart. Stem desgewenst af met de voorgang(st)er.';
+    } else if (huidigeRol === 'voorganger' && !toonAlles) {
+      ordeCollabBanner.style.display = '';
+      ordeCollabBanner.innerHTML =
+        'De organist(e) opent <strong>dezelfde cloud-link</strong> en ziet deze orde. ' +
+        'Zet een <strong>+ Muziek</strong>-blok op de plek waar instrumentale muziek hoort (bijv. tussen twee liederen), ' +
+        'zodat de organist(e) daar de titel kan invullen. Orgelspel ziet u hieronder zodra die is ingevuld.';
+    } else {
+      ordeCollabBanner.style.display = 'none';
+      ordeCollabBanner.innerHTML = '';
+    }
+  }
+
+  renderOrde();
+  renderDienstOverzicht();
 }
 
 function setupSectionToggles() {
@@ -2010,11 +2087,14 @@ function buildKlaarBericht({ short, cloud, datumTekst, rolLabel, shortId, nieuws
   let body =
     `Beste,\n\n` +
     `Hierbij mijn ingevulde onderdeel voor de liturgie op ${datumTekst} (${rolLabel}).\n\n` +
+    `Belangrijk: voorgang(st)er en organist(e) werken in ÉÉN gedeelde cloud-dienst. ` +
+    `Open onderstaande link om alles samen te zien (niet handmatig overtypen).\n\n` +
     mailLinkBlock(short);
 
   if (shortId) {
     body +=
-      `\nid: ${shortId}\n` +
+      `\nGedeelde dienst-id: ${shortId}\n` +
+      `(Zelfde id = zelfde liturgie — koppel hieraan het onderdeel van de andere invuller.)\n` +
       `Nieuwsbrief-app: ${nieuwsbriefUrl}\n`;
   }
 
@@ -2169,12 +2249,86 @@ function moveOrde(id, dir) {
   renderOrde();
 }
 
+function organistOrdeRefMode() {
+  const toonAlles = document.getElementById('toon-alles')?.checked;
+  return huidigeRol === 'organist' && !toonAlles;
+}
+
+function renderDienstOverzicht() {
+  const box = document.getElementById('dienst-overzicht');
+  if (!box) return;
+
+  const val = (id) => (document.getElementById(id)?.value || '').trim();
+  const orgelOpen = val('orgelspel_opening');
+  const lichtlied = val('lichtlied');
+  const muziekOver = val('muziek_overdenking');
+  const liedNa = val('lied_na_overdenking');
+  const slotlied = val('slotlied');
+  const orgelSlot = val('orgelspel_slot');
+
+  const labels = { lied: 'Lied', lezing: 'Lezing', inleiding: 'Inleiding', muziek: 'Muziek', overig: 'Overig' };
+  const firstLine = (t) => String(t || '').split('\n')[0].trim();
+
+  const items = [];
+  const push = (label, text, cls = '') => {
+    const t = firstLine(text);
+    if (t) items.push({ html: `<strong>${label}:</strong> ${escapeHtml(t)}`, cls });
+    else items.push({ html: `<strong>${label}:</strong> <span class="ov-empty">nog leeg</span>`, cls: cls || 'ov-open' });
+  };
+
+  push('Orgelspel opening', orgelOpen, orgelOpen ? 'ov-mine' : 'ov-open');
+  push('Lichtlied', lichtlied);
+  if (!ordeItems.length) {
+    items.push({ html: '<span class="ov-empty">Nog geen liederen/lezingen/muziek in de orde</span>', cls: 'ov-empty' });
+  } else {
+    ordeItems.forEach((item, i) => {
+      if (!item || !item.type) return;
+      const lab = labels[item.type] || item.type;
+      const t = firstLine(item.content);
+      const isMuziek = item.type === 'muziek';
+      const cls = isMuziek ? (t ? 'ov-mine' : 'ov-open') : '';
+      items.push({
+        html: t
+          ? `<strong>${i + 1}. ${lab}:</strong> ${escapeHtml(t)}`
+          : `<strong>${i + 1}. ${lab}:</strong> <span class="ov-empty">nog leeg${isMuziek ? ' — organist(e) vult in' : ''}</span>`,
+        cls,
+      });
+    });
+  }
+  items.push({ html: '<strong>Overdenking</strong> → stilte', cls: '' });
+  push('Muziek na overdenking', muziekOver, muziekOver ? 'ov-mine' : 'ov-open');
+  if (liedNa) push('Lied na overdenking', liedNa);
+  push('Slotlied', slotlied);
+  push('Orgelspel slot', orgelSlot, orgelSlot ? 'ov-mine' : 'ov-open');
+
+  const hint = huidigeRol === 'organist'
+    ? 'Oranje/lege muziekplekken zijn voor u. Liederen en lezingen vult de voorgang(st)er in.'
+    : huidigeRol === 'voorganger'
+      ? 'De organist(e) ziet dit overzicht in dezelfde cloud-dienst en vult orgelspel + muziekblokken in.'
+      : 'Zelfde id voor voorgang(st)er en organist(e) — dan komen hun onderdelen hier samen.';
+
+  box.innerHTML =
+    `<h4>Overzicht van de dienst</h4>` +
+    `<ol>${items.map(it => `<li class="${it.cls || ''}">${it.html}</li>`).join('')}</ol>` +
+    `<p class="ov-hint">${hint}</p>`;
+}
+
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
 function renderOrde() {
   const list = document.getElementById('orde-list');
+  if (!list) return;
   // Verwijder eventuele corrupte null-gaten (oude bug bij omhoog/omlaag)
   if (ordeItems.some(i => !i || !i.type)) {
     ordeItems = ordeItems.filter(i => i && i.type);
   }
+  const refMode = organistOrdeRefMode();
   list.innerHTML = '';
   ordeItems.forEach((item, idx) => {
     const labels = { lied: 'Lied', lezing: 'Lezing', inleiding: 'Inleiding', muziek: 'Muziek', overig: 'Overig' };
@@ -2182,36 +2336,47 @@ function renderOrde() {
       lied:      'bijv. Lied 652: 1, 3 en 5\nof: Lied 773: Van grond en vuur (eventueel met liedtekst)',
       lezing:    'bijv. Genesis 4, 1-16\n\nEventueel de volledige tekst eronder…',
       inleiding: 'Optionele inleidingstekst…',
-      muziek:    'bijv. Improvisatie',
+      muziek:    'bijv. Improvisatie / titel muziekstuk (organist)',
       overig:    '',
     };
+    const canEdit = !refMode || item.type === 'muziek';
     const div = document.createElement('div');
-    div.className = 'orde-item' + (String(item.id) === String(focusedOrdeId) ? ' is-focused' : '');
+    div.className = 'orde-item'
+      + (String(item.id) === String(focusedOrdeId) ? ' is-focused' : '')
+      + (refMode && item.type === 'muziek' ? ' orde-organist-edit' : '')
+      + (refMode && item.type !== 'muziek' ? ' orde-readonly' : '');
     const safeId = String(item.id).replace(/\\/g, '\\\\').replace(/'/g, "\\'");
-    const fetchBtn = item.type === 'lezing'
+    const fetchBtn = !canEdit ? '' : item.type === 'lezing'
       ? `<button class="btn-fetch" onclick="fetchBibleText('${safeId}')" title="Haal bijbeltekst op via BijbelAPI (let op: alleen Statenvertaling beschikbaar)">Tekst ophalen (Statenvertaling)</button>
          <button class="btn-fetch" onclick="openNbv21('${safeId}')" title="Open NBV21 op debijbel.nl — kopieer de tekst zelf (geen gratis API voor deze vertaling)">NBV21 openen</button>`
       : item.type === 'lied'
       ? `<button class="btn-fetch" onclick="openLiedboekOnline('${safeId}')" title="Open Liedbundels Online (inlog vereist)">Liedbundels Online</button>${item.muziek_data?.length ? '<span style="font-size:12px;color:#2e7d32">♪ muziek 1e couplet</span>' : ''}`
       : '';
-    div.innerHTML = `
-      <select onchange="updateOrdeType('${safeId}', this.value)">
+    const typeControl = canEdit && !refMode
+      ? `<select onchange="updateOrdeType('${safeId}', this.value)">
         ${['lied','lezing','inleiding','muziek','overig'].map(t =>
           `<option value="${t}"${t===item.type?' selected':''}>${labels[t]}</option>`
         ).join('')}
-      </select>
+      </select>`
+      : `<div style="font-size:13px;font-weight:600;padding:6px 0;color:var(--brand-dark)">${labels[item.type] || item.type}${refMode && item.type === 'muziek' ? ' <span class="opt">u vult in</span>' : ''}</div>`;
+    const moveControls = canEdit && !refMode
+      ? `<div style="display:flex;flex-direction:column;gap:4px">
+        <button class="btn-icon" onclick="moveOrde('${safeId}',-1)" title="Omhoog">↑</button>
+        <button class="btn-icon" onclick="moveOrde('${safeId}',1)" title="Omlaag">↓</button>
+      </div>
+      <button class="btn-icon del" onclick="removeOrde('${safeId}')" title="Verwijder">✕</button>`
+      : '<div></div><div></div>';
+    div.innerHTML = `
+      ${typeControl}
       <div style="display:flex;flex-direction:column;gap:6px">
         <textarea placeholder="${placeholders[item.type]||''}"
+                  ${canEdit ? '' : 'readonly'}
                   onfocus="focusedOrdeId='${safeId}'; document.querySelectorAll('.orde-item').forEach(el=>el.classList.remove('is-focused')); this.closest('.orde-item').classList.add('is-focused')"
                   onchange="updateOrdeContent('${safeId}', this.value)"
                   oninput="updateOrdeContent('${safeId}', this.value)"></textarea>
         ${fetchBtn}
       </div>
-      <div style="display:flex;flex-direction:column;gap:4px">
-        <button class="btn-icon" onclick="moveOrde('${safeId}',-1)" title="Omhoog">↑</button>
-        <button class="btn-icon" onclick="moveOrde('${safeId}',1)" title="Omlaag">↓</button>
-      </div>
-      <button class="btn-icon del" onclick="removeOrde('${safeId}')" title="Verwijder">✕</button>
+      ${moveControls}
     `;
     const ta = div.querySelector('textarea');
     ta.value = item.content || '';
@@ -2219,6 +2384,7 @@ function renderOrde() {
     ta.rows = Math.max(2, Math.min(16, lines + 1));
     list.appendChild(div);
   });
+  renderDienstOverzicht();
   scheduleDraftSave();
 }
 
@@ -2229,7 +2395,9 @@ function updateOrdeType(id, type) {
 
 function updateOrdeContent(id, content) {
   const item = ordeItems[findOrdeIndex(id)];
-  if (item) item.content = content;
+  if (!item) return;
+  if (organistOrdeRefMode() && item.type !== 'muziek') return;
+  item.content = content;
   focusedOrdeId = id;
   scheduleDraftSave();
 }
@@ -3095,6 +3263,9 @@ function aanhefVasteVoorganger() {
 async function emailRol(rol) {
   const datum = document.getElementById('datum').value;
   const datumTekst = datum ? formatDatum(datum) : 'komende dienst';
+  const voorgangerNaam = document.getElementById('voorganger').value.trim() || 'de voorgang(st)er';
+  const organistNaam = document.getElementById('organist').value.trim() || 'de organist(e)';
+  const orgVoornaam = voornaamUitNaam(document.getElementById('organist').value) || 'organist';
   setStatus('Opslaan & link maken…', '');
   const { short, cloud } = await prepareShareLink(rol);
   await copyShareLinkRich(short);
@@ -3108,17 +3279,20 @@ async function emailRol(rol) {
       `Hier is de link naar de liturgie van ${datumTekst}. ` +
       `Kun je thema, orde van dienst (liederen en lezingen), lichtlied en slotlied, ` +
       `een afbeelding voor het voorblad en een kort stukje voor de nieuwsbrief invullen?\n\n` +
+      `Tip: zet een “+ Muziek”-blok op de plek waar ${organistNaam} speelt (bijv. tussen twee liederen). ` +
+      `${organistNaam} krijgt dezelfde cloud-link en ziet jouw orde — zo kunnen jullie op elkaar afstemmen.\n\n` +
       mailLinkBlock(short) + '\n' +
       `Je hoeft niet alles in één keer te doen. Als je klaar bent, klik je op “Ik ben klaar” — ` +
       `dan komt het bij de liturgiemaker terecht (info@vrijburg.nl).\n\n` +
       `Hartelijke groet,\nGigi`;
   } else {
-    const orgNaam = voornaamUitNaam(document.getElementById('organist').value) || 'organist';
     subject = `Liturgie Vrijburg – ${datumTekst} (orgelspel)`;
     body =
-      `Beste ${orgNaam},\n\n` +
-      `Hier is de link naar de liturgie van ${datumTekst}. ` +
+      `Beste ${orgVoornaam},\n\n` +
+      `Hier is de link naar de liturgie van ${datumTekst} (dezelfde cloud-dienst als die van ${voorgangerNaam}). ` +
       `Kun je orgelspel (opening en slot) en de muziek na de overdenking invullen?\n\n` +
+      `In de link zie je ook de orde van dienst van ${voorgangerNaam} (liederen, lezingen, eventuele muziekblokken). ` +
+      `Vul bij “Muziek”-blokken de titel in. Stem desgewenst met ${voorgangerNaam} af wat er moet klinken.\n\n` +
       mailLinkBlock(short) + '\n' +
       `Als je klaar bent, klik je op “Ik ben klaar”.\n\n` +
       `Hartelijke groet,\nGigi`;
@@ -3192,7 +3366,8 @@ async function emailGastpredikantBrief() {
     `Voor het samenstellen van de liturgie gebruiken we de Liturgie Generator. ` +
     `Via onderstaande link vult u thema, orde van dienst (liederen en lezingen), lichtlied/slotlied, ` +
     `foto en een kort stukje voor de nieuwsbrief in. U hoeft niet alles in één keer te doen; ` +
-    `klik op “Ik ben klaar” als uw deel gereed is.\n\n` +
+    `klik op “Ik ben klaar” als uw deel gereed is. ` +
+    `Zet een “+ Muziek”-blok waar instrumentale muziek hoort — de organist ziet uw orde in dezelfde cloud-dienst.\n\n` +
     mailLinkBlock(short) + '\n' +
     `Ter oriëntatie kunt u de basisliturgie downloaden — zo ziet u hoe de dienst in de basis is opgebouwd. ` +
     `Daarop kunt u natuurlijk variëren (bijvoorbeeld een ander lichtlied uit het Liedboek). ` +
@@ -3242,7 +3417,10 @@ let suppressDraftSave = false;
 function scheduleDraftSave() {
   if (suppressDraftSave) return;
   clearTimeout(draftTimer);
-  draftTimer = setTimeout(saveDraft, 500);
+  draftTimer = setTimeout(() => {
+    saveDraft();
+    renderDienstOverzicht();
+  }, 500);
 }
 
 function saveDraft() {
