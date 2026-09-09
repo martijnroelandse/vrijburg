@@ -119,6 +119,17 @@
       width: 100%;
       transition: border-color 0.15s;
     }
+    input::placeholder, textarea::placeholder {
+      color: #9aa3ad;
+      font-style: italic;
+      opacity: 1;
+    }
+    /* Ingevulde velden: geen grijze “voorbeeld”-uitstraling meer */
+    input:not(:placeholder-shown), textarea:not(:placeholder-shown) {
+      font-style: normal;
+      border-color: #c5ced6;
+      background: #fcfdfe;
+    }
 
     input:focus, textarea:focus, select:focus {
       outline: none;
@@ -659,25 +670,29 @@
         </div>
         <div class="field" data-owner="medewerker">
           <label>Afwijkende aanvangstijd <span class="opt">optioneel</span></label>
-          <input type="text" id="aanvangstijd" placeholder="bijv. 14.30 of 19.30">
+          <input type="text" id="aanvangstijd" placeholder="14.30 of 19.30">
         </div>
         <div class="field" data-owner="medewerker">
           <label>Bijzondere dienst <span class="opt">uit dienstplanning</span></label>
-          <input type="text" id="bijzondere_dienst" placeholder="bijv. Pasen, Pinksteren, Kerstavond">
+          <input type="text" id="bijzondere_dienst" placeholder="Pasen, Pinksteren, Kerstavond">
         </div>
       </div>
       <div class="row">
         <div class="field" data-owner="medewerker">
           <label>Voorgang(st)er / predikant <span class="opt">uit dienstplanning</span></label>
-          <input type="text" id="voorganger" placeholder="bijv. ds. Rachelle van Andel">
+          <input type="text" id="voorganger" placeholder="ds. Rachelle van Andel">
         </div>
         <div class="field" data-owner="medewerker">
           <label>Organist(e) <span class="opt">uit dienstplanning</span></label>
-          <input type="text" id="organist" placeholder="bijv. Jan Pieter Lanooy">
+          <input type="text" id="organist" placeholder="Jan Pieter Lanooy">
         </div>
         <div class="field" data-owner="medewerker">
           <label>Lector <span class="opt">bureaumedewerk(st)er vult in</span></label>
-          <input type="text" id="lector" placeholder="bijv. Gon Homburg">
+          <input type="text" id="lector" placeholder="Gon Homburg">
+        </div>
+        <div class="field" data-owner="medewerker">
+          <label>Dienstdoende bestuurder <span class="opt">uit dienstenrooster</span></label>
+          <input type="text" id="bestuurslid" placeholder="Roelandse">
         </div>
       </div>
       <div class="row">
@@ -687,7 +702,7 @@
         </div>
         <div class="field" data-owner="medewerker">
           <label>Kinderkerk <span class="opt">optioneel</span></label>
-          <input type="text" id="kinderkerk" placeholder="bijv. ja">
+          <input type="text" id="kinderkerk" placeholder="ja">
         </div>
       </div>
       <div class="vl-grid" data-owner="medewerker">
@@ -726,11 +741,12 @@
       <div class="row">
         <div class="field" data-owner="medewerker" style="grid-column: 1/-1">
           <label>Overige bijzonderheden <span class="opt">locatie, opmerkingen</span></label>
-          <textarea id="bijzonderheden" rows="2" placeholder="bijv. Locatie: Thomaskerk"></textarea>
+          <textarea id="bijzonderheden" rows="2" placeholder="Locatie: Thomaskerk"></textarea>
         </div>
       </div>
       <p style="font-size:12px;color:#aaa;margin-top:8px">
-        Namen en VLV/VLH/VLZ komen uit de <a href="https://docs.google.com/spreadsheets/d/1imjMr9ELUHGV9331mYIoTOUc-DizOysV/edit" target="_blank" rel="noopener">dienstplanning</a>.
+        Namen, lector en dienstdoende bestuurder komen uit de <a href="https://docs.google.com/spreadsheets/d/1imjMr9ELUHGV9331mYIoTOUc-DizOysV/edit" target="_blank" rel="noopener">dienstplanning</a>
+        (kolom Bestuurslid; Q3-2026 gevuld vanuit Jet’s dienstenrooster).
       </p>
     </div>
   </div>
@@ -742,7 +758,7 @@
       <div class="row">
         <div class="field" style="grid-column: 1/-1">
           <label>Thema <span class="opt">– bovenkop van de dienst</span></label>
-          <input type="text" id="thema" placeholder="bijv. Liefde en wonden">
+          <input type="text" id="thema" placeholder="Liefde en wonden">
         </div>
       </div>
       <div class="row">
@@ -780,7 +796,7 @@
       <div class="row">
         <div class="field" style="grid-column: 1/-1">
           <label>Bronvermelding afbeelding <span class="opt">– naam fotograaf / bron (verplicht bij upload)</span></label>
-          <input type="text" id="foto_credit" placeholder="bijv. Foto ammoniet: Petra Galama">
+          <input type="text" id="foto_credit" placeholder="Foto ammoniet: Petra Galama">
           <p class="comm-hint">Vermeld altijd de bron of fotograaf als u een afbeelding uploadt.</p>
         </div>
       </div>
@@ -812,12 +828,12 @@
       <div class="row">
         <div class="field field-mine" data-owner="organist">
           <label>Orgelspel opening <span class="opt">organist(e)</span></label>
-          <input type="text" id="orgelspel_opening" placeholder="bijv. Präludium in C-dur BWV 545, J.S. Bach">
+          <input type="text" id="orgelspel_opening" placeholder="Leeg = niet afgedrukt — titel orgelwerk">
         </div>
         <div class="field field-mine" data-owner="voorganger">
           <label>Lichtlied <span class="opt">voorgang(st)er</span></label>
           <div style="display:flex;gap:8px;align-items:center">
-            <input type="text" id="lichtlied" placeholder="bijv. Lied 217: 1 en 3  of  'Licht dat wil ingaan…'" style="flex:1">
+            <input type="text" id="lichtlied" placeholder="Lied 217: 1 en 3  of  'Licht dat wil ingaan…'" style="flex:1">
             <button type="button" class="btn-small" onclick="openLiedboekOnlineField('lichtlied')" title="Open Liedbundels Online">Liedboek</button>
           </div>
           <textarea id="lichtlied_lyrics" rows="6" style="display:none;margin-top:8px" placeholder="Couplettekst na import van de liedlijst" oninput="lichtliedLyrics=this.value;scheduleDraftSave()"></textarea>
@@ -866,7 +882,7 @@
       </div>
       <div class="field field-mine" id="orde-organist-ui" data-owner="organist" style="grid-column:1/-1">
         <label>Muziek na de overdenking <span class="opt">organist(e)</span></label>
-        <input type="text" id="muziek_overdenking" placeholder="bijv. Improvisatie">
+        <input type="text" id="muziek_overdenking" placeholder="Leeg = niet afgedrukt — titel muziekstuk">
         <p class="comm-hint">
           Dit komt in de liturgie na Overdenking → Stilte. De liederen van de voorgang(st)er ziet u via de rol
           Voorgang(st)er of Alles bekijken.
@@ -882,7 +898,15 @@
       <div class="row">
         <div class="field field-mine" data-owner="voorganger" style="grid-column: 1/-1">
           <label>Voorbeden <span class="opt">eigen tekst, acclamaties (optioneel)</span></label>
-          <textarea id="voorbeden_tekst" rows="4" placeholder="Laat leeg voor de standaardtekst &quot;Stil gebed, afgesloten met Onze Vader:&quot;.&#10;Vul hier bijv. eigen voorbeden met acclamaties in, zoals:&#10;Voorganger: Zo bidden wij…&#10;Allen: Heer, hoor ons gebed."></textarea>
+          <textarea id="voorbeden_tekst" rows="4" placeholder="Laat leeg voor de standaardtekst &quot;Stil gebed, afgesloten met Onze Vader:&quot;.&#10;Vul hier eigen voorbeden met acclamaties in, zoals:&#10;Voorganger: Zo bidden wij…&#10;Allen: Heer, hoor ons gebed."></textarea>
+        </div>
+      </div>
+      <div class="row">
+        <div class="field field-mine" data-owner="voorganger" style="grid-column: 1/-1">
+          <label>Acclamatie / lied bij voorbeden <span class="opt">optioneel, komt onder de voorbeden in de liturgie</span></label>
+          <input type="text" id="acclamatie_lied" placeholder="Lied … (alleen titelregel, of titel + coupletten onder elkaar)">
+          <textarea id="acclamatie_lied_lyrics" rows="4" style="display:none;margin-top:8px" placeholder="Couplettekst na import of handmatig" oninput="scheduleDraftSave()"></textarea>
+          <p class="comm-hint">Gebruik dit veld voor een acclamatie-lied dat <em>bij de voorbeden</em> hoort — niet als lied in de orde van dienst (dat komt na de lezingen).</p>
         </div>
       </div>
       <div class="row">
@@ -905,13 +929,13 @@
       <div class="row">
         <div class="field field-mine" data-owner="voorganger">
           <label>Slotlied <span class="opt">voorgang(st)er</span></label>
-          <input type="text" id="slotlied" placeholder="bijv. Lied 675">
+          <input type="text" id="slotlied" placeholder="Lied 675">
           <textarea id="slotlied_lyrics" rows="6" style="display:none;margin-top:8px" placeholder="Couplettekst na import van de liedlijst" oninput="slotliedLyrics=this.value;scheduleDraftSave()"></textarea>
           <p class="comm-hint" id="slotlied-muziek-hint" style="display:none">♪ Muziek 1e couplet meegenomen voor het Word-document</p>
         </div>
         <div class="field field-mine" data-owner="organist">
           <label>Orgelspel slot <span class="opt">organist(e)</span></label>
-          <input type="text" id="orgelspel_slot" placeholder="bijv. Fuge in C-dur BWV 545, J.S. Bach">
+          <input type="text" id="orgelspel_slot" placeholder="Leeg = niet afgedrukt — titel orgelwerk">
         </div>
       </div>
     </div>
@@ -935,11 +959,11 @@
         <div class="row">
           <div class="field">
             <label>Collectethema</label>
-            <input type="text" id="c1_thema" placeholder="bijv. Vluchtelingen">
+            <input type="text" id="c1_thema" placeholder="Vluchtelingen">
           </div>
           <div class="field">
             <label>Naam organisatie</label>
-            <input type="text" id="c1_naam" placeholder="bijv. Stichting NAOMI">
+            <input type="text" id="c1_naam" placeholder="Stichting NAOMI">
           </div>
         </div>
         <div class="row">
@@ -969,7 +993,7 @@
           </div>
           <div class="field" id="c2-naam-field" style="display:none">
             <label>Naam / bestemming</label>
-            <input type="text" id="c2_naam" placeholder="bijv. Wederopbouw Cuba" oninput="scheduleDraftSave()">
+            <input type="text" id="c2_naam" placeholder="Wederopbouw Cuba" oninput="scheduleDraftSave()">
           </div>
         </div>
         <div class="row">
@@ -1003,11 +1027,11 @@
       </div>
       <div class="field" style="margin-bottom:16px">
         <label>Activiteiten komende week <span class="opt">– voor activiteiten die binnenkort plaatsvinden</span></label>
-        <textarea id="agenda_kort" rows="8" placeholder="bijv. Donderdag 2 juli 12:30 uur – Vrijburglunch – Vrijburg&#10;Schuif aan bij de maandelijkse gezellige Vrijburglunch!…"></textarea>
+        <textarea id="agenda_kort" rows="8" placeholder="Donderdag 2 juli 12:30 uur – Vrijburglunch – Vrijburg&#10;Schuif aan bij de maandelijkse gezellige Vrijburglunch!…"></textarea>
       </div>
       <div class="field">
         <label>Aankondigingen verder weg <span class="opt">optioneel</span></label>
-        <textarea id="agenda_ver" rows="8" placeholder="bijv. Zondag 13 juli 10:30 uur – kerkdienst met ds. …&#10;Korte omschrijving van de activiteit…"></textarea>
+        <textarea id="agenda_ver" rows="8" placeholder="Zondag 13 juli 10:30 uur – kerkdienst met ds. …&#10;Korte omschrijving van de activiteit…"></textarea>
       </div>
     </div>
   </div>
@@ -1093,7 +1117,7 @@
 // ============================================================
 const COLLECTES = []; // Filled from collectes.json below
 const DIENSTPLANNING = []; // Filled from dienstplanning.json
-const UI_VERSION = 'v2026-08-18';
+const UI_VERSION = 'v2026-09-09';
 
 // ============================================================
 // VASTE TEKSTEN
@@ -2816,6 +2840,7 @@ function getFormState() {
     voorganger: document.getElementById('voorganger').value,
     organist: document.getElementById('organist').value,
     lector: document.getElementById('lector').value,
+    bestuurslid: document.getElementById('bestuurslid').value,
     thema: document.getElementById('thema').value,
     intro: document.getElementById('intro').value,
     nieuwsbrief: document.getElementById('nieuwsbrief').value,
@@ -2842,6 +2867,7 @@ function getFormState() {
     c2_tekst: document.getElementById('c2_tekst').value,
     c2_rekening: document.getElementById('c2_rekening').value,
     voorbeden_tekst: document.getElementById('voorbeden_tekst').value,
+    acclamatie_lied: document.getElementById('acclamatie_lied').value,
     geen_onze_vader: document.getElementById('geen_onze_vader').checked,
     agenda_kort: document.getElementById('agenda_kort').value,
     agenda_ver: document.getElementById('agenda_ver').value,
@@ -2873,10 +2899,10 @@ function applyPlanningVl(planning) {
 function applyFormState(state) {
   if (!state) return;
   const fields = ['datum','aanvangstijd','bijzondere_dienst','kinderkerk','bijzonderheden',
-    'voorganger','organist','lector','thema','intro','nieuwsbrief','overdenking_email','foto_credit',
+    'voorganger','organist','lector','bestuurslid','thema','intro','nieuwsbrief','overdenking_email','foto_credit',
     'orgelspel_opening','lichtlied','gebed_opening','muziek_overdenking','slotlied','orgelspel_slot','bloemen',
     'c1_thema','c1_naam','c1_tekst','c1_rekening','c2_type','c2_naam','c2_tekst','c2_rekening',
-    'voorbeden_tekst',
+    'voorbeden_tekst','acclamatie_lied',
     'agenda_kort','agenda_ver','avondmaal'];
   fields.forEach(id => {
     if (state[id] !== undefined) document.getElementById(id).value = state[id];
@@ -3196,6 +3222,7 @@ function emptyFormState() {
     voorganger: '',
     organist: '',
     lector: '',
+    bestuurslid: '',
     thema: '',
     intro: '',
     nieuwsbrief: '',
@@ -3222,6 +3249,7 @@ function emptyFormState() {
     c2_tekst: '',
     c2_rekening: '',
     voorbeden_tekst: '',
+    acclamatie_lied: '',
     geen_onze_vader: false,
     agenda_kort: '',
     agenda_ver: '',
@@ -3288,6 +3316,7 @@ function onDatumChange() {
     document.getElementById('voorganger').value = planning.predikant || '';
     document.getElementById('organist').value = planning.organist || '';
     document.getElementById('lector').value = planning.lector || '';
+    document.getElementById('bestuurslid').value = planning.bestuurslid || '';
     document.getElementById('aanvangstijd').value = planning.aanvangstijd || '';
     document.getElementById('bijzondere_dienst').value = planning.bijzondere_dienst || '';
     document.getElementById('cantorij').checked = !!planning.cantorij;
@@ -3296,7 +3325,8 @@ function onDatumChange() {
     planningNotice.style.display = 'block';
     planningNotice.style.background = '#e8f5e9';
     planningNotice.style.color = '#2e7d32';
-    planningNotice.textContent = `✓ Dienstplanning ingevuld voor ${formatDatum(val)}`;
+    planningNotice.textContent = `✓ Dienstplanning ingevuld voor ${formatDatum(val)}`
+      + (planning.bestuurslid ? ` (bestuurder: ${planning.bestuurslid})` : '');
   } else {
     planningNotice.style.display = 'block';
     planningNotice.style.background = '#fff3e0';
@@ -3619,6 +3649,7 @@ async function generateDocxAsync() {
   const voorganger = document.getElementById('voorganger').value.trim();
   const organist   = document.getElementById('organist').value.trim();
   const lector     = document.getElementById('lector').value.trim();
+  const bestuurslid = document.getElementById('bestuurslid').value.trim();
   const thema      = document.getElementById('thema').value.trim();
   const intro      = document.getElementById('intro').value.trim();
   const foto       = document.getElementById('foto_credit').value.trim();
@@ -3638,6 +3669,7 @@ async function generateDocxAsync() {
   const c2Tekst    = document.getElementById('c2_tekst').value.trim();
   const c2Rek      = document.getElementById('c2_rekening').value.trim();
   const voorbedenTekst  = document.getElementById('voorbeden_tekst').value.trim();
+  const acclamatieLied  = document.getElementById('acclamatie_lied').value.trim();
   const geenOnzeVader   = document.getElementById('geen_onze_vader').checked;
   const agendaKort = document.getElementById('agenda_kort').value.trim();
   const agendaVer  = document.getElementById('agenda_ver').value.trim();
@@ -3714,7 +3746,12 @@ async function generateDocxAsync() {
   }
 
   function pageBreak() {
-    return new Paragraph({ children: [new PageBreak()] });
+    // Expliciete rPr (Calibri 16) zodat Word na download op die regel
+    // niet terugvalt op Normal/Helvetica 11.
+    return new Paragraph({
+      children: [textRun(''), new PageBreak()],
+      spacing: { before: 0, after: 0, line: 276, lineRule: 'auto' },
+    });
   }
 
   function sectie(text) {
@@ -3958,6 +3995,7 @@ async function generateDocxAsync() {
   if (voorganger) coverRoleLines++;
   if (organist) coverRoleLines++;
   if (lector) coverRoleLines++;
+  if (bestuurslid) coverRoleLines++;
   if (cantorij) coverRoleLines++;
   if (kinderkerk && !dienstExtraPreview.includes('kinderkerk')) coverRoleLines++;
 
@@ -4028,6 +4066,7 @@ async function generateDocxAsync() {
   if (voorganger) children.push(p(`${voorgangerLabel}: ${voorganger}`));
   if (organist) children.push(p(`Organist: ${organist}`));
   if (lector) children.push(p(`Lector${/\s+en\s+/i.test(lector) ? 'en' : ''}: ${lector}`));
+  if (bestuurslid) children.push(p(`Dienstdoende bestuurder: ${bestuurslid}`));
   if (cantorij) children.push(p('Cantorij'));
   if (kinderkerk && !dienstExtra.includes('kinderkerk')) {
     children.push(p(`Kinderkerk: ${kinderkerk}`));
@@ -4119,13 +4158,18 @@ async function generateDocxAsync() {
   if (muziekOverdenking) children.push(pOrgelspel('Muziek: ' + muziekOverdenking));
   else children.push(p('Muziek', { bold: true }));
 
-  // VOORBEDEN
+  // VOORBEDEN (+ optioneel acclamatie-lied onder de voorbeden)
   children.push(empty());
   children.push(p('Voorbeden', { bold: true, before: 120 }));
   if (voorbedenTekst) {
     children.push(...multiline(voorbedenTekst));
   } else {
     children.push(p('Stil gebed, afgesloten met Onze Vader:'));
+  }
+  if (acclamatieLied) {
+    children.push(empty());
+    const acclamatieLines = acclamatieLied.split('\n').map(l => l.trim()).filter(Boolean);
+    await appendLiedWithOptionalMusic(children, acclamatieLines, null);
   }
   if (!geenOnzeVader) {
     ONZE_VADER.forEach(regel => children.push(p(regel, { indent: 0.5 })));
@@ -4226,7 +4270,18 @@ async function generateDocxAsync() {
         document: {
           run: { font: 'Calibri', size: szBody }
         }
-      }
+      },
+      paragraphStyles: [
+        {
+          id: 'Normal',
+          name: 'Normal',
+          quickStyle: true,
+          run: { font: 'Calibri', size: szBody },
+          paragraph: {
+            spacing: { before: 0, after: 0, line: 276, lineRule: 'auto' },
+          },
+        },
+      ],
     },
     sections: [{
       properties: {

@@ -205,6 +205,13 @@ Aanleiding: een voorganger had geen mailto-client geconfigureerd (Firefox-dialoo
 - Knop **Ik ben klaar – kopieer bericht** (voorganger/organist): zelfde inhoud als de klaar-mail (Aan/CC/onderwerp/tekst + link), zonder e-mailprogramma te openen — plakken in Gmail.
 - De gewone **Ik ben klaar – stuur naar liturgie** zet het klaar-bericht óók op het klembord vóór de mailto, met statushint als e-mail niet opent.
 
+**7c. Bureau-feedback sep 2026** ✅  
+- Placeholders zonder verwarrend voorvoegsel “bijv.”; orgelvelden zeggen expliciet “Leeg = niet afgedrukt”.
+- Acclamatie-/liedveld onder Voorbeden → komt in de .docx tussen voorbedentekst en Onze Vader.
+- Agenda-template Heilige/Hemelse Bronnen: begeleid door ds. Rachelle van Andel (was Tina Geels).
+- .docx: Normal-stijl + pageBreak met expliciete Calibri 16pt (minder Helvetica 11 bij nawerk in Word).
+- Dienstdoende bestuurder op voorblad; kolom `bestuurslid` in `dienstplanning.json` (uit Jet’s Q3-rooster). Google Sheet kolom Bestuurslid nog handmatig bijwerken met `downloads/bestuurslid-q3-2026-voor-sheet.tsv`.
+
 **7b. "Meld nieuwsbriefredactie" direct onder het nieuwsbriefveld** ✅ *geïmplementeerd (aug 2026)*  
 Aanleiding: in de praktijk staat de nieuwsbrieftekst niet altijd al klaar op het moment dat de rest van de liturgie compleet is (dat was ook de directe oorzaak van het "ik zie geen nieuwsbrieftekst"-signaal — de tekst was simpelweg nog niet ingevuld, geen bug). Losse melding per veld is dus handiger dan wachten op de algemene "klaar"-melding van de hele dienst.
 
