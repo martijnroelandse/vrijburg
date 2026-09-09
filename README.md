@@ -87,9 +87,13 @@ De vaste teksten (Bemoediging, Groet, Onze Vader, QR-code tekst, footer) staan b
 Zodra alles is ingevuld, klikt de bureaumedewerker (rol "Bureaumedewerker" of "Alles bekijken") op **📣 Meld: liturgie is klaar**. Dat doet twee dingen:
 
 1. Slaat de dienst op met status `klaar` (zichtbaar naast de cloud-link onderin het formulier).
-2. Stuurt een e-mail-ping met de datum, het thema en de `id` naar `KLAAR_NOTIFY_EMAIL` (Gon + info@vrijburg.nl) — zodat de liturgiemaker niet zelf hoeft te checken of/wanneer een liturgie compleet is.
+2. Stuurt een e-mail-ping met de datum, het thema en de `id` naar Gon, `info@vrijburg.nl` en de nieuwsbriefredactie (`NIEUWSBRIEF_REDACTIE_EMAIL`) — zodat de liturgiemaker én de nieuwsbrief-maker meteen de id hebben.
 
-Die e-mail wordt automatisch verstuurd via de Supabase Edge Function `supabase/functions/meld-klaar`, mits `RESEND_API_KEY` is ingesteld (zie de comment bovenin dat bestand en `HANDOVER.md`). De vaste ontvangers zijn Gon (`gon.homburg@gmail.com`) en `info@vrijburg.nl`. Zolang de automatische ping niet lukt, opent de knop een kant-en-klare e-mail in uw eigen mailprogramma.
+Die e-mail wordt automatisch verstuurd via de Supabase Edge Function `supabase/functions/meld-klaar`, mits `RESEND_API_KEY` is ingesteld (zie de comment bovenin dat bestand en `HANDOVER.md`). De vaste ontvangers zijn Gon (`gon.homburg@gmail.com`), `info@vrijburg.nl` en de nieuwsbriefredactie (`martijnroelandse@me.com`). Zolang de automatische ping niet lukt, opent de knop een kant-en-klare e-mail in uw eigen mailprogramma.
+
+### Bij "Ik ben klaar" (voorganger/organist)
+
+Als de voorganger of organist op **Ik ben klaar** klikt, gaat de mailto naar Gon + `info@vrijburg.nl`, met de nieuwsbriefredactie in **CC**. In onderwerp en body staan de `id` en een link naar `nieuwsbrief.html?id=…`, zodat de redactie zonder aparte knop meteen de nieuwsbrief-app kan openen.
 
 ### Los daarvan: "Meld nieuwsbriefredactie" (direct onder het nieuwsbriefveld)
 

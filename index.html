@@ -1161,12 +1161,15 @@ const SUPABASE_FOTO_BUCKET = 'dienst-fotos';
 // info@ is de gedeelde bureau-inbox (iedereen met toegang tot die mailbox).
 const LITURGIE_MAKER_EMAIL = 'gon.homburg@gmail.com';
 const BUREAU_EMAIL = 'info@vrijburg.nl';
-const KLAAR_NOTIFY_EMAIL = `${LITURGIE_MAKER_EMAIL},${BUREAU_EMAIL}`;
-// Ontvanger van de "meld nieuwsbriefredactie"-knop (zie meldNieuwsbriefRedactie()).
-// Voor nu tijdelijk naar Martijn zodat hij meteen ziet wanneer een
-// nieuwsbrieftekst klaarstaat; later te vervangen door het vaste
-// redactie-adres.
+// Ontvanger van de "meld nieuwsbriefredactie"-knop (zie meldNieuwsbriefRedactie())
+// én CC bij "Ik ben klaar" / mee op de bureau-klaar-ping — zodat de redactie
+// meteen de short_id heeft voor nieuwsbrief.html?id=…
+// Voor nu tijdelijk naar Martijn; later te vervangen door het vaste redactie-adres.
 const NIEUWSBRIEF_REDACTIE_EMAIL = 'martijnroelandse@me.com';
+// To bij "Ik ben klaar" (dominee/organist) en fallback van "Meld: liturgie is klaar".
+const KLAAR_NOTIFY_EMAIL = `${LITURGIE_MAKER_EMAIL},${BUREAU_EMAIL}`;
+// Bureau-klaar-ping: Gon + info@ + nieuwsbriefredactie (allen hebben de id nodig).
+const LITURGIE_KLAAR_NOTIFY_EMAIL = `${KLAAR_NOTIFY_EMAIL},${NIEUWSBRIEF_REDACTIE_EMAIL}`;
 
 const sb = (() => {
   const lib = (typeof supabase !== 'undefined') ? supabase : null;
@@ -1257,7 +1260,7 @@ const ROL_CONFIG = {
   voorganger: {
     label: 'Voorgang(st)er',
     primary: ['thema', 'opening', 'orde', 'voorbeden', 'slot'],
-    hint: 'Vul thema, tekst op voorblad, afbeelding, nieuwsbrief en overdenking in. Vul de orde van dienst in (liederen, lezingen) en lichtlied/slotlied. Wijkt u af van het standaardgebed? Vul dat in bij Voorbeden. Klik op <strong>Ik ben klaar</strong> om alles naar de liturgiemaker en info@vrijburg.nl te sturen.',
+    hint: 'Vul thema, tekst op voorblad, afbeelding, nieuwsbrief en overdenking in. Vul de orde van dienst in (liederen, lezingen) en lichtlied/slotlied. Wijkt u af van het standaardgebed? Vul dat in bij Voorbeden. Klik op <strong>Ik ben klaar</strong> om alles naar de liturgiemaker en info@vrijburg.nl te sturen (nieuwsbriefredactie ontvangt de id in CC).',
     emailAan: 'voorganger',
   },
   organist: {
@@ -1775,9 +1778,10 @@ async function saveDienstManual() {
 // Probeert een automatische e-mail-ping te sturen via een Supabase Edge
 // Function (supabase/functions/meld-klaar). Die functie stuurt pas echt een
 // e-mail als RESEND_API_KEY is ingesteld op het Supabase-project — zie
-// HANDOVER.md. Ontvangers: Gon + info@vrijburg.nl (plus optioneel NOTIFY_EMAIL).
-// Zolang dat niet lukt, valt meldDienstKlaar() terug op een kant-en-klare
-// mailto-link, zodat de melding sowieso verstuurd kan worden.
+// HANDOVER.md. Ontvangers: Gon + info@vrijburg.nl + nieuwsbriefredactie
+// (plus optioneel NOTIFY_EMAIL). Zolang dat niet lukt, valt meldDienstKlaar()
+// terug op een kant-en-klare mailto-link, zodat de melding sowieso verstuurd
+// kan worden.
 async function pingKlaarNotificatie({ shortId, datumTekst, thema, liturgieUrl, nieuwsbriefUrl }) {
   if (!sb) return { ok: false, reason: 'Geen Supabase-verbinding' };
   try {
@@ -1828,7 +1832,7 @@ async function meldDienstKlaar() {
     } else {
       console.warn('Automatische e-mail-ping (nog) niet gelukt:', ping.reason);
       openMailto({
-        to: KLAAR_NOTIFY_EMAIL,
+        to: LITURGIE_KLAAR_NOTIFY_EMAIL,
         subject: `Liturgie klaar – ${datumTekst}${thema ? ' – ' + thema : ''} (id=${shortId})`,
         body:
           `De liturgie voor ${datumTekst}${thema ? ' (' + thema + ')' : ''} is compleet en gemarkeerd als klaar.\n\n` +
@@ -1907,13 +1911,17 @@ async function copyShareLinkRich(url, label = SHARE_LINK_LABEL) {
   }
 }
 
-function openMailto({ to = '', subject, body }) {
-  const addrs = String(to).split(',').map(s => s.trim()).filter(Boolean);
-  const toPart = addrs.map(a => encodeURIComponent(a)).join(',');
-  const href = toPart
-    ? `mailto:${toPart}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
-    : `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-  window.location.href = href;
+function openMailto({ to = '', cc = '', subject, body }) {
+  const encodeList = (value) =>
+    String(value).split(',').map(s => s.trim()).filter(Boolean).map(a => encodeURIComponent(a)).join(',');
+  const toPart = encodeList(to);
+  const ccPart = encodeList(cc);
+  const params = [];
+  if (ccPart) params.push(`cc=${ccPart}`);
+  params.push(`subject=${encodeURIComponent(subject)}`);
+  params.push(`body=${encodeURIComponent(body)}`);
+  const query = params.join('&');
+  window.location.href = toPart ? `mailto:${toPart}?${query}` : `mailto:?${query}`;
 }
 
 function terugNaarBureau() {
@@ -1935,10 +1943,25 @@ function terugNaarBureau() {
 
   prepareShareLink().then(async ({ short, cloud }) => {
     await copyShareLinkRich(short);
+    const shortId = cloud && currentShortId ? currentShortId : '';
+    const nieuwsbriefUrl = shortId
+      ? (() => {
+          const u = new URL('nieuwsbrief.html', location.href.split('?')[0]);
+          u.searchParams.set('id', shortId);
+          return u.toString();
+        })()
+      : '';
+
     let body =
       `Beste,\n\n` +
       `Hierbij mijn ingevulde onderdeel voor de liturgie op ${datumTekst} (${rolLabel}).\n\n` +
       mailLinkBlock(short);
+
+    if (shortId) {
+      body +=
+        `\nid: ${shortId}\n` +
+        `Nieuwsbrief-app: ${nieuwsbriefUrl}\n`;
+    }
 
     if (heeftFoto && cloud && currentFotoPath) {
       body +=
@@ -1971,14 +1994,19 @@ function terugNaarBureau() {
 
     body += `\nMet vriendelijke groet`;
 
+    // Nieuwsbriefredactie in CC: zo heeft die meteen de id voor nieuwsbrief.html
+    // zonder te wachten op de latere bureau-knop "Meld: liturgie is klaar".
     openMailto({
       to: KLAAR_NOTIFY_EMAIL,
-      subject: `Liturgie Vrijburg – ${datumTekst} – ${rolLabel}`,
+      cc: NIEUWSBRIEF_REDACTIE_EMAIL,
+      subject: shortId
+        ? `Liturgie Vrijburg – ${datumTekst} – ${rolLabel} (id=${shortId})`
+        : `Liturgie Vrijburg – ${datumTekst} – ${rolLabel}`,
       body,
     });
 
     const msg = cloud
-      ? (heeftFoto ? '✓ Cloud-link in mail + klembord (foto meegeslagen)' : '✓ Cloud-link in mail en op klembord')
+      ? (heeftFoto ? '✓ Cloud-link in mail + klembord (foto meegeslagen; redactie in CC)' : '✓ Cloud-link in mail en op klembord (redactie in CC)')
       : (heeftFoto ? '✓ Link in mail + klembord — voeg foto als bijlage toe' : '✓ Link in mail en op klembord');
     setStatus(msg, 'ok');
   }).catch(err => {
