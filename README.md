@@ -13,9 +13,10 @@ Webformulier waarmee medewerkers (of dominees zelf) de wekelijkse liturgie kunne
 
 1. **Bureaumedewerker** zet datum → predikant, organist, lector en cantorij worden ingevuld vanuit de dienstplanning
 2. **Bureaumedewerk(st)er** stuurt *Link vaste voorganger* (eigen predikant, informele mail) of *Brief gastpredikant* (gast, met downloads)
-2. **Voorgang(st)er** vult thema, afbeelding, nieuwsbrief, overdenking en orde van dienst in, stuurt link terug
-3. **Organist(e)** vult orgelspel en muziek na de overdenking in, stuurt link terug
-4. **Bureaumedewerker** controleert agenda en collecte, downloadt de liturgie
+3. **Voorgang(st)er** vult thema, afbeelding, nieuwsbrief, overdenking en orde van dienst in (inclusief `+ Muziek`-blokken waar nodig), stuurt link terug
+4. **Bureau** stuurt **dezelfde cloud-link** (zelfde `id`) naar de organist(e)
+5. **Organist(e)** ziet de orde van de voorganger, vult orgelspel, muziekblokken en muziek na de overdenking in, stuurt link terug
+6. **Bureaumedewerker** opent die ene link, controleert agenda en collecte, downloadt de liturgie
 
 Zie `HANDOVER.md` voor technische details.
 
@@ -114,6 +115,7 @@ Zie `HANDOVER.md` voor de volledige lijst. Recent toegevoegd:
 - Overdenking naar info@vrijburg.nl (mailto)
 - Foto in liturgie (.docx) + download voor website
 - Gelijktijdig invullen door voorganger + organist overschrijft elkaars velden niet meer (samenvoegen bij opslaan)
+- Voorganger en organist zien elkaars orde/muziek (dienstoverzicht); organist vult Muziek-blokken in dezelfde cloud-dienst
 - Melding "liturgie is klaar" met e-mail-ping + id (zie hierboven)
 
 Nog open: collectes 2027-2028, bijzondere diensten.

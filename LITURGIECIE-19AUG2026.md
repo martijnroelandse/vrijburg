@@ -20,7 +20,7 @@ Gespreksstuk: open vragen + de collectelijst die de Liturgie Generator gebruikt 
 ## 2. Praktisch (Hiltjes laatste ronde)
 
 5. **Proefkonijn** — Rienk Lanooij, 30 augustus (gast), of de eigen predikantes op 6 september? Of allebei?
-6. **Liederen: wie bepaalt?** — Organist ziet in de generator nu alleen muziek na de overdenking + orgelspel. Liederen zijn van de voorgang(st)er. Bevestigen met de organisten?
+6. **Liederen: wie bepaalt?** — ~~Organist ziet alleen muziek na overdenking + orgelspel.~~ **Opgelost:** organist ziet de orde van de voorganger (liederen/lezingen ter referentie) en kan **Muziek**-blokken invullen; dienstoverzicht toont de volgorde. Liederen blijven van de voorgang(st)er.
 7. **Lied splijten** (bijv. couplet ná Bemoediging/Groet) — Voorlopig handwerk, of later in de tool?
 8. **Agenda** — Import vult al vaste teksten + contact. Lijn: kort (komende week + wat opgave vraagt), of hele website-agenda? E-mails in de liturgie, niet op de site?
 9. **Collectes** — Zie de lijst hieronder. Punten:
