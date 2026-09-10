@@ -217,7 +217,8 @@ Aanleiding: een voorganger had geen mailto-client geconfigureerd (Firefox-dialoo
 **7d. Lied na overdenking + orde-volgorde + Outlook-mailto** ✅ *sep 2026*  
 - Nieuw veld **Lied na overdenking / muziek** (tussen orgelmuziek en voorbeden in de .docx).
 - Orde: nieuw item komt onder het geselecteerde blok (niet altijd onderaan); tip over ↑↓; zip-import plakt restliederen niet meer blind na alle lezingen.
-- `openMailto`: e-mailadressen niet meer `%40`-encoden (breekt Outlook); te lange mailto → standaard klembord i.p.v. kapotte compose. **Uitzondering:** *Brief gastpredikant* gebruikt `force: true` zodat Apple Mail de (lange) brief weer opent zoals voorheen; volledige tekst staat ook op het klembord.
+- `openMailto`: e-mailadressen niet meer `%40`-encoden (breekt Outlook); te lange mailto → standaard klembord i.p.v. kapotte compose.
+- **Brief gastpredikant:** verkorte mail (dienst-specifieke link, termijnen, lector/organist) + doorverwijzing naar `info.html#gastpredikant` voor de rest. Past zo onder de Outlook-limiet (~1800); Apple Mail én Outlook openen zonder `force`. Volledige tekst ook op klembord.
 
 **7b. "Meld nieuwsbriefredactie" direct onder het nieuwsbriefveld** ✅ *geïmplementeerd (aug 2026)*  
 Aanleiding: in de praktijk staat de nieuwsbrieftekst niet altijd al klaar op het moment dat de rest van de liturgie compleet is (dat was ook de directe oorzaak van het "ik zie geen nieuwsbrieftekst"-signaal — de tekst was simpelweg nog niet ingevuld, geen bug). Losse melding per veld is dus handiger dan wachten op de algemene "klaar"-melding van de hele dienst.
