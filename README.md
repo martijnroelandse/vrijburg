@@ -18,7 +18,7 @@ Webformulier waarmee medewerkers (of dominees zelf) de wekelijkse liturgie kunne
 5. **Organist(e)** ziet de orde van de voorganger, vult orgelspel, muziekblokken en muziek na de overdenking in, stuurt link terug
 6. **Bureaumedewerker** opent die ene link, controleert agenda en collecte, downloadt de liturgie
 
-Zie `HANDOVER.md` voor technische details.
+Zie `HANDOVER.md` voor de volledige project-handover (mensen, wekelijkse workflow, Supabase, config, open punten).
 
 ## GitHub Pages deployment
 
