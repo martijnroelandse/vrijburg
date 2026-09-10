@@ -2039,7 +2039,7 @@ async function copyShareLinkRich(url, label = SHARE_LINK_LABEL) {
   }
 }
 
-function openMailto({ to = '', cc = '', subject, body }) {
+function openMailto({ to = '', cc = '', subject, body, force = false }) {
   // Adressen NIET encoden: Outlook/Windows breekt op gon.homburg%40gmail.com.
   const listAddrs = (value) =>
     String(value).split(',').map(s => s.trim()).filter(Boolean).join(',');
@@ -2052,7 +2052,9 @@ function openMailto({ to = '', cc = '', subject, body }) {
   const query = params.join('&');
   const href = toPart ? `mailto:${toPart}?${query}` : `mailto:?${query}`;
   // Windows/Outlook knipt lange mailto-URL's (~2000 tekens) → vreemde compose.
-  if (href.length > 1800) {
+  // Standaard weigeren we die (caller zet tekst op klembord). force:true opent
+  // tóch — nodig voor de gastpredikant-brief in Apple Mail, die lange mailto aankan.
+  if (href.length > 1800 && !force) {
     return { ok: false, reason: 'mailto-te-lang', href };
   }
   window.location.href = href;
@@ -3352,13 +3354,13 @@ async function emailGastpredikantBrief() {
 
   setStatus('Opslaan & brief maken…', '');
   const { short, cloud } = await prepareShareLink('voorganger');
-  await copyShareLinkRich(short);
 
   const basisUrl = siteFileUrl('downloads/basisliturgie-calibri-mrt2026.docx');
   const declUrl = siteFileUrl('downloads/declaratieformulier-preekbeurt-nov2024.docx');
   const infoUrl = siteFileUrl('info.html#gastpredikant');
 
   const aanhef = gastAanhef(voorganger);
+  const subject = `Preekbeurt Vrijburg – ${datumTekst}`;
 
   const body =
     `${aanhef}\n\n` +
@@ -3396,14 +3398,14 @@ async function emailGastpredikantBrief() {
     `Gigi Calkoen\n` +
     `Bureau Vrijburg`;
 
-  openMailto({
-    subject: `Preekbeurt Vrijburg – ${datumTekst}`,
-    body,
-  });
+  // Volledige brief op klembord (backup). force:true: Apple Mail opent lange
+  // mailto wél; de lengte-blokkade was bedoeld voor Outlook en blokkeerde Mail.
+  await copyPlainText(`Onderwerp: ${subject}\n\n${body}`);
+  openMailto({ subject, body, force: true });
   setStatus(
     cloud
-      ? '✓ Brief gastpredikant in mail (generator-link + downloads op klembord)'
-      : '✓ Brief gastpredikant in mail — voeg desgewenst de Word-bijlagen uit “downloads” toe',
+      ? '✓ Brief gastpredikant in Mail (volledige tekst ook op klembord)'
+      : '✓ Brief gastpredikant in Mail — voeg desgewenst de Word-bijlagen uit “downloads” toe',
     'ok'
   );
 }
