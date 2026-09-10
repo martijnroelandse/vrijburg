@@ -2039,7 +2039,7 @@ async function copyShareLinkRich(url, label = SHARE_LINK_LABEL) {
   }
 }
 
-function openMailto({ to = '', cc = '', subject, body }) {
+function openMailto({ to = '', cc = '', subject, body, force = false }) {
   // Adressen NIET encoden: Outlook/Windows breekt op gon.homburg%40gmail.com.
   const listAddrs = (value) =>
     String(value).split(',').map(s => s.trim()).filter(Boolean).join(',');
@@ -2052,7 +2052,9 @@ function openMailto({ to = '', cc = '', subject, body }) {
   const query = params.join('&');
   const href = toPart ? `mailto:${toPart}?${query}` : `mailto:?${query}`;
   // Windows/Outlook knipt lange mailto-URL's (~2000 tekens) → vreemde compose.
-  if (href.length > 1800) {
+  // Standaard weigeren we die (caller zet tekst op klembord). force:true opent
+  // tóch — nodig voor de gastpredikant-brief in Apple Mail, die lange mailto aankan.
+  if (href.length > 1800 && !force) {
     return { ok: false, reason: 'mailto-te-lang', href };
   }
   window.location.href = href;
@@ -3342,70 +3344,54 @@ async function emailGastpredikantBrief() {
   const datumTekst = datum ? formatDatum(datum) : 'zondag [datum dienst]';
   const voorganger = document.getElementById('voorganger').value.trim() || '[naam]';
   const org = organistVoorBrief();
-  const organistZin = org.email
-    ? `Onze organist, ${org.label}, ${org.email}, adviseert u graag en oefent voorafgaand aan de dienst desgewenst de liederen.`
-    : `Onze organist, ${org.label}, adviseert u graag en oefent voorafgaand aan de dienst desgewenst de liederen.`;
+  const organistRegel = org.email
+    ? `Organist: ${org.label}, ${org.email}`
+    : `Organist: ${org.label}`;
   const lector = document.getElementById('lector').value.trim() || '[lector]';
-  // Dienst is doorgaans zondag; inhoud uiterlijk de dinsdag ervoor, nieuwsbrief donderdag ervoor.
   const dinsdag = datum ? formatDatum(addDaysYmd(datum, -5)) : '[dinsdag voor de dienst]';
   const donderdag = datum ? formatDatum(addDaysYmd(datum, -3)) : '[donderdag voor de dienst]';
 
   setStatus('Opslaan & brief maken…', '');
   const { short, cloud } = await prepareShareLink('voorganger');
-  await copyShareLinkRich(short);
 
-  const basisUrl = siteFileUrl('downloads/basisliturgie-calibri-mrt2026.docx');
-  const declUrl = siteFileUrl('downloads/declaratieformulier-preekbeurt-nov2024.docx');
   const infoUrl = siteFileUrl('info.html#gastpredikant');
-
   const aanhef = gastAanhef(voorganger);
+  const subject = `Preekbeurt Vrijburg – ${datumTekst}`;
 
+  // Korte mail (past in Outlook én Apple Mail). Details staan op info.html#gastpredikant.
   const body =
     `${aanhef}\n\n` +
     `Hartelijk dank dat u op ${datumTekst} bij ons voor wilt gaan.\n\n` +
-    `Voor het samenstellen van de liturgie gebruiken we de Liturgie Generator. ` +
-    `Via onderstaande link vult u thema, orde van dienst (liederen en lezingen), lichtlied/slotlied, ` +
-    `foto en een kort stukje voor de nieuwsbrief in. U hoeft niet alles in één keer te doen; ` +
-    `klik op “Ik ben klaar” als uw deel gereed is. ` +
-    `Zet een “+ Muziek”-blok waar instrumentale muziek hoort — de organist ziet uw orde in dezelfde cloud-dienst.\n\n` +
+    `Voor de liturgie gebruiken we de Liturgie Generator. Via onderstaande link vult u uw onderdeel in ` +
+    `(thema, orde, liederen, foto, nieuwsbrief). Klik op “Ik ben klaar” als u klaar bent.\n\n` +
     mailLinkBlock(short) + '\n' +
-    `Ter oriëntatie kunt u de basisliturgie downloaden — zo ziet u hoe de dienst in de basis is opgebouwd. ` +
-    `Daarop kunt u natuurlijk variëren (bijvoorbeeld een ander lichtlied uit het Liedboek). ` +
-    `${organistZin}\n\n` +
-    `Basisliturgie: ${basisUrl}\n` +
-    `Declaratieformulier: ${declUrl}\n` +
-    `Korte uitleg: ${infoUrl}\n\n` +
-    `De (Bijbel)teksten in uw dienst worden gelezen door ${lector}.\n\n` +
-    `Het is prettig als u voor een passend plaatje kunt zorgen voor het voorblad (rechtenvrij — bijv. unsplash.com). ` +
-    `U kunt dat in de generator uploaden; het komt ook in de aankondiging in onze wekelijkse Nieuwsbrief.\n\n` +
-    `Wilt u uw onderdeel in de generator uiterlijk ${dinsdag} afronden (knop “Ik ben klaar”)? ` +
-    `De liturgie komt dan binnen bij info@vrijburg.nl (en de liturgiemaker). ` +
-    `Stem liederen gerust af met de organist${org.email ? ` (${org.label}, ${org.email})` : ` (${org.label})`}.\n\n` +
-    `Op donderdag of vrijdag gaat onze Nieuwsbrief uit. Wilt u daartoe uiterlijk ${donderdag} ` +
-    `het korte stukje over het thema (inclusief foto) in de generator invullen? ` +
-    `U kunt daar ook “Meld nieuwsbriefredactie” gebruiken.\n\n` +
-    `Het declaratieformulier kunt u naar info@vrijburg.nl mailen. Hopelijk kunt u tegelijk ook uw preek mailen? ` +
-    `Het liefst op maximaal 2 bladzijden, of opgemaakt in Word. Wij sturen onze preken per post naar ` +
-    `leden zonder internet en willen de porti graag in de hand houden.\n\n` +
-    `Voor inhoudelijke vragen: Rachelle van Andel, rachellevanandel@vrijburg.nl.\n` +
-    `Voor algemene vragen: info@vrijburg.nl.\n\n` +
-    `Kunt u op de ochtend van uw dienst om uiterlijk 10 uur aanwezig zijn?\n` +
-    `Wij kijken uit naar uw komst.\n\n` +
+    `Uitleg, termijnen, basisliturgie en declaratieformulier:\n${infoUrl}\n\n` +
+    `Praktisch voor deze dienst:\n` +
+    `• Liturgie afronden uiterlijk ${dinsdag}\n` +
+    `• Nieuwsbrieftekst + foto uiterlijk ${donderdag}\n` +
+    `• Lector: ${lector}\n` +
+    `• ${organistRegel} (stem liederen desgewenst af)\n\n` +
+    `Vragen: rachellevanandel@vrijburg.nl (inhoud) of info@vrijburg.nl.\n` +
+    `Graag aanwezig om uiterlijk 10.00 uur op de ochtend van de dienst.\n\n` +
     `Met een hartelijke groet,\n` +
     `namens het bestuur van Vrijburg,\n\n` +
     `Gigi Calkoen\n` +
     `Bureau Vrijburg`;
 
-  openMailto({
-    subject: `Preekbeurt Vrijburg – ${datumTekst}`,
-    body,
-  });
-  setStatus(
-    cloud
-      ? '✓ Brief gastpredikant in mail (generator-link + downloads op klembord)'
-      : '✓ Brief gastpredikant in mail — voeg desgewenst de Word-bijlagen uit “downloads” toe',
-    'ok'
-  );
+  await copyPlainText(`Onderwerp: ${subject}\n\n${body}`);
+  const mail = openMailto({ subject, body });
+  if (mail.ok) {
+    setStatus(
+      cloud
+        ? '✓ Brief gastpredikant in mailprogramma (tekst ook op klembord)'
+        : '✓ Brief gastpredikant in mailprogramma',
+      'ok',
+    );
+  } else {
+    // Zou niet moeten gebeuren met de verkorte brief; fallback voor zekerheid.
+    openMailto({ subject, body, force: true });
+    setStatus('✓ Brief geopend (tekst ook op klembord). Werkt plakken beter: Cmd+V in een nieuwe mail.', 'ok');
+  }
 }
 
 // ============================================================
