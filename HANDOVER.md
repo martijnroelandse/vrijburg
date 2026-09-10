@@ -1,322 +1,232 @@
 # Handover: Vrijburg Liturgie Generator
 
-## Wat is dit?
-
-Een statische webapplicatie (GitHub Pages) waarmee medewerkers van Vrijburg Amsterdam de wekelijkse kerkdienst-liturgie kunnen genereren als kant-en-klaar Word-document (`.docx`). Geen server nodig — alles draait in de browser.
-
-**Live URL (na GitHub Pages activeren):**  
-`https://<gebruiker>.github.io/<repo>/`
+Stand: **september 2026** · Repo: [martijnroelandse/vrijburg](https://github.com/martijnroelandse/vrijburg) · Hosting: GitHub Pages (`main` → root)
 
 ---
 
-## Context
+## 1. Wat is dit?
 
-Vrijburg is een vrijzinnig-christelijk centrum in Amsterdam. Elke week wordt er een liturgie-document gemaakt (`.docx`, geprint en uitgedeeld in de kerk). Dat kostte vroeger veel handmatig werk: vaste teksten kopiëren, collecte opzoeken, alles opmaken.
+Statische webapp waarmee Vrijburg Amsterdam de wekelijkse liturgie samenstelt en als printbaar **`.docx`** downloadt. Voorganger, organist en bureau vullen elk hun deel in via **één gedeelde cloud-link** (`?id=…`). Companion-app: **nieuwsbrief** (Mailchimp-cards) op dezelfde `id`.
 
-**De twee input-workflows van dominees:**
-1. **Gastvoorganger via de generator** — het bureau stuurt de knop *Brief gastpredikant* (generator-link + downloads van basisliturgie en declaratieformulier). De gast vult in de tool in; het bureau downloadt daarna de `.docx`.
-2. **Informele email** — Dominee stuurt een plain-text email met de orde van dienst (bijv. Peter Kattenberg, 26 april 2026: "Lied 213: alle verzen / Lezing: Psalm 23 / ...") — het bureau zet dat in de generator.
-
-De bureaumedewerker (Gigi Calkoen, di–do) rondt af en downloadt de liturgie. Bestanden voor gastpredikanten staan in `downloads/` en op `info.html#gastpredikant`.
-
----
-
-## Workflow: wie vult wat in?
-
-De liturgie wordt door **meerdere mensen** aangeleverd. In de app kiest ieder bovenaan zijn/haar rol:
-
-| Rol | Verantwoordelijk voor |
+| | |
 |---|---|
-| **Voorganger** | Thema, beschrijving liturgie, foto, nieuwsbrief, overdenking (naar bureau), orde van dienst (liederen, lezingen, inleiding), lichtlied en slotlied |
-| **Organist** | Orgelspeel (opening en slot), muziek in de orde van dienst |
-| **Bureaumedewerker** | Datum, predikant/organist/lector/cantorij/kinderkerk (uit dienstplanning), collecte, bloemen, agenda |
-| **Alles bekijken** | Volledig overzicht en download van de .docx |
+| **Live liturgie** | `https://martijnroelandse.github.io/vrijburg/` |
+| **Info / gastpredikant** | `…/info.html` (ankers `#gastpredikant`, `#handleiding`, `#privacy`) |
+| **Nieuwsbrief** | `…/nieuwsbrief.html?id=<short_id>` |
+| **Supabase** | project *Liturgie*, ref `iabrbkirzsolwnuknbel`, regio `eu-west-3` |
 
-### Hoe het samenkomt
-
-1. Bureaumedewerker zet datum en stuurt link naar **voorganger** (`?rol=voorganger`)
-2. Voorganger vult zijn/haar onderdeel in (orde + eventuele `+ Muziek`-blokken) → klikt **Ik ben klaar** → stuurt link terug
-3. Bureaumedewerker stuurt **dezelfde cloud-link** (zelfde `id`) naar **organist** (`?rol=organist`)
-4. Organist ziet de orde van de voorganger, vult orgelspel + muziekblokken in → stuurt link terug
-5. Bureaumedewerker opent die ene link, controleert agenda en collecte, kiest **Alles bekijken**, downloadt .docx
-
-Geen enkel veld is verplicht — ieder vult alleen zijn eigen onderdeel in. De gedeelde link bevat alle reeds ingevulde gegevens; bij terugsturen worden nieuwe invoer samengevoegd. **Zelfde id = zelfde liturgie** — zo hoeft het bureau niets handmatig over te typen tussen “link van de dominee” en “klaar-mail van de organist”.
-
-**Zichtbaarheid tussen rollen:** voorganger en organist zien elkaars bijdrage in sectie 4 (dienstoverzicht + orde). De organist mag muziek-blokken bewerken; liederen/lezingen zijn ter referentie. Orgelspel en muziek na overdenking zijn voor beiden zichtbaar.
+Geen build-stap: wijzig `index.html` / JSON, push naar `main`, Pages deployt.
 
 ---
 
-## Bestandsstructuur
+## 2. Mensen & rollen
 
-```
-├── index.html           # Volledige app (HTML + CSS + JS in één bestand)
-├── info.html            # Handleiding, gastpredikant-downloads, privacy
-├── downloads/           # Basisliturgie, declaratieformulier, brief gastpredikant
-├── collectes.json       # Collectes 2026-2027 (55 entries, per datum)
-├── dienstplanning.json  # Dienstplanning (predikant, organist, lector, cantorij, etc.)
-├── README.md            # Gebruikersdocumentatie
-└── HANDOVER.md          # Dit bestand
-```
+| Wie | Rol in de praktijk |
+|---|---|
+| **Gigi Calkoen** | Bureau (di–do): datum, planning, links versturen, afronden, `.docx` printen |
+| **Gon Homburg** | Liturgiemaker / ontvanger klaar-mails (`gon.homburg@gmail.com`) |
+| **ds. Rachelle van Andel / ds. Rosaliene Israël** | Vaste voorgangers |
+| **Organisten** | o.a. Jan Pieter Lanooy, Martijn Pranger, … (uit dienstplanning) |
+| **Martijn Roelandse** | Onderhoud tool + nieuwsbriefredactie (voorlopig `martijnroelandse@me.com`) |
+| **Hiltje** | Vorige handmatige liturgie-maker; feedback in `VERBETERPLAN-FEEDBACK-HILTJE.md` |
+
+**App-rollen** (UI, geen login): `voorganger` · `organist` · `medewerker` · `compleet` (Alles bekijken).
+
+| Rol | Vult in |
+|---|---|
+| Voorganger | Thema, voorbladtekst, foto+credit, nieuwsbrief, overdenking, orde (lied/lezing/…), lichtlied/slotlied, voorbeden, lied na overdenking |
+| Organist | Orgelspel opening/slot, muziek na overdenking, **Muziek**-blokken in de orde |
+| Bureau | Datum → planning, collecte, bloemen, agenda; links mailen; `.docx` downloaden; “liturgie is klaar” |
+| Alles bekijken | Volledig overzicht + download |
+
+Iedereen met de link kan van rol wisselen of “Toon ook onderdelen van anderen” aanzetten — bewust prototype, geen ACL.
 
 ---
 
-## Hoe het nu werkt
+## 3. Wekelijkse workflow (bureau)
 
-### Formulier (index.html)
+1. Open de app als **Bureaumedewerk(st)er**, kies de **datum** → predikant, organist, lector, cantorij, kinderkerk, bestuurslid, VL-velden komen uit `dienstplanning.json`.
+2. Controleer collecte (auto uit `collectes.json`) en agenda (of import van vrijburg.nl).
+3. **Opslaan** → noteer de `id` onderin.
+4. Mailen (altijd **dezelfde cloud-dienst**, zelfde `id`):
+   - vaste predikant → **Link vaste voorganger**
+   - gast → **Brief gastpredikant** (korte mail + link naar `info.html#gastpredikant`)
+   - daarna → **Link organist**
+5. Als beiden klaar zijn: open die ene link, rol **Alles bekijken**, check, download **`.docx`**, print (liefst veelvoud van 4 pagina’s).
+6. Optioneel: **Meld: liturgie is klaar** (status `klaar` + ping met `id` voor nieuwsbrief).
 
-Secties:
-1. **Dienst** — datum, voorganger, organist, lector
-2. **Thema, foto & communicatie** — thema, beschrijving liturgie (voorkant .docx), foto-upload (in .docx + download voor website), foto credit, nieuwsbrief (kopieerknop), overdenking (mailto naar info@vrijburg.nl)
-3. **Opening** — lichtlied, orgelspel opening
-4. **Orde van dienst** — dynamische lijst: lied / lezing / inleiding / muziek / overig, in volgorde rangschikken met ↑↓
-5. **Afsluiting** — slotlied, orgelspel slot
-6. **Collecte & bloemen** — eerste collecte auto-ingevuld op basis van datum (uit collectes.json), tweede collecte (diaconie/gemeente) wisselt automatisch
-7. **Agenda** — vrij tekstveld (komende week + verder weg)
+**Ik ben klaar** (voorganger/organist) → mailto naar Gon + `info@vrijburg.nl`, nieuwsbriefredactie in **CC**, met `id` en link naar `nieuwsbrief.html?id=…`. Werkt e-mail niet: **Ik ben klaar – kopieer bericht**.
 
-### .docx generatie
+### Gouden regels
 
-Gebruikt [`docx`](https://docx.js.org/) v8.5.0 via CDN. De vaste teksten zijn ingebakken als JS-constanten:
-- `BEMOEDIGING_LINES` — beurtzang voorganger/gemeente
-- `GROET_LINES`
-- `ONZE_VADER`
-- `DIACONIE_TEKST` / `GEMEENTE_TEKST` + rekeningnummers
-- `QR_TEKST` — digitaal collecteren info
-- `FOOTER` — "Voorgangers van Vrijburg zijn..."
+- **Zelfde `id` = zelfde liturgie.** Nooit een tweede dienst starten voor dezelfde zondag als de organist al een andere link heeft — anders moet bureau handmatig overtypen.
+- Voorganger zet **`+ Muziek`** waar instrumentale muziek hoort; organist ziet de orde en vult die blokken + orgelspel in.
+- Gastpredikant: details (termijnen, downloads, wat invullen) staan op de **infopagina**, niet in de lange mail (Outlook/Mail-limiet ~1800 tekens voor `mailto:`).
 
-Font: Calibri, 11pt (conform de huisstijl van de bestaande liturgieën).
+---
 
-### Collectes (collectes.json)
+## 4. Architectuur (kort)
 
-Elk object:
-```json
-{
-  "dag": 14,
-  "maand": "Juni",
-  "thema": "Vluchtelingen",
-  "type": "gemeente",
-  "naam": "Stichting NAOMI",
-  "tekst": "NAOMI is ontstaan in 2011...",
-  "rekening": "DE80 5206 0410 0005 0013 40"
-}
+```
+Browser (index.html)
+  ├── collectes.json / dienstplanning.json / agenda_templates.json  (statisch)
+  ├── docx.js + JSZip (CDN) → .docx download
+  ├── Supabase Postgres `diensten` + Storage `dienst-fotos`  (?id=short_id)
+  └── Edge Function `meld-klaar` → Resend (optioneel) of mailto-fallback
+
+nieuwsbrief.html ──zelfde short_id──► Mailchimp-cards (platte tekst)
 ```
 
-`type` is de **tweede** collecte. De eerste collecte is altijd de genoemde organisatie.  
-Op datum-match wordt de eerste collecte auto-ingevuld; de tweede collecte wisselt automatisch (als eerste = gemeente → tweede = diaconie, en omgekeerd).
+| Pad | Functie |
+|---|---|
+| `index.html` | Hele liturgie-app (HTML/CSS/JS) |
+| `nieuwsbrief.html` | Mailchimp-cards + podcast-card |
+| `info.html` | Handleiding, gastpredikant, privacy |
+| `downloads/` | Basisliturgie, declaratie, brief-sjabloon Word |
+| `collectes.json` | Collectes seizoen (nu 2026–2027) |
+| `dienstplanning.json` | Predikant/organist/lector/… per datum |
+| `scripts/update-dienstplanning.py` | CSV/Sheet → JSON |
+| `supabase/migrations/001_diensten.sql` | Schema |
+| `supabase/functions/meld-klaar/` | Klaar-ping e-mail |
+| `.github/workflows/keep-supabase-active.yml` | Ping elke 3 dagen (Free-tier pauze voorkomen) |
 
-### Dienstplanning (dienstplanning.json)
+Oude lange deel-links `?z=` / `?v=` werken nog als fallback; standaard is `?id=` + `?rol=`.
 
-Bron (meest actueel): [Google Spreadsheet dienstplanning](https://docs.google.com/spreadsheets/d/1imjMr9ELUHGV9331mYIoTOUc-DizOysV/edit)  
-Statische fallback in repo: `dienstplanning-2026.csv` → `dienstplanning.json`
+---
 
-Bij het kiezen van een datum worden automatisch ingevuld:
-- Predikant → voorganger
-- Organist, lector (door bureaumedewerker beheerd)
-- Cantorij, kinderkerk
-- **VLV / VLH / VLZ** — bijzondere dienstvormen (zie hieronder)
-- Afwijkende aanvangstijd, bijzondere dienst (feestdag)
-- Locatie en overige opmerkingen
+## 5. Configuratie (constanten in `index.html`)
 
-### VLV, VLH en VLZ
+Zoek bovenin het script-blok:
 
-Drie bijzondere dienstvormen van Vrijburg (logo's in `assets/`):
+| Constante | Betekenis |
+|---|---|
+| `SUPABASE_URL` / `SUPABASE_ANON_KEY` | Cloud-backend (anon key = publiek in frontend) |
+| `SUPABASE_FOTO_BUCKET` | `dienst-fotos` |
+| `LITURGIE_MAKER_EMAIL` | Gon |
+| `BUREAU_EMAIL` | `info@vrijburg.nl` |
+| `NIEUWSBRIEF_REDACTIE_EMAIL` | Nu Martijn — **vervang door vast redactie-adres** wanneer bekend |
+| Vaste liturgieteksten | `BEMOEDIGING_LINES`, `GROET_LINES`, `ONZE_VADER`, `FOOTER`, diaconie/gemeente-teksten, QR-tekst |
 
-| Afkorting | Naam | Inhoud |
-|---|---|---|
-| **VLV** | Vrijburg laat voorgaan | Iemand anders dan de predikant leidt (deel van) de dienst |
-| **VLH** | Vrijburg laat horen | Muzikale dienst — concert, cantorij, orgel |
-| **VLZ** | Vrijburg laat zien | Visuele dienst — film, tentoonstelling, performance |
+RLS: anon mag lezen/schrijven (prototype). Later: auth, edit-tokens, of Edge Function met geheim.
 
-In het spreadsheet staan deze in kolommen `VLV`, `VLH`, `VLZ`. Een `?` betekent: gepland maar nog niet definitief.
+---
 
-**Bijwerken (voorkeur — live Google Sheet):**
+## 6. Data bijwerken
+
+### Dienstplanning
+
+Bron: [Google Sheet](https://docs.google.com/spreadsheets/d/1imjMr9ELUHGV9331mYIoTOUc-DizOysV/edit)
+
 ```bash
 curl -sL "https://docs.google.com/spreadsheets/d/1imjMr9ELUHGV9331mYIoTOUc-DizOysV/export?format=csv" -o dienstplanning.csv
 python3 scripts/update-dienstplanning.py dienstplanning.csv
+# commit + push dienstplanning.json
 ```
 
-**Of vanuit meegeleverde CSV (bijv. `dienstplanning-2026.csv`):**
+Kolom **Bestuurslid**: Q3-2026-hulpbestand `downloads/bestuurslid-q3-2026-voor-sheet.tsv` (Sheet desnoods handmatig bijwerken).
+
+### Collectes
+
+`collectes.json`: `type` = **tweede** collecte (`gemeente` / `diaconie` / `bijzonder`), letterlijk gebruikt (geen omkering meer). Eerste collecte = `naam`/`tekst`/`rekening`. Bijzondere 2e: optioneel `c2_naam` / `c2_tekst` / `c2_rekening`; QR → `vrijburg.nl/bijzonderecollecte`.
+
+**Nog te doen:** seizoen **2027–2028** inladen.
+
+### Agenda-templates
+
+`agenda_templates.json` — vaste teksten die bij import/keuze meelopen (o.a. Heilige/Hemelse Bronnen: begeleid door ds. Rachelle).
+
+---
+
+## 7. E-mail & klaar-meldingen
+
+| Actie | Wat gebeurt er |
+|---|---|
+| Link vaste voorganger / organist | Korte mailto + cloud-link (`?rol=…`) |
+| Brief gastpredikant | **Korte** mailto (link, termijnen, lector/organist) + `info.html#gastpredikant`; tekst ook op klembord |
+| Ik ben klaar | Mailto Gon + info@, CC nieuwsbrief; `id` + nieuwsbrief-URL |
+| Meld nieuwsbriefredactie | Mailto alleen redactie + nieuwsbrieftekst |
+| Meld: liturgie is klaar | `status=klaar` + Edge Function Resend, anders mailto-fallback |
+
+`openMailto`: adressen **niet** `%40`-encoden (breekt Outlook). URLs langer dan ~1800 tekens worden standaard geweigerd (Outlook knipt); gastbrief is bewust kort gehouden.
+
+**Resend** (automatische klaar-ping), secrets op project `iabrbkirzsolwnuknbel`:
+
 ```bash
-python3 scripts/update-dienstplanning.py dienstplanning-2026.csv
+supabase secrets set --project-ref iabrbkirzsolwnuknbel \
+  RESEND_API_KEY=re_xxx \
+  RESEND_FROM="Liturgie Vrijburg <liturgie@vrijburg.nl>" \
+  NOTIFY_EMAIL="extra@voorbeeld.nl"
 ```
 
-Het 2026-template gebruikt verkorte kolomnamen (`KK`, `VLV`, `VLH`, `VLZ`); het script herkent zowel het oude als het nieuwe formaat.
+Zonder `RESEND_API_KEY` → HTTP 501 → UI opent mailto. Functie is al gedeployed; secrets kunnen nog ontbreken.
 
 ---
 
-## Wat er nog ontbreekt / prioriteiten voor doorontwikkeling
+## 8. Belangrijke technische keuzes
 
-### Hoge prioriteit
-
-**1. Bijbelteksten automatisch ophalen** ✅ *geïmplementeerd*  
-Bij type "lezing" in de orde-lijst: knop "Tekst ophalen (Statenvertaling)" die de referentie parseert en de tekst invult via [BijbelAPI](https://www.bijbelapi.com/) (enige gratis vertaling die de API aanbiedt). Knop "NBV21 openen" ✅ *geïmplementeerd* opent de referentie op debijbel.nl om de tekst handmatig te kopiëren (NBV21 heeft geen gratis API, auteursrecht Nederlands-Vlaams Bijbelgenootschap).
-
-**2. Emailformulier naar dominee** ✅ *geïmplementeerd*  
-Knop "Stuur link naar dominee" opent een pre-ingevulde mailto:-link. Formulierstatus wordt geserialiseerd naar URL-params zodat een gedeelde link de velden pre-invult.
-
-**3. Agenda-import van vrijburg.nl** ✅ *geïmplementeerd*  
-Via WordPress REST API: `https://www.vrijburg.nl/wp-json/wp/v2/evenementen` (custom post type met ACF-velden `start` en `locatie`).
-
-**Voorganger → bureau:** bij "Ik ben klaar" wordt de foto automatisch gedownload; de e-mail bevat instructies om het bestand als bijlage toe te voegen (mailto kan geen bijlagen automatisch meesturen).
-
-**4. Collectes seizoen 2027-2028 bijwerken**  
-`collectes.json` dekt 2026-2027. Voor volgend seizoen: vervang of breid het bestand uit. Overweeg een simpel beheerscherm of gewoon het JSON-bestand handmatig bijwerken.
-
-**5. Gedeelde backend (Supabase)** ✅ *schema + liturgie save/load + nieuwsbrief-pagina*  
-Liturgie slaat op in tabel `diensten` en deelt via korte link `?id=short_id` (foto in Storage-bucket `dienst-fotos`). Aparte pagina `nieuwsbrief.html` opent dezelfde id en toont Mailchimp-cards (platte tekst, kopieer per card), inclusief optionele card voor de laatste Vrijzinnige Miniatuur (via vrijburg.nl blog + SoundCloud-link), met downloadknop voor de illustratie en copyright/bronvermelding. Oude `?z=`-links blijven als fallback. SQL: `supabase/migrations/001_diensten.sql`.
-
-**6. Gelijktijdig invullen overschrijft elkaar niet meer** ✅ *geïmplementeerd (aug 2026)*  
-Bug: de voorganger en organist krijgen vaak *tegelijk* een link (zie workflow hierboven — stap "Bureaumedewerker stuurt link naar voorganger én organist"). Als beiden de pagina al open hadden vóórdat de ander opsloeg, overschreef `saveDienstToCloud()` de **hele** `data`-kolom met de eigen (deels verouderde) formulierstand — inclusief lege velden die de ander intussen wél had ingevuld. Dit verklaart het symptoom "de nieuwsbrieftekst is verdwenen, terwijl de dominee 'm wel heeft ingevuld": de organist sloeg daarna op met een stand van vóór het invullen van de nieuwsbrief, en die (lege) waarde won.
-
-Oplossing (`index.html`, functies `mergeStateForSave()` en `saveDienstToCloud()`): bij iedere save naar een bestaande dienst wordt eerst de nieuwste stand van de server opgehaald en samengevoegd met de lokale stand — per veld geldt: *alleen* velden die in déze sessie daadwerkelijk zijn gewijzigd (t.o.v. de laatst geladen/opgeslagen `baselineState`) overschrijven de servernaarde; niet-aangeraakte velden krijgen altijd de nieuwste serverwaarde. Zo kunnen voorganger en organist tegelijk in hetzelfde formulier werken zonder elkaars invoer te wissen. `baselineState` wordt bijgewerkt na elke succesvolle load/save.
-
-Beperking: als iemand een veld bewust **leegmaakt** (intentioneel wissen) terwijl een ander tegelijk iets anders invult, wordt die leegmaak-actie wel als "gewijzigd" gezien (baseline had een waarde, nu leeg) en dus doorgevoerd — dat is correct gedrag. Alleen *niet-aangeraakte* velden worden beschermd.
-
-**7. Melding "liturgie is klaar" (e-mail-ping + id)** ✅ *geïmplementeerd (aug 2026)*  
-Feedback: er was geen signaal wanneer een liturgie echt compleet was en geen manier om de `id` te achterhalen zonder de link er specifiek bij te zoeken — terwijl die nodig is om de nieuwsbrief (`nieuwsbrief.html?id=...`) te openen.
-
-Nieuwe knop **"📣 Meld: liturgie is klaar"** (zichtbaar voor rol Bureaumedewerker / Alles bekijken, naast de downloadknop):
-1. Slaat de dienst op met `status = 'klaar'` (kolom bestond al in `diensten`, werd tot nu toe nooit gezet).
-2. Roept de Supabase Edge Function `supabase/functions/meld-klaar` aan (`sb.functions.invoke('meld-klaar', …)`) met `short_id`, datum, thema en de liturgie-/nieuwsbrief-link.
-3. Die functie verstuurt een e-mail via de [Resend](https://resend.com) API naar vaste ontvangers Gon + `info@vrijburg.nl` + nieuwsbriefredactie, plus optioneel extra adressen in secret `NOTIFY_EMAIL`. Vereiste secrets op het Supabase-project (Dashboard → Edge Functions → `meld-klaar` → Secrets, of via CLI):
-   ```bash
-   supabase secrets set --project-ref iabrbkirzsolwnuknbel \
-     RESEND_API_KEY=re_xxx \
-     RESEND_FROM="Liturgie Vrijburg <liturgie@vrijburg.nl>" \
-     NOTIFY_EMAIL="extra@voorbeeld.nl"
-   ```
-   (Resend: gratis account, 100 mails/dag; `RESEND_FROM` moet een bij Resend geverifieerd domein zijn — gebruik tijdelijk `onboarding@resend.dev` als testafzender tot dat geregeld is.)
-4. **Zolang RESEND_API_KEY niet is ingesteld** antwoordt de functie met `{ ok: false, error: '...' }` (HTTP 501) en valt `index.html` automatisch terug op een kant-en-klare **mailto**-link naar `LITURGIE_KLAAR_NOTIFY_EMAIL` (Gon + `info@vrijburg.nl` + nieuwsbriefredactie). De melding gaat dus in beide gevallen de deur uit; het verschil is alleen automatisch versus één klik op "verstuur" in het eigen mailprogramma.
-5. De functie is al gedeployed op het live project (`iabrbkirzsolwnuknbel`) via de Supabase MCP-tool; alleen de secrets ontbreken nog. Testen zonder secrets:
-   ```bash
-   curl -X POST "https://iabrbkirzsolwnuknbel.supabase.co/functions/v1/meld-klaar" \
-     -H "Authorization: Bearer <anon-key>" -H "apikey: <anon-key>" \
-     -H "Content-Type: application/json" \
-     -d '{"short_id":"test1234","datum":"zondag 1 januari 2027","thema":"Test"}'
-   # → {"ok":false,"error":"Niet geconfigureerd: ..."} (HTTP 501) totdat de secrets zijn gezet
-   ```
-
-**7a. Nieuwsbriefredactie in CC bij "Ik ben klaar"** ✅ *sep 2026*  
-Aanleiding: de nieuwsbrief-maker (Martijn) wist niet welke `id` de liturgie van zondag had en kon de nieuwsbrief-tool niet openen, omdat "Ik ben klaar" alleen naar Gon + info@ ging.
-
-Bij **Ik ben klaar** (voorganger/organist) staat de nieuwsbriefredactie (`NIEUWSBRIEF_REDACTIE_EMAIL`) nu in **CC** van dezelfde mailto; onderwerp en body vermelden expliciet `id=…` plus de link naar `nieuwsbrief.html?id=…`. Zo krijgt de redactie het seintje zodra de dominee terugstuurt, zonder te wachten op de latere bureau-knop.
-
-**7a-bis. Kopieer-alternatief als e-mail niet werkt** ✅ *sep 2026*  
-Aanleiding: een voorganger had geen mailto-client geconfigureerd (Firefox-dialoog “Kies een toepassing…”) en dacht dat er niets gebeurde.
-
-- Knop **Kopieer link** (alle rollen): slaat op en zet alleen de cloud-link op het klembord.
-- Knop **Ik ben klaar – kopieer bericht** (voorganger/organist): zelfde inhoud als de klaar-mail (Aan/CC/onderwerp/tekst + link), zonder e-mailprogramma te openen — plakken in Gmail.
-- De gewone **Ik ben klaar – stuur naar liturgie** zet het klaar-bericht óók op het klembord vóór de mailto, met statushint als e-mail niet opent.
-
-**7c. Bureau-feedback sep 2026** ✅  
-- Placeholders zonder verwarrend voorvoegsel “bijv.”; orgelvelden zeggen expliciet “Leeg = niet afgedrukt”.
-- Acclamatie-/liedveld onder Voorbeden → komt in de .docx tussen voorbedentekst en Onze Vader.
-- Agenda-template Heilige/Hemelse Bronnen: begeleid door ds. Rachelle van Andel (was Tina Geels).
-- .docx: Normal-stijl + pageBreak met expliciete Calibri 16pt (minder Helvetica 11 bij nawerk in Word).
-- Dienstdoende bestuurder op voorblad; kolom `bestuurslid` in `dienstplanning.json` (uit Jet’s Q3-rooster). Google Sheet kolom Bestuurslid nog handmatig bijwerken met `downloads/bestuurslid-q3-2026-voor-sheet.tsv`.
-
-**7d. Lied na overdenking + orde-volgorde + Outlook-mailto** ✅ *sep 2026*  
-- Nieuw veld **Lied na overdenking / muziek** (tussen orgelmuziek en voorbeden in de .docx).
-- Orde: nieuw item komt onder het geselecteerde blok (niet altijd onderaan); tip over ↑↓; zip-import plakt restliederen niet meer blind na alle lezingen.
-- `openMailto`: e-mailadressen niet meer `%40`-encoden (breekt Outlook); te lange mailto → standaard klembord i.p.v. kapotte compose.
-- **Brief gastpredikant:** verkorte mail (dienst-specifieke link, termijnen, lector/organist) + doorverwijzing naar `info.html#gastpredikant` voor de rest. Past zo onder de Outlook-limiet (~1800); Apple Mail én Outlook openen zonder `force`. Volledige tekst ook op klembord.
-
-**7b. "Meld nieuwsbriefredactie" direct onder het nieuwsbriefveld** ✅ *geïmplementeerd (aug 2026)*  
-Aanleiding: in de praktijk staat de nieuwsbrieftekst niet altijd al klaar op het moment dat de rest van de liturgie compleet is (dat was ook de directe oorzaak van het "ik zie geen nieuwsbrieftekst"-signaal — de tekst was simpelweg nog niet ingevuld, geen bug). Losse melding per veld is dus handiger dan wachten op de algemene "klaar"-melding van de hele dienst.
-
-Nieuwe knop **"📣 Meld nieuwsbriefredactie"** (sectie Thema, foto & communicatie, onder het nieuwsbriefveld): slaat op (`prepareShareLink()`, zodat er een deelbare `id` is) en opent een `mailto:`-link met de nieuwsbrieftekst plus de link, naar het adres in de constante `NIEUWSBRIEF_REDACTIE_EMAIL` bovenin `index.html`. Staat voor nu op `martijnroelandse@me.com` ("voor nu", zoals gevraagd) — pas dit aan naar het definitieve redactie-adres zodra dat bekend is. Gebruikt bewust (nog) geen Edge Function/automatische e-mail: simpele mailto is hier voldoende en werkt zonder verdere configuratie.
-
-De drie oorspronkelijke knoppen "Kopieer voor nieuwsbrief", "Kopieer voor Mailchimp cards" en "Open nieuwsbrief-app" zijn weer verwijderd (aug 2026, feedback: overbodig/verwarrend voor de dominee — de aparte `nieuwsbrief.html`-app met de echte Mailchimp-cards is de bedoelde plek daarvoor). De bijbehorende dode code (`copyField()`, `copyMailchimpCards()`, `collectMailchimpCardsText()`, `openNieuwsbriefPage()` — een verouderde, eenvoudiger duplicaat-implementatie van de cards uit `nieuwsbrief.html`) is verwijderd uit `index.html`. Alleen **"📣 Meld nieuwsbriefredactie"** blijft staan.
-
-### Lage prioriteit / nice-to-have
-
-- **Opslaan als concept** ✅ *geïmplementeerd* — localStorage zodat een half-ingevuld formulier bewaard blijft bij sluiten
-- **Liedbundels Online** ([liedbundelsonline.nl](https://liedbundelsonline.nl), gelanceerd juni 2026; vervangt `liedboek.liedbundels.nu`) — knop opent deeplink `/nl/lied/lb-{nummer}` (incl. letter-suffix zoals `23b`). **Zip-import** ✅: bureaumedewerker downloadt een liedlijst (mét “platte tekst”) en klikt **Importeer liedlijst (.zip)**. De app leest `liedlijst-*-tekst.txt` + de JPG’s; zet coupletteksten in het formulier (zichtbaar in de orde van dienst, lichtlied en slotlied) en plaatst de **muziek van het eerste couplet** in het Word-document. Geen publieke API; contact voor koppeling: `info@liedbundelsonline.nl`.
-- **Foto upload** ✅ *geïmplementeerd* — in .docx op voorkant; download voor website. Bij "Ik ben klaar": auto-download + instructie bijlage in e-mail.
-- **Nieuwsbrief & overdenking** ✅ *geïmplementeerd* — nieuwsbrief met kopieerknop, inclusief Mailchimp card/box-copy als platte tekst (geen HTML); overdenking via mailto naar `info@vrijburg.nl` (niet in .docx)
-- **WordPress foto-upload** — direct uploaden naar mediabibliotheek op vrijburg.nl; vereist afstemming met webmaster (Application Password + CORS)
-- **Digitale versie** — naast het .docx ook een HTML-versie genereren voor op de website
-- **Meerdere diensten per week** — soms zijn er bijzondere diensten (Kerstavond, Pasen) met een afwijkende structuur
+- **Gelijktijdig opslaan:** `mergeStateForSave()` + `baselineState` — alleen in déze sessie gewijzigde velden overschrijven de server; voorkomt dat organist de nieuwsbrief van de dominee wist.
+- **Samenwerking voorganger/organist:** sectie 4 toont dienstoverzicht; organist ziet orde (liederen readonly, Muziek bewerkbaar); voorganger ziet orgelvelden.
+- **Liedbundels Online:** deeplink + zip-import (platte tekst + muziek 1e couplet). Geen publieke API; niet scrapen. Contact: `info@liedbundelsonline.nl`.
+- **Bijbel:** BijbelAPI = Statenvertaling; NBV21 = handmatig via debijbel.nl.
+- **Foto:** in Storage + in `.docx`; bij klaar zonder cloud-foto: auto-download + “voeg bijlage toe”.
+- **Voorbladlogo** in `.docx`: ~3 cm breed.
 
 ---
 
-## Feedback van de handmatige liturgie-maker (Hiltje)
+## 9. Bekende valkuilen
 
-Zie `VERBETERPLAN-FEEDBACK-HILTJE.md` voor een puntsgewijze analyse van haar
-feedback (juli 2026) — met name over de vaste, niet-zichtbare/niet-bewerkbare
-blokken (Gebed na de Groet, Voorbeden, Onze Vader, Uitzending/Zegen) die een
-gastvoorganger die van de basisliturgie afwijkt in de weg zitten — en een
-gefaseerd verbetervoorstel.
-
-Hiervan zijn inmiddels geïmplementeerd:
-- **Sectie "5. Voorbeden"**: vrij tekstveld voor eigen voorbeden/acclamaties
-  (`#voorbeden_tekst`) + checkbox om het standaard Onze Vader weg te laten
-  (`#geen_onze_vader`). Standaardgedrag (leeg formulier) blijft ongewijzigd.
-- **Collecte "Bijzondere collecte"**: derde optie naast Diaconie/Gemeente voor
-  een eenmalige bestemming, met eigen naamveld (`#c2_naam`) en een vierde
-  QR-code (`DOCX_ASSETS.qrBijzonder` → `assets/collecte_bijzonder.png`,
-  verwijst naar de vaste pagina `vrijburg.nl/bijzonderecollecte`).
-
-Nog open (zie verbeterplan): labels verduidelijken, live-voorbeeldpaneel,
-gebedsveld bij Opening, Overdenking/Afsluiting als vrije lijst.
-
-## Bekende issues / aandachtspunten
-
-- **Tab-uitlijning bemoediging**: de docx.js tab-stops werken maar zijn moeilijk exact te matchen met de originele Word-opmaak. Bij grote afwijkingen: aanpassen via `TabStopPosition` waarden in `beurtzang()`.
-- **Liedteksten**: sommige liturgieën bevatten de volledige liedtekst (bijv. lied 773 in de dienst van 14 juni). Dit is optioneel — de dominee voert dit in het tekstgebied in als hij het wil.
-- **Bijzondere diensten**: Kerst, Pasen, Pinksteren hebben soms een afwijkende structuur (avondmaal, doopdienst). Overweeg een "bijzondere dienst" toggle.
-- **Fetch van collectes.json**: werkt via GitHub Pages (HTTPS). Bij lokaal openen van index.html als `file://` werkt de fetch niet — dan moet `COLLECTES` inline in de JS staan. Oplossing: in de catch-handler de data inline fallback plaatsen.
-- **Bijbelvertaling**: de gratis BijbelAPI biedt momenteel alleen Statenvertaling (`sv`), Canisiusbijbel en De Heilige Schrift 1917 aan (`GET /api/versions`) — géén BasisBijbel en géén NBV21 (auteursrechtelijk beschermd door het Nederlands-Vlaams Bijbelgenootschap, geen gratis API). Knop "Tekst ophalen (Statenvertaling)" gebruikt daarom `sv`. Voor NBV21 opent de knop "NBV21 openen" de juiste referentie op debijbel.nl (boeknaam → OSIS-code via `BIJBELBOEK_OSIS`), waarna de tekst handmatig gekopieerd en geplakt moet worden — vergelijkbaar met de "Liedbundels Online"-knop.
-
-### Verkenning Liedbundels Online (aug 2026)
-
-**Platform:** Laravel-site, sessie-auth (cookies + XSRF). Zoeken (`/nl/lied-zoeken`), liedpagina’s (`/nl/lied/lb-213`), coupletten (`/nl/couplet/lb-213-1`) en liedlijst vereisen inlog. Met `Accept: application/json` geven die routes `401 {"message":"Unauthenticated."}` — er is dus een JSON-backend achter de UI, maar **geen openbare developer-API**.
-
-**Publiek zonder inlog:** catalogus `/nl/bundels/liedboek` (~1386 LB-liederen met nummer + beginregel, bijv. `23b` → "De Heer is mijn herder!"). Sitemap bevat ~16k couplet-URL’s (LB/WK/HH/OTH/GK); de inhoud zelf is achter login.
-
-**Licentie/download (FAQ):** lied toevoegen aan liedlijst → stap 2 voorkeuren → **platte tekst = ja** → zip met `.txt` (alle geselecteerde liederen). Previews hebben watermerk en mogen niet als bron voor liturgie. AV: downloads registreren; na einde licentie mag materiaal niet meer gebruikt worden.
-
-**Wat we wél kunnen (zonder API):**
-1. Deeplink naar het juiste lied — geïmplementeerd.
-2. **Liedlijst-zip importeren** ✅ — tekst + muziek 1e couplet naar formulier/.docx (aug 2026).
-3. Optioneel later: autocomplete op nummer/beginregel uit de **publieke** catalogus.
-4. Officiële API/export aanvragen bij `info@liedbundelsonline.nl`.
-
-**Wat we niet moeten doen:** scraping van liedteksten/previews (licentievoorwaarden + geen stabiele API).
-- **Supabase-project pauzeert bij inactiviteit** (opgetreden 10 augustus 2026): het gratis Supabase-project pauzeert automatisch na ~1 week zonder API-gebruik. Symptoom in de app: **"Opslaan mislukt: TypeError: Load failed"** (Safari) of "Failed to fetch" (Chrome) bij opslaan/laden/delen via `?id=…`. Herstel: Supabase-dashboard → project → **Restore project** (of via de Supabase MCP-tool `restore_project` met project-ref `iabrbkirzsolwnuknbel`); duurt 1–3 minuten. Preventie: `.github/workflows/keep-supabase-active.yml` doet elke 3 dagen een publieke leesaanvraag om het project actief te houden. Let op: GitHub schakelt scheduled workflows automatisch uit na 60 dagen zonder commits op de repo — bij twijfel de workflow handmatig draaien via **Actions → Houd Supabase-project actief → Run workflow**.
-
----
-
-## Tech stack
-
-| Onderdeel | Technologie |
+| Symptoom | Oorzaak / oplossing |
 |---|---|
-| Frontend | Vanilla HTML/CSS/JS (geen framework) |
-| .docx generatie | [docx](https://docx.js.org/) v8.5.0 via CDN |
-| Bijbelteksten | [BijbelAPI](https://www.bijbelapi.com/) (Statenvertaling) + handmatige NBV21-link naar debijbel.nl |
-| Agenda | WordPress REST API (vrijburg.nl) |
-| Data | collectes.json (statisch) + Supabase `diensten` (gedeelde opslag) |
-| Hosting | GitHub Pages (statisch) |
-| Backend | Supabase Free (Postgres + Storage + Edge Functions); zie `supabase/` |
-| E-mail-ping "klaar" | Supabase Edge Function `meld-klaar` + [Resend](https://resend.com) API (secrets vereist, zie hierboven); mailto-fallback ingebouwd |
-| Geen | Build-tool, npm (vooralsnog) |
+| “Opslaan mislukt: Load failed / Failed to fetch” | Supabase Free **gepauzeerd** → Dashboard Restore (`iabrbkirzsolwnuknbel`). Workflow `keep-supabase-active` houdt wakker; GitHub zet scheduled workflows uit na 60 dagen zonder commits — desnoods handmatig **Run workflow**. |
+| Dominee-link en organist-mail “passen niet” | Verschillende `id`s gebruikt. Altijd vanuit één opgeslagen dienst mailen. |
+| Gastbrief opent niet / alleen link op klembord | Was te lange mailto; opgelost met korte brief + info-pagina (PR #55). |
+| Nieuwsbrieftekst “verdwenen” | Oude overwrite-bug; gefixt met merge-on-save. |
+| Lokaal `file://` | `collectes.json` fetch faalt — app via Pages of `python3 -m http.server` openen. |
+| Firefox “kies een toepassing” bij mailto | Gebruik **Kopieer bericht** / **Kopieer link**. |
 
 ---
 
-## Referentiebestanden
+## 10. Open / later
 
-Op de site (`downloads/` + `info.html#gastpredikant`):
+**Operationeel**
+
+- [ ] Collectes 2027–2028
+- [ ] Vast adres `NIEUWSBRIEF_REDACTIE_EMAIL`
+- [ ] Resend-domein + secrets voor automatische klaar-ping
+- [ ] Google Sheet-kolom Bestuurslid synchroon houden
+
+**Product (niet blokkerend)**
+
+- Live-voorbeeldpaneel vóór `.docx` (Hiltje/Gigi)
+- Flexibelere bijzondere diensten (avondmaal, doop, Kerst/Pasen)
+- Auth / edit-tokens i.p.v. open anon RLS
+- WordPress mediabibliotheek-upload
+- Liedbundels autocomplete of officiële API
+- Print-hulp “veelvoud van 4 pagina’s”
+
+Gesprekstukken (niet uitvoeren zonder overleg): `LITURGIECIE-19AUG2026.md`, `PLAN-REACTIE-HILTJE-AUG2026.md`, `VERBETERPLAN-FEEDBACK-HILTJE.md`.
+
+---
+
+## 11. Referenties & downloads
 
 | Bestand | Inhoud |
 |---|---|
-| `downloads/basisliturgie-calibri-mrt2026.docx` | Basisliturgie voor gastpredikanten (Calibri, maart 2026) |
-| `downloads/declaratieformulier-preekbeurt-nov2024.docx` | Declaratieformulier preekbeurt (nov 2024) |
-| `downloads/brief-gastpredikant.docx` | Brief op Vrijburg-briefpapier, afgestemd op de generator (placeholders tussen [haakjes]). Bureau kan dezelfde tekst vanuit de app mailen via *Brief gastpredikant*. |
+| `downloads/basisliturgie-calibri-mrt2026.docx` | Basisliturgie gastpredikanten |
+| `downloads/declaratieformulier-preekbeurt-nov2024.docx` | Declaratie |
+| `downloads/brief-gastpredikant.docx` | Word-sjabloon briefpapier (app-mail is korter) |
+| `Liturgien/*.docx` | Referentie-opmaak bestaande liturgieën |
+| `supabase/README.md` | Schema, bucket, setup |
+| `README.md` | Korte gebruikersdoc |
 
-Lokaal bij Martijn (niet in repo):
+---
 
-| Bestand | Inhoud |
-|---|---|
-| `collectes 2026 - 2027 teksten voor de liturgie.txt` | Bronbestand voor collectes.json |
-| `Liturgien/MMDD.docx` | 25 voltooide liturgieën van 2026 als referentie voor opmaak en structuur |
-| `Re_ Preekbeurt 26 april 2026 in Vrijburg.eml` | Voorbeeld informele email van dominee (Kattenberg) |
-| `gastvoorganger Vrijburg 14 juni.eml` | Voorbeeld email met ingevulde basisliturgie (Galama) |
+## 12. Eerste week checklist voor een opvolger
+
+1. Clone repo, open live URL, maak een testdienst met datum uit de planning.
+2. Doorloop rollen voorganger → organist → compleet; check merge-save met twee tabs.
+3. Test **Brief gastpredikant** in het mailprogramma dat bureau gebruikt (Mail of Outlook).
+4. Open Supabase-dashboard; bevestig tabel `diensten`, bucket, eventueel Restore als pauze.
+5. Pas `NIEUWSBRIEF_REDACTIE_EMAIL` aan als er een vast adres is.
+6. Lees `info.html#gastpredikant` en de workflow in §3 hierboven.
+7. Noteer wie print (Gigi) en wie de `.docx` inhoudelijk checkt (Gon).
