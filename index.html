@@ -10,12 +10,14 @@
   <style>
     :root {
       --brand: #00a8db;
-      --brand-dark: #007aa3;
+      --brand-dark: #00688c;
       --brand-light: #e8f7fc;
       --brand-mid: #99ddf0;
       --border: #ddd;
       --text: #222;
       --muted: #666;
+      --success-bg: #e8f5e9;
+      --success-text: #2e7d32;
       --radius: 6px;
       --shadow: 0 2px 8px rgba(0,0,0,0.08);
     }
@@ -31,13 +33,13 @@
     }
 
     header {
-      background: var(--brand);
+      background: var(--brand-dark);
       color: white;
       padding: 16px 32px;
       display: flex;
       align-items: center;
       gap: 20px;
-      box-shadow: 0 2px 8px rgba(0,122,163,0.25);
+      box-shadow: 0 2px 8px rgba(0,104,140,0.25);
     }
 
     .header-logo {
@@ -76,8 +78,9 @@
       padding: 12px 20px;
       font-weight: 600;
       font-size: 14px;
-      color: var(--brand);
+      color: var(--brand-dark);
       letter-spacing: 0.3px;
+      margin: 0;
     }
 
     .section-body { padding: 20px; }
@@ -105,7 +108,7 @@
       font-weight: 400;
       text-transform: none;
       letter-spacing: 0;
-      color: #aaa;
+      color:var(--muted);
       font-size: 11px;
     }
 
@@ -141,9 +144,9 @@
 
     .auto-badge {
       display: inline-block;
-      background: #e8f5e9;
-      color: #2e7d32;
-      font-size: 10px;
+      background: var(--success-bg);
+      color: var(--success-text);
+      font-size: 11px;
       font-weight: 600;
       padding: 1px 6px;
       border-radius: 10px;
@@ -174,7 +177,7 @@
 
     .import-banner {
       display: none;
-      background: #e8f5e9;
+      background: var(--success-bg);
       border: 1px solid #a5d6a7;
       color: #1b5e20;
       padding: 10px 14px;
@@ -213,7 +216,7 @@
       font-size: 13px;
       line-height: 1.45;
     }
-    .dienst-overzicht h4 {
+    .dienst-overzicht h3 {
       margin: 0 0 8px;
       font-size: 12px;
       text-transform: uppercase;
@@ -260,7 +263,7 @@
       border: 1px dashed var(--brand);
       border-radius: 4px;
       padding: 6px 14px;
-      color: var(--brand);
+      color: var(--brand-dark);
       font-size: 13px;
       cursor: pointer;
       font-weight: 500;
@@ -272,9 +275,9 @@
     /* Collecte */
     .collecte-auto-notice {
       font-size: 12px;
-      color: #2e7d32;
+      color: var(--success-text);
       margin-bottom: 12px;
-      background: #e8f5e9;
+      background: var(--success-bg);
       padding: 6px 10px;
       border-radius: 4px;
     }
@@ -287,11 +290,11 @@
       background: #fafafa;
     }
 
-    .collecte-block h4 {
+    .collecte-block h3 {
       font-size: 13px;
       font-weight: 600;
-      margin-bottom: 10px;
-      color: var(--brand);
+      margin: 0 0 10px;
+      color: var(--brand-dark);
     }
 
     /* Generate button */
@@ -351,7 +354,7 @@
     }
 
     .btn-generate {
-      background: var(--brand);
+      background: var(--brand-dark);
       color: white;
       border: none;
       border-radius: var(--radius);
@@ -368,7 +371,7 @@
       line-height: 1.2;
     }
 
-    .btn-generate:hover { background: var(--brand-dark); }
+    .btn-generate:hover { background: #004f68; }
     .btn-generate:disabled { background: #aaa; cursor: not-allowed; }
 
     .generate-hint { flex: 1; min-width: 140px; }
@@ -384,12 +387,12 @@
       border-radius: 4px;
       white-space: nowrap;
     }
-    .status-msg.ok { background: #e8f5e9; color: #2e7d32; }
+    .status-msg.ok { background: var(--success-bg); color: var(--success-text); }
     .status-msg.err { background: #ffeaea; color: #c00; }
 
     .btn-secondary {
       background: white;
-      color: var(--brand);
+      color: var(--brand-dark);
       border: 1px solid var(--brand);
       border-radius: var(--radius);
       padding: 7px 12px;
@@ -427,7 +430,7 @@
       border-radius: 4px;
       padding: 4px 10px;
       font-size: 12px;
-      color: var(--brand);
+      color: var(--brand-dark);
       cursor: pointer;
       align-self: flex-start;
     }
@@ -439,7 +442,7 @@
       color: var(--muted);
       margin-bottom: 12px;
     }
-    .draft-notice a { color: var(--brand); cursor: pointer; }
+    .draft-notice a { color: var(--brand-dark); cursor: pointer; }
 
     /* Workflow / rollen */
     .workflow-section { border: 2px solid var(--brand-mid); }
@@ -470,7 +473,7 @@
       background: var(--brand-light);
       box-shadow: 0 0 0 3px rgba(0,168,219,0.12);
     }
-    .role-card strong { display: block; font-size: 14px; color: var(--brand); margin-bottom: 4px; }
+    .role-card strong { display: block; font-size: 14px; color: var(--brand-dark); margin-bottom: 4px; }
     .role-card span { font-size: 12px; color: var(--muted); line-height: 1.4; }
 
     .workflow-hint {
@@ -493,7 +496,7 @@
 
     .section.primary .section-header {
       background: #dff4fc;
-      border-bottom-color: var(--brand);
+      border-bottom-color: var(--brand-dark);
     }
     .section.primary .section-header::after {
       content: ' ← uw onderdeel';
@@ -516,7 +519,7 @@
     }
     .section.hidden { display: none; }
 
-    .field-mine label { color: var(--brand); }
+    .field-mine label { color: var(--brand-dark); }
     .field-other label { opacity: 0.65; }
 
     .vl-grid {
@@ -600,7 +603,7 @@
       align-items: center;
       justify-content: center;
       font-size: 12px;
-      color: #aaa;
+      color:var(--muted);
       text-align: center;
       padding: 8px;
     }
@@ -615,7 +618,7 @@
       cursor: pointer;
       color: var(--muted);
     }
-    .btn-small:hover { border-color: var(--brand); color: var(--brand); }
+    .btn-small:hover { border-color: var(--brand); color: var(--brand-dark); }
 
     .comm-hint {
       font-size: 12px;
@@ -649,6 +652,20 @@
     }
     .download-list a:hover { text-decoration: underline; }
     .download-list span { font-weight: 400; color: var(--muted); font-size: 13px; }
+
+    /* Responsive: narrow viewports */
+    @media (max-width: 640px) {
+      .orde-item { grid-template-columns: 1fr; }
+    }
+
+    /* Touch targets: coarse pointers (touch/stylus) need bigger hit areas than a mouse */
+    @media (pointer: coarse) {
+      input[type=text], input[type=date], textarea, select {
+        font-size: 16px; /* iOS Safari force-zooms focused inputs under 16px */
+      }
+      .btn-icon { width: 44px; height: 44px; }
+      .generate-bar .btn-secondary { min-height: 44px; }
+    }
   </style>
 </head>
 <body>
@@ -667,7 +684,7 @@
 
   <!-- 0. WORKFLOW -->
   <div class="section workflow-section" id="section-workflow">
-    <div class="section-header">Wie vult wat in?</div>
+    <h2 class="section-header">Wie vult wat in?</h2>
     <div class="section-body">
       <p class="workflow-intro">
         De liturgie wordt door meerdere mensen aangeleverd via <strong>één gedeelde cloud-link</strong> (zelfde <code>id</code>).
@@ -712,38 +729,38 @@
 
   <!-- 1. DIENST INFO -->
   <div class="section" id="section-dienst" data-section="dienst">
-    <div class="section-header">1. Dienst</div>
+    <h2 class="section-header">1. Dienst</h2>
     <div class="section-body">
       <div id="planning-notice" class="collecte-auto-notice" style="display:none"></div>
       <div class="row">
         <div class="field" data-owner="all">
-          <label>Datum</label>
+          <label for="datum">Datum</label>
           <input type="date" id="datum" onchange="onDatumChange()">
         </div>
         <div class="field" data-owner="medewerker">
-          <label>Afwijkende aanvangstijd <span class="opt">optioneel</span></label>
+          <label for="aanvangstijd">Afwijkende aanvangstijd <span class="opt">optioneel</span></label>
           <input type="text" id="aanvangstijd" placeholder="14.30 of 19.30">
         </div>
         <div class="field" data-owner="medewerker">
-          <label>Bijzondere dienst <span class="opt">uit dienstplanning</span></label>
+          <label for="bijzondere_dienst">Bijzondere dienst <span class="opt">uit dienstplanning</span></label>
           <input type="text" id="bijzondere_dienst" placeholder="Pasen, Pinksteren, Kerstavond">
         </div>
       </div>
       <div class="row">
         <div class="field" data-owner="medewerker">
-          <label>Voorgang(st)er / predikant <span class="opt">uit dienstplanning</span></label>
+          <label for="voorganger">Voorgang(st)er / predikant <span class="opt">uit dienstplanning</span></label>
           <input type="text" id="voorganger" placeholder="ds. Rachelle van Andel">
         </div>
         <div class="field" data-owner="medewerker">
-          <label>Organist(e) <span class="opt">uit dienstplanning</span></label>
+          <label for="organist">Organist(e) <span class="opt">uit dienstplanning</span></label>
           <input type="text" id="organist" placeholder="Jan Pieter Lanooy">
         </div>
         <div class="field" data-owner="medewerker">
-          <label>Lector <span class="opt">bureaumedewerk(st)er vult in</span></label>
+          <label for="lector">Lector <span class="opt">bureaumedewerk(st)er vult in</span></label>
           <input type="text" id="lector" placeholder="Gon Homburg">
         </div>
         <div class="field" data-owner="medewerker">
-          <label>Dienstdoende bestuurder <span class="opt">uit dienstenrooster</span></label>
+          <label for="bestuurslid">Dienstdoende bestuurder <span class="opt">uit dienstenrooster</span></label>
           <input type="text" id="bestuurslid" placeholder="Roelandse">
         </div>
       </div>
@@ -753,7 +770,7 @@
           <label for="cantorij" style="text-transform:none;letter-spacing:0;font-size:14px">Cantorij zingt mee</label>
         </div>
         <div class="field" data-owner="medewerker">
-          <label>Kinderkerk <span class="opt">optioneel</span></label>
+          <label for="kinderkerk">Kinderkerk <span class="opt">optioneel</span></label>
           <input type="text" id="kinderkerk" placeholder="ja">
         </div>
       </div>
@@ -792,11 +809,11 @@
       </div>
       <div class="row">
         <div class="field" data-owner="medewerker" style="grid-column: 1/-1">
-          <label>Overige bijzonderheden <span class="opt">locatie, opmerkingen</span></label>
+          <label for="bijzonderheden">Overige bijzonderheden <span class="opt">locatie, opmerkingen</span></label>
           <textarea id="bijzonderheden" rows="2" placeholder="Locatie: Thomaskerk"></textarea>
         </div>
       </div>
-      <p style="font-size:12px;color:#aaa;margin-top:8px">
+      <p style="font-size:12px;color:var(--muted);margin-top:8px">
         Namen, lector en dienstdoende bestuurder komen uit de <a href="https://docs.google.com/spreadsheets/d/1imjMr9ELUHGV9331mYIoTOUc-DizOysV/edit" target="_blank" rel="noopener">dienstplanning</a>
         (kolom Bestuurslid; Q3-2026 gevuld vanuit Jet’s dienstenrooster).
       </p>
@@ -805,23 +822,23 @@
 
   <!-- 2. THEMA & COMMUNICATIE -->
   <div class="section" id="section-thema" data-section="thema">
-    <div class="section-header">2. Thema, afbeelding &amp; communicatie</div>
+    <h2 class="section-header">2. Thema, afbeelding &amp; communicatie</h2>
     <div class="section-body">
       <div class="row">
         <div class="field" style="grid-column: 1/-1">
-          <label>Thema <span class="opt">– bovenkop van de dienst</span></label>
+          <label for="thema">Thema <span class="opt">– bovenkop van de dienst</span></label>
           <input type="text" id="thema" placeholder="Liefde en wonden">
         </div>
       </div>
       <div class="row">
         <div class="field" style="grid-column: 1/-1">
-          <label>Tekst op voorblad <span class="opt">optioneel – bijv. een gedicht of korte tekst voor op de voorkant</span></label>
+          <label for="intro">Tekst op voorblad <span class="opt">optioneel – bijv. een gedicht of korte tekst voor op de voorkant</span></label>
           <textarea id="intro" rows="3" placeholder="Optioneel: een gedicht, ondertitel of korte tekst voor op het voorblad van de liturgie"></textarea>
         </div>
       </div>
       <div class="row">
         <div class="field" style="grid-column: 1/-1">
-          <label>Afbeelding op voorblad <span class="opt">– liturgie, socials en website</span></label>
+          <label for="foto_file">Afbeelding op voorblad <span class="opt">– liturgie, socials en website</span></label>
           <div class="foto-upload-row">
             <div class="foto-preview-wrap">
               <img id="foto-preview" class="foto-preview" alt="Voorbeeld afbeelding op voorblad">
@@ -847,14 +864,14 @@
       </div>
       <div class="row">
         <div class="field" style="grid-column: 1/-1">
-          <label>Bronvermelding afbeelding <span class="opt">– naam fotograaf / bron (verplicht bij upload)</span></label>
+          <label for="foto_credit">Bronvermelding afbeelding <span class="opt">– naam fotograaf / bron (verplicht bij upload)</span></label>
           <input type="text" id="foto_credit" placeholder="Foto ammoniet: Petra Galama">
           <p class="comm-hint">Vermeld altijd de bron of fotograaf als u een afbeelding uploadt.</p>
         </div>
       </div>
       <div class="row">
         <div class="field" style="grid-column: 1/-1">
-          <label>Nieuwsbrief <span class="opt">– kort stukje voor de wekelijkse email</span></label>
+          <label for="nieuwsbrief">Nieuwsbrief <span class="opt">– kort stukje voor de wekelijkse email</span></label>
           <textarea id="nieuwsbrief" rows="4" placeholder="Tekst over de komende dienst en het thema, voor in de nieuwsbrief…"></textarea>
           <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px">
             <button type="button" class="btn-small" onclick="meldNieuwsbriefRedactie()">📣 Meld nieuwsbriefredactie</button>
@@ -864,7 +881,7 @@
       </div>
       <div class="row">
         <div class="field" style="grid-column: 1/-1">
-          <label>Overdenking <span class="opt">– voor info@vrijburg.nl (emaillijst na de dienst)</span></label>
+          <label for="overdenking_email">Overdenking <span class="opt">– voor info@vrijburg.nl (emaillijst na de dienst)</span></label>
           <textarea id="overdenking_email" rows="6" placeholder="Schrijf hier de overdenking. Stuur deze naar het bureau — zij plaatsen het op de emaillijst…"></textarea>
           <button type="button" class="btn-small" style="margin-top:8px" onclick="emailOverdenkingNaarBureau()">✉ Stuur naar info@vrijburg.nl</button>
           <p class="comm-hint">Dit veld komt niet in het Word-document. In de liturgie blijft het vaste blok Overdenking → Stilte → Muziek staan.</p>
@@ -875,15 +892,15 @@
 
   <!-- 3. OPENING -->
   <div class="section" id="section-opening" data-section="opening">
-    <div class="section-header">3. Opening van de dienst</div>
+    <h2 class="section-header">3. Opening van de dienst</h2>
     <div class="section-body">
       <div class="row">
         <div class="field field-mine" data-owner="organist">
-          <label>Orgelspel opening <span class="opt">organist(e)</span></label>
+          <label for="orgelspel_opening">Orgelspel opening <span class="opt">organist(e)</span></label>
           <input type="text" id="orgelspel_opening" placeholder="Leeg = niet afgedrukt — titel orgelwerk">
         </div>
         <div class="field field-mine" data-owner="voorganger">
-          <label>Lichtlied <span class="opt">voorgang(st)er</span></label>
+          <label for="lichtlied">Lichtlied <span class="opt">voorgang(st)er</span></label>
           <div style="display:flex;gap:8px;align-items:center">
             <input type="text" id="lichtlied" placeholder="Lied 217: 1 en 3  of  'Licht dat wil ingaan…'" style="flex:1">
             <button type="button" class="btn-small" onclick="openLiedboekOnlineField('lichtlied')" title="Open Liedbundels Online">Liedboek</button>
@@ -900,7 +917,7 @@
       </div>
       <div class="row">
         <div class="field field-mine" data-owner="voorganger" style="grid-column: 1/-1">
-          <label>Gebed <span class="opt">na de Groet — optioneel, staat standaard alleen als kopje "Gebed" in de liturgie</span></label>
+          <label for="gebed_opening">Gebed <span class="opt">na de Groet — optioneel, staat standaard alleen als kopje "Gebed" in de liturgie</span></label>
           <textarea id="gebed_opening" rows="3" placeholder="Laat leeg voor alleen het kopje 'Gebed'. Vul hier de tekst in als u het openingsgebed woordelijk in de liturgie wilt afdrukken."></textarea>
         </div>
       </div>
@@ -909,7 +926,7 @@
 
   <!-- 4. ORDE VAN DIENST -->
   <div class="section" id="section-orde" data-section="orde">
-    <div class="section-header" id="orde-header">4. Orde van dienst <span style="font-weight:400;font-size:12px;color:#888">– in volgorde zoals de voorgang(st)er die aanlevert</span></div>
+    <h2 class="section-header" id="orde-header">4. Orde van dienst <span style="font-weight:400;font-size:12px;color:var(--muted)">– in volgorde zoals de voorgang(st)er die aanlevert</span></h2>
     <div class="section-body">
       <div id="dienst-overzicht" class="dienst-overzicht" aria-live="polite"></div>
       <div id="orde-collab-banner" class="orde-collab-banner" style="display:none"></div>
@@ -922,7 +939,7 @@
         <button class="btn-add" onclick="addOrde('muziek')">+ Muziek</button>
         <button class="btn-add" onclick="addOrde('overig')">+ Overig</button>
       </div>
-      <p style="font-size:12px;color:#aaa;margin-top:10px;">
+      <p style="font-size:12px;color:var(--muted);margin-top:10px;">
         Tip: de volgorde van de lijst is de volgorde in de liturgie. Nieuw item komt onder het geselecteerde blok (of onderaan);
         verplaats met <strong>↑↓</strong> zodat liederen tussen de lezingen staan — niet allemaal onderaan.
         Voor een lied: bijv. "Lied 652: 1, 3 en 5". Bij lezingen: knop <em>Tekst ophalen (Statenvertaling)</em>
@@ -937,14 +954,14 @@
       <div id="liedlijst-import-result" class="import-banner" style="margin-top:12px"></div>
       </div>
       <div class="field field-mine" id="orde-organist-ui" data-owner="organist" style="grid-column:1/-1">
-        <label>Muziek na de overdenking <span class="opt">organist(e)</span></label>
+        <label for="muziek_overdenking">Muziek na de overdenking <span class="opt">organist(e)</span></label>
         <input type="text" id="muziek_overdenking" placeholder="Leeg = niet afgedrukt — titel muziekstuk">
         <p class="comm-hint">
           Dit komt in de liturgie na Overdenking → Stilte.
         </p>
       </div>
       <div class="field field-mine" data-owner="voorganger" style="grid-column:1/-1;margin-top:12px">
-        <label>Lied na overdenking / muziek <span class="opt">optioneel — tussen muziek en voorbeden</span></label>
+        <label for="lied_na_overdenking">Lied na overdenking / muziek <span class="opt">optioneel — tussen muziek en voorbeden</span></label>
         <textarea id="lied_na_overdenking" rows="3" placeholder="Lied …&#10;Eerste regel = titel; volgende regels = coupletten (optioneel)" oninput="scheduleDraftSave()"></textarea>
         <p class="comm-hint">
           Gebruik dit veld als er ná de overdenking (en orgelmuziek) nog een lied komt, vóór de voorbeden.
@@ -956,17 +973,17 @@
 
   <!-- 5. VOORBEDEN -->
   <div class="section" id="section-voorbeden" data-section="voorbeden">
-    <div class="section-header">5. Voorbeden <span style="font-weight:400;font-size:12px;color:#888">– optioneel, voor wie afwijkt van het standaardgebed</span></div>
+    <h2 class="section-header">5. Voorbeden <span style="font-weight:400;font-size:12px;color:var(--muted)">– optioneel, voor wie afwijkt van het standaardgebed</span></h2>
     <div class="section-body">
       <div class="row">
         <div class="field field-mine" data-owner="voorganger" style="grid-column: 1/-1">
-          <label>Voorbeden <span class="opt">eigen tekst, acclamaties (optioneel)</span></label>
+          <label for="voorbeden_tekst">Voorbeden <span class="opt">eigen tekst, acclamaties (optioneel)</span></label>
           <textarea id="voorbeden_tekst" rows="4" placeholder="Laat leeg voor de standaardtekst &quot;Stil gebed, afgesloten met Onze Vader:&quot;.&#10;Vul hier eigen voorbeden met acclamaties in, zoals:&#10;Voorganger: Zo bidden wij…&#10;Allen: Heer, hoor ons gebed."></textarea>
         </div>
       </div>
       <div class="row">
         <div class="field field-mine" data-owner="voorganger" style="grid-column: 1/-1">
-          <label>Acclamatie / lied bij voorbeden <span class="opt">optioneel — komt in de liturgie onder de voorbedentekst, vóór het Onze Vader</span></label>
+          <label for="acclamatie_lied">Acclamatie / lied bij voorbeden <span class="opt">optioneel — komt in de liturgie onder de voorbedentekst, vóór het Onze Vader</span></label>
           <textarea id="acclamatie_lied" rows="3" placeholder="Lied …&#10;Eerste regel = titel; volgende regels = coupletten (optioneel)" oninput="scheduleDraftSave()"></textarea>
           <p class="comm-hint">Alleen voor een acclamatie <em>bij de voorbeden</em>. Liederen tussen lezingen zet u in de <strong>orde van dienst</strong> (met ↑↓ op de juiste plek). Een lied ná de overdenking/muziek heeft een eigen veld hieronder bij de overdenking-sectie.</p>
         </div>
@@ -977,7 +994,7 @@
           <label for="geen_onze_vader" style="text-transform:none;letter-spacing:0;font-size:14px">Geen standaard Onze Vader (eigen afsluiting staat hierboven bij Voorbeden)</label>
         </div>
       </div>
-      <p style="font-size:12px;color:#aaa;margin-top:4px">
+      <p style="font-size:12px;color:var(--muted);margin-top:4px">
         Standaard sluit de tool de Voorbeden af met de vaste tekst van het Onze Vader. Vul hierboven een eigen
         tekst in als de voorganger iets anders wil bidden, en vink het vakje aan om de standaardtekst weg te laten.
       </p>
@@ -986,17 +1003,17 @@
 
   <!-- 6. SLOT -->
   <div class="section" id="section-slot" data-section="slot">
-    <div class="section-header">6. Afsluiting</div>
+    <h2 class="section-header">6. Afsluiting</h2>
     <div class="section-body">
       <div class="row">
         <div class="field field-mine" data-owner="voorganger">
-          <label>Slotlied <span class="opt">voorgang(st)er</span></label>
+          <label for="slotlied">Slotlied <span class="opt">voorgang(st)er</span></label>
           <input type="text" id="slotlied" placeholder="Lied 675">
           <textarea id="slotlied_lyrics" rows="6" style="display:none;margin-top:8px" placeholder="Couplettekst na import van de liedlijst" oninput="slotliedLyrics=this.value;scheduleDraftSave()"></textarea>
           <p class="comm-hint" id="slotlied-muziek-hint" style="display:none">♪ Muziek 1e couplet meegenomen voor het Word-document</p>
         </div>
         <div class="field field-mine" data-owner="organist">
-          <label>Orgelspel slot <span class="opt">organist(e)</span></label>
+          <label for="orgelspel_slot">Orgelspel slot <span class="opt">organist(e)</span></label>
           <input type="text" id="orgelspel_slot" placeholder="Leeg = niet afgedrukt — titel orgelwerk">
         </div>
       </div>
@@ -1005,11 +1022,11 @@
 
   <!-- 7. COLLECTE & BLOEMEN -->
   <div class="section" id="section-collecte" data-section="collecte">
-    <div class="section-header">7. Collecte &amp; bloemen</div>
+    <h2 class="section-header">7. Collecte &amp; bloemen</h2>
     <div class="section-body">
       <div class="row" style="margin-bottom:16px">
         <div class="field" style="grid-column: 1/-1">
-          <label>Bloemen gaan naar</label>
+          <label for="bloemen">Bloemen gaan naar</label>
           <input type="text" id="bloemen">
         </div>
       </div>
@@ -1017,36 +1034,36 @@
       <div id="collecte-notice" class="collecte-auto-notice" style="display:none"></div>
 
       <div class="collecte-block">
-        <h4>Eerste collecte</h4>
+        <h3>Eerste collecte</h3>
         <div class="row">
           <div class="field">
-            <label>Collectethema</label>
+            <label for="c1_thema">Collectethema</label>
             <input type="text" id="c1_thema" placeholder="Vluchtelingen">
           </div>
           <div class="field">
-            <label>Naam organisatie</label>
+            <label for="c1_naam">Naam organisatie</label>
             <input type="text" id="c1_naam" placeholder="Stichting NAOMI">
           </div>
         </div>
         <div class="row">
           <div class="field" style="grid-column: 1/-1">
-            <label>Beschrijving</label>
+            <label for="c1_tekst">Beschrijving</label>
             <textarea id="c1_tekst" rows="4"></textarea>
           </div>
         </div>
         <div class="row">
           <div class="field" style="grid-column: 1/-1">
-            <label>Rekeningnummer</label>
+            <label for="c1_rekening">Rekeningnummer</label>
             <input type="text" id="c1_rekening">
           </div>
         </div>
       </div>
 
       <div class="collecte-block">
-        <h4>Tweede collecte <span class="auto-badge">automatisch</span></h4>
+        <h3>Tweede collecte <span class="auto-badge">automatisch</span></h3>
         <div class="row">
           <div class="field">
-            <label>Type</label>
+            <label for="c2_type">Type</label>
             <select id="c2_type" onchange="onC2TypeChange()">
               <option value="diaconie">Diaconie</option>
               <option value="gemeente">Gemeente</option>
@@ -1054,19 +1071,19 @@
             </select>
           </div>
           <div class="field" id="c2-naam-field" style="display:none">
-            <label>Naam / bestemming</label>
+            <label for="c2_naam">Naam / bestemming</label>
             <input type="text" id="c2_naam" placeholder="Wederopbouw Cuba" oninput="scheduleDraftSave()">
           </div>
         </div>
         <div class="row">
           <div class="field" style="grid-column: 1/-1">
-            <label>Beschrijving</label>
+            <label for="c2_tekst">Beschrijving</label>
             <textarea id="c2_tekst" rows="3"></textarea>
           </div>
         </div>
         <div class="row">
           <div class="field" style="grid-column: 1/-1">
-            <label>Rekeningnummer</label>
+            <label for="c2_rekening">Rekeningnummer</label>
             <input type="text" id="c2_rekening">
           </div>
         </div>
@@ -1081,18 +1098,18 @@
 
   <!-- 7. AGENDA -->
   <div class="section" id="section-agenda" data-section="agenda">
-    <div class="section-header">8. Agenda</div>
+    <h2 class="section-header">8. Agenda</h2>
     <div class="section-body">
       <div style="margin-bottom:12px">
         <button class="btn-secondary" onclick="importAgenda()" id="btn-import-agenda">↻ Importeer van vrijburg.nl</button>
-        <span style="font-size:12px;color:#aaa;margin-left:8px">Haalt aankomende activiteiten op (2 weken + tot 6 weken)</span>
+        <span style="font-size:12px;color:var(--muted);margin-left:8px">Haalt aankomende activiteiten op (2 weken + tot 6 weken)</span>
       </div>
       <div class="field" style="margin-bottom:16px">
-        <label>Activiteiten komende week <span class="opt">– voor activiteiten die binnenkort plaatsvinden</span></label>
+        <label for="agenda_kort">Activiteiten komende week <span class="opt">– voor activiteiten die binnenkort plaatsvinden</span></label>
         <textarea id="agenda_kort" rows="8" placeholder="Donderdag 2 juli 12:30 uur – Vrijburglunch – Vrijburg&#10;Schuif aan bij de maandelijkse gezellige Vrijburglunch!…"></textarea>
       </div>
       <div class="field">
-        <label>Aankondigingen verder weg <span class="opt">optioneel</span></label>
+        <label for="agenda_ver">Aankondigingen verder weg <span class="opt">optioneel</span></label>
         <textarea id="agenda_ver" rows="8" placeholder="Zondag 13 juli 10:30 uur – kerkdienst met ds. …&#10;Korte omschrijving van de activiteit…"></textarea>
       </div>
     </div>
@@ -1446,8 +1463,8 @@ function applyRolUI() {
   if (ordeAddRow) ordeAddRow.style.display = organistRefMode ? 'none' : '';
   if (ordeHeader) {
     ordeHeader.innerHTML = organistRefMode
-      ? '4. Orde van dienst &amp; muziek <span style="font-weight:400;font-size:12px;color:#888">– vul muziek in; liederen/lezingen ter referentie</span>'
-      : '4. Orde van dienst <span style="font-weight:400;font-size:12px;color:#888">– in volgorde zoals de voorgang(st)er die aanlevert</span>';
+      ? '4. Orde van dienst &amp; muziek <span style="font-weight:400;font-size:12px;color:var(--muted)">– vul muziek in; liederen/lezingen ter referentie</span>'
+      : '4. Orde van dienst <span style="font-weight:400;font-size:12px;color:var(--muted)">– in volgorde zoals de voorgang(st)er die aanlevert</span>';
   }
   if (ordeCollabBanner) {
     if (organistRefMode) {
@@ -2310,7 +2327,7 @@ function renderDienstOverzicht() {
       : 'Zelfde id voor voorgang(st)er en organist(e) — dan komen hun onderdelen hier samen.';
 
   box.innerHTML =
-    `<h4>Overzicht van de dienst</h4>` +
+    `<h3>Overzicht van de dienst</h3>` +
     `<ol>${items.map(it => `<li class="${it.cls || ''}">${it.html}</li>`).join('')}</ol>` +
     `<p class="ov-hint">${hint}</p>`;
 }
@@ -2352,7 +2369,7 @@ function renderOrde() {
       ? `<button class="btn-fetch" onclick="fetchBibleText('${safeId}')" title="Haal bijbeltekst op via BijbelAPI (let op: alleen Statenvertaling beschikbaar)">Tekst ophalen (Statenvertaling)</button>
          <button class="btn-fetch" onclick="openNbv21('${safeId}')" title="Open NBV21 op debijbel.nl — kopieer de tekst zelf (geen gratis API voor deze vertaling)">NBV21 openen</button>`
       : item.type === 'lied'
-      ? `<button class="btn-fetch" onclick="openLiedboekOnline('${safeId}')" title="Open Liedbundels Online (inlog vereist)">Liedbundels Online</button>${item.muziek_data?.length ? '<span style="font-size:12px;color:#2e7d32">♪ muziek 1e couplet</span>' : ''}`
+      ? `<button class="btn-fetch" onclick="openLiedboekOnline('${safeId}')" title="Open Liedbundels Online (inlog vereist)">Liedbundels Online</button>${item.muziek_data?.length ? '<span style="font-size:12px;color:var(--success-text)">♪ muziek 1e couplet</span>' : ''}`
       : '';
     const typeControl = canEdit && !refMode
       ? `<select onchange="updateOrdeType('${safeId}', this.value)">
@@ -3542,8 +3559,8 @@ function onDatumChange() {
     document.getElementById('kinderkerk').value = planning.kinderkerk || '';
     applyPlanningVl(planning);
     planningNotice.style.display = 'block';
-    planningNotice.style.background = '#e8f5e9';
-    planningNotice.style.color = '#2e7d32';
+    planningNotice.style.background = 'var(--success-bg)';
+    planningNotice.style.color = 'var(--success-text)';
     planningNotice.textContent = `✓ Dienstplanning ingevuld voor ${formatDatum(val)}`
       + (planning.bestuurslid ? ` (bestuurder: ${planning.bestuurslid})` : '');
   } else {

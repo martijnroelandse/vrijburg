@@ -65,6 +65,10 @@ nieuwsbrief.html ──same short_id──► Mailchimp card text (plain text, c
 - `supabase/functions/meld-klaar`: Edge Function that emails a "liturgy ready" ping via Resend when `RESEND_API_KEY` is configured; without it, returns HTTP 501 and the frontend falls back to opening a mailto instead.
 - `.github/workflows/keep-supabase-active.yml`: cron every 3 days to ping the Supabase REST endpoint, since the free tier auto-pauses after ~1 week idle. GitHub disables scheduled workflows after 60 days with no commits to the repo — may need a manual "Run workflow" if things go quiet.
 
+## Tooling
+
+- `.claude/skills/impeccable/` (with matching agents in `.claude/agents/impeccable-*.md`) is a third-party frontend-design skill (`npx impeccable install`), invoked as `/impeccable <command>` — e.g. `critique`/`audit` to review `index.html`'s UI, `polish`/`harden` for refinement passes. No `PRODUCT.md`/`DESIGN.md` exist yet, so its first run on this repo will offer `init` to capture product context before doing design work.
+
 ## Working conventions
 
 - All UI copy, commit messages, and docs in this repo are in **Dutch**. Match that when editing content or writing commits.
