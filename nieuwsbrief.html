@@ -42,6 +42,15 @@
       border-color: var(--brand);
       box-shadow: 0 0 0 3px rgba(0,168,219,0.15);
     }
+    .sr-only {
+      position: absolute;
+      width: 1px; height: 1px;
+      padding: 0; margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
     .btn {
       border: none;
       border-radius: 4px;
@@ -49,10 +58,10 @@
       font: inherit;
       font-weight: 500;
       cursor: pointer;
-      background: var(--brand);
+      background: var(--brand-dark);
       color: white;
     }
-    .btn:hover { background: var(--brand-dark); }
+    .btn:hover { background: #004f68; }
     .btn-sec {
       background: white;
       color: var(--brand-dark);
@@ -69,6 +78,11 @@
       cursor: pointer;
     }
     .btn-small:hover { border-color: var(--brand); color: var(--brand); }
+    @media (pointer: coarse) {
+      input[type="text"] { font-size: 16px; } /* iOS Safari force-zooms focused inputs under 16px */
+      .btn, .btn-sec { min-height: 44px; }
+      .btn-small { min-height: 44px; padding: 6px 14px; }
+    }
     .hint { font-size: 13px; color: var(--muted); margin-top: 10px; line-height: 1.45; }
     .meta { font-size: 13px; color: var(--muted); margin-bottom: 12px; }
     .meta strong { color: var(--text); }
@@ -176,10 +190,11 @@
     <div class="panel-h">Dienst openen</div>
     <div class="panel-b">
       <div class="row">
+        <label class="sr-only" for="short-id">short_id</label>
         <input type="text" id="short-id" placeholder="short_id uit de liturgie-link (bijv. a1b2c3d4)" autocomplete="off">
         <button type="button" class="btn" onclick="openDienst()">Open</button>
         <button type="button" class="btn-sec" onclick="reloadDienst()">Vernieuwen</button>
-        <span id="status-msg" class="status"></span>
+        <span id="status-msg" class="status" aria-live="polite"></span>
       </div>
       <p class="hint">
         Open dezelfde <code>?id=…</code> als in de Liturgie Generator. Plak elk blok hieronder in een aparte Mailchimp box/card (platte tekst, geen HTML).
@@ -190,7 +205,7 @@
       </label>
       <div class="row" style="margin-top:8px">
         <button type="button" class="btn-sec" onclick="refreshPodcast()">↻ Haal laatste podcast op</button>
-        <span id="podcast-status" class="status"></span>
+        <span id="podcast-status" class="status" aria-live="polite"></span>
       </div>
     </div>
   </div>
