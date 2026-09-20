@@ -1,0 +1,5 @@
+# Local scratch folder with test/reference .eml exports — never committed.
+/nieuwsbrief/
+
+# macOS
+.DS_Store
