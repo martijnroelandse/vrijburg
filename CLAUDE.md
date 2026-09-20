@@ -30,15 +30,16 @@ Deployment is just pushing to `main`; GitHub Pages serves the repo root directly
 
 ```
 Browser (index.html)
+  ├── shared.css / shared.js                                         (tokens, header chrome, Supabase client, date/escape helpers)
   ├── collectes.json / dienstplanning.json / agenda_templates.json   (static data, fetched at runtime)
-  ├── docx.js + JSZip (CDN, index.html:1171-1174)                    → builds the .docx client-side
+  ├── docx.js + JSZip (CDN)                                          → builds the .docx client-side
   ├── Supabase Postgres table `diensten` + Storage bucket `dienst-fotos`  (?id=<short_id>)
   └── Edge Function `meld-klaar` → Resend (if configured) or mailto fallback
 
-nieuwsbrief.html ──same short_id──► Mailchimp card text (plain text, copy/paste)
+nieuwsbrief.html ──same short_id + shared.css/shared.js──► Mailchimp card text (plain text, copy/paste)
 ```
 
-`index.html` is a single ~4600-line file containing all markup, CSS and JS for the main app — there is no module system or bundler. Key structural landmarks inside it:
+`index.html` and `nieuwsbrief.html` are two pages of one platform (liturgy input → newsletter output, same Supabase `diensten` records), each a single self-contained HTML file with inline `<style>`/`<script>` — there is no module system or bundler. What's genuinely identical between them (CSS custom-property tokens, the `header`/`.header-logo` chrome, the Supabase client + `SUPABASE_*` constants, `NL_MAANDEN`/`NL_DAGEN`, `formatDatum()`, `escapeHtml()`) lives in `shared.css`/`shared.js`, loaded via plain `<link>`/`<script src>` tags by both pages — **not** an import/bundle step, just two more static files GitHub Pages serves as-is. Everything page-specific (including same-named classes like `.row` or `.btn-small`, which mean different things in each file — a CSS grid of form fields in `index.html` vs. a flex toolbar row in `nieuwsbrief.html`) stays local to that page; don't assume a class name means the same thing in both files. Key structural landmarks inside `index.html`:
 
 - **Config constants** near the top (~line 1180 onward): `SUPABASE_URL`/`SUPABASE_ANON_KEY`, `LITURGIE_MAKER_EMAIL`, `BUREAU_EMAIL`, `NIEUWSBRIEF_REDACTIE_EMAIL`, and the fixed liturgy texts (`BEMOEDIGING_LINES`, `GROET_LINES`, `ONZE_VADER`, `FOOTER`, diaconie/gemeente collection texts, QR text). Edit these directly for content changes — no rebuild needed.
 - **`getFormState()` / `applyFormState()`**: the canonical shape of a service's form data; `data` in the Supabase `diensten` table mirrors this (minus `foto_data`, which goes to Storage instead).

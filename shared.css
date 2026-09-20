@@ -1,0 +1,56 @@
+/* Shared tokens and base chrome for index.html + nieuwsbrief.html.
+   These two pages are one platform, split across two static files (no
+   build step — see CLAUDE.md). Only put things here that are genuinely
+   identical across both pages; each page keeps its own component CSS
+   (e.g. .row and .btn-small mean different things in each file). */
+
+:root {
+  --brand: #00a8db;
+  --brand-dark: #00688c;
+  --brand-light: #e8f7fc;
+  --brand-mid: #99ddf0;
+  --border: #ddd;
+  --text: #222;
+  --muted: #666;
+  --success-bg: #e8f5e9;
+  --success-text: #2e7d32;
+  --radius: 6px;
+  --shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Roboto', 'Segoe UI', Arial, sans-serif;
+  font-size: 15px;
+  color: var(--text);
+  background: #f4fbfe;
+  min-height: 100vh;
+}
+
+header {
+  background: var(--brand-dark);
+  color: white;
+  padding: 16px 32px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  box-shadow: 0 2px 8px rgba(0,104,140,0.25);
+}
+
+.header-logo {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  text-decoration: none;
+}
+
+.header-logo img {
+  height: 52px;
+  width: auto;
+  display: block;
+}
+
+header h1 { font-size: 20px; font-weight: 500; letter-spacing: 0.2px; }
+header p { font-size: 12px; opacity: 0.9; margin-top: 3px; font-weight: 300; }

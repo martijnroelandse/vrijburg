@@ -7,57 +7,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shared.css">
   <style>
-    :root {
-      --brand: #00a8db;
-      --brand-dark: #00688c;
-      --brand-light: #e8f7fc;
-      --brand-mid: #99ddf0;
-      --border: #ddd;
-      --text: #222;
-      --muted: #666;
-      --success-bg: #e8f5e9;
-      --success-text: #2e7d32;
-      --radius: 6px;
-      --shadow: 0 2px 8px rgba(0,0,0,0.08);
-    }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      font-family: 'Roboto', 'Segoe UI', Arial, sans-serif;
-      font-size: 15px;
-      color: var(--text);
-      background: #f4fbfe;
-      min-height: 100vh;
-    }
-
-    header {
-      background: var(--brand-dark);
-      color: white;
-      padding: 16px 32px;
-      display: flex;
-      align-items: center;
-      gap: 20px;
-      box-shadow: 0 2px 8px rgba(0,104,140,0.25);
-    }
-
-    .header-logo {
-      display: flex;
-      align-items: center;
-      flex-shrink: 0;
-      text-decoration: none;
-    }
-
-    .header-logo img {
-      height: 52px;
-      width: auto;
-      display: block;
-    }
-
-    header h1 { font-size: 20px; font-weight: 500; letter-spacing: 0.2px; }
-    header p { font-size: 12px; opacity: 0.9; margin-top: 3px; font-weight: 300; }
-
     main {
       max-width: 860px;
       margin: 32px auto;
@@ -1189,6 +1140,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.8/dist/umd/supabase.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+<script src="shared.js"></script>
 
 <script>
 // ============================================================
@@ -1246,9 +1198,7 @@ const QR_TEKST = 'Voor digitaal collecteren maken wij gebruik van een algemene Q
 const FOOTER_LINE = '=============================================================';
 const FOOTER = 'Voorgangers van Vrijburg zijn ds. Rachelle van Andel en ds. Rosaliene Israël.\nds. Rachelle van Andel\nrachellevanandel@vrijburg.nl\nds. Rosaliene Israël\nrosaliene.israel@vrijburg.nl\n\nAlgemeen\nVrijburg is een vrijzinnige christelijke geloofsgemeenschap, gevormd door Remonstranten en Vrijzinnige Protestanten.\nVrijheid, verdraagzaamheid, verantwoordelijkheid en ruimte voor ieders persoonlijk geloof zijn belangrijke uitgangspunten die terugkomen in kerkdiensten, gespreksgroepen en overige activiteiten.\nVoor de verschillende Nieuwsbrieven kunt u zich aanmelden via onze website: www.vrijburg.nl.';
 
-const NL_MAANDEN = ['januari','februari','maart','april','mei','juni','juli','augustus','september','oktober','november','december'];
 const NL_MAANDEN_CAP = ['Januari','Februari','Maart','April','Mei','Juni','Juli','Augustus','September','Oktober','November','December'];
-const NL_DAGEN = ['zondag','maandag','dinsdag','woensdag','donderdag','vrijdag','zaterdag'];
 
 // BijbelAPI (gratis) biedt momenteel alleen sv (Statenvertaling), canisius en
 // hs1917 aan (zie GET /api/versions) — geen BasisBijbel of NBV21 (auteursrecht).
@@ -1264,10 +1214,8 @@ const VRIJBURG_EVENTS_API = 'https://www.vrijburg.nl/wp-json/wp/v2/evenementen';
 let AGENDA_TEMPLATES = [];
 fetch('agenda_templates.json').then(r => r.ok ? r.json() : []).then(d => { AGENDA_TEMPLATES = d; }).catch(() => {});
 
-// Supabase (gedeelde opslag liturgie + nieuwsbrief)
-const SUPABASE_URL = 'https://iabrbkirzsolwnuknbel.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlhYnJia2lyenNvbHdudWtuYmVsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ3OTU4MDIsImV4cCI6MjEwMDM3MTgwMn0.ojjiiwwAwb3eITwThJPXGgOk_XynghQUNZ_snDDe6iQ';
-const SUPABASE_FOTO_BUCKET = 'dienst-fotos';
+// Supabase client, NL_MAANDEN/NL_DAGEN, formatDatum() en escapeHtml() komen
+// uit shared.js (zelfde platform als nieuwsbrief.html, zie CLAUDE.md).
 // Ontvangers van "Ik ben klaar" en de klaar-melding. Gon maakt de liturgie;
 // info@ is de gedeelde bureau-inbox (iedereen met toegang tot die mailbox).
 const LITURGIE_MAKER_EMAIL = 'gon.homburg@gmail.com';
@@ -1281,12 +1229,6 @@ const NIEUWSBRIEF_REDACTIE_EMAIL = 'martijnroelandse@me.com';
 const KLAAR_NOTIFY_EMAIL = `${LITURGIE_MAKER_EMAIL},${BUREAU_EMAIL}`;
 // Bureau-klaar-ping: Gon + info@ + nieuwsbriefredactie (allen hebben de id nodig).
 const LITURGIE_KLAAR_NOTIFY_EMAIL = `${KLAAR_NOTIFY_EMAIL},${NIEUWSBRIEF_REDACTIE_EMAIL}`;
-
-const sb = (() => {
-  const lib = (typeof supabase !== 'undefined') ? supabase : null;
-  const create = lib?.createClient || lib?.default?.createClient;
-  return create ? create(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
-})();
 
 let currentDienstUuid = null;
 let currentShortId = null;
@@ -2330,14 +2272,6 @@ function renderDienstOverzicht() {
     `<h3>Overzicht van de dienst</h3>` +
     `<ol>${items.map(it => `<li class="${it.cls || ''}">${it.html}</li>`).join('')}</ol>` +
     `<p class="ov-hint">${hint}</p>`;
-}
-
-function escapeHtml(str) {
-  return String(str)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
 }
 
 function renderOrde() {
@@ -3623,16 +3557,6 @@ function onC2TypeChange() {
 
 // Init tweede collecte
 onC2TypeChange();
-
-// ============================================================
-// DATUMFORMATTERING
-// ============================================================
-function formatDatum(val) {
-  if (!val) return '';
-  const d = new Date(val + 'T12:00:00');
-  const dag = NL_DAGEN[d.getDay()];
-  return `${dag} ${d.getDate()} ${NL_MAANDEN[d.getMonth()]} ${d.getFullYear()}`;
-}
 
 // ============================================================
 // DOCX GENERATOR
