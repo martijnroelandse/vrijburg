@@ -1860,7 +1860,7 @@ async function saveDienstManual() {
 // (plus optioneel NOTIFY_EMAIL). Zolang dat niet lukt, valt meldDienstKlaar()
 // terug op een kant-en-klare mailto-link, zodat de melding sowieso verstuurd
 // kan worden.
-async function pingKlaarNotificatie({ shortId, datumTekst, thema, liturgieUrl, nieuwsbriefUrl }) {
+async function pingKlaarNotificatie({ shortId, datumTekst, thema, liturgieUrl, nieuwsbriefUrl, subject, text }) {
   if (!sb) return { ok: false, reason: 'Geen Supabase-verbinding' };
   try {
     const { data, error } = await sb.functions.invoke('meld-klaar', {
@@ -1870,6 +1870,8 @@ async function pingKlaarNotificatie({ shortId, datumTekst, thema, liturgieUrl, n
         thema,
         liturgie_url: liturgieUrl,
         nieuwsbrief_url: nieuwsbriefUrl,
+        ...(subject ? { subject } : {}),
+        ...(text ? { text } : {}),
       },
     });
     if (error) return { ok: false, reason: error.message || String(error) };
@@ -2128,6 +2130,24 @@ function terugNaarBureau({ copyOnly = false } = {}) {
       short, cloud, datumTekst, rolLabel, shortId, nieuwsbriefUrl,
       heeftFoto, fotoCredit, fotoBestand, overdenking,
     });
+
+    // Automatische server-side melding (Resend via Edge Function meld-klaar),
+    // als garantie náást de mailto/klembord hieronder — zo komt de melding bij
+    // Gon/bureau/redactie aan ook als het mailprogramma van voorganger/organist
+    // niet goed werkt (bv. geen mailclient gekoppeld).
+    if (shortId) {
+      pingKlaarNotificatie({
+        shortId,
+        datumTekst,
+        thema: document.getElementById('thema').value.trim(),
+        liturgieUrl: getCloudShareUrl(),
+        nieuwsbriefUrl,
+        subject,
+        text: body,
+      }).then(ping => {
+        if (!ping.ok) console.warn('Automatische klaar-ping (Ik ben klaar) mislukt:', ping.reason);
+      });
+    }
 
     // Altijd klaar-bericht + link op klembord: helpt als mailto faalt (Firefox-
     // dialoog "kies een toepassing" zonder geconfigureerde mailclient).

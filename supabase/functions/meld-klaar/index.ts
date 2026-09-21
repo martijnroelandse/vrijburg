@@ -1,9 +1,16 @@
 // Edge Function: meld-klaar
 //
-// Stuurt een e-mail-ping wanneer een liturgie in de Liturgie Generator wordt
-// gemarkeerd als "klaar" (knop "📣 Meld: liturgie is klaar" in index.html).
-// Zo weten de liturgiemaker (Gon), het bureau (info@) en de nieuwsbriefredactie
-// meteen dát een dienst compleet is én wat de id (?id=...) is.
+// Stuurt een e-mail-ping. Wordt aangeroepen vanuit index.html door zowel
+// "Ik ben klaar" (voorganger/organist, terugNaarBureau()) als de bureau-knop
+// "📣 Meld: liturgie is klaar" (meldDienstKlaar()) — in beide gevallen als
+// automatische, server-side garantie náást de mailto/klembord-melding, zodat
+// de liturgiemaker (Gon), het bureau (info@) en de nieuwsbriefredactie de
+// melding ook krijgen als iemands eigen mailprogramma niet goed werkt.
+//
+// Optioneel kan de caller een eigen `subject` en `text` meesturen (zo gebruikt
+// "Ik ben klaar" hetzelfde klaar-bericht dat ook in de mailto/klembord staat,
+// met rol-specifieke inhoud). Zonder `subject`/`text` bouwt deze functie zelf
+// een generiek "liturgie is klaar"-bericht.
 //
 // Gebruikt de Resend API (https://resend.com, gratis tot 100 mails/dag,
 // 3000/maand) omdat dat vanuit een Edge Function met één fetch-call werkt,
@@ -90,14 +97,17 @@ Deno.serve(async (req: Request) => {
   const thema = typeof body.thema === "string" ? body.thema : "";
   const liturgieUrl = typeof body.liturgie_url === "string" ? body.liturgie_url : "";
   const nieuwsbriefUrl = typeof body.nieuwsbrief_url === "string" ? body.nieuwsbrief_url : "";
+  const customSubject = typeof body.subject === "string" ? body.subject.trim() : "";
+  const customText = typeof body.text === "string" ? body.text.trim() : "";
 
   if (!shortId) {
     return jsonResponse({ ok: false, error: "short_id ontbreekt in de aanvraag" }, 400);
   }
 
   const datumTekst = datum || "(datum onbekend)";
-  const subject = `Liturgie klaar – ${datumTekst}${thema ? " – " + thema : ""} (id=${shortId})`;
-  const lines = [
+  const subject = customSubject ||
+    `Liturgie klaar – ${datumTekst}${thema ? " – " + thema : ""} (id=${shortId})`;
+  const lines = customText ? [customText] : [
     `De liturgie voor ${datumTekst}${thema ? " (" + thema + ")" : ""} is gemarkeerd als klaar.`,
     "",
     `id: ${shortId}`,
