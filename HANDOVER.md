@@ -143,7 +143,7 @@ Kolom **Bestuurslid**: Q3-2026-hulpbestand `downloads/bestuurslid-q3-2026-voor-s
 |---|---|
 | Link vaste voorganger / organist | Korte mailto + cloud-link (`?rol=…`) |
 | Brief gastpredikant | **Korte** mailto (link, termijnen, lector/organist) + `info.html#gastpredikant`; tekst ook op klembord |
-| Ik ben klaar | Mailto Gon + info@, CC nieuwsbrief; `id` + nieuwsbrief-URL |
+| Ik ben klaar | Mailto Gon + info@, CC nieuwsbrief; `id` + nieuwsbrief-URL — **plus** automatische Edge Function/Resend-ping (best effort, non-blocking) als garantie ook al werkt iemands mailto niet |
 | Meld nieuwsbriefredactie | Mailto alleen redactie + nieuwsbrieftekst |
 | Meld: liturgie is klaar | `status=klaar` + Edge Function Resend, anders mailto-fallback |
 
