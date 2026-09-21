@@ -89,6 +89,7 @@ nieuwsbrief.html ──zelfde short_id──► Mailchimp-cards (platte tekst)
 | `supabase/migrations/001_diensten.sql` | Schema |
 | `supabase/functions/meld-klaar/` | Klaar-ping e-mail |
 | `.github/workflows/keep-supabase-active.yml` | Ping elke 3 dagen (Free-tier pauze voorkomen) |
+| `.github/workflows/deploy-edge-functions.yml` | Deployt `supabase/functions/**` automatisch bij push naar `main` (zie §7) |
 
 Oude lange deel-links `?z=` / `?v=` werken nog als fallback; standaard is `?id=` + `?rol=`.
 
@@ -159,6 +160,8 @@ supabase secrets set --project-ref iabrbkirzsolwnuknbel \
 ```
 
 Zonder `RESEND_API_KEY` → HTTP 501 → UI opent mailto. Functie is al gedeployed; secrets kunnen nog ontbreken.
+
+**Deploy van de functie** gebeurt automatisch via `.github/workflows/deploy-edge-functions.yml` bij elke push naar `main` die `supabase/functions/**` raakt (of handmatig via "Run workflow"). Vereist eenmalig het repo-secret `SUPABASE_ACCESS_TOKEN` (GitHub → repo Settings → Secrets and variables → Actions), een persoonlijk access token via Supabase Dashboard → Account → Access Tokens — **niet** hetzelfde als de `RESEND_API_KEY`/anon key. Zonder dat secret faalt de workflow met een duidelijke auth-fout; dan alsnog via de Supabase-dashboard code-editor deployen (zie meld-klaar/index.ts bovenaan het bestand voor de volledige code + uitleg).
 
 ---
 

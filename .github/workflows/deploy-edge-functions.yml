@@ -1,0 +1,34 @@
+name: Deploy Supabase Edge Functions
+
+# Deployt automatisch alle functies in supabase/functions/ zodra er iets in
+# die map naar main wordt gepusht — zodat een wijziging aan bijv. meld-klaar
+# niet meer los via de CLI of de Supabase-dashboard code-editor hoeft te
+# worden gedeployed.
+#
+# Vereist secret SUPABASE_ACCESS_TOKEN (repo Settings → Secrets and
+# variables → Actions → New repository secret): een persoonlijk access
+# token, aan te maken via Supabase Dashboard → Account → Access Tokens.
+# Dit is geen API-key van het project en hoort niet in index.html of
+# collectes.json thuis — alleen als GitHub Actions secret.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'supabase/functions/**'
+  workflow_dispatch: {}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Deploy Edge Functions
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: supabase functions deploy --project-ref iabrbkirzsolwnuknbel
