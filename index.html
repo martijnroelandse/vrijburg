@@ -1874,7 +1874,20 @@ async function pingKlaarNotificatie({ shortId, datumTekst, thema, liturgieUrl, n
         ...(text ? { text } : {}),
       },
     });
-    if (error) return { ok: false, reason: error.message || String(error) };
+    if (error) {
+      // supabase-js geeft bij een non-2xx response alleen een generieke melding
+      // op error.message ("Edge Function returned a non-2xx status code") — de
+      // eigenlijke reden (bv. de Resend-foutmelding) zit in de response-body,
+      // bereikbaar via error.context (de ruwe Response).
+      let reason = error.message || String(error);
+      if (error.context && typeof error.context.json === 'function') {
+        try {
+          const body = await error.context.json();
+          if (body && body.error) reason = body.error;
+        } catch (_) { /* body niet JSON-parsable: generieke melding houden */ }
+      }
+      return { ok: false, reason };
+    }
     if (data && data.ok === false) return { ok: false, reason: data.error || 'onbekende fout' };
     return { ok: true };
   } catch (e) {
