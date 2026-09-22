@@ -987,7 +987,7 @@
               <div class="hint-body" hidden>
                 <strong>Liturgie (.docx):</strong> wordt automatisch op de voorkant geplaatst.<br>
                 <strong>Socials &amp; website:</strong> het bureau gebruikt de afbeelding voor promotie van de dienst (FB/Insta) en soms op vrijburg.nl.<br>
-                <strong>E-mail naar bureau:</strong> bij &ldquo;Ik ben klaar&rdquo; wordt de afbeelding gedownload — voeg die handmatig toe als bijlage (paperclip in uw mailprogramma).
+                <strong>Bureau ziet 'm vanzelf:</strong> de foto gaat mee met de gedeelde dienst — het bureau haalt 'm vandaar op (of ziet 'm al in het Word-document). Niets aan een e-mail toevoegen nodig.
               </div>
             </div>
           </div>
@@ -1708,7 +1708,7 @@ function applyRolUI() {
   const hint = document.getElementById('workflow-hint');
   const deadline = deadlineTekst();
   hint.innerHTML = cfg.hint + (deadline
-    ? `<div style="margin-top:8px;padding-top:8px;border-top:1px solid #7dd3fc"><strong>Let op de termijnen:</strong> ${deadline}.</div>`
+    ? `<div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--brand-mid)"><strong>Let op de termijnen:</strong> ${deadline}.</div>`
     : '');
   if (document.getElementById('section-workflow').classList.contains('summary-mode')) updateWorkflowSummary();
   setOverzichtCollapsed(!(huidigeRol === 'compleet' || toonAlles));
