@@ -21,6 +21,7 @@
       box-shadow: var(--shadow);
       margin-bottom: 20px;
       overflow: hidden;
+      scroll-margin-top: 64px;
     }
 
     .section-header {
@@ -455,20 +456,59 @@
       font-size: 11px;
       opacity: 0.8;
     }
-    .section.secondary { opacity: 0.85; }
-    .section.secondary.collapsed .section-body { display: none; }
-    .section.secondary .section-header {
-      cursor: pointer;
-      font-size: 13px;
-    }
-    .section.secondary .section-header::before {
-      content: '▸ ';
-      font-size: 11px;
-    }
-    .section.secondary:not(.collapsed) .section-header::before {
-      content: '▾ ';
-    }
     .section.hidden { display: none; }
+
+    .voortgangsbalk {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      background: white;
+      border-bottom: 1px solid var(--border);
+      padding: 10px 32px;
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      overflow-x: auto;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+    }
+    .voortgangsbalk:empty { display: none; }
+    .vb-pill {
+      font: inherit;
+      font-size: 12.5px;
+      font-weight: 500;
+      color: var(--muted);
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 5px 12px 5px 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .vb-pill .vb-num {
+      width: 17px;
+      height: 17px;
+      border-radius: 50%;
+      background: var(--border);
+      color: white;
+      font-size: 10px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .vb-pill.done { border-color: var(--brand); color: var(--brand-dark); background: var(--brand-light); }
+    .vb-pill.done .vb-num { background: var(--brand); }
+    .vb-pill.current { border-color: var(--brand-dark); color: var(--brand-dark); box-shadow: 0 0 0 2px var(--brand-mid); }
+    .vb-pill.current .vb-num { background: var(--brand-dark); }
+    .vb-arrow { color: var(--border); font-size: 12px; padding: 0 2px; flex-shrink: 0; }
+    @media (max-width: 640px) {
+      .voortgangsbalk { padding: 8px 16px; }
+    }
 
     .field-mine label { color: var(--brand-dark); }
     .field-other label { opacity: 0.65; }
@@ -630,6 +670,8 @@
     <p>Remonstranten · Vrijzinnige Protestanten · <a href="info.html" style="color:inherit;opacity:0.95">Uitleg &amp; privacy</a> · <a href="nieuwsbrief.html" id="link-nieuwsbrief" style="color:inherit;opacity:0.95">Nieuwsbrief / Mailchimp</a></p>
   </div>
 </header>
+
+<div class="voortgangsbalk" id="voortgangsbalk" role="navigation" aria-label="Voortgang"></div>
 
 <main>
 
@@ -1336,6 +1378,49 @@ const ROL_CONFIG = {
   },
 };
 
+const VOORTGANG_LABELS = {
+  dienst: 'Dienst',
+  thema: 'Thema',
+  opening: 'Opening',
+  orde: 'Orde van dienst',
+  voorbeden: 'Voorbeden',
+  slot: 'Afsluiting',
+  collecte: 'Collecte',
+  agenda: 'Agenda',
+};
+
+// Ruwe indicatie voor de voortgangsbalk: telt een stap als "ingevuld" zodra
+// er tekst in staat, niet als volledigheidscontrole.
+function sectionHasContent(name) {
+  const body = document.querySelector('#section-' + name + ' .section-body');
+  if (!body) return false;
+  return Array.from(body.querySelectorAll('input[type=text], input[type=date], textarea'))
+    .some(el => el.value.trim() !== '');
+}
+
+function renderVoortgangsbalk() {
+  const bar = document.getElementById('voortgangsbalk');
+  const cfg = ROL_CONFIG[huidigeRol];
+  const stappen = cfg.primary.filter(name => VOORTGANG_LABELS[name] && document.getElementById('section-' + name));
+  if (stappen.length < 2) { bar.innerHTML = ''; return; }
+
+  const gedaan = stappen.map(sectionHasContent);
+  const huidigeIndex = gedaan.indexOf(false);
+
+  bar.innerHTML = stappen.map((name, i) => {
+    const status = gedaan[i] ? 'done' : (i === huidigeIndex ? 'current' : '');
+    const nummer = gedaan[i] ? '✓' : (i + 1);
+    const pill = `<button type="button" class="vb-pill ${status}" onclick="scrollNaarSectie('${name}')">` +
+      `<span class="vb-num">${nummer}</span>${VOORTGANG_LABELS[name]}</button>`;
+    return i === 0 ? pill : `<span class="vb-arrow">›</span>${pill}`;
+  }).join('');
+}
+
+function scrollNaarSectie(name) {
+  const sec = document.getElementById('section-' + name);
+  if (sec) sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
 function setRol(rol) {
   huidigeRol = rol;
   document.querySelectorAll('.role-card').forEach(c => {
@@ -1354,16 +1439,18 @@ function applyRolUI() {
   document.querySelectorAll('[data-section]').forEach(sec => {
     const name = sec.dataset.section;
     const isPrimary = cfg.primary.includes(name);
-    sec.classList.remove('primary', 'secondary', 'collapsed', 'hidden');
+    sec.classList.remove('primary', 'hidden');
 
     if (huidigeRol === 'compleet' || toonAlles) {
       if (isPrimary) sec.classList.add('primary');
     } else if (isPrimary) {
       sec.classList.add('primary');
     } else {
-      sec.classList.add('secondary', 'collapsed');
+      sec.classList.add('hidden');
     }
   });
+
+  renderVoortgangsbalk();
 
   // Veld-highlight binnen gedeelde secties (opening, slot)
   document.querySelectorAll('[data-owner]').forEach(field => {
@@ -1429,13 +1516,6 @@ function applyRolUI() {
 
   renderOrde();
   renderDienstOverzicht();
-}
-
-function setupSectionToggles() {
-  document.querySelector('main').addEventListener('click', e => {
-    const header = e.target.closest('.section.secondary .section-header');
-    if (header) header.closest('.section').classList.toggle('collapsed');
-  });
 }
 
 // ============================================================
@@ -2519,7 +2599,7 @@ function showLiedlijstImportResult(text) {
 function revealSection(id) {
   const sec = document.getElementById(id);
   if (!sec) return;
-  sec.classList.remove('collapsed');
+  sec.classList.remove('hidden');
 }
 
 function compressDataUrlJpeg(dataUrl, maxWidth = 720, quality = 0.72) {
@@ -3390,6 +3470,7 @@ function scheduleDraftSave() {
   draftTimer = setTimeout(() => {
     saveDraft();
     renderDienstOverzicht();
+    renderVoortgangsbalk();
   }, 500);
 }
 
@@ -4532,7 +4613,6 @@ Promise.all([
 
 function initApp() {
   setupAutoSave();
-  setupSectionToggles();
   updateCloudHint();
   renderUiVersion();
   renderVasteTekstOpeningPreview();
