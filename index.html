@@ -446,6 +446,33 @@
     }
     .workflow-options input { width: auto; }
 
+    #workflow-summary { display: none; }
+    .section.summary-mode > .section-header,
+    .section.summary-mode > .section-body { display: none; }
+    .section.summary-mode > #workflow-summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+      background: var(--brand-light);
+      border-bottom: 1px solid var(--brand-mid);
+      padding: 12px 20px;
+      font-size: 14px;
+      color: var(--brand-dark);
+    }
+    #workflow-summary button {
+      font: inherit;
+      font-size: 13px;
+      color: var(--brand-dark);
+      background: white;
+      border: 1px solid var(--brand-mid);
+      border-radius: 999px;
+      padding: 5px 14px;
+      cursor: pointer;
+    }
+    #workflow-summary button:hover { background: var(--brand-light); }
+
     .section.primary .section-header {
       background: #dff4fc;
       border-bottom-color: var(--brand-dark);
@@ -677,6 +704,7 @@
 
   <!-- 0. WORKFLOW -->
   <div class="section workflow-section" id="section-workflow">
+    <div id="workflow-summary"></div>
     <h2 class="section-header">Wie vult wat in?</h2>
     <div class="section-body">
       <p class="workflow-intro">
@@ -1430,11 +1458,28 @@ function setRol(rol) {
   scheduleDraftSave();
 }
 
+// Komt iemand via een link met ?rol= binnen (vaste voorganger/organist-link,
+// brief gastpredikant), dan staat de rol al vast — het volledige "Wie vult
+// wat in?"-blok is dan alleen ruis. Wordt na de eerste load ingeklapt tot
+// één regel; "Wissel van rol" klapt hem weer open.
+function setWorkflowCollapsed(collapsed) {
+  document.getElementById('section-workflow').classList.toggle('summary-mode', collapsed);
+  if (collapsed) updateWorkflowSummary();
+}
+
+function updateWorkflowSummary() {
+  const cfg = ROL_CONFIG[huidigeRol];
+  document.getElementById('workflow-summary').innerHTML =
+    `<span>U bent aangemeld als <strong>${cfg.label}</strong></span>` +
+    `<button type="button" onclick="setWorkflowCollapsed(false)">Wissel van rol</button>`;
+}
+
 function applyRolUI() {
   const cfg = ROL_CONFIG[huidigeRol];
   const toonAlles = document.getElementById('toon-alles').checked;
   const hint = document.getElementById('workflow-hint');
   hint.innerHTML = cfg.hint;
+  if (document.getElementById('section-workflow').classList.contains('summary-mode')) updateWorkflowSummary();
 
   document.querySelectorAll('[data-section]').forEach(sec => {
     const name = sec.dataset.section;
@@ -4649,6 +4694,14 @@ function initApp() {
     // Alleen planning auto-invullen bij leeg/nieuw formulier, niet na cloud/URL-load
     if (!loaded && document.getElementById('datum').value) onDatumChange();
     applyRolUI();
+
+    // Rol al vastgelegd via de link (?rol=…, bijv. brief gastpredikant of
+    // link vaste voorganger/organist) én ook echt zo geladen? Dan is de
+    // rolkeuze-uitleg overbodig. Vergelijk met huidigeRol (i.p.v. alleen de
+    // URL) zodat een mislukte load (geen geldige id/z/v) niet ten onrechte
+    // inklapt op een rol die niet daadwerkelijk is toegepast.
+    const rolParam = new URLSearchParams(location.search).get('rol');
+    if (rolParam && rolParam === huidigeRol) setWorkflowCollapsed(true);
   });
 }
 </script>
