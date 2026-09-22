@@ -4754,10 +4754,10 @@ function initApp() {
   renderVasteTekstOpeningPreview();
 
   loadFromUrlOrCloud().then(loaded => {
+    let restored = false;
     if (!loaded) {
       // Kale URL zonder id: leeg formulier.
       // Alleen na refresh in dezelfde tab een lokaal concept herstellen.
-      let restored = false;
       try {
         if (sessionStorage.getItem(SESSION_ACTIVE_KEY)) {
           const draft = loadDraft();
@@ -4786,13 +4786,13 @@ function initApp() {
     if (!loaded && document.getElementById('datum').value) onDatumChange();
     applyRolUI();
 
-    // Rol al vastgelegd via de link (?rol=…, bijv. brief gastpredikant of
-    // link vaste voorganger/organist) én ook echt zo geladen? Dan is de
-    // rolkeuze-uitleg overbodig. Vergelijk met huidigeRol (i.p.v. alleen de
-    // URL) zodat een mislukte load (geen geldige id/z/v) niet ten onrechte
-    // inklapt op een rol die niet daadwerkelijk is toegepast.
-    const rolParam = new URLSearchParams(location.search).get('rol');
-    if (rolParam && rolParam === huidigeRol) setWorkflowCollapsed(true);
+    // De rol staat al vast zodra er iets geladen is: via ?rol= in de link,
+    // via de rol die al in de clouddienst was opgeslagen (bijv. een kale
+    // ?id=-link zonder eigen ?rol=, zoals gedeeld door het bureau), of via
+    // een hersteld concept uit dezelfde tab. Alleen bij een écht leeg,
+    // nieuw formulier (niets geladen, niets hersteld) is de rolkeuze nog
+    // een keuze — dan blijft het blok open.
+    if (loaded || restored) setWorkflowCollapsed(true);
   });
 }
 </script>
