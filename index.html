@@ -621,6 +621,8 @@
     }
     .gastmodus-greeting h2 { font-size: 18px; font-weight: 500; color: var(--brand-dark); margin-bottom: 6px; }
     .gastmodus-greeting p { font-size: 13.5px; color: var(--muted); line-height: 1.5; max-width: 60ch; }
+    .gastmodus-greeting p + p { margin-top: 6px; }
+    .gastmodus-greeting p strong { color: var(--brand-dark); }
     .gastmodus-greeting button {
       font: inherit;
       font-size: 12.5px;
@@ -1631,10 +1633,13 @@ function toonGastmodus() {
   const datum = document.getElementById('datum').value;
   const datumTekst = datum ? formatDatum(datum) : 'de komende dienst';
   const werkwoord = huidigeRol === 'organist' ? 'de muziek verzorgt' : 'voorgaat';
+  const deadline = deadlineTekst();
   greeting.hidden = false;
   greeting.innerHTML =
     `<div><h2>Welkom${naam ? ', ' + escapeHtml(naam) : ''}</h2>` +
-    `<p>Fijn dat u ${datumTekst} bij ons ${werkwoord}. Vul hieronder in ${stappen.length} korte stappen uw onderdeel in — u kunt altijd tussentijds opslaan en later verdergaan.</p></div>` +
+    `<p>Fijn dat u ${datumTekst} bij ons ${werkwoord}. Vul hieronder in ${stappen.length} korte stappen uw onderdeel in — u kunt altijd tussentijds opslaan en later verdergaan.</p>` +
+    (deadline ? `<p><strong>Let op de termijnen:</strong> ${deadline}.</p>` : '') +
+    `</div>` +
     `<button type="button" onclick="setGastmodus(false)">Volledige weergave</button>`;
 
   nav.hidden = false;
