@@ -965,11 +965,12 @@
               <p class="comm-hint" style="color:var(--brand-dark)">
                 <strong>Rechten verplicht:</strong> lever alleen een afbeelding waarvan Vrijburg de rechten heeft voor gebruik op de liturgie, socials (Facebook/Instagram) en eventueel vrijburg.nl.
               </p>
-              <p class="comm-hint">
-                <strong>Liturgie (.docx):</strong> de afbeelding wordt automatisch op de voorkant geplaatst.<br>
+              <button type="button" class="hint-toggle" aria-expanded="false" onclick="toggleHint(this)"><span class="chev">▸</span> <span class="label">Wat gebeurt hiermee?</span></button>
+              <div class="hint-body" hidden>
+                <strong>Liturgie (.docx):</strong> wordt automatisch op de voorkant geplaatst.<br>
                 <strong>Socials &amp; website:</strong> het bureau gebruikt de afbeelding voor promotie van de dienst (FB/Insta) en soms op vrijburg.nl.<br>
                 <strong>E-mail naar bureau:</strong> bij &ldquo;Ik ben klaar&rdquo; wordt de afbeelding gedownload — voeg die handmatig toe als bijlage (paperclip in uw mailprogramma).
-              </p>
+              </div>
             </div>
           </div>
         </div>
@@ -988,7 +989,8 @@
           <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px">
             <button type="button" class="btn-small" onclick="meldNieuwsbriefRedactie()">📣 Meld nieuwsbriefredactie</button>
           </div>
-          <p class="comm-hint">Slaat op en stuurt de tekst + id per e-mail naar de nieuwsbriefredactie. Zij verwerken de tekst verder in de <a href="nieuwsbrief.html" target="_blank" rel="noopener">nieuwsbrief-app</a> (Mailchimp-cards e.d.).</p>
+          <button type="button" class="hint-toggle" aria-expanded="false" onclick="toggleHint(this)"><span class="chev">▸</span> <span class="label">Wat gebeurt hiermee?</span></button>
+          <div class="hint-body" hidden>Slaat op en stuurt de tekst + id per e-mail naar de nieuwsbriefredactie. Zij verwerken de tekst verder in de <a href="nieuwsbrief.html" target="_blank" rel="noopener">nieuwsbrief-app</a> (Mailchimp-cards e.d.).</div>
         </div>
       </div>
       <div class="row">
@@ -996,7 +998,8 @@
           <label for="overdenking_email">Overdenking <span class="opt">– voor info@vrijburg.nl (emaillijst na de dienst)</span></label>
           <textarea id="overdenking_email" rows="6" placeholder="Schrijf hier de overdenking. Stuur deze naar het bureau — zij plaatsen het op de emaillijst…"></textarea>
           <button type="button" class="btn-small" style="margin-top:8px" onclick="emailOverdenkingNaarBureau()">✉ Stuur naar info@vrijburg.nl</button>
-          <p class="comm-hint">Dit veld komt niet in het Word-document. In de liturgie blijft het vaste blok Overdenking → Stilte → Muziek staan.</p>
+          <button type="button" class="hint-toggle" aria-expanded="false" onclick="toggleHint(this)"><span class="chev">▸</span> <span class="label">Komt dit in de liturgie?</span></button>
+          <div class="hint-body" hidden>Nee — dit veld komt niet in het Word-document. In de liturgie blijft het vaste blok Overdenking → Stilte → Muziek staan.</div>
         </div>
       </div>
     </div>
@@ -1078,10 +1081,11 @@
       <div class="field field-mine" data-owner="voorganger" style="grid-column:1/-1;margin-top:12px">
         <label for="lied_na_overdenking">Lied na overdenking / muziek <span class="opt">optioneel — tussen muziek en voorbeden</span></label>
         <textarea id="lied_na_overdenking" rows="3" placeholder="Lied …&#10;Eerste regel = titel; volgende regels = coupletten (optioneel)" oninput="scheduleDraftSave()"></textarea>
-        <p class="comm-hint">
-          Gebruik dit veld als er ná de overdenking (en orgelmuziek) nog een lied komt, vóór de voorbeden.
+        <button type="button" class="hint-toggle" aria-expanded="false" onclick="toggleHint(this)"><span class="chev">▸</span> <span class="label">Wanneer gebruik ik dit veld?</span></button>
+        <div class="hint-body" hidden>
+          Als er ná de overdenking (en orgelmuziek) nog een lied komt, vóór de voorbeden.
           Zet dit <em>niet</em> onderaan in de orde van dienst — die blokken komen altijd <em>vóór</em> de overdenking.
-        </p>
+        </div>
       </div>
     </div>
   </div>
@@ -1100,7 +1104,8 @@
         <div class="field field-mine" data-owner="voorganger" style="grid-column: 1/-1">
           <label for="acclamatie_lied">Acclamatie / lied bij voorbeden <span class="opt">optioneel — komt in de liturgie onder de voorbedentekst, vóór het Onze Vader</span></label>
           <textarea id="acclamatie_lied" rows="3" placeholder="Lied …&#10;Eerste regel = titel; volgende regels = coupletten (optioneel)" oninput="scheduleDraftSave()"></textarea>
-          <p class="comm-hint">Alleen voor een acclamatie <em>bij de voorbeden</em>. Liederen tussen lezingen zet u in de <strong>orde van dienst</strong> (met ↑↓ op de juiste plek). Een lied ná de overdenking/muziek heeft een eigen veld hieronder bij de overdenking-sectie.</p>
+          <button type="button" class="hint-toggle" aria-expanded="false" onclick="toggleHint(this)"><span class="chev">▸</span> <span class="label">Hoort dit hier wel?</span></button>
+          <div class="hint-body" hidden>Alleen voor een acclamatie <em>bij de voorbeden</em>. Liederen tussen lezingen zet u in de <strong>orde van dienst</strong> (met ↑↓ op de juiste plek). Een lied ná de overdenking/muziek heeft een eigen veld bij de overdenking-sectie.</div>
         </div>
       </div>
       <div class="row">
