@@ -428,15 +428,52 @@
     .role-card strong { display: block; font-size: 14px; color: var(--brand-dark); margin-bottom: 4px; }
     .role-card span { font-size: 12px; color: var(--muted); line-height: 1.4; }
 
+    /* Eén stijl voor uitleg over hóe iets werkt (rolinstructie, samenwerking,
+       auto-invul-toelichting) — voorheen geel (workflow-hint) vs. blauw
+       (orde-collab-banner) door elkaar; nu hetzelfde blauw. .collecte-auto-notice
+       blijft bewust groen: dat is een statusmelding ("automatisch ingevuld"),
+       geen uitleg. */
     .workflow-hint {
       font-size: 13px;
-      background: #fff8e1;
-      border: 1px solid #ffe082;
+      background: #e0f2fe;
+      border: 1px solid #7dd3fc;
+      color: #0c4a6e;
       border-radius: 4px;
       padding: 10px 14px;
       margin-bottom: 14px;
       line-height: 1.5;
     }
+
+    /* Uitklapbare hulptekst: standaard dichtgeklapt, geen popup — het veld
+       blijft in beeld. Gebruikt voor optionele toelichting en hulpmiddelen
+       die niet iedereen nodig heeft (opzoekknoppen, achtergrondinfo). */
+    .hint-toggle {
+      font: inherit;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--brand-dark);
+      background: none;
+      border: none;
+      padding: 0;
+      margin-top: 6px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .hint-toggle .chev { display: inline-block; font-size: 9px; transition: transform 0.15s; }
+    .hint-toggle[aria-expanded="true"] .chev { transform: rotate(90deg); }
+    .hint-body {
+      font-size: 12.5px;
+      color: #0c4a6e;
+      background: #e0f2fe;
+      border: 1px solid #7dd3fc;
+      border-radius: 4px;
+      padding: 8px 11px;
+      margin-top: 7px;
+      line-height: 1.5;
+    }
+    .hint-body[hidden] { display: none; }
     .workflow-options {
       display: flex;
       align-items: center;
@@ -949,7 +986,8 @@
   <div class="section" id="section-orde" data-section="orde">
     <h2 class="section-header" id="orde-header">Orde van dienst <span style="font-weight:400;font-size:12px;color:var(--muted)">– in volgorde zoals de voorgang(st)er die aanlevert</span></h2>
     <div class="section-body">
-      <div id="dienst-overzicht" class="dienst-overzicht" aria-live="polite"></div>
+      <button type="button" class="hint-toggle" id="overzicht-toggle" aria-expanded="false" onclick="toggleOverzicht()"><span class="chev">▸</span> <span class="label">Toon overzicht van de hele dienst</span></button>
+      <div id="dienst-overzicht" class="dienst-overzicht" aria-live="polite" hidden></div>
       <div id="orde-collab-banner" class="orde-collab-banner" style="display:none"></div>
       <div id="orde-voorganger-ui">
       <div class="orde-list" id="orde-list"></div>
@@ -963,15 +1001,17 @@
       <p style="font-size:12px;color:var(--muted);margin-top:10px;">
         Tip: de volgorde van de lijst is de volgorde in de liturgie. Nieuw item komt onder het geselecteerde blok (of onderaan);
         verplaats met <strong>↑↓</strong> zodat liederen tussen de lezingen staan — niet allemaal onderaan.
-        Voor een lied: bijv. "Lied 652: 1, 3 en 5". Bij lezingen: knop <em>Tekst ophalen (Statenvertaling)</em>
-        haalt de tekst automatisch op (de enige gratis vertaling die hiervoor beschikbaar is); knop <em>NBV21 openen</em>
-        opent debijbel.nl met de juiste referentie — kopieer die tekst zelf en plak hem hier (NBV21 is auteursrechtelijk
-        beschermd, er is geen gratis API voor).
-        Bij liederen: knop <em>Liedbundels Online</em> opent het lied direct (inlog Vrijburg).
-        Of: bureaumedewerk(st)er downloadt een liedlijst-zip op Liedbundels Online (mét platte tekst)
-        en klikt onderaan op <em>Importeer liedlijst (.zip)</em> — teksten + muziek 1e couplet
-        komen dan in het formulier én in het Word-document.
+        Voor een lied: bijv. "Lied 652: 1, 3 en 5". Voor een lezing: bijv. "Genesis 4, 1-16".
       </p>
+      <button type="button" class="hint-toggle" aria-expanded="false" onclick="toggleHint(this)"><span class="chev">▸</span> <span class="label">Opzoekhulp en liedlijst-import — hoe werkt dat?</span></button>
+      <div class="hint-body" hidden>
+        Bij lezingen haalt <em>Tekst ophalen (Statenvertaling)</em> de tekst automatisch op (de enige gratis vertaling
+        hiervoor); <em>NBV21 openen</em> opent debijbel.nl met de juiste referentie — kopieer die tekst zelf en plak hem
+        hier (NBV21 is auteursrechtelijk beschermd, geen gratis API). Bij liederen opent <em>Liedbundels Online</em>
+        het lied direct (inlog Vrijburg). Bureaumedewerk(st)er kan ook een liedlijst-zip downloaden op Liedbundels
+        Online (mét platte tekst) en die hieronder importeren — teksten + muziek 1e couplet komen dan in het
+        formulier én in het Word-document.
+      </div>
       <div id="liedlijst-import-result" class="import-banner" style="margin-top:12px"></div>
       </div>
       <div class="field field-mine" id="orde-organist-ui" data-owner="organist" style="grid-column:1/-1">
@@ -1467,6 +1507,16 @@ function setWorkflowCollapsed(collapsed) {
   if (collapsed) updateWorkflowSummary();
 }
 
+// Generieke uitklap-toggle voor statische hint-blokken (niet opnieuw
+// gerenderd zoals de orde-van-dienst-rijen) — het veld blijft in beeld,
+// geen popup.
+function toggleHint(btn) {
+  const body = btn.nextElementSibling;
+  const open = btn.getAttribute('aria-expanded') === 'true';
+  btn.setAttribute('aria-expanded', String(!open));
+  body.hidden = open;
+}
+
 function updateWorkflowSummary() {
   const cfg = ROL_CONFIG[huidigeRol];
   document.getElementById('workflow-summary').innerHTML =
@@ -1480,6 +1530,7 @@ function applyRolUI() {
   const hint = document.getElementById('workflow-hint');
   hint.innerHTML = cfg.hint;
   if (document.getElementById('section-workflow').classList.contains('summary-mode')) updateWorkflowSummary();
+  setOverzichtCollapsed(!(huidigeRol === 'compleet' || toonAlles));
 
   document.querySelectorAll('[data-section]').forEach(sec => {
     const name = sec.dataset.section;
@@ -1567,6 +1618,10 @@ function applyRolUI() {
 // ORDE VAN DIENST – DYNAMISCHE LIJST
 // ============================================================
 let ordeItems = [];
+// Welke orde-items hun opzoekhulp (Liedbundels Online / bijbeltekst ophalen)
+// hebben uitgeklapt — een dominee hoeft alleen liednummer/bijbelverwijzing
+// in te typen, dus deze knoppen staan standaard dicht.
+let ordeOptiesExpanded = new Set();
 let fotoDataUrl = ''; // base64 data URL voor foto in .docx
 // Extra regels + 1e-couplet-muziek voor lichtlied/slotlied (uit liedlijst-zip)
 let lichtliedLyrics = '';
@@ -2373,6 +2428,23 @@ function organistOrdeRefMode() {
   return huidigeRol === 'organist' && !toonAlles;
 }
 
+// Het overzicht herhaalt grotendeels wat hieronder al zichtbaar is in de
+// bewerkbare lijst; het enige unieke nut is zien wat de ándere rol al heeft
+// ingevuld. Daarom dichtgeklapt tenzij dat cross-rol-overzicht het doel ís
+// (Alles bekijken / "toon ook onderdelen van anderen").
+function setOverzichtCollapsed(collapsed) {
+  const toggle = document.getElementById('overzicht-toggle');
+  const box = document.getElementById('dienst-overzicht');
+  if (!toggle || !box) return;
+  toggle.setAttribute('aria-expanded', String(!collapsed));
+  toggle.querySelector('.label').textContent = collapsed ? 'Toon overzicht van de hele dienst' : 'Verberg overzicht van de hele dienst';
+  box.hidden = collapsed;
+}
+
+function toggleOverzicht() {
+  setOverzichtCollapsed(document.getElementById('overzicht-toggle').getAttribute('aria-expanded') === 'true');
+}
+
 function renderDienstOverzicht() {
   const box = document.getElementById('dienst-overzicht');
   if (!box) return;
@@ -2457,11 +2529,22 @@ function renderOrde() {
       + (refMode && item.type === 'muziek' ? ' orde-organist-edit' : '')
       + (refMode && item.type !== 'muziek' ? ' orde-readonly' : '');
     const safeId = String(item.id).replace(/\\/g, '\\\\').replace(/'/g, "\\'");
-    const fetchBtn = !canEdit ? '' : item.type === 'lezing'
+    const fetchTools = !canEdit ? '' : item.type === 'lezing'
       ? `<button class="btn-fetch" onclick="fetchBibleText('${safeId}')" title="Haal bijbeltekst op via BijbelAPI (let op: alleen Statenvertaling beschikbaar)">Tekst ophalen (Statenvertaling)</button>
          <button class="btn-fetch" onclick="openNbv21('${safeId}')" title="Open NBV21 op debijbel.nl — kopieer de tekst zelf (geen gratis API voor deze vertaling)">NBV21 openen</button>`
       : item.type === 'lied'
-      ? `<button class="btn-fetch" onclick="openLiedboekOnline('${safeId}')" title="Open Liedbundels Online (inlog vereist)">Liedbundels Online</button>${item.muziek_data?.length ? '<span style="font-size:12px;color:var(--success-text)">♪ muziek 1e couplet</span>' : ''}`
+      ? `<button class="btn-fetch" onclick="openLiedboekOnline('${safeId}')" title="Open Liedbundels Online (inlog vereist)">Liedbundels Online</button>`
+      : '';
+    const muziekBadge = (item.type === 'lied' && item.muziek_data?.length)
+      ? '<span style="font-size:12px;color:var(--success-text)">♪ muziek 1e couplet</span>' : '';
+    // Opzoekhulp is optioneel gereedschap (liedbundel/bijbeltekst ophalen) — een
+    // dominee typt gewoon "Lied 652: 1, 3 en 5" of "Genesis 4, 1-16" en heeft
+    // dit niet nodig. Standaard dichtgeklapt, per item onthouden.
+    const optiesOpen = ordeOptiesExpanded.has(String(item.id));
+    const fetchBtn = fetchTools
+      ? `<button type="button" class="hint-toggle" aria-expanded="${optiesOpen}" onclick="toggleOrdeOpties('${safeId}')">` +
+          `<span class="chev">▸</span> <span class="label">${optiesOpen ? 'Verberg opzoekhulp' : 'Opzoekhulp (liedbundel / bijbeltekst)'}</span></button>` +
+        `<div class="hint-body" ${optiesOpen ? '' : 'hidden'}>${fetchTools}</div>`
       : '';
     const typeControl = canEdit && !refMode
       ? `<select onchange="updateOrdeType('${safeId}', this.value)">
@@ -2485,6 +2568,7 @@ function renderOrde() {
                   onfocus="focusedOrdeId='${safeId}'; document.querySelectorAll('.orde-item').forEach(el=>el.classList.remove('is-focused')); this.closest('.orde-item').classList.add('is-focused')"
                   onchange="updateOrdeContent('${safeId}', this.value)"
                   oninput="updateOrdeContent('${safeId}', this.value)"></textarea>
+        ${muziekBadge}
         ${fetchBtn}
       </div>
       ${moveControls}
@@ -2497,6 +2581,13 @@ function renderOrde() {
   });
   renderDienstOverzicht();
   scheduleDraftSave();
+}
+
+function toggleOrdeOpties(id) {
+  const key = String(id);
+  if (ordeOptiesExpanded.has(key)) ordeOptiesExpanded.delete(key);
+  else ordeOptiesExpanded.add(key);
+  renderOrde();
 }
 
 function updateOrdeType(id, type) {
