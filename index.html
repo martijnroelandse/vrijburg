@@ -1180,6 +1180,7 @@
 
 <div class="generate-bar">
   <div id="liedlijst-import-banner" class="import-banner"></div>
+  <div id="klaar-bevestiging" class="import-banner"></div>
   <div class="generate-bar-actions">
     <button class="btn-generate" id="btn-download" onclick="generateDocx()">
       <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M5 20h14v-2H5v2zm7-3 5-5h-3V4h-4v8H7l5 5z"/></svg>
@@ -1219,19 +1220,15 @@
       </button>
     </div>
     <div class="btn-cluster">
-      <button class="btn-secondary" id="btn-klaar" onclick="terugNaarBureau()">
+      <button class="btn-secondary" id="btn-klaar" onclick="terugNaarBureau()" title="Brengt het bureau automatisch op de hoogte — u hoeft hier niets voor te mailen">
         <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-        Ik ben klaar – stuur naar liturgie
-      </button>
-      <button class="btn-secondary" id="btn-klaar-copy" onclick="terugNaarBureau({ copyOnly: true })" title="Zelfde als Ik ben klaar, maar opent geen e-mailprogramma: kopieert het klaar-bericht (met link) naar het klembord zodat u het zelf in Gmail of een andere mail kunt plakken">
-        <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
-        Ik ben klaar – kopieer bericht
+        Ik ben klaar
       </button>
       <button class="btn-secondary" id="btn-meld-klaar" onclick="meldDienstKlaar()" title="Zet de status op 'klaar' en stuurt automatisch een e-mail-melding met de id, zodat de nieuwsbrief gemaakt kan worden">
         <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 8H4a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h1v3a1 1 0 0 0 1.7.7L10.4 16H12l6 3V5l-6 3zm8 1.5v5a1.5 1.5 0 0 0 0-5z"/></svg>
         Meld: liturgie is klaar
       </button>
-      <button class="btn-secondary btn-quiet" onclick="clearDraft()">
+      <button class="btn-secondary btn-quiet" id="btn-wis-concept" onclick="clearDraft()">
         Wis concept
       </button>
     </div>
@@ -1519,16 +1516,33 @@ function toggleHint(btn) {
 
 function updateWorkflowSummary() {
   const cfg = ROL_CONFIG[huidigeRol];
+  const deadline = deadlineTekst();
   document.getElementById('workflow-summary').innerHTML =
-    `<span>U bent aangemeld als <strong>${cfg.label}</strong></span>` +
+    `<span>U bent aangemeld als <strong>${cfg.label}</strong>${deadline ? ' — ' + deadline : ''}</span>` +
     `<button type="button" onclick="setWorkflowCollapsed(false)">Wissel van rol</button>`;
+}
+
+// Herhaalt de dinsdag/donderdag-termijnen uit de brief-mail in de generator
+// zelf, voor wie de mail niet meer bij de hand heeft (Hiltjes journey-map:
+// termijnen staan nu alleen in een mail die je maar één keer per jaar leest).
+function deadlineTekst() {
+  if (huidigeRol !== 'voorganger' && huidigeRol !== 'organist') return '';
+  const datum = document.getElementById('datum')?.value;
+  if (!datum) return '';
+  const dinsdag = formatDatum(addDaysYmd(datum, -5));
+  return huidigeRol === 'voorganger'
+    ? `liturgie afronden uiterlijk ${dinsdag}, nieuwsbrieftekst + foto uiterlijk ${formatDatum(addDaysYmd(datum, -3))}`
+    : `liturgie afronden uiterlijk ${dinsdag}`;
 }
 
 function applyRolUI() {
   const cfg = ROL_CONFIG[huidigeRol];
   const toonAlles = document.getElementById('toon-alles').checked;
   const hint = document.getElementById('workflow-hint');
-  hint.innerHTML = cfg.hint;
+  const deadline = deadlineTekst();
+  hint.innerHTML = cfg.hint + (deadline
+    ? `<div style="margin-top:8px;padding-top:8px;border-top:1px solid #7dd3fc"><strong>Let op de termijnen:</strong> ${deadline}.</div>`
+    : '');
   if (document.getElementById('section-workflow').classList.contains('summary-mode')) updateWorkflowSummary();
   setOverzichtCollapsed(!(huidigeRol === 'compleet' || toonAlles));
 
@@ -1570,10 +1584,10 @@ function applyRolUI() {
   document.getElementById('btn-email-organist').style.display = huidigeRol === 'medewerker' ? '' : 'none';
   const isInvuller = huidigeRol === 'voorganger' || huidigeRol === 'organist';
   document.getElementById('btn-klaar').style.display = isInvuller ? '' : 'none';
-  document.getElementById('btn-klaar-copy').style.display = isInvuller ? '' : 'none';
+  document.getElementById('btn-wis-concept').style.display = isInvuller ? 'none' : '';
   document.getElementById('generate-hint').textContent = isSamenvoeger
     ? 'Download wanneer alle onderdelen zijn ingevuld'
-    : 'Stuur uw ingevulde gegevens naar de liturgiemaker en info@vrijburg.nl als u klaar bent (of gebruik “Kopieer bericht” als e-mail niet werkt)';
+    : 'Klik op "Ik ben klaar" als u klaar bent — het bureau wordt automatisch op de hoogte gebracht';
 
   // Orde: voorganger én organist zien elkaars bijdrage in één sectie.
   // Organist zonder "toon alles" mag muziek-blokken bewerken; liederen/lezingen zijn ter referentie.
@@ -2292,7 +2306,21 @@ function buildKlaarBericht({ short, cloud, datumTekst, rolLabel, shortId, nieuws
   return { subject, body };
 }
 
-function terugNaarBureau({ copyOnly = false } = {}) {
+// Blijft zichtbaar tot er weer iets gewijzigd wordt (zie scheduleDraftSave) —
+// anders dan setStatus(), die na 5s vanzelf verdwijnt en zo geen betrouwbare
+// bevestiging geeft dat "Ik ben klaar" ook echt is aangekomen.
+function showKlaarBevestiging(tekst) {
+  const el = document.getElementById('klaar-bevestiging');
+  if (!el) return;
+  el.textContent = tekst;
+  el.classList.add('visible');
+}
+
+function hideKlaarBevestiging() {
+  document.getElementById('klaar-bevestiging')?.classList.remove('visible');
+}
+
+function terugNaarBureau() {
   const datum = document.getElementById('datum').value;
   const datumTekst = datum ? formatDatum(datum) : 'komende dienst';
   const rolLabel = ROL_CONFIG[huidigeRol]?.label || 'medewerker';
@@ -2307,7 +2335,7 @@ function terugNaarBureau({ copyOnly = false } = {}) {
     return;
   }
 
-  setStatus(copyOnly ? 'Opslaan & klaar-bericht kopiëren…' : 'Opslaan & link maken…', '');
+  setStatus('Opslaan & bureau op de hoogte brengen…', '');
 
   prepareShareLink().then(async ({ short, cloud }) => {
     const shortId = cloud && currentShortId ? currentShortId : '';
@@ -2324,12 +2352,16 @@ function terugNaarBureau({ copyOnly = false } = {}) {
       heeftFoto, fotoCredit, fotoBestand, overdenking,
     });
 
-    // Automatische server-side melding (Resend via Edge Function meld-klaar),
-    // als garantie náást de mailto/klembord hieronder — zo komt de melding bij
-    // Gon/bureau/redactie aan ook als het mailprogramma van voorganger/organist
-    // niet goed werkt (bv. geen mailclient gekoppeld).
+    const tijd = new Date().toLocaleTimeString('nl-NL', { hour: '2-digit', minute: '2-digit' });
+
+    // Resend-melding (Edge Function meld-klaar) is de primaire, betrouwbare
+    // weg naar Gon/bureau/redactie — de voorgang(st)er/organist hoeft daar
+    // zelf niets voor te mailen. Alleen als die niet lukt (bv. RESEND_API_KEY
+    // niet ingesteld, of geen cloud-koppeling) valt dit terug op mailto +
+    // klembord, zoals voorheen de enige weg was.
+    let pingOk = false;
     if (shortId) {
-      pingKlaarNotificatie({
+      const ping = await pingKlaarNotificatie({
         shortId,
         datumTekst,
         thema: document.getElementById('thema').value.trim(),
@@ -2337,29 +2369,26 @@ function terugNaarBureau({ copyOnly = false } = {}) {
         nieuwsbriefUrl,
         subject,
         text: body,
-      }).then(ping => {
-        if (!ping.ok) console.warn('Automatische klaar-ping (Ik ben klaar) mislukt:', ping.reason);
       });
+      pingOk = ping.ok;
+      if (!ping.ok) console.warn('Automatische klaar-ping (Ik ben klaar) mislukt:', ping.reason);
     }
 
-    // Altijd klaar-bericht + link op klembord: helpt als mailto faalt (Firefox-
-    // dialoog "kies een toepassing" zonder geconfigureerde mailclient).
+    if (pingOk) {
+      setStatus('✓ Bureau automatisch op de hoogte gebracht', 'ok');
+      showKlaarBevestiging(`✓ Uw onderdeel is verzonden naar het bureau, ${tijd}. U hoeft verder niets te mailen.`);
+      return;
+    }
+
+    // Fallback zonder werkende automatische melding: klaar-bericht + link op
+    // klembord (helpt als mailto faalt — Firefox-dialoog "kies een toepassing"
+    // zonder geconfigureerde mailclient) én een mailto-poging.
     const clipboardText =
       `Aan: ${KLAAR_NOTIFY_EMAIL}\n` +
       `CC: ${NIEUWSBRIEF_REDACTIE_EMAIL}\n` +
       `Onderwerp: ${subject}\n\n` +
       body;
     await copyPlainText(clipboardText);
-
-    if (copyOnly) {
-      setStatus(
-        cloud
-          ? '✓ Klaar-bericht gekopieerd (Aan/CC/onderwerp/tekst + link). Plak het in Gmail of een andere mail en verstuur.'
-          : '✓ Klaar-bericht gekopieerd. Plak het in Gmail of een andere mail en verstuur.',
-        'ok',
-      );
-      return;
-    }
 
     // Nieuwsbriefredactie in CC: zo heeft die meteen de id voor nieuwsbrief.html
     // zonder te wachten op de latere bureau-knop "Meld: liturgie is klaar".
@@ -2381,6 +2410,9 @@ function terugNaarBureau({ copyOnly = false } = {}) {
         : '✓ Klaar-bericht op klembord. Als e-mail niet opent: plak in Gmail (voeg foto als bijlage toe indien nodig)';
       setStatus(msg, 'ok');
     }
+    showKlaarBevestiging(cloud
+      ? `✓ Opgeslagen, ${tijd}. De automatische melding lukte niet — rond het af via de geopende e-mail of het klembord-bericht.`
+      : `✓ Klaar-bericht staat op het klembord, ${tijd}. Plak het in een e-mail om het bureau op de hoogte te brengen.`);
   }).catch(err => {
     console.error(err);
     setStatus('Kon link niet voorbereiden', 'err');
@@ -3561,19 +3593,20 @@ async function emailGastpredikantBrief() {
   // Korte mail (past in Outlook én Apple Mail). Details staan op info.html#gastpredikant.
   const body =
     `${aanhef}\n\n` +
-    `Hartelijk dank dat u op ${datumTekst} bij ons voor wilt gaan.\n\n` +
-    `Voor de liturgie gebruiken we de Liturgie Generator. Via onderstaande link vult u uw onderdeel in ` +
-    `(thema, orde, liederen, foto, nieuwsbrief). Klik op “Ik ben klaar” als u klaar bent.\n\n` +
+    `Fijn dat u op ${datumTekst} bij ons voorgaat — daar kijken we naar uit.\n\n` +
+    `Voor de voorbereiding gebruiken wij een liturgie-generator: via de link hieronder vult u op uw eigen ` +
+    `moment thema, orde van dienst, liederen, een foto en een nieuwsbriefstukje in — dat kost een kwartier. ` +
+    `Klaar? Klik op “Ik ben klaar”, dan weten wij dat meteen.\n\n` +
     mailLinkBlock(short) + '\n' +
-    `Uitleg, termijnen, basisliturgie en declaratieformulier:\n${infoUrl}\n\n` +
+    `Uitleg, termijnen, basisliturgie en declaratieformulier vindt u hier:\n${infoUrl}\n\n` +
     `Praktisch voor deze dienst:\n` +
     `• Liturgie afronden uiterlijk ${dinsdag}\n` +
     `• Nieuwsbrieftekst + foto uiterlijk ${donderdag}\n` +
     `• Lector: ${lector}\n` +
     `• ${organistRegel} (stem liederen desgewenst af)\n\n` +
-    `Vragen: rachellevanandel@vrijburg.nl (inhoud) of info@vrijburg.nl.\n` +
-    `Graag aanwezig om uiterlijk 10.00 uur op de ochtend van de dienst.\n\n` +
-    `Met een hartelijke groet,\n` +
+    `Vragen over de inhoud? Mail gerust naar rachellevanandel@vrijburg.nl. Praktische zaken: info@vrijburg.nl.\n` +
+    `Bent u er op de ochtend zelf uiterlijk 10.00 uur?\n\n` +
+    `Met hartelijke groet en tot ziens,\n` +
     `namens het bestuur van Vrijburg,\n\n` +
     `Gigi Calkoen\n` +
     `Bureau Vrijburg`;
@@ -3602,6 +3635,7 @@ let suppressDraftSave = false;
 
 function scheduleDraftSave() {
   if (suppressDraftSave) return;
+  hideKlaarBevestiging();
   clearTimeout(draftTimer);
   draftTimer = setTimeout(() => {
     saveDraft();
