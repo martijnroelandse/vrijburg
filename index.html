@@ -570,9 +570,61 @@
     .vb-pill.current { border-color: var(--brand-dark); color: var(--brand-dark); box-shadow: 0 0 0 2px var(--brand-mid); }
     .vb-pill.current .vb-num { background: var(--brand-dark); }
     .vb-arrow { color: var(--border); font-size: 12px; padding: 0 2px; flex-shrink: 0; }
+    .vb-toggle {
+      margin-left: auto;
+      font: inherit;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--brand-dark);
+      background: none;
+      border: none;
+      text-decoration: underline;
+      cursor: pointer;
+      padding: 5px 6px;
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
     @media (max-width: 640px) {
       .voortgangsbalk { padding: 8px 16px; }
     }
+
+    /* Gastmodus: één sectie tegelijk, met begroeting en stap-navigatie i.p.v.
+       de volledige rolkeuze en alle secties onder elkaar. */
+    .gastmodus-greeting {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 20px 24px;
+      margin-bottom: 20px;
+    }
+    .gastmodus-greeting h2 { font-size: 18px; font-weight: 500; color: var(--brand-dark); margin-bottom: 6px; }
+    .gastmodus-greeting p { font-size: 13.5px; color: var(--muted); line-height: 1.5; max-width: 60ch; }
+    .gastmodus-greeting button {
+      font: inherit;
+      font-size: 12.5px;
+      color: var(--brand-dark);
+      background: none;
+      border: 1px solid var(--brand-mid);
+      border-radius: 999px;
+      padding: 5px 14px;
+      cursor: pointer;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .gastmodus-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 4px 0 24px;
+    }
+    .gast-stap-label { font-size: 13px; color: var(--muted); font-weight: 500; }
 
     .field-mine label { color: var(--brand-dark); }
     .field-other label { opacity: 0.65; }
@@ -738,6 +790,8 @@
 <div class="voortgangsbalk" id="voortgangsbalk" role="navigation" aria-label="Voortgang"></div>
 
 <main>
+
+  <div id="gastmodus-greeting" class="gastmodus-greeting" hidden></div>
 
   <!-- 0. WORKFLOW -->
   <div class="section workflow-section" id="section-workflow">
@@ -1178,6 +1232,12 @@
 
 </main>
 
+<div id="gastmodus-nav" class="gastmodus-nav" hidden>
+  <button type="button" class="btn-secondary" id="gast-prev" onclick="gastStap(-1)">← Vorige</button>
+  <span id="gast-stap-label" class="gast-stap-label"></span>
+  <button type="button" class="btn-generate" id="gast-next" onclick="gastStap(1)">Volgende →</button>
+</div>
+
 <div class="generate-bar">
   <div id="liedlijst-import-banner" class="import-banner"></div>
   <div id="klaar-bevestiging" class="import-banner"></div>
@@ -1415,6 +1475,12 @@ function onAvondmaalToggle() {
 // WORKFLOW / ROLLEN
 // ============================================================
 let huidigeRol = 'medewerker';
+// Gastmodus: één sectie tegelijk voor voorgang(st)er/organist, i.p.v. de
+// volledige rolkeuze + alle secties onder elkaar. Activeert automatisch
+// zodra de rol al vaststond bij het laden (zie initApp) — nooit bij een
+// handmatige rolwissel via de kaarten, dat blijft de volledige weergave.
+let gastModusActief = false;
+let gastStapIndex = 0;
 
 const ROL_CONFIG = {
   voorganger: {
@@ -1463,27 +1529,102 @@ function sectionHasContent(name) {
     .some(el => el.value.trim() !== '');
 }
 
+function gastStappenVoorRol() {
+  const cfg = ROL_CONFIG[huidigeRol];
+  return cfg.primary.filter(name => VOORTGANG_LABELS[name] && document.getElementById('section-' + name));
+}
+
 function renderVoortgangsbalk() {
   const bar = document.getElementById('voortgangsbalk');
-  const cfg = ROL_CONFIG[huidigeRol];
-  const stappen = cfg.primary.filter(name => VOORTGANG_LABELS[name] && document.getElementById('section-' + name));
-  if (stappen.length < 2) { bar.innerHTML = ''; return; }
+  const stappen = gastStappenVoorRol();
+  const kanGastmodus = huidigeRol === 'voorganger' || huidigeRol === 'organist';
+  if (stappen.length < 2 && !kanGastmodus) { bar.innerHTML = ''; return; }
 
   const gedaan = stappen.map(sectionHasContent);
-  const huidigeIndex = gedaan.indexOf(false);
+  const huidigeIndex = gastModusActief ? gastStapIndex : gedaan.indexOf(false);
 
-  bar.innerHTML = stappen.map((name, i) => {
+  const pillsHtml = stappen.length < 2 ? '' : stappen.map((name, i) => {
     const status = gedaan[i] ? 'done' : (i === huidigeIndex ? 'current' : '');
     const nummer = gedaan[i] ? '✓' : (i + 1);
     const pill = `<button type="button" class="vb-pill ${status}" onclick="scrollNaarSectie('${name}')">` +
       `<span class="vb-num">${nummer}</span>${VOORTGANG_LABELS[name]}</button>`;
     return i === 0 ? pill : `<span class="vb-arrow">›</span>${pill}`;
   }).join('');
+
+  const toggleHtml = kanGastmodus
+    ? `<button type="button" class="vb-toggle" onclick="setGastmodus(${!gastModusActief})">${gastModusActief ? 'Volledige weergave' : 'Eenvoudige weergave'}</button>`
+    : '';
+
+  bar.innerHTML = pillsHtml + toggleHtml;
 }
 
 function scrollNaarSectie(name) {
+  if (gastModusActief) {
+    const idx = gastStappenVoorRol().indexOf(name);
+    if (idx >= 0) { gastStapIndex = idx; toonGastmodus(); }
+    return;
+  }
   const sec = document.getElementById('section-' + name);
   if (sec) sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// Toont maar één sectie tegelijk (de huidige gaststap), met een persoonlijke
+// begroeting i.p.v. de rolkeuze-uitleg en Vorige/Volgende i.p.v. alles onder
+// elkaar. Bouwt voort op de bestaande secties/velden — geen aparte kopie van
+// de formuliervelden, dus geen synchronisatie nodig.
+function setGastmodus(actief) {
+  gastModusActief = actief && (huidigeRol === 'voorganger' || huidigeRol === 'organist');
+  gastStapIndex = 0;
+  toonGastmodus();
+}
+
+function gastStap(delta) {
+  const stappen = gastStappenVoorRol();
+  gastStapIndex = Math.min(Math.max(gastStapIndex + delta, 0), stappen.length - 1);
+  toonGastmodus();
+}
+
+function toonGastmodus() {
+  const greeting = document.getElementById('gastmodus-greeting');
+  const nav = document.getElementById('gastmodus-nav');
+  document.getElementById('section-workflow').classList.toggle('hidden', gastModusActief);
+
+  if (!gastModusActief) {
+    greeting.hidden = true;
+    nav.hidden = true;
+    renderVoortgangsbalk();
+    return;
+  }
+
+  const stappen = gastStappenVoorRol();
+  document.querySelectorAll('[data-section]').forEach(sec => {
+    sec.classList.remove('primary');
+    sec.classList.toggle('hidden', sec.dataset.section !== stappen[gastStapIndex]);
+  });
+  const huidigeSectie = document.getElementById('section-' + stappen[gastStapIndex]);
+  if (huidigeSectie) huidigeSectie.classList.add('primary');
+
+  const naam = (huidigeRol === 'voorganger'
+    ? document.getElementById('voorganger').value
+    : document.getElementById('organist').value).trim();
+  const datum = document.getElementById('datum').value;
+  const datumTekst = datum ? formatDatum(datum) : 'de komende dienst';
+  const werkwoord = huidigeRol === 'organist' ? 'de muziek verzorgt' : 'voorgaat';
+  greeting.hidden = false;
+  greeting.innerHTML =
+    `<div><h2>Welkom${naam ? ', ' + escapeHtml(naam) : ''}</h2>` +
+    `<p>Fijn dat u ${datumTekst} bij ons ${werkwoord}. Vul hieronder in ${stappen.length} korte stappen uw onderdeel in — u kunt altijd tussentijds opslaan en later verdergaan.</p></div>` +
+    `<button type="button" onclick="setGastmodus(false)">Volledige weergave</button>`;
+
+  nav.hidden = false;
+  const isEerste = gastStapIndex === 0;
+  const isLaatste = gastStapIndex === stappen.length - 1;
+  document.getElementById('gast-prev').style.visibility = isEerste ? 'hidden' : '';
+  document.getElementById('gast-next').style.display = isLaatste ? 'none' : '';
+  document.getElementById('gast-stap-label').textContent = `Stap ${gastStapIndex + 1} van ${stappen.length} — ${VOORTGANG_LABELS[stappen[gastStapIndex]] || ''}`;
+  if (huidigeSectie) huidigeSectie.after(nav);
+
+  renderVoortgangsbalk();
 }
 
 function setRol(rol) {
@@ -1560,7 +1701,7 @@ function applyRolUI() {
     }
   });
 
-  renderVoortgangsbalk();
+  toonGastmodus();
 
   // Veld-highlight binnen gedeelde secties (opening, slot)
   document.querySelectorAll('[data-owner]').forEach(field => {
@@ -4825,8 +4966,13 @@ function initApp() {
     // ?id=-link zonder eigen ?rol=, zoals gedeeld door het bureau), of via
     // een hersteld concept uit dezelfde tab. Alleen bij een écht leeg,
     // nieuw formulier (niets geladen, niets hersteld) is de rolkeuze nog
-    // een keuze — dan blijft het blok open.
-    if (loaded || restored) setWorkflowCollapsed(true);
+    // een keuze — dan blijft het blok open. Voor voorgang(st)er/organist
+    // gaat dat automatisch naar Gastmodus (één stap tegelijk); een
+    // handmatige rolwissel via de kaarten doet dat bewust nooit.
+    if (loaded || restored) {
+      if (huidigeRol === 'voorganger' || huidigeRol === 'organist') setGastmodus(true);
+      else setWorkflowCollapsed(true);
+    }
   });
 }
 </script>
