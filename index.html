@@ -201,9 +201,9 @@
     }
     .orde-collab-banner {
       font-size: 13px;
-      color: #0c4a6e;
-      background: #e0f2fe;
-      border: 1px solid #7dd3fc;
+      color: var(--brand-dark);
+      background: var(--brand-light);
+      border: 1px solid var(--brand-mid);
       border-radius: 4px;
       padding: 8px 12px;
       margin-bottom: 12px;
@@ -428,20 +428,27 @@
     .role-card strong { display: block; font-size: 14px; color: var(--brand-dark); margin-bottom: 4px; }
     .role-card span { font-size: 12px; color: var(--muted); line-height: 1.4; }
 
-    /* Eén stijl voor uitleg over hóe iets werkt (rolinstructie, samenwerking,
-       auto-invul-toelichting) — voorheen geel (workflow-hint) vs. blauw
-       (orde-collab-banner) door elkaar; nu hetzelfde blauw. .collecte-auto-notice
-       blijft bewust groen: dat is een statusmelding ("automatisch ingevuld"),
-       geen uitleg. */
+    /* Vaste lijn voor alle hulptekst in de app: één lichtblauw blok
+       (brand-tokens), of hij nu altijd zichtbaar is (workflow-hint, een
+       eis als "Rechten verplicht") of achter een toggle zit (hint-toggle/
+       hint-body) — dicht- én opengeklapt hetzelfde blok, zodat "dit is
+       hulp" in één oogopslag herkenbaar is tegen de verder witte
+       secties. Statusmeldingen (auto-ingevuld, muziek al ingevoerd)
+       blijven bewust groen via .hint-status / .collecte-auto-notice —
+       dat is geen hulp maar een bevestiging. */
+    .workflow-hint,
+    .hint-toggle,
+    .hint-body {
+      background: var(--brand-light);
+      border: 1px solid var(--brand-mid);
+      color: var(--brand-dark);
+      border-radius: 4px;
+      line-height: 1.5;
+    }
     .workflow-hint {
       font-size: 13px;
-      background: #e0f2fe;
-      border: 1px solid #7dd3fc;
-      color: #0c4a6e;
-      border-radius: 4px;
       padding: 10px 14px;
       margin-bottom: 14px;
-      line-height: 1.5;
     }
 
     /* Uitklapbare hulptekst: standaard dichtgeklapt, geen popup — het veld
@@ -449,31 +456,40 @@
        die niet iedereen nodig heeft (opzoekknoppen, achtergrondinfo). */
     .hint-toggle {
       font: inherit;
-      font-size: 12px;
+      font-size: 12.5px;
       font-weight: 500;
-      color: var(--brand-dark);
-      background: none;
-      border: none;
-      padding: 0;
-      margin-top: 6px;
       cursor: pointer;
-      display: inline-flex;
+      margin-top: 6px;
+      padding: 6px 11px;
+      display: flex;
       align-items: center;
-      gap: 4px;
+      gap: 6px;
+      width: 100%;
+      box-sizing: border-box;
+      text-align: left;
     }
-    .hint-toggle .chev { display: inline-block; font-size: 9px; transition: transform 0.15s; }
+    .hint-toggle:hover { background: var(--brand-mid); }
+    .hint-toggle .chev { font-size: 9px; transition: transform 0.15s; flex-shrink: 0; }
     .hint-toggle[aria-expanded="true"] .chev { transform: rotate(90deg); }
     .hint-body {
       font-size: 12.5px;
-      color: #0c4a6e;
-      background: #e0f2fe;
-      border: 1px solid #7dd3fc;
-      border-radius: 4px;
       padding: 8px 11px;
-      margin-top: 7px;
-      line-height: 1.5;
+      margin-top: 6px;
     }
     .hint-body[hidden] { display: none; }
+
+    /* Statusmelding (geen hulp): iets is al automatisch ingevuld/opgehaald. */
+    .hint-status {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--success-text);
+      background: var(--success-bg);
+      border: 1px solid #a5d6a7;
+      border-radius: 4px;
+      padding: 4px 9px;
+      margin-top: 6px;
+    }
     .workflow-options {
       display: flex;
       align-items: center;
@@ -962,14 +978,15 @@
                 <button type="button" class="btn-small" onclick="downloadFoto()">Download afbeelding</button>
                 <button type="button" class="btn-small" onclick="clearFoto()">Afbeelding verwijderen</button>
               </div>
-              <p class="comm-hint" style="color:var(--brand-dark)">
+              <div class="hint-body">
                 <strong>Rechten verplicht:</strong> lever alleen een afbeelding waarvan Vrijburg de rechten heeft voor gebruik op de liturgie, socials (Facebook/Instagram) en eventueel vrijburg.nl.
-              </p>
-              <p class="comm-hint">
-                <strong>Liturgie (.docx):</strong> de afbeelding wordt automatisch op de voorkant geplaatst.<br>
+              </div>
+              <button type="button" class="hint-toggle" aria-expanded="false" onclick="toggleHint(this)"><span class="chev">▸</span> <span class="label">Wat gebeurt hiermee?</span></button>
+              <div class="hint-body" hidden>
+                <strong>Liturgie (.docx):</strong> wordt automatisch op de voorkant geplaatst.<br>
                 <strong>Socials &amp; website:</strong> het bureau gebruikt de afbeelding voor promotie van de dienst (FB/Insta) en soms op vrijburg.nl.<br>
                 <strong>E-mail naar bureau:</strong> bij &ldquo;Ik ben klaar&rdquo; wordt de afbeelding gedownload — voeg die handmatig toe als bijlage (paperclip in uw mailprogramma).
-              </p>
+              </div>
             </div>
           </div>
         </div>
@@ -978,7 +995,7 @@
         <div class="field" style="grid-column: 1/-1">
           <label for="foto_credit">Bronvermelding afbeelding <span class="opt">– naam fotograaf / bron (verplicht bij upload)</span></label>
           <input type="text" id="foto_credit" placeholder="Foto ammoniet: Petra Galama">
-          <p class="comm-hint">Vermeld altijd de bron of fotograaf als u een afbeelding uploadt.</p>
+          <div class="hint-body">Vermeld altijd de bron of fotograaf als u een afbeelding uploadt.</div>
         </div>
       </div>
       <div class="row">
@@ -988,7 +1005,8 @@
           <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px">
             <button type="button" class="btn-small" onclick="meldNieuwsbriefRedactie()">📣 Meld nieuwsbriefredactie</button>
           </div>
-          <p class="comm-hint">Slaat op en stuurt de tekst + id per e-mail naar de nieuwsbriefredactie. Zij verwerken de tekst verder in de <a href="nieuwsbrief.html" target="_blank" rel="noopener">nieuwsbrief-app</a> (Mailchimp-cards e.d.).</p>
+          <button type="button" class="hint-toggle" aria-expanded="false" onclick="toggleHint(this)"><span class="chev">▸</span> <span class="label">Wat gebeurt hiermee?</span></button>
+          <div class="hint-body" hidden>Slaat op en stuurt de tekst + id per e-mail naar de nieuwsbriefredactie. Zij verwerken de tekst verder in de <a href="nieuwsbrief.html" target="_blank" rel="noopener">nieuwsbrief-app</a> (Mailchimp-cards e.d.).</div>
         </div>
       </div>
       <div class="row">
@@ -996,7 +1014,8 @@
           <label for="overdenking_email">Overdenking <span class="opt">– voor info@vrijburg.nl (emaillijst na de dienst)</span></label>
           <textarea id="overdenking_email" rows="6" placeholder="Schrijf hier de overdenking. Stuur deze naar het bureau — zij plaatsen het op de emaillijst…"></textarea>
           <button type="button" class="btn-small" style="margin-top:8px" onclick="emailOverdenkingNaarBureau()">✉ Stuur naar info@vrijburg.nl</button>
-          <p class="comm-hint">Dit veld komt niet in het Word-document. In de liturgie blijft het vaste blok Overdenking → Stilte → Muziek staan.</p>
+          <button type="button" class="hint-toggle" aria-expanded="false" onclick="toggleHint(this)"><span class="chev">▸</span> <span class="label">Komt dit in de liturgie?</span></button>
+          <div class="hint-body" hidden>Nee — dit veld komt niet in het Word-document. In de liturgie blijft het vaste blok Overdenking → Stilte → Muziek staan.</div>
         </div>
       </div>
     </div>
@@ -1018,7 +1037,7 @@
             <button type="button" class="btn-small" onclick="openLiedboekOnlineField('lichtlied')" title="Open Liedbundels Online">Liedboek</button>
           </div>
           <textarea id="lichtlied_lyrics" rows="6" style="display:none;margin-top:8px" placeholder="Couplettekst na import van de liedlijst" oninput="lichtliedLyrics=this.value;scheduleDraftSave()"></textarea>
-          <p class="comm-hint" id="lichtlied-muziek-hint" style="display:none">♪ Muziek 1e couplet meegenomen voor het Word-document</p>
+          <p class="hint-status" id="lichtlied-muziek-hint" style="display:none">♪ Muziek 1e couplet meegenomen voor het Word-document</p>
         </div>
       </div>
       <div class="row">
@@ -1071,17 +1090,18 @@
       <div class="field field-mine" id="orde-organist-ui" data-owner="organist" style="grid-column:1/-1">
         <label for="muziek_overdenking">Muziek na de overdenking <span class="opt">organist(e)</span></label>
         <input type="text" id="muziek_overdenking" placeholder="Leeg = niet afgedrukt — titel muziekstuk">
-        <p class="comm-hint">
+        <div class="hint-body">
           Dit komt in de liturgie na Overdenking → Stilte.
-        </p>
+        </div>
       </div>
       <div class="field field-mine" data-owner="voorganger" style="grid-column:1/-1;margin-top:12px">
         <label for="lied_na_overdenking">Lied na overdenking / muziek <span class="opt">optioneel — tussen muziek en voorbeden</span></label>
         <textarea id="lied_na_overdenking" rows="3" placeholder="Lied …&#10;Eerste regel = titel; volgende regels = coupletten (optioneel)" oninput="scheduleDraftSave()"></textarea>
-        <p class="comm-hint">
-          Gebruik dit veld als er ná de overdenking (en orgelmuziek) nog een lied komt, vóór de voorbeden.
+        <button type="button" class="hint-toggle" aria-expanded="false" onclick="toggleHint(this)"><span class="chev">▸</span> <span class="label">Wanneer gebruik ik dit veld?</span></button>
+        <div class="hint-body" hidden>
+          Als er ná de overdenking (en orgelmuziek) nog een lied komt, vóór de voorbeden.
           Zet dit <em>niet</em> onderaan in de orde van dienst — die blokken komen altijd <em>vóór</em> de overdenking.
-        </p>
+        </div>
       </div>
     </div>
   </div>
@@ -1100,7 +1120,8 @@
         <div class="field field-mine" data-owner="voorganger" style="grid-column: 1/-1">
           <label for="acclamatie_lied">Acclamatie / lied bij voorbeden <span class="opt">optioneel — komt in de liturgie onder de voorbedentekst, vóór het Onze Vader</span></label>
           <textarea id="acclamatie_lied" rows="3" placeholder="Lied …&#10;Eerste regel = titel; volgende regels = coupletten (optioneel)" oninput="scheduleDraftSave()"></textarea>
-          <p class="comm-hint">Alleen voor een acclamatie <em>bij de voorbeden</em>. Liederen tussen lezingen zet u in de <strong>orde van dienst</strong> (met ↑↓ op de juiste plek). Een lied ná de overdenking/muziek heeft een eigen veld hieronder bij de overdenking-sectie.</p>
+          <button type="button" class="hint-toggle" aria-expanded="false" onclick="toggleHint(this)"><span class="chev">▸</span> <span class="label">Hoort dit hier wel?</span></button>
+          <div class="hint-body" hidden>Alleen voor een acclamatie <em>bij de voorbeden</em>. Liederen tussen lezingen zet u in de <strong>orde van dienst</strong> (met ↑↓ op de juiste plek). Een lied ná de overdenking/muziek heeft een eigen veld bij de overdenking-sectie.</div>
         </div>
       </div>
       <div class="row">
@@ -1125,7 +1146,7 @@
           <label for="slotlied">Slotlied <span class="opt">voorgang(st)er</span></label>
           <input type="text" id="slotlied" placeholder="Lied 675">
           <textarea id="slotlied_lyrics" rows="6" style="display:none;margin-top:8px" placeholder="Couplettekst na import van de liedlijst" oninput="slotliedLyrics=this.value;scheduleDraftSave()"></textarea>
-          <p class="comm-hint" id="slotlied-muziek-hint" style="display:none">♪ Muziek 1e couplet meegenomen voor het Word-document</p>
+          <p class="hint-status" id="slotlied-muziek-hint" style="display:none">♪ Muziek 1e couplet meegenomen voor het Word-document</p>
         </div>
         <div class="field field-mine" data-owner="organist">
           <label for="orgelspel_slot">Orgelspel slot <span class="opt">organist(e)</span></label>
@@ -1202,7 +1223,7 @@
             <input type="text" id="c2_rekening">
           </div>
         </div>
-        <p class="comm-hint" id="c2-bijzonder-hint" style="display:none">
+        <p class="hint-body" id="c2-bijzonder-hint" style="display:none">
           Bij een bijzondere collecte (bijv. Cuba of Colombia i.p.v. de vaste diaconie- of gemeentecollecte) wordt
           één QR-code gebruikt (<code>vrijburg.nl/bijzonderecollecte</code>) — dezelfde pagina voor elk bijzonder doel.
           Zorg dat die bestemming op de website/ING-betaalpagina staat (nu: bijgewerkt tot 25 oktober 2026).
@@ -2709,7 +2730,7 @@ function renderOrde() {
       ? `<button class="btn-fetch" onclick="openLiedboekOnline('${safeId}')" title="Open Liedbundels Online (inlog vereist)">Liedbundels Online</button>`
       : '';
     const muziekBadge = (item.type === 'lied' && item.muziek_data?.length)
-      ? '<span style="font-size:12px;color:var(--success-text)">♪ muziek 1e couplet</span>' : '';
+      ? '<span class="hint-status">♪ muziek 1e couplet</span>' : '';
     // Opzoekhulp is optioneel gereedschap (liedbundel/bijbeltekst ophalen) — een
     // dominee typt gewoon "Lied 652: 1, 3 en 5" of "Genesis 4, 1-16" en heeft
     // dit niet nodig. Standaard dichtgeklapt, per item onthouden.
