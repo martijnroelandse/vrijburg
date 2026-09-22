@@ -722,7 +722,7 @@
 
   <!-- 1. DIENST INFO -->
   <div class="section" id="section-dienst" data-section="dienst">
-    <h2 class="section-header">1. Dienst</h2>
+    <h2 class="section-header">Dienst</h2>
     <div class="section-body">
       <div id="planning-notice" class="collecte-auto-notice" style="display:none"></div>
       <div class="row">
@@ -815,7 +815,7 @@
 
   <!-- 2. THEMA & COMMUNICATIE -->
   <div class="section" id="section-thema" data-section="thema">
-    <h2 class="section-header">2. Thema, afbeelding &amp; communicatie</h2>
+    <h2 class="section-header">Thema, afbeelding &amp; communicatie</h2>
     <div class="section-body">
       <div class="row">
         <div class="field" style="grid-column: 1/-1">
@@ -885,7 +885,7 @@
 
   <!-- 3. OPENING -->
   <div class="section" id="section-opening" data-section="opening">
-    <h2 class="section-header">3. Opening van de dienst</h2>
+    <h2 class="section-header">Opening van de dienst</h2>
     <div class="section-body">
       <div class="row">
         <div class="field field-mine" data-owner="organist">
@@ -919,7 +919,7 @@
 
   <!-- 4. ORDE VAN DIENST -->
   <div class="section" id="section-orde" data-section="orde">
-    <h2 class="section-header" id="orde-header">4. Orde van dienst <span style="font-weight:400;font-size:12px;color:var(--muted)">– in volgorde zoals de voorgang(st)er die aanlevert</span></h2>
+    <h2 class="section-header" id="orde-header">Orde van dienst <span style="font-weight:400;font-size:12px;color:var(--muted)">– in volgorde zoals de voorgang(st)er die aanlevert</span></h2>
     <div class="section-body">
       <div id="dienst-overzicht" class="dienst-overzicht" aria-live="polite"></div>
       <div id="orde-collab-banner" class="orde-collab-banner" style="display:none"></div>
@@ -966,7 +966,7 @@
 
   <!-- 5. VOORBEDEN -->
   <div class="section" id="section-voorbeden" data-section="voorbeden">
-    <h2 class="section-header">5. Voorbeden <span style="font-weight:400;font-size:12px;color:var(--muted)">– optioneel, voor wie afwijkt van het standaardgebed</span></h2>
+    <h2 class="section-header">Voorbeden <span style="font-weight:400;font-size:12px;color:var(--muted)">– optioneel, voor wie afwijkt van het standaardgebed</span></h2>
     <div class="section-body">
       <div class="row">
         <div class="field field-mine" data-owner="voorganger" style="grid-column: 1/-1">
@@ -996,7 +996,7 @@
 
   <!-- 6. SLOT -->
   <div class="section" id="section-slot" data-section="slot">
-    <h2 class="section-header">6. Afsluiting</h2>
+    <h2 class="section-header">Afsluiting</h2>
     <div class="section-body">
       <div class="row">
         <div class="field field-mine" data-owner="voorganger">
@@ -1015,7 +1015,7 @@
 
   <!-- 7. COLLECTE & BLOEMEN -->
   <div class="section" id="section-collecte" data-section="collecte">
-    <h2 class="section-header">7. Collecte &amp; bloemen</h2>
+    <h2 class="section-header">Collecte &amp; bloemen</h2>
     <div class="section-body">
       <div class="row" style="margin-bottom:16px">
         <div class="field" style="grid-column: 1/-1">
@@ -1091,7 +1091,7 @@
 
   <!-- 7. AGENDA -->
   <div class="section" id="section-agenda" data-section="agenda">
-    <h2 class="section-header">8. Agenda</h2>
+    <h2 class="section-header">Agenda</h2>
     <div class="section-body">
       <div style="margin-bottom:12px">
         <button class="btn-secondary" onclick="importAgenda()" id="btn-import-agenda">↻ Importeer van vrijburg.nl</button>
@@ -1492,8 +1492,8 @@ function applyRolUI() {
   if (ordeAddRow) ordeAddRow.style.display = organistRefMode ? 'none' : '';
   if (ordeHeader) {
     ordeHeader.innerHTML = organistRefMode
-      ? '4. Orde van dienst &amp; muziek <span style="font-weight:400;font-size:12px;color:var(--muted)">– vul muziek in; liederen/lezingen ter referentie</span>'
-      : '4. Orde van dienst <span style="font-weight:400;font-size:12px;color:var(--muted)">– in volgorde zoals de voorgang(st)er die aanlevert</span>';
+      ? 'Orde van dienst &amp; muziek <span style="font-weight:400;font-size:12px;color:var(--muted)">– vul muziek in; liederen/lezingen ter referentie</span>'
+      : 'Orde van dienst <span style="font-weight:400;font-size:12px;color:var(--muted)">– in volgorde zoals de voorgang(st)er die aanlevert</span>';
   }
   if (ordeCollabBanner) {
     if (organistRefMode) {
