@@ -890,7 +890,7 @@
           <input type="text" id="lector" placeholder="Gon Homburg">
         </div>
         <div class="field" data-owner="medewerker">
-          <label for="bestuurslid">Dienstdoende bestuurder <span class="opt">uit dienstenrooster</span></label>
+          <label for="bestuurslid">Dienstdoende bestuurder <span class="opt">uit dienstenrooster · niet in liturgie</span></label>
           <input type="text" id="bestuurslid" placeholder="Roelandse">
         </div>
       </div>
@@ -4261,7 +4261,6 @@ async function generateDocxAsync() {
   const voorganger = document.getElementById('voorganger').value.trim();
   const organist   = document.getElementById('organist').value.trim();
   const lector     = document.getElementById('lector').value.trim();
-  const bestuurslid = document.getElementById('bestuurslid').value.trim();
   const thema      = document.getElementById('thema').value.trim();
   const intro      = document.getElementById('intro').value.trim();
   const foto       = document.getElementById('foto_credit').value.trim();
@@ -4608,7 +4607,6 @@ async function generateDocxAsync() {
   if (voorganger) coverRoleLines++;
   if (organist) coverRoleLines++;
   if (lector) coverRoleLines++;
-  if (bestuurslid) coverRoleLines++;
   if (cantorij) coverRoleLines++;
   if (kinderkerk && !dienstExtraPreview.includes('kinderkerk')) coverRoleLines++;
 
@@ -4679,7 +4677,6 @@ async function generateDocxAsync() {
   if (voorganger) children.push(p(`${voorgangerLabel}: ${voorganger}`));
   if (organist) children.push(p(`Organist: ${organist}`));
   if (lector) children.push(p(`Lector${/\s+en\s+/i.test(lector) ? 'en' : ''}: ${lector}`));
-  if (bestuurslid) children.push(p(`Dienstdoende bestuurder: ${bestuurslid}`));
   if (cantorij) children.push(p('Cantorij'));
   if (kinderkerk && !dienstExtra.includes('kinderkerk')) {
     children.push(p(`Kinderkerk: ${kinderkerk}`));
