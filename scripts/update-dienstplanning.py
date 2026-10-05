@@ -23,6 +23,23 @@ LOC_CODES = {
 
 VL_TYPES = ("VLV", "VLH", "VLZ")
 
+# Het dienstenrooster (kolom Bestuur) noemt alleen achternamen; vul aan tot volledige naam.
+# Sleutel = achternaam in kleine letters, inclusief varianten/tikfouten uit het rooster.
+BESTUURDERS = {
+    "de meijer": "Gloria Jeanne de Meijer",
+    "de ruijter": "Doret de Ruijter",
+    "de vries": "Jan de Vries",
+    "van drimmelen": "Gert van Drimmelen",
+    "v. drimmelen": "Gert van Drimmelen",
+    "hamaker": "Mariette Hamaker",
+    "hamakeer": "Mariette Hamaker",
+    "roelandse": "Martijn Roelandse",
+}
+
+
+def bestuurder_naam(v):
+    return BESTUURDERS.get(v.strip().lower(), v)
+
 
 def clean(v):
     v = (v or "").strip()
@@ -44,15 +61,20 @@ def get_col(row, *names):
 
 
 def parse_aanvangstijd(raw):
+    """Geeft (aanvangstijd, extra bijzonderheden, avondmaal) terug."""
     v = clean(raw)
     if not v:
-        return "", []
+        return "", [], ""
     low = v.lower()
     if low in LOC_CODES:
-        return "", [f"Locatie: {LOC_CODES[low]}"]
+        return "", [f"Locatie: {LOC_CODES[low]}"], ""
+    # In de Sheet staat avondmaal soms in deze kolom ("avondmaal?", "avondmaal19.30")
+    if "avondmaal" in low:
+        tijd = re.search(r"\d{1,2}[:.]\d{2}", v)
+        return (tijd.group(0).replace(".", ":") if tijd else ""), [], "x"
     if re.match(r"^\d{1,2}[:.]\d{2}$", v):
-        return v.replace(".", ":"), []
-    return v, []
+        return v.replace(".", ":"), [], ""
+    return v, [], ""
 
 
 def parse_vl_value(raw):
@@ -106,11 +128,11 @@ def convert(csv_path: Path) -> list:
             if kk.lower() == "kk":
                 kk = "ja"
 
-            aanvangstijd, extra = parse_aanvangstijd(r.get("Afwijkende aanvangstijd"))
+            aanvangstijd, extra, avondmaal_tijdkolom = parse_aanvangstijd(r.get("Afwijkende aanvangstijd"))
             vl = assign_vl_fields(r)
 
             bijz = list(extra)
-            avondmaal = get_col(r, "Avondmaal")
+            avondmaal = get_col(r, "Avondmaal") or avondmaal_tijdkolom
             opm = get_col(r, "Opmerkingen")
             if opm:
                 bijz.append(opm)
@@ -124,7 +146,7 @@ def convert(csv_path: Path) -> list:
                 "cantorij": flag(get_col(r, "Cantorij ♫♫ ")),
                 "kinderkerk": kk,
                 "lector": get_col(r, "Lector"),
-                "bestuurslid": get_col(r, "Bestuurslid ", "Bestuurslid"),
+                "bestuurslid": bestuurder_naam(get_col(r, "Bestuur", "Bestuurslid ", "Bestuurslid")),
                 "vlv": vl["vlv"],
                 "vlh": vl["vlh"],
                 "vlz": vl["vlz"],

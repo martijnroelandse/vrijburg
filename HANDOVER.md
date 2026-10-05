@@ -124,7 +124,7 @@ python3 scripts/update-dienstplanning.py dienstplanning.csv
 # commit + push dienstplanning.json
 ```
 
-Kolom **Bestuurslid**: staat (nog) niet in de Sheet maar in Jet’s kwartaalrooster. Hulpbestanden om in de Sheet te plakken: `downloads/bestuurslid-q3-2026-voor-sheet.tsv` en `downloads/bestuurslid-q4-2026-voor-sheet.tsv`. **Let op:** zolang de Sheet-kolom leeg is, wist een nieuwe run van het script de bestuursleden in `dienstplanning.json` — zet ze daarna terug (of plak eerst de TSV in de Sheet).
+Kolom **Bestuur** (vanaf Q4-2026 in de Sheet, uit Jet’s kwartaalrooster; het script leest ook nog de oude kolomnaam `Bestuurslid`). Het rooster noemt alleen achternamen; `BESTUURDERS` in `scripts/update-dienstplanning.py` vult de voornaam aan — nieuw bestuurslid = daar één regel toevoegen. Q3-2026 stond niet in de Sheet; hulpbestand daarvan: `downloads/bestuurslid-q3-2026-voor-sheet.tsv`. „avondmaal” in de kolom *Afwijkende aanvangstijd* wordt door het script als avondmaal gelezen (eventuele tijd blijft aanvangstijd).
 
 ### Collectes
 
