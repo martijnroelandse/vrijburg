@@ -124,7 +124,7 @@ python3 scripts/update-dienstplanning.py dienstplanning.csv
 # commit + push dienstplanning.json
 ```
 
-Kolom **Bestuurslid**: Q3-2026-hulpbestand `downloads/bestuurslid-q3-2026-voor-sheet.tsv` (Sheet desnoods handmatig bijwerken).
+Kolom **Bestuurslid**: staat (nog) niet in de Sheet maar in Jet’s kwartaalrooster. Hulpbestanden om in de Sheet te plakken: `downloads/bestuurslid-q3-2026-voor-sheet.tsv` en `downloads/bestuurslid-q4-2026-voor-sheet.tsv`. **Let op:** zolang de Sheet-kolom leeg is, wist een nieuwe run van het script de bestuursleden in `dienstplanning.json` — zet ze daarna terug (of plak eerst de TSV in de Sheet).
 
 ### Collectes
 
