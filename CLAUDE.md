@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 A static webapp (no build step, no framework) that Vrijburg Amsterdam uses to compile its weekly church service liturgy and download it as a print-ready `.docx`. There is no server-side code except one Supabase Edge Function. Everything else is plain HTML/CSS/JS files deployed as-is via GitHub Pages.
 
-- Live app: `https://martijnroelandse.github.io/vrijburg/`
+- Live app: `https://liturgie.vrijburg.nl/` (custom domain via `CNAME`; formerly `martijnroelandse.github.io/vrijburg/`)
 - Companion newsletter app: `nieuwsbrief.html?id=<short_id>` (Mailchimp card text, same dataset)
 - `info.html`: guide/instructions page for guest preachers, incl. privacy info
 
@@ -24,7 +24,7 @@ python3 scripts/update-dienstplanning.py dienstplanning.csv
 # then commit the regenerated dienstplanning.json
 ```
 
-Deployment is just pushing to `main`; GitHub Pages serves the repo root directly — no CI build step.
+Deployment is just pushing to `main`; GitHub Pages serves the repo root directly on the custom domain `liturgie.vrijburg.nl` (set in `CNAME`) — no CI build step.
 
 ## Architecture
 

@@ -10,7 +10,7 @@ Statische webapp waarmee Vrijburg Amsterdam de wekelijkse liturgie samenstelt en
 
 | | |
 |---|---|
-| **Live liturgie** | `https://martijnroelandse.github.io/vrijburg/` |
+| **Live liturgie** | `https://liturgie.vrijburg.nl/` |
 | **Info / gastpredikant** | `…/info.html` (ankers `#gastpredikant`, `#handleiding`, `#privacy`) |
 | **Nieuwsbrief** | `…/nieuwsbrief.html?id=<short_id>` |
 | **Supabase** | project *Liturgie*, ref `iabrbkirzsolwnuknbel`, regio `eu-west-3` |
