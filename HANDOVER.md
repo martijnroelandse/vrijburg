@@ -87,6 +87,7 @@ nieuwsbrief.html ──zelfde short_id──► Mailchimp-cards (platte tekst)
 | `dienstplanning.json` | Predikant/organist/lector/… per datum |
 | `scripts/update-dienstplanning.py` | CSV/Sheet → JSON |
 | `supabase/migrations/001_diensten.sql` | Schema |
+| `supabase/migrations/002_diensten_historie.sql` | Versiegeschiedenis per dienst (trigger) — zie `supabase/README.md` |
 | `supabase/functions/meld-klaar/` | Klaar-ping e-mail |
 | `.github/workflows/keep-supabase-active.yml` | Ping elke 3 dagen (Free-tier pauze voorkomen) |
 | `.github/workflows/deploy-edge-functions.yml` | Deployt `supabase/functions/**` automatisch bij push naar `main` (zie §7) |
@@ -184,6 +185,7 @@ Zonder `RESEND_API_KEY` → HTTP 501 → UI opent mailto. Functie is al gedeploy
 | Dominee-link en organist-mail “passen niet” | Verschillende `id`s gebruikt. Altijd vanuit één opgeslagen dienst mailen. |
 | Gastbrief opent niet / alleen link op klembord | Was te lange mailto; opgelost met korte brief + info-pagina (PR #55). |
 | Nieuwsbrieftekst “verdwenen” | Oude overwrite-bug; gefixt met merge-on-save. |
+| Liturgie van zondag X opeens “van volgende week” | Iemand hergebruikte de `?id=`-link en wijzigde de datum (okt 2026, 11 → 18 okt). De app waarschuwt nu bij een datumwijziging; vorige versies staan in `diensten_historie` (zie `supabase/README.md`). |
 | Lokaal `file://` | `collectes.json` fetch faalt — app via Pages of `python3 -m http.server` openen. |
 | Firefox “kies een toepassing” bij mailto | Gebruik **Kopieer bericht** / **Kopieer link**. |
 

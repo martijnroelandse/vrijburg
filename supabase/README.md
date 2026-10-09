@@ -27,6 +27,7 @@ Migratie `diensten_schema` is toegepast op het remote project (tabel + bucket + 
    - **Table Editor** → tabel `diensten`
    - **Storage** → bucket `dienst-fotos`
    - View `diensten_nieuwsbrief`
+6. Daarna op dezelfde manier `migrations/002_diensten_historie.sql` (versiegeschiedenis, zie hieronder)
 
 ## Datamodel (kort)
 
@@ -44,6 +45,23 @@ Migratie `diensten_schema` is toegepast op het remote project (tabel + bucket + 
 | `foto_credit` | Bijschrift foto |
 
 `data` volgt dezelfde velden als `getFormState()` in `index.html`, minus `foto_data`.
+
+### Tabel `diensten_historie` (migratie 002)
+
+Elke opslag van een dienst wordt hier als volledige versie bewaard, door een trigger op `diensten` (de app hoeft er niets voor te doen). Kolommen: dezelfde als `diensten`, plus `actie` (`basis`/`insert`/`update`/`delete`), `vastgelegd_op`, `rol` (rol in de app van wie opsloeg) en `gewijzigde_velden` (welke velden t.o.v. de vorige versie veranderden). Opslaan zonder inhoudelijke wijziging wordt niet gelogd. Anon mag lezen, niet schrijven of wissen.
+
+Een overschreven dienst terughalen (SQL Editor):
+
+```sql
+-- tijdlijn van één dienst
+select id, vastgelegd_op, actie, datum, thema, rol, gewijzigde_velden
+from diensten_historie where short_id = '7e3fc330' order by vastgelegd_op;
+
+-- versie <id> terugzetten
+update diensten d set datum = h.datum, thema = h.thema, status = h.status,
+  data = h.data, foto_path = h.foto_path, foto_credit = h.foto_credit
+from diensten_historie h where h.id = <id> and d.id = h.dienst_id;
+```
 
 ### Bucket `dienst-fotos`
 
