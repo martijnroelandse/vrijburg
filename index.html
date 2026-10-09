@@ -1424,6 +1424,10 @@ let currentDienstUuid = null;
 let currentShortId = null;
 let currentFotoPath = null;
 let currentDienstStatus = null;
+// Datum zoals die in de cloud is opgeslagen voor de gekoppelde dienst (?id=).
+// Wordt gebruikt om te waarschuwen als iemand de datum van een bestaande
+// liturgie wijzigt in plaats van een nieuwe te beginnen.
+let currentDienstDatum = null;
 // Laatst bekende opgeslagen stand (server of leeg formulier). Wordt gebruikt
 // om bij het opslaan te bepalen welke velden in déze sessie zijn gewijzigd,
 // zodat gelijktijdig invullen door voorganger/organist elkaar niet overschrijft.
@@ -2005,6 +2009,7 @@ function setCurrentDienst(row) {
   currentShortId = row.short_id;
   currentFotoPath = row.foto_path || null;
   if (row.status) currentDienstStatus = row.status;
+  if ('datum' in row) currentDienstDatum = row.datum || null;
   updateCloudHint();
   try {
     history.replaceState(null, '', getCloudShareUrl(
@@ -2017,6 +2022,8 @@ function clearCloudBinding({ updateUrl = false } = {}) {
   currentDienstUuid = null;
   currentShortId = null;
   currentFotoPath = null;
+  currentDienstStatus = null;
+  currentDienstDatum = null;
   updateCloudHint();
   if (updateUrl) {
     try {
@@ -2127,7 +2134,7 @@ async function saveDienstToCloud({ status } = {}) {
       .from('diensten')
       .update(update)
       .eq('id', currentDienstUuid)
-      .select('id, short_id, foto_path, status')
+      .select('id, short_id, datum, foto_path, status')
       .single();
     if (error) throw error;
     row = data;
@@ -2145,7 +2152,7 @@ async function saveDienstToCloud({ status } = {}) {
     const { data, error } = await sb
       .from('diensten')
       .insert(insert)
-      .select('id, short_id, foto_path, status')
+      .select('id, short_id, datum, foto_path, status')
       .single();
     if (error) throw error;
     row = data;
@@ -2157,7 +2164,7 @@ async function saveDienstToCloud({ status } = {}) {
         .from('diensten')
         .update({ foto_path: fotoPath })
         .eq('id', row.id)
-        .select('id, short_id, foto_path, status')
+        .select('id, short_id, datum, foto_path, status')
         .single();
       if (upErr) throw upErr;
       row = updated;
@@ -3923,9 +3930,40 @@ function setupAutoSave() {
 // ============================================================
 // COLLECTE LOGICA
 // ============================================================
+// Wie de datum wijzigt van een liturgie die al in de cloud staat, overschrijft
+// die dienst (namen en collecte worden opnieuw uit het rooster ingevuld).
+// Vraag daarom eerst of het om een nieuwe dienst gaat. Geeft false terug als
+// de wijziging is teruggedraaid.
+function bevestigDatumWissel(val) {
+  const oud = currentDienstDatum;
+  if (!currentDienstUuid || !oud || oud === val) return true;
+  const oudTekst = formatDatum(oud);
+  const nieuwTekst = formatDatum(val);
+  const klaar = currentDienstStatus === 'klaar' ? ' en is al gemeld als klaar' : '';
+  if (confirm(
+    `Let op: deze liturgie hoort bij ${oudTekst}${klaar}.\n\n` +
+    `Wilt u een NIEUWE liturgie beginnen voor ${nieuwTekst}?\n\n` +
+    `OK = nieuwe, lege liturgie voor ${nieuwTekst} (die van ${oudTekst} blijft ongewijzigd)\n` +
+    `Annuleren = geen nieuwe liturgie`
+  )) {
+    clearCloudBinding({ updateUrl: true });
+    resetFormToEmpty();
+    document.getElementById('datum').value = val;
+    setStatus(`Nieuwe liturgie voor ${nieuwTekst} — de liturgie van ${oudTekst} is niet gewijzigd`, 'ok');
+    return true;
+  }
+  if (confirm(
+    `Datum van déze liturgie wijzigen van ${oudTekst} naar ${nieuwTekst}?\n\n` +
+    `Alleen doen als de datum verkeerd was. Namen en collecte worden opnieuw ingevuld voor ${nieuwTekst}.`
+  )) return true;
+  document.getElementById('datum').value = oud;
+  return false;
+}
+
 function onDatumChange() {
   const val = document.getElementById('datum').value;
   if (!val) return;
+  if (!bevestigDatumWissel(val)) return;
   const d = new Date(val + 'T12:00:00');
   const dag = d.getDate();
   const maand = NL_MAANDEN_CAP[d.getMonth()];
