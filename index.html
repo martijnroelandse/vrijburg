@@ -1400,7 +1400,10 @@ const LIEDBOEK_BASE = 'https://liedbundelsonline.nl';
 const LIEDBOEK_URL = LIEDBOEK_BASE + '/nl/lied-zoeken?bundles%5B0%5D=LB';
 const STORAGE_KEY = 'vrijburg-liturgie-draft';
 const SESSION_ACTIVE_KEY = 'vrijburg-liturgie-session';
-const VRIJBURG_EVENTS_API = 'https://www.vrijburg.nl/wp-json/wp/v2/evenementen';
+// agenda.json wordt dagelijks door .github/workflows/update-agenda.yml van
+// www.vrijburg.nl/evenementen/ gehaald (de nieuwe site heeft geen WP-API en
+// geen CORS-headers, dus de browser kan vrijburg.nl niet zelf uitlezen).
+const VRIJBURG_AGENDA_URL = './agenda.json';
 let AGENDA_TEMPLATES = [];
 fetch('agenda_templates.json').then(r => r.ok ? r.json() : []).then(d => { AGENDA_TEMPLATES = d; }).catch(() => {});
 
@@ -3297,35 +3300,17 @@ async function fetchBibleText(id) {
 // AGENDA IMPORT
 // ============================================================
 async function fetchVrijburgEvenementen() {
-  // orderby=date is de WordPress-publicatiedatum, níet acf.start.
-  // Daarom: nieuwste posts eerst (desc). Met order=asc kreeg je alleen oude
-  // evenementen uit 2013–2014 en vielen alle toekomstige activiteiten weg.
-  const collected = [];
-  const maxPages = 3;
-  for (let page = 1; page <= maxPages; page++) {
-    const res = await fetch(
-      `${VRIJBURG_EVENTS_API}?per_page=100&page=${page}&orderby=date&order=desc`
-    );
-    if (!res.ok) throw new Error('API niet bereikbaar (' + res.status + ')');
-    const batch = await res.json();
-    if (!Array.isArray(batch) || !batch.length) break;
-    collected.push(...batch);
-
-    const totalPages = parseInt(res.headers.get('X-WP-TotalPages') || '1', 10);
-    const now = new Date();
-    now.setHours(0, 0, 0, 0);
-    const hasFuture = batch.some(ev => {
-      const startStr = ev.acf?.start;
-      if (!startStr) return false;
-      const start = new Date(startStr.replace(' ', 'T'));
-      return !Number.isNaN(start.getTime()) && start >= now;
-    });
-    // Volgende pagina's zijn ouder gepubliceerd; stop als deze pagina
-    // geen toekomstige startdata meer heeft (na de eerste pagina).
-    if (page > 1 && !hasFuture) break;
-    if (page >= totalPages) break;
-  }
-  return collected;
+  const res = await fetch(VRIJBURG_AGENDA_URL + '?t=' + Date.now(), { cache: 'no-store' });
+  if (!res.ok) throw new Error('agenda.json niet bereikbaar (' + res.status + ')');
+  const data = await res.json();
+  return {
+    bijgewerkt: data.bijgewerkt || '',
+    evenementen: (data.evenementen || []).map(ev => {
+      const [j, m, d] = (ev.datum || '').split('-').map(Number);
+      const [u, mi] = (ev.tijd || '00:00').split(':').map(Number);
+      return { ...ev, start: new Date(j, (m || 1) - 1, d || 1, u || 0, mi || 0) };
+    }),
+  };
 }
 
 async function importAgenda() {
@@ -3334,7 +3319,7 @@ async function importAgenda() {
   btn.textContent = 'Bezig met importeren…';
 
   try {
-    const events = await fetchVrijburgEvenementen();
+    const { bijgewerkt, evenementen: events } = await fetchVrijburgEvenementen();
 
     const now = new Date();
     now.setHours(0, 0, 0, 0);
@@ -3346,14 +3331,12 @@ async function importAgenda() {
     const kort = [], ver = [];
 
     events.forEach(ev => {
-      const startStr = ev.acf?.start;
-      if (!startStr) return;
-      const start = new Date(startStr.replace(' ', 'T'));
+      const start = ev.start;
       if (Number.isNaN(start.getTime()) || start < now) return;
 
-      const title = decodeHtmlEntities(ev.title?.rendered || '');
-      const loc = ev.acf?.locatie ? ` – ${ev.acf.locatie}` : '';
-      const header = formatAgendaRegel(start) + ' – ' + title + loc;
+      const title = ev.titel || '';
+      const loc = ev.locatie ? ` – ${ev.locatie}` : '';
+      const header = formatAgendaRegel(start, !!ev.tijd) + ' – ' + title + loc;
       const blurb = agendaItemBlurb(ev);
       const line = blurb ? `${header}\n${blurb}` : header;
 
@@ -3371,8 +3354,9 @@ async function importAgenda() {
 
     scheduleDraftSave();
     const total = kort.length + ver.length;
+    const stand = bijgewerkt ? ` — agenda van vrijburg.nl, stand ${formatBijgewerkt(bijgewerkt)}` : '';
     if (total) {
-      setStatus(`✓ ${total} activiteiten geïmporteerd (${kort.length} komende 2 weken, ${ver.length} daarna)`, 'ok');
+      setStatus(`✓ ${total} activiteiten geïmporteerd (${kort.length} komende 2 weken, ${ver.length} daarna)${stand}`, 'ok');
     } else {
       setStatus('Geen aankomende activiteiten gevonden in de komende 6 weken', 'err');
     }
@@ -3403,9 +3387,12 @@ function findAgendaTemplate(title) {
   return AGENDA_TEMPLATES.find(t => t.match.some(m => lower.includes(m)));
 }
 
+function agendaEvTekst(ev) {
+  return (ev.tekst || ev.samenvatting || '').trim();
+}
+
 function agendaKerkdienstVoorganger(ev) {
-  const raw = ev.excerpt?.rendered || ev.content?.rendered || '';
-  const text = decodeHtmlEntities(raw);
+  const text = agendaEvTekst(ev);
   if (!text) return '';
   const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
   for (const line of lines) {
@@ -3420,7 +3407,7 @@ function agendaKerkdienstVoorganger(ev) {
 }
 
 function agendaItemBlurb(ev) {
-  const title = decodeHtmlEntities(ev.title?.rendered || '');
+  const title = ev.titel || '';
   if (/kerkdienst/i.test(title)) {
     return agendaKerkdienstVoorganger(ev);
   }
@@ -3431,8 +3418,7 @@ function agendaItemBlurb(ev) {
     if (tpl.contact) parts.push('Contact: ' + tpl.contact);
     return parts.join(' ');
   }
-  const raw = ev.excerpt?.rendered || ev.content?.rendered || '';
-  let text = decodeHtmlEntities(raw);
+  let text = agendaEvTekst(ev).replace(/\s*\n+\s*/g, ' ');
   if (!text) return '';
   const sentences = text.match(/[^.!?]+[.!?]+(?:\s+|$)|[^.!?]+$/g) || [text];
   let blurb = sentences.slice(0, 2).map(s => s.trim()).filter(Boolean).join(' ');
@@ -3443,11 +3429,19 @@ function agendaItemBlurb(ev) {
   return blurb;
 }
 
-function formatAgendaRegel(d) {
+function formatAgendaRegel(d, metTijd = true) {
   const dag = NL_DAGEN[d.getDay()];
   const dagCap = dag.charAt(0).toUpperCase() + dag.slice(1);
+  const datum = `${dagCap} ${d.getDate()} ${NL_MAANDEN[d.getMonth()]} ${d.getFullYear()}`;
+  if (!metTijd) return datum;
   const uur = d.getHours().toString().padStart(2, '0') + ':' + d.getMinutes().toString().padStart(2, '0');
-  return `${dagCap} ${d.getDate()} ${NL_MAANDEN[d.getMonth()]} ${d.getFullYear()} ${uur} uur`;
+  return `${datum} ${uur} uur`;
+}
+
+function formatBijgewerkt(iso) {
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return iso;
+  return `${d.getDate()} ${NL_MAANDEN[d.getMonth()]} ${d.getHours().toString().padStart(2, '0')}:${d.getMinutes().toString().padStart(2, '0')}`;
 }
 
 // ============================================================
