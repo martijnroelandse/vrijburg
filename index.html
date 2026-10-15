@@ -3422,11 +3422,20 @@ function agendaItemBlurb(ev) {
   // zinssplitsing) en zinnen met een link overslaan.
   let text = agendaEvTekst(ev)
     .replace(/(?:https?:\/\/|www\.)\S+/gi, '\u2042')
+    // Alinea zonder slotteken (bijv. kopregel "Ensemble X o.l.v. Y") is een eigen zin
+    .replace(/([^.!?:;,\s])[ \t]*\n\s*\n\s*/g, '$1. ')
     .replace(/\s*\n+\s*/g, ' ')
     .trim();
   if (!text) return '';
+  // Punten in afkortingen (o.l.v., m.m.v., ds., C.M.) zijn geen zinseinde:
+  // tijdelijk vervangen door een placeholder, na het splitsen terugzetten.
+  const ABBR_DOT = '\u2024';
+  text = text
+    .replace(/\b(ds|dr|drs|mr|prof|bijv|ca|enz|incl|excl|nr|mevr|dhr|vs|resp|evt|zgn)\./gi, `$1${ABBR_DOT}`)
+    .replace(/\b([A-Za-z])\.(?=\s*[A-Za-z(])/g, `$1${ABBR_DOT}`);
   const sentences = (text.match(/[^.!?]+[.!?]+(?:\s+|$)|[^.!?]+$/g) || [text])
-    .filter(s => !s.includes('\u2042'));
+    .filter(s => !s.includes('\u2042'))
+    .map(s => s.split(ABBR_DOT).join('.'));
   let blurb = sentences.slice(0, 2).map(s => s.trim()).filter(Boolean).join(' ');
   const maxLen = 220;
   if (blurb.length > maxLen) {
