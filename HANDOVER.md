@@ -137,6 +137,16 @@ Kolom **Bestuur** (vanaf Q4-2026 in de Sheet, uit Jet’s kwartaalrooster; het s
 
 `agenda_templates.json` — vaste teksten die bij import/keuze meelopen (o.a. Heilige/Hemelse Bronnen: begeleid door ds. Rachelle).
 
+### Agenda-import (sinds okt 2026)
+
+vrijburg.nl is van WordPress naar een statische Hugo-site gegaan: de oude WP-API (`/wp-json/wp/v2/evenementen`) bestaat niet meer en de site stuurt geen CORS-headers, dus de browser kan vrijburg.nl niet zelf uitlezen. Daarom:
+
+- `.github/workflows/update-agenda.yml` draait dagelijks (~06:17) `scripts/update-agenda.py`: leest `www.vrijburg.nl/evenementen/` + de detailpagina's (Datum / Tijd / Locatie / tekst) voor de komende 70 dagen en commit `agenda.json` als er iets veranderd is.
+- De knop **↻ Importeer van vrijburg.nl** leest `agenda.json` van het eigen domein. De statusregel toont de stand ("stand 15 oktober 10:24").
+- Direct verversen (bijv. net na een wijziging op vrijburg.nl): GitHub → Actions → *Agenda bijwerken van vrijburg.nl* → **Run workflow**.
+- Faalt de workflow met "Geen evenementen gevonden", dan is de HTML-structuur van vrijburg.nl veranderd (selectors: `article.evenementen`, `h2 a`, `p.date`, `header div.row > div > strong`, `.entry-content`). De RSS-feed is onbruikbaar: alle pubDates staan op 1-1-2000.
+- Tijd 00:00 op de site = geen tijd ingevuld → agendaregel zonder "uur". Locatie "Vrijburg" wordt weggelaten.
+
 ---
 
 ## 7. E-mail & klaar-meldingen
