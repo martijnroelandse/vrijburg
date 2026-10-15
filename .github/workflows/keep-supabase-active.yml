@@ -14,10 +14,23 @@ on:
     - cron: '0 6 */3 * *' # elke 3 dagen om 06:00 UTC
   workflow_dispatch: {}
 
+# actions: write is nodig voor de 'actief houden'-stap hieronder.
+permissions:
+  actions: write
+
 jobs:
   ping:
     runs-on: ubuntu-latest
     steps:
+      # GitHub zet geplande workflows uit na 60 dagen zonder commits in de
+      # repo. Opnieuw 'enablen' via de API reset die teller, zodat deze ping
+      # ook in stille periodes blijft draaien (vroeger deed de dagelijkse
+      # agenda-commit dat ongemerkt).
+      - name: Workflow actief houden
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api -X PUT "repos/${{ github.repository }}/actions/workflows/keep-supabase-active.yml/enable"
+
       - name: Ping Supabase REST-endpoint
         run: |
           set -euo pipefail

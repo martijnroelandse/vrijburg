@@ -139,11 +139,10 @@ Kolom **Bestuur** (vanaf Q4-2026 in de Sheet, uit Jet’s kwartaalrooster; het s
 
 ### Agenda-import (sinds okt 2026)
 
-vrijburg.nl (Hugo-site) publiceert de agenda als JSON: `/evenementen/index.json` (alles), `kerkdiensten.json` en `activiteiten.json`. Velden per item: `title`, `date` (ISO), `time`, `location`, `summary`, `content` (HTML), `service` (kerkdienst ja/nee), `url`. De site stuurt (nog) geen CORS-header, dus:
+vrijburg.nl (Hugo-site) publiceert de agenda als JSON: `/evenementen/index.json` (alles), `kerkdiensten.json` en `activiteiten.json`. Velden per item: `title`, `date` (ISO), `time`, `location`, `summary`, `content` (HTML), `service` (kerkdienst ja/nee), `url`.
 
-- De knop **↻ Importeer van vrijburg.nl** probeert eerst `www.vrijburg.nl/evenementen/index.json` live. Weigert de browser dat (geen CORS) of komt er niets bruikbaars terug, dan valt de app terug op `agenda.json` van het eigen domein. De statusregel zegt welke bron gebruikt is ("live van vrijburg.nl" of "stand 15 oktober 11:23").
-- `.github/workflows/update-agenda.yml` kopieert dagelijks (~06:17) met `scripts/update-agenda.py` die JSON naar `agenda.json` en commit als er iets veranderd is. Direct verversen: GitHub → Actions → *Agenda bijwerken van vrijburg.nl* → **Run workflow**.
-- **Zodra vrijburg.nl `Access-Control-Allow-Origin` meestuurt op `/evenementen/*.json`** gebruikt de app automatisch de live agenda. Dan kunnen workflow, script en `agenda.json` weg — let wel: die dagelijkse commits houden nu ook `keep-supabase-active` in leven (GitHub zet geplande workflows uit na 60 dagen zonder commits).
+- De knop **↻ Importeer van vrijburg.nl** leest `www.vrijburg.nl/evenementen/index.json` rechtstreeks (altijd actueel). Dat kan omdat vrijburg.nl `Access-Control-Allow-Origin: *` meestuurt op `/evenementen/*.json` — **valt die header weg bij een wijziging aan de site, dan werkt de import niet meer** (melding "vrijburg.nl niet bereikbaar"). Test in de console: `fetch('https://www.vrijburg.nl/evenementen/index.json').then(r=>r.json()).then(d=>d.length)`.
+- Tot okt 2026 kopieerde een dagelijkse Action de agenda naar `agenda.json`; die is opgeheven.
 - Tijd 00:00 op de site = geen tijd ingevuld → agendaregel zonder "uur". Locatie wordt altijd getoond (meestal Vrijburg, niet altijd).
 
 ---
@@ -190,7 +189,7 @@ Zonder `RESEND_API_KEY` → HTTP 501 → UI opent mailto. Functie is al gedeploy
 
 | Symptoom | Oorzaak / oplossing |
 |---|---|
-| “Opslaan mislukt: Load failed / Failed to fetch” | Supabase Free **gepauzeerd** → Dashboard Restore (`iabrbkirzsolwnuknbel`). Workflow `keep-supabase-active` houdt wakker; GitHub zet scheduled workflows uit na 60 dagen zonder commits — desnoods handmatig **Run workflow**. |
+| “Opslaan mislukt: Load failed / Failed to fetch” | Supabase Free **gepauzeerd** → Dashboard Restore (`iabrbkirzsolwnuknbel`). Workflow `keep-supabase-active` houdt wakker en zet zichzelf bij elke run opnieuw aan (GitHub schakelt geplande workflows anders uit na 60 dagen zonder commits). Staat hij toch uit: Actions → *Houd Supabase-project actief* → **Enable workflow** / **Run workflow**. |
 | Dominee-link en organist-mail “passen niet” | Verschillende `id`s gebruikt. Altijd vanuit één opgeslagen dienst mailen. |
 | Gastbrief opent niet / alleen link op klembord | Was te lange mailto; opgelost met korte brief + info-pagina (PR #55). |
 | Nieuwsbrieftekst “verdwenen” | Oude overwrite-bug; gefixt met merge-on-save. |
