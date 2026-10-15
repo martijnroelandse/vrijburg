@@ -1400,9 +1400,11 @@ const LIEDBOEK_BASE = 'https://liedbundelsonline.nl';
 const LIEDBOEK_URL = LIEDBOEK_BASE + '/nl/lied-zoeken?bundles%5B0%5D=LB';
 const STORAGE_KEY = 'vrijburg-liturgie-draft';
 const SESSION_ACTIVE_KEY = 'vrijburg-liturgie-session';
-// agenda.json wordt dagelijks door .github/workflows/update-agenda.yml van
-// www.vrijburg.nl/evenementen/ gehaald (de nieuwe site heeft geen WP-API en
-// geen CORS-headers, dus de browser kan vrijburg.nl niet zelf uitlezen).
+// Agenda: eerst live van vrijburg.nl (evenementen/index.json). Zolang die
+// geen CORS-header (Access-Control-Allow-Origin) stuurt, weigert de browser
+// dat en valt de import terug op agenda.json: een dagelijkse kopie van
+// dezelfde JSON door .github/workflows/update-agenda.yml.
+const VRIJBURG_AGENDA_LIVE_URL = 'https://www.vrijburg.nl/evenementen/index.json';
 const VRIJBURG_AGENDA_URL = './agenda.json';
 let AGENDA_TEMPLATES = [];
 fetch('agenda_templates.json').then(r => r.ok ? r.json() : []).then(d => { AGENDA_TEMPLATES = d; }).catch(() => {});
@@ -3299,13 +3301,43 @@ async function fetchBibleText(id) {
 // ============================================================
 // AGENDA IMPORT
 // ============================================================
-async function fetchVrijburgEvenementen() {
-  const res = await fetch(VRIJBURG_AGENDA_URL + '?t=' + Date.now(), { cache: 'no-store' });
-  if (!res.ok) throw new Error('agenda.json niet bereikbaar (' + res.status + ')');
-  const data = await res.json();
+// Item uit vrijburg.nl/evenementen/index.json (title/date/time/content…)
+// omzetten naar de velden die de import gebruikt. Items in het oude
+// agenda.json-formaat (titel/datum/tijd/tekst) blijven zoals ze zijn.
+function normalizeAgendaItem(ev) {
+  if (ev.titel !== undefined) return ev;
   return {
-    bijgewerkt: data.bijgewerkt || '',
-    evenementen: (data.evenementen || []).map(ev => {
+    titel: ev.title || '',
+    datum: (ev.date || '').slice(0, 10),
+    // 00:00 is op de site de standaardwaarde voor "geen tijd ingevuld"
+    tijd: ev.time && ev.time !== '00:00' ? ev.time : null,
+    locatie: ev.location || '',
+    samenvatting: ev.summary || '',
+    tekst: decodeHtmlEntities(ev.content || ''),
+    url: ev.url || '',
+  };
+}
+
+async function fetchVrijburgEvenementen() {
+  let data = null;
+  let live = false;
+  try {
+    const res = await fetch(VRIJBURG_AGENDA_LIVE_URL, { cache: 'no-store' });
+    if (res.ok) {
+      const json = await res.json();
+      if (Array.isArray(json) && json.length) { data = json; live = true; }
+    }
+  } catch (_) { /* geen CORS of offline: terugvallen op agenda.json */ }
+  if (!live) {
+    const res = await fetch(VRIJBURG_AGENDA_URL + '?t=' + Date.now(), { cache: 'no-store' });
+    if (!res.ok) throw new Error('agenda.json niet bereikbaar (' + res.status + ')');
+    data = await res.json();
+  }
+  const items = Array.isArray(data) ? data : (data.evenementen || []);
+  return {
+    live,
+    bijgewerkt: live ? '' : (data.bijgewerkt || ''),
+    evenementen: items.map(normalizeAgendaItem).map(ev => {
       const [j, m, d] = (ev.datum || '').split('-').map(Number);
       const [u, mi] = (ev.tijd || '00:00').split(':').map(Number);
       return { ...ev, start: new Date(j, (m || 1) - 1, d || 1, u || 0, mi || 0) };
@@ -3319,7 +3351,7 @@ async function importAgenda() {
   btn.textContent = 'Bezig met importeren…';
 
   try {
-    const { bijgewerkt, evenementen: events } = await fetchVrijburgEvenementen();
+    const { live, bijgewerkt, evenementen: events } = await fetchVrijburgEvenementen();
 
     const now = new Date();
     now.setHours(0, 0, 0, 0);
@@ -3354,7 +3386,9 @@ async function importAgenda() {
 
     scheduleDraftSave();
     const total = kort.length + ver.length;
-    const stand = bijgewerkt ? ` — agenda van vrijburg.nl, stand ${formatBijgewerkt(bijgewerkt)}` : '';
+    const stand = live
+      ? ' — live van vrijburg.nl'
+      : (bijgewerkt ? ` — agenda van vrijburg.nl, stand ${formatBijgewerkt(bijgewerkt)}` : '');
     if (total) {
       setStatus(`✓ ${total} activiteiten geïmporteerd (${kort.length} komende 2 weken, ${ver.length} daarna)${stand}`, 'ok');
     } else {
@@ -3422,11 +3456,20 @@ function agendaItemBlurb(ev) {
   // zinssplitsing) en zinnen met een link overslaan.
   let text = agendaEvTekst(ev)
     .replace(/(?:https?:\/\/|www\.)\S+/gi, '\u2042')
+    // Alinea zonder slotteken (bijv. kopregel "Ensemble X o.l.v. Y") is een eigen zin
+    .replace(/([^.!?:;,\s])[ \t]*\n\s*\n\s*/g, '$1. ')
     .replace(/\s*\n+\s*/g, ' ')
     .trim();
   if (!text) return '';
+  // Punten in afkortingen (o.l.v., m.m.v., ds., C.M.) zijn geen zinseinde:
+  // tijdelijk vervangen door een placeholder, na het splitsen terugzetten.
+  const ABBR_DOT = '\u2024';
+  text = text
+    .replace(/\b(ds|dr|drs|mr|prof|bijv|ca|enz|incl|excl|nr|mevr|dhr|vs|resp|evt|zgn)\./gi, `$1${ABBR_DOT}`)
+    .replace(/\b([A-Za-z])\.(?=\s*[A-Za-z(])/g, `$1${ABBR_DOT}`);
   const sentences = (text.match(/[^.!?]+[.!?]+(?:\s+|$)|[^.!?]+$/g) || [text])
-    .filter(s => !s.includes('\u2042'));
+    .filter(s => !s.includes('\u2042'))
+    .map(s => s.split(ABBR_DOT).join('.'));
   let blurb = sentences.slice(0, 2).map(s => s.trim()).filter(Boolean).join(' ');
   const maxLen = 220;
   if (blurb.length > maxLen) {

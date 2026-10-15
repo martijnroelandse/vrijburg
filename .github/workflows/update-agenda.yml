@@ -1,9 +1,10 @@
 name: Agenda bijwerken van vrijburg.nl
 
-# De liturgie-app kan vrijburg.nl niet zelf uitlezen (nieuwe Hugo-site:
-# geen WordPress-API meer en geen CORS-headers). Deze workflow haalt de
-# agenda dagelijks op met scripts/update-agenda.py en commit agenda.json,
-# dat de app vervolgens van zijn eigen domein laadt.
+# vrijburg.nl publiceert de agenda als JSON (/evenementen/index.json), maar
+# zonder CORS-header, dus de browser mag die niet vanaf liturgie.vrijburg.nl
+# lezen. Deze workflow kopieert de JSON dagelijks naar agenda.json; de app
+# probeert eerst live en valt anders hierop terug. Overbodig zodra
+# vrijburg.nl Access-Control-Allow-Origin meestuurt (zie scripts/update-agenda.py).
 #
 # Bijkomend voordeel: de regelmatige commits houden geplande workflows
 # (zoals keep-supabase-active) actief; GitHub zet die anders uit na

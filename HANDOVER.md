@@ -139,12 +139,11 @@ Kolom **Bestuur** (vanaf Q4-2026 in de Sheet, uit Jet’s kwartaalrooster; het s
 
 ### Agenda-import (sinds okt 2026)
 
-vrijburg.nl is van WordPress naar een statische Hugo-site gegaan: de oude WP-API (`/wp-json/wp/v2/evenementen`) bestaat niet meer en de site stuurt geen CORS-headers, dus de browser kan vrijburg.nl niet zelf uitlezen. Daarom:
+vrijburg.nl (Hugo-site) publiceert de agenda als JSON: `/evenementen/index.json` (alles), `kerkdiensten.json` en `activiteiten.json`. Velden per item: `title`, `date` (ISO), `time`, `location`, `summary`, `content` (HTML), `service` (kerkdienst ja/nee), `url`. De site stuurt (nog) geen CORS-header, dus:
 
-- `.github/workflows/update-agenda.yml` draait dagelijks (~06:17) `scripts/update-agenda.py`: leest `www.vrijburg.nl/evenementen/` + de detailpagina's (Datum / Tijd / Locatie / tekst) voor de komende 70 dagen en commit `agenda.json` als er iets veranderd is.
-- De knop **↻ Importeer van vrijburg.nl** leest `agenda.json` van het eigen domein. De statusregel toont de stand ("stand 15 oktober 10:24").
-- Direct verversen (bijv. net na een wijziging op vrijburg.nl): GitHub → Actions → *Agenda bijwerken van vrijburg.nl* → **Run workflow**.
-- Faalt de workflow met "Geen evenementen gevonden", dan is de HTML-structuur van vrijburg.nl veranderd (selectors: `article.evenementen`, `h2 a`, `p.date`, `header div.row > div > strong`, `.entry-content`). De RSS-feed is onbruikbaar: alle pubDates staan op 1-1-2000.
+- De knop **↻ Importeer van vrijburg.nl** probeert eerst `www.vrijburg.nl/evenementen/index.json` live. Weigert de browser dat (geen CORS) of komt er niets bruikbaars terug, dan valt de app terug op `agenda.json` van het eigen domein. De statusregel zegt welke bron gebruikt is ("live van vrijburg.nl" of "stand 15 oktober 11:23").
+- `.github/workflows/update-agenda.yml` kopieert dagelijks (~06:17) met `scripts/update-agenda.py` die JSON naar `agenda.json` en commit als er iets veranderd is. Direct verversen: GitHub → Actions → *Agenda bijwerken van vrijburg.nl* → **Run workflow**.
+- **Zodra vrijburg.nl `Access-Control-Allow-Origin` meestuurt op `/evenementen/*.json`** gebruikt de app automatisch de live agenda. Dan kunnen workflow, script en `agenda.json` weg — let wel: die dagelijkse commits houden nu ook `keep-supabase-active` in leven (GitHub zet geplande workflows uit na 60 dagen zonder commits).
 - Tijd 00:00 op de site = geen tijd ingevuld → agendaregel zonder "uur". Locatie wordt altijd getoond (meestal Vrijburg, niet altijd).
 
 ---
