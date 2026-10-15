@@ -73,6 +73,7 @@ nieuwsbrief.html ──same short_id + shared.css/shared.js──► Mailchimp c
 ## Working conventions
 
 - All UI copy, commit messages, and docs in this repo are in **Dutch**. Match that when editing content or writing commits.
+- **Never push directly to `main`** (pushing to `main` deploys live to `liturgie.vrijburg.nl`). Work on a branch and open a pull request for Martijn to review and merge. If `gh` is not authenticated, push the branch and give him the `https://github.com/martijnroelandse/vrijburg/compare/main...<branch>?expand=1` link. Exception: the `update-agenda.yml` Action commits `agenda.json` to `main` itself.
 - This is a small internal tool for a handful of named users (see `HANDOVER.md` §2) — prefer direct, pragmatic fixes over generalizing for hypothetical future users.
 - `HANDOVER.md` is the canonical, up-to-date project handover doc (roles, weekly workflow, config, known pitfalls, open items) — read it before making non-trivial changes. `README.md` is the short user-facing doc. `LITURGIECIE-19AUG2026.md`, `PLAN-REACTIE-HILTJE-AUG2026.md`, and `VERBETERPLAN-FEEDBACK-HILTJE.md` are discussion/proposal documents — per `HANDOVER.md` §10, don't act on them without prior discussion with the user.
 - Config secrets in `index.html` and the GitHub workflow (e.g. `SUPABASE_ANON_KEY`) are intentionally public — it's an anon/publishable key for a client-side app, not a leaked secret.
