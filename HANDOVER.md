@@ -145,7 +145,7 @@ vrijburg.nl is van WordPress naar een statische Hugo-site gegaan: de oude WP-API
 - De knop **↻ Importeer van vrijburg.nl** leest `agenda.json` van het eigen domein. De statusregel toont de stand ("stand 15 oktober 10:24").
 - Direct verversen (bijv. net na een wijziging op vrijburg.nl): GitHub → Actions → *Agenda bijwerken van vrijburg.nl* → **Run workflow**.
 - Faalt de workflow met "Geen evenementen gevonden", dan is de HTML-structuur van vrijburg.nl veranderd (selectors: `article.evenementen`, `h2 a`, `p.date`, `header div.row > div > strong`, `.entry-content`). De RSS-feed is onbruikbaar: alle pubDates staan op 1-1-2000.
-- Tijd 00:00 op de site = geen tijd ingevuld → agendaregel zonder "uur". Locatie "Vrijburg" wordt weggelaten.
+- Tijd 00:00 op de site = geen tijd ingevuld → agendaregel zonder "uur". Locatie wordt altijd getoond (meestal Vrijburg, niet altijd).
 
 ---
 

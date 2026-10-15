@@ -3335,8 +3335,7 @@ async function importAgenda() {
       if (Number.isNaN(start.getTime()) || start < now) return;
 
       const title = ev.titel || '';
-      // "Vrijburg" als locatie is in de eigen liturgie overbodig
-      const loc = ev.locatie && !/^vrijburg$/i.test(ev.locatie.trim()) ? ` – ${ev.locatie}` : '';
+      const loc = ev.locatie ? ` – ${ev.locatie}` : '';
       const header = formatAgendaRegel(start, !!ev.tijd) + ' – ' + title + loc;
       const blurb = agendaItemBlurb(ev);
       const line = blurb ? `${header}\n${blurb}` : header;
