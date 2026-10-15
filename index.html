@@ -1400,12 +1400,9 @@ const LIEDBOEK_BASE = 'https://liedbundelsonline.nl';
 const LIEDBOEK_URL = LIEDBOEK_BASE + '/nl/lied-zoeken?bundles%5B0%5D=LB';
 const STORAGE_KEY = 'vrijburg-liturgie-draft';
 const SESSION_ACTIVE_KEY = 'vrijburg-liturgie-session';
-// Agenda: eerst live van vrijburg.nl (evenementen/index.json). Zolang die
-// geen CORS-header (Access-Control-Allow-Origin) stuurt, weigert de browser
-// dat en valt de import terug op agenda.json: een dagelijkse kopie van
-// dezelfde JSON door .github/workflows/update-agenda.yml.
-const VRIJBURG_AGENDA_LIVE_URL = 'https://www.vrijburg.nl/evenementen/index.json';
-const VRIJBURG_AGENDA_URL = './agenda.json';
+// Agenda live van vrijburg.nl (kerkdiensten + activiteiten). De site stuurt
+// Access-Control-Allow-Origin: *, dus de browser mag dit rechtstreeks lezen.
+const VRIJBURG_AGENDA_URL = 'https://www.vrijburg.nl/evenementen/index.json';
 let AGENDA_TEMPLATES = [];
 fetch('agenda_templates.json').then(r => r.ok ? r.json() : []).then(d => { AGENDA_TEMPLATES = d; }).catch(() => {});
 
@@ -3302,10 +3299,8 @@ async function fetchBibleText(id) {
 // AGENDA IMPORT
 // ============================================================
 // Item uit vrijburg.nl/evenementen/index.json (title/date/time/content…)
-// omzetten naar de velden die de import gebruikt. Items in het oude
-// agenda.json-formaat (titel/datum/tijd/tekst) blijven zoals ze zijn.
+// omzetten naar de velden die de import gebruikt.
 function normalizeAgendaItem(ev) {
-  if (ev.titel !== undefined) return ev;
   return {
     titel: ev.title || '',
     datum: (ev.date || '').slice(0, 10),
@@ -3319,24 +3314,16 @@ function normalizeAgendaItem(ev) {
 }
 
 async function fetchVrijburgEvenementen() {
-  let data = null;
-  let live = false;
+  let res;
   try {
-    const res = await fetch(VRIJBURG_AGENDA_LIVE_URL, { cache: 'no-store' });
-    if (res.ok) {
-      const json = await res.json();
-      if (Array.isArray(json) && json.length) { data = json; live = true; }
-    }
-  } catch (_) { /* geen CORS of offline: terugvallen op agenda.json */ }
-  if (!live) {
-    const res = await fetch(VRIJBURG_AGENDA_URL + '?t=' + Date.now(), { cache: 'no-store' });
-    if (!res.ok) throw new Error('agenda.json niet bereikbaar (' + res.status + ')');
-    data = await res.json();
+    res = await fetch(VRIJBURG_AGENDA_URL, { cache: 'no-store' });
+  } catch (_) {
+    throw new Error('vrijburg.nl niet bereikbaar (geen internet, of de site blokkeert de aanvraag)');
   }
-  const items = Array.isArray(data) ? data : (data.evenementen || []);
+  if (!res.ok) throw new Error('agenda van vrijburg.nl niet beschikbaar (' + res.status + ')');
+  const items = await res.json();
+  if (!Array.isArray(items)) throw new Error('onverwacht formaat van de agenda op vrijburg.nl');
   return {
-    live,
-    bijgewerkt: live ? '' : (data.bijgewerkt || ''),
     evenementen: items.map(normalizeAgendaItem).map(ev => {
       const [j, m, d] = (ev.datum || '').split('-').map(Number);
       const [u, mi] = (ev.tijd || '00:00').split(':').map(Number);
@@ -3351,7 +3338,7 @@ async function importAgenda() {
   btn.textContent = 'Bezig met importeren…';
 
   try {
-    const { live, bijgewerkt, evenementen: events } = await fetchVrijburgEvenementen();
+    const { evenementen: events } = await fetchVrijburgEvenementen();
 
     const now = new Date();
     now.setHours(0, 0, 0, 0);
@@ -3386,9 +3373,7 @@ async function importAgenda() {
 
     scheduleDraftSave();
     const total = kort.length + ver.length;
-    const stand = live
-      ? ' — live van vrijburg.nl'
-      : (bijgewerkt ? ` — agenda van vrijburg.nl, stand ${formatBijgewerkt(bijgewerkt)}` : '');
+    const stand = ' — live van vrijburg.nl';
     if (total) {
       setStatus(`✓ ${total} activiteiten geïmporteerd (${kort.length} komende 2 weken, ${ver.length} daarna)${stand}`, 'ok');
     } else {
@@ -3485,12 +3470,6 @@ function formatAgendaRegel(d, metTijd = true) {
   if (!metTijd) return datum;
   const uur = d.getHours().toString().padStart(2, '0') + ':' + d.getMinutes().toString().padStart(2, '0');
   return `${datum} ${uur} uur`;
-}
-
-function formatBijgewerkt(iso) {
-  const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return iso;
-  return `${d.getDate()} ${NL_MAANDEN[d.getMonth()]} ${d.getHours().toString().padStart(2, '0')}:${d.getMinutes().toString().padStart(2, '0')}`;
 }
 
 // ============================================================
