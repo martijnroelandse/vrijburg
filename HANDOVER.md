@@ -194,6 +194,7 @@ Zonder `RESEND_API_KEY` → HTTP 501 → UI opent mailto. Functie is al gedeploy
 | Gastbrief opent niet / alleen link op klembord | Was te lange mailto; opgelost met korte brief + info-pagina (PR #55). |
 | Nieuwsbrieftekst “verdwenen” | Oude overwrite-bug; gefixt met merge-on-save. |
 | Liturgie van zondag X opeens “van volgende week” | Iemand hergebruikte de `?id=`-link en wijzigde de datum (okt 2026, 11 → 18 okt). De app waarschuwt nu bij een datumwijziging; vorige versies staan in `diensten_historie` (zie `supabase/README.md`). |
+| “permission denied” op een nieuwe tabel in `public` | Sinds 30 okt 2026 geeft Supabase nieuwe tabellen in `public` geen automatische Data API-rechten meer (bestaande tabellen houden ze). Zet in elke nieuwe migratie bij de `create table` ook een expliciete `grant … to anon, authenticated;`, zoals in `001` en `002`. Geldt ook bij een nieuw project, previewbranch of `supabase db reset`. |
 | Lokaal `file://` | `collectes.json` fetch faalt — app via Pages of `python3 -m http.server` openen. |
 | Firefox “kies een toepassing” bij mailto | Gebruik **Kopieer bericht** / **Kopieer link**. |
 
