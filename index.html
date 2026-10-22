@@ -2979,11 +2979,25 @@ function updateOrdeContent(id, content) {
 // "Mijn liedlijst" → download (platte tekst = ja) → Importeer .zip hier.
 // ============================================================
 function parseLiedNummer(text) {
-  const first = String(text || '').split('\n')[0].trim();
-  // Inclusief letter-suffix (23b, 100a, …) — slug op het platform is lb-23b
-  const m = first.match(/(?:lied|psalm|gezang|vlied)\s*#?(\d{1,4}[a-z]?)/i)
-    || first.match(/^(\d{1,4}[a-z]?)(?:\s*:|$)/i);
-  return m ? m[1].toLowerCase() : null;
+  // Een predikant typt vaak een titel erbij ("Lied 773: Van grond en vuur",
+  // "773 – Van grond en vuur", "Van grond en vuur (LB 773)") en soms staat de
+  // titel op regel 1 en het nummer op regel 2. Daarom: eerst een nummer mét
+  // trefwoord, dan een nummer aan het begin, dan een nummer tussen haakjes —
+  // op de eerste twee regels. Inclusief letter-suffix (23b, 100a, …): de slug
+  // op het platform is lb-23b.
+  const lines = String(text || '').split('\n').slice(0, 2).map(l => l.trim());
+  const patronen = [
+    /\b(?:lied(?:boek)?|psalm|gezang|vlied|lb|nr\.?|nummer)\s*#?\s*(\d{1,4}[a-z]?)\b/i,
+    /^\W*(\d{1,4}[a-z]?)(?=\s|[:.\-–—)]|$)/i,
+    /\(\s*#?(\d{1,4}[a-z]?)\s*\)/i,
+  ];
+  for (const re of patronen) {
+    for (const line of lines) {
+      const m = line.match(re);
+      if (m) return m[1].toLowerCase();
+    }
+  }
+  return null;
 }
 
 function liedboekSongUrl(nr) {
@@ -3213,13 +3227,17 @@ async function importLiedlijstZip(event) {
       imported.push({ nr, content, muziek, coupletten: couplets.length });
     }
 
-    applyLiedlijstImport(imported);
+    const { nietHerkend } = applyLiedlijstImport(imported);
     const samenvatting = imported.map(s => {
       const n = s.coupletten || 0;
       return `Lied ${s.nr}` + (n ? ` (${n} couplet${n === 1 ? '' : 'ten'})` : '')
         + (s.muziek.length ? ', met muziek 1e couplet' : '');
     }).join('\n');
-    const msg = `✓ ${imported.length} lied${imported.length === 1 ? '' : 'eren'} in het formulier:\n${samenvatting}\n\nCoupletten staan bij de liederen in de orde van dienst (en bij lichtlied/slotlied).`;
+    const msg = `✓ ${imported.length} lied${imported.length === 1 ? '' : 'eren'} in het formulier:\n${samenvatting}\n\nCoupletten staan bij de liederen in de orde van dienst (en bij lichtlied/slotlied).` +
+      (nietHerkend.length
+        ? `\n\n⚠ Niet herkend in de ingevulde orde: ${nietHerkend.map(n => 'lied ' + n).join(', ')}. ` +
+          `Die zijn in een leeg liedvak of vóór een lezing gezet. Controleer de volgorde, en zet bij een lied in de orde het nummer erbij (bijv. “Lied ${nietHerkend[0]}: titel”).`
+        : '');
     showLiedlijstImportResult(msg);
     revealSection('section-orde');
     revealSection('section-opening');
@@ -3278,8 +3296,10 @@ function applyLiedlijstImport(imported) {
 
   // 3. Restant: lege lied-slots vullen, anders invoegen vóór een lezing
   // die nog geen lied er vlak voor heeft — nooit blind onderaan na alle lezingen.
+  const nietHerkend = [];
   for (const song of imported) {
     if (used.has(song.nr)) continue;
+    nietHerkend.push(song.nr);
     const empty = ordeItems.find(i => i.type === 'lied' && !String(i.content || '').trim());
     if (empty) {
       empty.content = song.content;
@@ -3302,6 +3322,7 @@ function applyLiedlijstImport(imported) {
   renderOrde();
   syncLiedLyricsFields();
   scheduleDraftSave();
+  return { nietHerkend };
 }
 
 // ============================================================
