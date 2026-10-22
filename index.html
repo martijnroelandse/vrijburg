@@ -1263,7 +1263,7 @@
 
       <div class="collecte-block" style="margin-top:16px">
         <h3>Feedback voor de liturgiecommissie</h3>
-        <p style="font-size:13px;color:var(--muted);margin:0 0 12px">Hoe was het om met de liturgie-generator te werken? Een paar korte vragen; alles is optioneel.</p>
+        <p style="font-size:13px;color:var(--muted);margin:0 0 12px">Hoe was het om met de liturgie-generator te werken? Een paar korte vragen; alles is optioneel. Ook voor ideeën of problemen met de tool zelf.</p>
         <div class="row">
           <div class="field field-mine" data-owner="voorganger">
             <label for="feedback_gemak">Hoe makkelijk was het invullen?</label>
@@ -1300,7 +1300,7 @@
             <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:8px">
               <button type="button" class="btn-small" onclick="bewaarFeedback()">Feedback opslaan</button>
             </div>
-            <div class="hint-body" style="margin-top:6px">Wordt apart bewaard (niet in de gedeelde link) en alleen door de liturgiecommissie gelezen.</div>
+            <div class="hint-body" style="margin-top:6px">Wordt apart bewaard (niet in de gedeelde link) en gelezen door de liturgiecommissie en de ontwikkelaar van de generator.</div>
           </div>
         </div>
       </div>
@@ -2049,6 +2049,9 @@ async function bewaarFeedback() {
     const res = await invokeEdgeFunction('nazorg', {
       type: 'feedback',
       short_id: currentShortId,
+      datum: document.getElementById('datum').value ? formatDatum(document.getElementById('datum').value) : '',
+      thema: document.getElementById('thema').value.trim(),
+      voorganger: document.getElementById('voorganger').value.trim(),
       feedback: {
         gemak: document.getElementById('feedback_gemak').value,
         tijd: document.getElementById('feedback_tijd').value,

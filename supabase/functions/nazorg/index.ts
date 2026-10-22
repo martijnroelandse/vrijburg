@@ -20,6 +20,7 @@
 //     PREEK_EMAIL="<adres>" RESEND_API_KEY=re_xxx \
 //     RESEND_FROM="Liturgie Vrijburg <liturgie@vrijburg.nl>"
 //
+// Optioneel FEEDBACK_EMAIL: krijgt een mail bij elke nieuwe feedback.
 // RESEND_API_KEY / RESEND_FROM worden gedeeld met meld-klaar. Zonder
 // RESEND_API_KEY of PREEK_EMAIL antwoordt type "preek" met HTTP 501 (de preek
 // is dan wél al bewaard); de app downloadt dan het .docx en opent een lege mail.
@@ -30,6 +31,9 @@ const SERVICE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
 const RESEND_FROM = Deno.env.get("RESEND_FROM") || "Liturgie Vrijburg <onboarding@resend.dev>";
 const PREEK_TO = (Deno.env.get("PREEK_EMAIL") || "")
+  .split(",").map((s) => s.trim()).filter(Boolean);
+// Optioneel: ontvanger(s) van een mail-melding bij nieuwe feedback (de ontwikkelaar).
+const FEEDBACK_TO = (Deno.env.get("FEEDBACK_EMAIL") || "")
   .split(",").map((s) => s.trim()).filter(Boolean);
 const MAX_BASE64_CHARS = 2_000_000;
 const MAX_TEXT_CHARS = 200_000;
@@ -89,6 +93,33 @@ Deno.serve(async (req: Request) => {
       const feedback: Record<string, string> = {};
       for (const k of ["gemak", "tijd", "verbeter", "overig"]) feedback[k] = str(fb[k]).slice(0, 5000);
       await bewaar(shortId, { feedback });
+
+      // Melding aan de ontwikkelaar; een mislukte mail mag het opslaan niet laten falen.
+      if (RESEND_API_KEY && FEEDBACK_TO.length > 0) {
+        const datum = str(body.datum);
+        const thema = str(body.thema);
+        const voorganger = str(body.voorganger);
+        try {
+          await fetch("https://api.resend.com/emails", {
+            method: "POST",
+            headers: { Authorization: `Bearer ${RESEND_API_KEY}`, "Content-Type": "application/json" },
+            body: JSON.stringify({
+              from: RESEND_FROM,
+              to: FEEDBACK_TO,
+              subject: `Feedback liturgie-generator – ${datum || shortId}`,
+              text: [
+                `Dienst: ${datum || "(onbekend)"}${thema ? " – " + thema : ""} (id=${shortId})`,
+                voorganger ? `Voorganger: ${voorganger}` : "",
+                "",
+                `Gemak (1-5): ${feedback.gemak || "-"}`,
+                `Tijd: ${feedback.tijd || "-"}`,
+                `Wat kon beter: ${feedback.verbeter || "-"}`,
+                `Overig: ${feedback.overig || "-"}`,
+              ].filter((l, i) => l !== "" || i > 1).join("\n"),
+            }),
+          });
+        } catch (_e) { /* feedback is al bewaard */ }
+      }
       return jsonResponse({ ok: true });
     }
 
