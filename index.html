@@ -1011,15 +1011,6 @@
           <div class="hint-body" hidden>Slaat op en stuurt de tekst + id per e-mail naar de nieuwsbriefredactie. Zij verwerken de tekst verder in de <a href="nieuwsbrief.html" target="_blank" rel="noopener">nieuwsbrief-app</a> (Mailchimp-cards e.d.).</div>
         </div>
       </div>
-      <div class="row">
-        <div class="field" style="grid-column: 1/-1">
-          <label for="overdenking_email">Overdenking <span class="opt">– voor info@vrijburg.nl (emaillijst na de dienst)</span></label>
-          <textarea id="overdenking_email" rows="6" placeholder="Schrijf hier de overdenking. Stuur deze naar het bureau — zij plaatsen het op de emaillijst…"></textarea>
-          <button type="button" class="btn-small" style="margin-top:8px" onclick="emailOverdenkingNaarBureau()">✉ Stuur naar info@vrijburg.nl</button>
-          <button type="button" class="hint-toggle" aria-expanded="false" onclick="toggleHint(this)"><span class="chev">▸</span> <span class="label">Komt dit in de liturgie?</span></button>
-          <div class="hint-body" hidden>Nee — dit veld komt niet in het Word-document. In de liturgie blijft het vaste blok Overdenking → Stilte → Muziek staan.</div>
-        </div>
-      </div>
     </div>
   </div>
 
@@ -1259,14 +1250,14 @@
     <div class="section-body">
       <div class="row">
         <div class="field field-mine" data-owner="voorganger" style="grid-column: 1/-1">
-          <label for="preek">Preek <span class="opt">– mag ook ná de dienst, via dezelfde link</span></label>
-          <textarea id="preek" rows="10" placeholder="Plak hier de preek. Na ‘Preek toevoegen &amp; versturen’ gaat de preek als bijlage naar Anita…"></textarea>
+          <label for="preek">Preek <span class="opt">– voor leden zonder e-mail (en meestal ook zonder kerk-tv); mag ook ná de dienst, via dezelfde link</span></label>
+          <textarea id="preek" rows="10" placeholder="Plak hier de preek. Na ‘Preek toevoegen &amp; versturen’ gaat de preek als bijlage naar het bestuurslid dat hem per post verstuurt…"></textarea>
           <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:8px">
-            <button type="button" class="btn-small" id="btn-preek-versturen" onclick="stuurPreekNaarAnita()">✉ Preek toevoegen &amp; versturen</button>
+            <button type="button" class="btn-small" id="btn-preek-versturen" onclick="stuurPreek()">✉ Preek toevoegen &amp; versturen</button>
             <span class="hint-status" id="preek-status" style="display:none"></span>
           </div>
           <button type="button" class="hint-toggle" aria-expanded="false" onclick="toggleHint(this)"><span class="chev">▸</span> <span class="label">Wat gebeurt hiermee?</span></button>
-          <div class="hint-body" hidden>De preek wordt als Word-bijlage naar Anita gemaild en veilig apart bewaard (niet in de gedeelde liturgie-link, dus ook niet zichtbaar voor anderen met die link). Komt niet in de liturgie. Past u de tekst later aan? Klik dan opnieuw op de knop; Anita krijgt dan een nieuwe mail.</div>
+          <div class="hint-body" hidden>De preek wordt als Word-bijlage gemaild naar het bestuurslid dat hem per post verstuurt aan leden zonder e-mail (en meestal ook zonder kerk-tv). Hij wordt apart bewaard, niet in de gedeelde liturgie-link. Komt niet in het Word-document van de liturgie (daar blijft het vaste blok Overdenking → Stilte → Muziek staan). Past u de tekst later aan? Klik dan opnieuw op de knop; Anita krijgt dan een nieuwe mail.</div>
         </div>
       </div>
 
@@ -1578,7 +1569,7 @@ const ROL_CONFIG = {
   voorganger: {
     label: 'Voorgang(st)er',
     primary: ['thema', 'opening', 'orde', 'voorbeden', 'slot', 'nazorg'],
-    hint: 'Vul thema, tekst op voorblad, afbeelding, nieuwsbrief en overdenking in. Vul de orde van dienst in (liederen, lezingen) en lichtlied/slotlied. Zet een <strong>+ Muziek</strong>-blok waar de organist(e) iets speelt (bijv. tussen liederen) — die ziet uw orde en vult de titel in. Orgelspel en muziek na overdenking van de organist(e) ziet u hieronder ter referentie. Stem desgewenst af. Klik op <strong>Ik ben klaar</strong> (nieuwsbriefredactie ontvangt de id in CC). De preek en een paar vragen over de generator kunt u in de laatste stap invullen, ook ná de dienst via dezelfde link. Werkt e-mail niet? Gebruik <strong>Ik ben klaar – kopieer bericht</strong>.',
+    hint: 'Vul thema, tekst op voorblad, afbeelding, nieuwsbrief in. Vul de orde van dienst in (liederen, lezingen) en lichtlied/slotlied. Zet een <strong>+ Muziek</strong>-blok waar de organist(e) iets speelt (bijv. tussen liederen) — die ziet uw orde en vult de titel in. Orgelspel en muziek na overdenking van de organist(e) ziet u hieronder ter referentie. Stem desgewenst af. Klik op <strong>Ik ben klaar</strong> (nieuwsbriefredactie ontvangt de id in CC). De preek en een paar vragen over de generator kunt u in de laatste stap invullen, ook ná de dienst via dezelfde link. Werkt e-mail niet? Gebruik <strong>Ik ben klaar – kopieer bericht</strong>.',
     emailAan: 'voorganger',
   },
   organist: {
@@ -1955,26 +1946,6 @@ function downloadFoto(silent) {
   return true;
 }
 
-function emailOverdenkingNaarBureau() {
-  const text = document.getElementById('overdenking_email').value.trim();
-  if (!text) {
-    setStatus('Vul eerst de overdenking in', 'err');
-    return;
-  }
-  const datum = document.getElementById('datum').value;
-  const datumTekst = datum ? formatDatum(datum) : 'komende dienst';
-  const thema = document.getElementById('thema').value.trim();
-  const subject = encodeURIComponent(`Overdenking emaillijst – Vrijburg ${datumTekst}`);
-  const body = encodeURIComponent(
-    `Beste,\n\n` +
-    `Hierbij de overdenking voor de emaillijst na de dienst op ${datumTekst}` +
-    (thema ? ` (${thema})` : '') + `:\n\n` +
-    `${text}\n\n` +
-    `Met vriendelijke groet`
-  );
-  window.location.href = `mailto:${BUREAU_EMAIL}?subject=${subject}&body=${body}`;
-}
-
 // ============================================================
 // PREEK & FEEDBACK (laatste stap)
 // ============================================================
@@ -2009,12 +1980,12 @@ async function maakPreekDocx(tekst, { datumTekst, thema, voorganger }) {
   return { filename: `preek-${datum || 'vrijburg'}.docx`, blob, base64 };
 }
 
-// Mailt de preek (als .docx-bijlage) naar Anita en bewaart hem afgeschermd,
+// Mailt de preek (als .docx-bijlage) naar de ontvanger en bewaart hem afgeschermd,
 // via de Edge Function nazorg (het adres staat alleen daar, als secret).
 // Lukt dat niet (Resend niet ingesteld), dan wordt het bestand gedownload en
 // een mail aan het bureau geopend om zelf te bijlagen — mailto kan geen
 // bijlage meesturen.
-async function stuurPreekNaarAnita() {
+async function stuurPreek() {
   const tekst = document.getElementById('preek').value.trim();
   if (!tekst) {
     setStatus('Plak eerst de preek', 'err');
@@ -2050,7 +2021,7 @@ async function stuurPreekNaarAnita() {
       preekVerstuurdOp = new Date().toISOString();
       updatePreekStatus();
       await saveDienstToCloud();
-      setStatus('✓ Preek opgeslagen en verstuurd naar Anita', 'ok');
+      setStatus('✓ Preek opgeslagen en verstuurd', 'ok');
       return;
     }
     console.warn('Automatische preek-mail niet gelukt:', ping.reason);
@@ -2062,9 +2033,9 @@ async function stuurPreekNaarAnita() {
     openMailto({
       to: BUREAU_EMAIL,
       subject,
-      body: `Voor Anita: hierbij de preek van ${datumTekst}${thema ? ' (' + thema + ')' : ''}.\n\n(Voeg het zojuist gedownloade bestand ${bestand.filename} toe als bijlage.)\n`,
+      body: `Hierbij de preek van ${datumTekst}${thema ? ' (' + thema + ')' : ''}.\n\n(Voeg het zojuist gedownloade bestand ${bestand.filename} toe als bijlage.)\n`,
     });
-    setStatus(`✓ Preek opgeslagen. Automatisch versturen lukte niet — voeg ${bestand.filename} (Downloads) toe aan de geopende mail aan het bureau, dat stuurt hem door naar Anita`, 'ok');
+    setStatus(`✓ Preek opgeslagen. Automatisch versturen lukte niet — voeg ${bestand.filename} (Downloads) toe aan de geopende mail aan het bureau, dat stuurt hem door`, 'ok');
   } catch (err) {
     console.error(err);
     setStatus('Preek versturen mislukt: ' + (err.message || err), 'err');
@@ -2619,7 +2590,7 @@ async function copyPlainText(text) {
   }
 }
 
-function buildKlaarBericht({ short, cloud, datumTekst, rolLabel, shortId, nieuwsbriefUrl, heeftFoto, fotoCredit, fotoBestand, overdenking }) {
+function buildKlaarBericht({ short, cloud, datumTekst, rolLabel, shortId, nieuwsbriefUrl, heeftFoto, fotoCredit, fotoBestand }) {
   let body =
     `Beste,\n\n` +
     `Hierbij mijn ingevulde onderdeel voor de liturgie op ${datumTekst} (${rolLabel}).\n\n` +
@@ -2659,9 +2630,6 @@ function buildKlaarBericht({ short, cloud, datumTekst, rolLabel, shortId, nieuws
       `De foto staat ook in het Word-document (.docx) als het bureau dat downloadt.\n`;
   }
 
-  if (overdenking && huidigeRol === 'voorganger') {
-    body += `\n--- Overdenking (voor emaillijst) ---\n${overdenking}\n`;
-  }
 
   body += `\nMet vriendelijke groet`;
 
@@ -2690,7 +2658,6 @@ function terugNaarBureau() {
   const datum = document.getElementById('datum').value;
   const datumTekst = datum ? formatDatum(datum) : 'komende dienst';
   const rolLabel = ROL_CONFIG[huidigeRol]?.label || 'medewerker';
-  const overdenking = document.getElementById('overdenking_email').value.trim();
   const fotoBestand = getFotoFilename();
   const heeftFoto = !!fotoDataUrl;
   const fotoCredit = document.getElementById('foto_credit').value.trim();
@@ -2715,7 +2682,7 @@ function terugNaarBureau() {
 
     const { subject, body } = buildKlaarBericht({
       short, cloud, datumTekst, rolLabel, shortId, nieuwsbriefUrl,
-      heeftFoto, fotoCredit, fotoBestand, overdenking,
+      heeftFoto, fotoCredit, fotoBestand,
     });
 
     const tijd = new Date().toLocaleTimeString('nl-NL', { hour: '2-digit', minute: '2-digit' });
@@ -3685,7 +3652,6 @@ function getFormState() {
     thema: document.getElementById('thema').value,
     intro: document.getElementById('intro').value,
     nieuwsbrief: document.getElementById('nieuwsbrief').value,
-    overdenking_email: document.getElementById('overdenking_email').value,
     preek: document.getElementById('preek').value,
     preek_verstuurd: preekVerstuurdOp,
     feedback_gemak: document.getElementById('feedback_gemak').value,
@@ -3747,7 +3713,7 @@ function applyPlanningVl(planning) {
 function applyFormState(state) {
   if (!state) return;
   const fields = ['datum','aanvangstijd','bijzondere_dienst','kinderkerk','bijzonderheden',
-    'voorganger','organist','lector','bestuurslid','thema','intro','nieuwsbrief','overdenking_email','foto_credit',
+    'voorganger','organist','lector','bestuurslid','thema','intro','nieuwsbrief','foto_credit',
     'preek','feedback_gemak','feedback_tijd','feedback_verbeter','feedback_overig',
     'orgelspel_opening','lichtlied','gebed_opening','muziek_overdenking','slotlied','orgelspel_slot','bloemen',
     'c1_thema','c1_naam','c1_tekst','c1_rekening','c2_type','c2_naam','c2_tekst','c2_rekening',
@@ -3763,6 +3729,10 @@ function applyFormState(state) {
     if (!fotoDataUrl) document.getElementById('foto_file').value = '';
   }
   if (state.cantorij !== undefined) document.getElementById('cantorij').checked = !!state.cantorij;
+  // Migratie: het oude veld 'Overdenking' (voor info@) is de preek geworden.
+  if (state.overdenking_email && !document.getElementById('preek').value) {
+    document.getElementById('preek').value = state.overdenking_email;
+  }
   preekVerstuurdOp = state.preek_verstuurd || '';
   updatePreekStatus();
   setVlField('vlv', state.vlv || '');
@@ -4079,7 +4049,6 @@ function emptyFormState() {
     thema: '',
     intro: '',
     nieuwsbrief: '',
-    overdenking_email: '',
     preek: '',
     preek_verstuurd: '',
     feedback_gemak: '',

@@ -34,7 +34,7 @@ Geen build-stap: wijzig `index.html` / JSON, push naar `main`, Pages deployt.
 
 | Rol | Vult in |
 |---|---|
-| Voorganger | Thema, voorbladtekst, foto+credit, nieuwsbrief, overdenking, orde (lied/lezing/…), lichtlied/slotlied, voorbeden, lied na overdenking |
+| Voorganger | Thema, voorbladtekst, foto+credit, nieuwsbrief, orde (lied/lezing/…), lichtlied/slotlied, voorbeden, lied na overdenking |
 | Organist | Orgelspel opening/slot, muziek na overdenking, **Muziek**-blokken in de orde |
 | Bureau | Datum → planning, collecte, bloemen, agenda; links mailen; `.docx` downloaden; “liturgie is klaar” |
 | Alles bekijken | Volledig overzicht + download |
@@ -172,7 +172,7 @@ supabase secrets set --project-ref iabrbkirzsolwnuknbel \
 
 Zonder `RESEND_API_KEY` → HTTP 501 → UI opent mailto. Functie is al gedeployed; secrets kunnen nog ontbreken.
 
-**Preek & feedback (laatste stap `nazorg` in `index.html`):** bewust *niet* in `diensten.data` (leesbaar voor anon). De velden `preek` en `feedback_*` worden uit de cloud-payload en uit share-URL's gestript (`NAZORG_VELDEN`); ze gaan via Edge Function `nazorg` naar tabel `dienst_nazorg` (RLS zonder policies; lezen via Supabase Table Editor). De preek wordt bovendien als .docx gemaild naar de ontvanger in secret `PREEK_EMAIL` (staat nergens in de repo of op de site). **Eenmalig nodig:** migratie `003_dienst_nazorg.sql` draaien in de SQL Editor, en secrets `PREEK_EMAIL`, `RESEND_API_KEY`, `RESEND_FROM` zetten. Zonder Resend/PREEK_EMAIL is de preek wél bewaard; de app downloadt het .docx en opent een mail aan het bureau om door te sturen. Het formulier toont een eerder verstuurde preek niet opnieuw (alleen "Verstuurd …"). Beide onderdelen worden in de brieven aan (gast)predikanten genoemd.
+**Preek & feedback (laatste stap `nazorg` in `index.html`):** bewust *niet* in `diensten.data` (leesbaar voor anon). De velden `preek` en `feedback_*` worden uit de cloud-payload en uit share-URL's gestript (`NAZORG_VELDEN`); ze gaan via Edge Function `nazorg` naar tabel `dienst_nazorg` (RLS zonder policies; lezen via Supabase Table Editor). De preek wordt bovendien als .docx gemaild naar de ontvanger in secret `PREEK_EMAIL` (staat nergens in de repo of op de site). **Eenmalig nodig:** migratie `003_dienst_nazorg.sql` draaien in de SQL Editor, en secrets `PREEK_EMAIL`, `RESEND_API_KEY`, `RESEND_FROM` zetten. Zonder Resend/PREEK_EMAIL is de preek wél bewaard; de app downloadt het .docx en opent een mail aan het bureau om door te sturen. Het formulier toont een eerder verstuurde preek niet opnieuw (alleen "Verstuurd …"). De preek vervangt het oude veld *Overdenking* (voor info@; `overdenking_email` is uit de UI en wordt bij het laden van oude diensten overgenomen in `preek`). Doel: een bestuurslid stuurt de preek per post aan leden zonder e-mail (meestal ook zonder kerk-tv). Beide onderdelen worden in de brieven aan (gast)predikanten genoemd.
 
 **Deploy van de functie** gebeurt automatisch via `.github/workflows/deploy-edge-functions.yml` bij elke push naar `main` die `supabase/functions/**` raakt (of handmatig via "Run workflow"). Vereist eenmalig het repo-secret `SUPABASE_ACCESS_TOKEN` (GitHub → repo Settings → Secrets and variables → Actions), een persoonlijk access token via Supabase Dashboard → Account → Access Tokens — **niet** hetzelfde als de `RESEND_API_KEY`/anon key. Zonder dat secret faalt de workflow met een duidelijke auth-fout; dan alsnog via de Supabase-dashboard code-editor deployen (zie meld-klaar/index.ts bovenaan het bestand voor de volledige code + uitleg).
 
