@@ -73,7 +73,7 @@ Browser (index.html)
   ├── docx.js + JSZip (CDN) → .docx download
   ├── Supabase Postgres `diensten` + Storage `dienst-fotos`  (?id=short_id)
   ├── Edge Function `meld-klaar` → Resend (optioneel) of mailto-fallback
-  └── Edge Function `meld-preek` → Resend: preek (.docx-bijlage) naar anita@mpo-bv.nl
+  └── Edge Function `nazorg` → afgeschermde tabel `dienst_nazorg` + Resend: preek (.docx-bijlage) naar de ontvanger uit secret `PREEK_EMAIL`
 
 nieuwsbrief.html ──zelfde short_id──► Mailchimp-cards (platte tekst)
 ```
@@ -90,7 +90,7 @@ nieuwsbrief.html ──zelfde short_id──► Mailchimp-cards (platte tekst)
 | `supabase/migrations/001_diensten.sql` | Schema |
 | `supabase/migrations/002_diensten_historie.sql` | Versiegeschiedenis per dienst (trigger) — zie `supabase/README.md` |
 | `supabase/functions/meld-klaar/` | Klaar-ping e-mail |
-| `supabase/functions/meld-preek/` | Preek per mail (met .docx-bijlage) naar Anita; zelfde Resend-secrets als meld-klaar, optioneel `PREEK_EMAIL` |
+| `supabase/functions/nazorg/` | Preek (mail + opslag) en feedback (opslag); schrijft met service role naar `dienst_nazorg` (migratie 003, geen anon-toegang) |
 | `.github/workflows/keep-supabase-active.yml` | Ping elke 3 dagen (Free-tier pauze voorkomen) |
 | `.github/workflows/deploy-edge-functions.yml` | Deployt `supabase/functions/**` automatisch bij push naar `main` (zie §7) |
 
@@ -172,7 +172,7 @@ supabase secrets set --project-ref iabrbkirzsolwnuknbel \
 
 Zonder `RESEND_API_KEY` → HTTP 501 → UI opent mailto. Functie is al gedeployed; secrets kunnen nog ontbreken.
 
-**Preek & feedback (laatste stap `nazorg` in `index.html`):** de voorganger plakt de preek en klikt *Preek toevoegen & versturen* → opslaan bij de dienst (`data.preek`, `data.preek_verstuurd`) + Edge Function `meld-preek` mailt 'm als .docx naar `PREEK_EMAIL` (anita@mpo-bv.nl). Dat kan ook ná de dienst via dezelfde link. Zonder Resend downloadt de app het .docx en opent een lege mail om zelf te bijlagen. De feedbackvragen (`feedback_gemak/tijd/verbeter/overig`) staan in dezelfde `data`-JSON van de dienst (geen aparte tabel); lezen via Supabase Table Editor → `diensten.data`. Beide worden in de brieven aan (gast)predikanten genoemd.
+**Preek & feedback (laatste stap `nazorg` in `index.html`):** bewust *niet* in `diensten.data` (leesbaar voor anon). De velden `preek` en `feedback_*` worden uit de cloud-payload en uit share-URL's gestript (`NAZORG_VELDEN`); ze gaan via Edge Function `nazorg` naar tabel `dienst_nazorg` (RLS zonder policies; lezen via Supabase Table Editor). De preek wordt bovendien als .docx gemaild naar de ontvanger in secret `PREEK_EMAIL` (staat nergens in de repo of op de site). **Eenmalig nodig:** migratie `003_dienst_nazorg.sql` draaien in de SQL Editor, en secrets `PREEK_EMAIL`, `RESEND_API_KEY`, `RESEND_FROM` zetten. Zonder Resend/PREEK_EMAIL is de preek wél bewaard; de app downloadt het .docx en opent een mail aan het bureau om door te sturen. Het formulier toont een eerder verstuurde preek niet opnieuw (alleen "Verstuurd …"). Beide onderdelen worden in de brieven aan (gast)predikanten genoemd.
 
 **Deploy van de functie** gebeurt automatisch via `.github/workflows/deploy-edge-functions.yml` bij elke push naar `main` die `supabase/functions/**` raakt (of handmatig via "Run workflow"). Vereist eenmalig het repo-secret `SUPABASE_ACCESS_TOKEN` (GitHub → repo Settings → Secrets and variables → Actions), een persoonlijk access token via Supabase Dashboard → Account → Access Tokens — **niet** hetzelfde als de `RESEND_API_KEY`/anon key. Zonder dat secret faalt de workflow met een duidelijke auth-fout; dan alsnog via de Supabase-dashboard code-editor deployen (zie meld-klaar/index.ts bovenaan het bestand voor de volledige code + uitleg).
 
