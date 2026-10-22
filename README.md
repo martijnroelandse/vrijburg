@@ -13,7 +13,7 @@ Webformulier waarmee medewerkers (of dominees zelf) de wekelijkse liturgie kunne
 
 1. **Bureaumedewerker** zet datum → predikant, organist, lector en cantorij worden ingevuld vanuit de dienstplanning
 2. **Bureaumedewerk(st)er** stuurt *Link vaste voorganger* (eigen predikant, informele mail) of *Brief gastpredikant* (gast, met downloads)
-3. **Voorgang(st)er** vult thema, afbeelding, nieuwsbrief, overdenking en orde van dienst in (inclusief `+ Muziek`-blokken waar nodig), stuurt link terug
+3. **Voorgang(st)er** vult thema, afbeelding, nieuwsbrief en orde van dienst in (inclusief `+ Muziek`-blokken waar nodig), stuurt link terug
 4. **Bureau** stuurt **dezelfde cloud-link** (zelfde `id`) naar de organist(e)
 5. **Organist(e)** ziet de orde van de voorganger, vult orgelspel, muziekblokken en muziek na de overdenking in, stuurt link terug
 6. **Bureaumedewerker** opent die ene link, controleert agenda en collecte, downloadt de liturgie
