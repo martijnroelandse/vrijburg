@@ -237,6 +237,7 @@ Gesprekstukken (niet uitvoeren zonder overleg): `LITURGIECIE-19AUG2026.md`, `PLA
 | `Liturgien/*.docx` | Referentie-opmaak bestaande liturgieën |
 | `supabase/README.md` | Schema, bucket, setup |
 | `README.md` | Korte gebruikersdoc |
+| `docs/usecue-website.md` | Naslag voor het bewerken van vrijburg.nl via Usecue en Claude (zonder koppelgegevens: de repo is openbaar) |
 
 ---
 
