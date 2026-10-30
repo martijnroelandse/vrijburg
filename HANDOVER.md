@@ -73,7 +73,8 @@ Browser (index.html)
   ├── docx.js + JSZip (CDN) → .docx download
   ├── Supabase Postgres `diensten` + Storage `dienst-fotos`  (?id=short_id)
   ├── Edge Function `meld-klaar` → Resend (optioneel) of mailto-fallback
-  └── Edge Function `nazorg` → afgeschermde tabel `dienst_nazorg` + Resend: preek (.docx-bijlage) naar de ontvanger uit secret `PREEK_EMAIL`
+  ├── Edge Function `nazorg` → afgeschermde tabel `dienst_nazorg` + Resend: preek (.docx-bijlage) naar de ontvanger uit secret `PREEK_EMAIL`
+  └── Edge Function `podcast` → leest de nieuwste Vrijzinnige Miniatuur van www.vrijburg.nl (alleen nieuwsbrief.html)
 
 nieuwsbrief.html ──zelfde short_id──► Mailchimp-cards (platte tekst)
 ```
@@ -90,6 +91,7 @@ nieuwsbrief.html ──zelfde short_id──► Mailchimp-cards (platte tekst)
 | `supabase/migrations/001_diensten.sql` | Schema |
 | `supabase/migrations/002_diensten_historie.sql` | Versiegeschiedenis per dienst (trigger) — zie `supabase/README.md` |
 | `supabase/functions/meld-klaar/` | Klaar-ping e-mail |
+| `supabase/functions/podcast/` | Nieuwste miniatuur (nummer, auteur, thema, afbeelding, SoundCloud) van www.vrijburg.nl voor de podcast-card in `nieuwsbrief.html`. Nodig omdat de Hugo-site (sinds de overstap van WordPress) geen CORS-header meestuurt en `/wp-json/` niet meer bestaat. Volgt `/laatste-podcast/` (HTML-doorverwijzing) en leest die pagina; geen secrets nodig |
 | `supabase/functions/nazorg/` | Preek (mail + opslag) en feedback (opslag); schrijft met service role naar `dienst_nazorg` (migratie 003, geen anon-toegang) |
 | `.github/workflows/keep-supabase-active.yml` | Ping elke 3 dagen (Free-tier pauze voorkomen) |
 | `.github/workflows/deploy-edge-functions.yml` | Deployt `supabase/functions/**` automatisch bij push naar `main` (zie §7) |
