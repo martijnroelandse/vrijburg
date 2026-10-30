@@ -236,8 +236,6 @@
 <script>
 // Supabase client, NL_MAANDEN/NL_DAGEN, formatDatum() en escapeHtml() komen
 // uit shared.js (zelfde platform als index.html, zie CLAUDE.md).
-const VRIJBURG_POSTS_API = 'https://www.vrijburg.nl/wp-json/wp/v2/posts';
-const SOUNDCLOUD_USER = 'https://soundcloud.com/vrijburg-amsterdam';
 
 let currentRow = null;
 let currentCards = [];
@@ -257,23 +255,6 @@ function setPodcastStatus(msg, kind) {
   el.className = 'status' + (kind ? ' ' + kind : '');
 }
 
-function stripTags(html) {
-  return String(html || '')
-    .replace(/<script[\s\S]*?<\/script>/gi, ' ')
-    .replace(/<style[\s\S]*?<\/style>/gi, ' ')
-    .replace(/<br\s*\/?>/gi, '\n')
-    .replace(/<\/p>/gi, '\n')
-    .replace(/<[^>]+>/g, '\n')
-    .replace(/&nbsp;/g, ' ')
-    .replace(/&#8217;/g, "'")
-    .replace(/&#8216;/g, "'")
-    .replace(/&#8220;/g, '"')
-    .replace(/&#8221;/g, '"')
-    .replace(/&amp;/g, '&')
-    .replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>');
-}
-
 function getFotoPublicUrl(path) {
   if (!sb || !path) return '';
   const { data } = sb.storage.from(SUPABASE_FOTO_BUCKET).getPublicUrl(path);
@@ -289,141 +270,29 @@ function filenameFromUrl(url, fallback) {
   }
 }
 
-function fullSizeImageUrl(url) {
-  if (!url) return '';
-  // WP content often embeds -490x368 sized variants; prefer original
-  return url.replace(/-\d+x\d+(\.[a-z0-9]+)$/i, '$1');
-}
-
-function extractPodcastImage(post, contentHtml) {
-  const featured = post?._embedded?.['wp:featuredmedia']?.[0];
-  if (featured?.source_url) {
-    return {
-      imageUrl: featured.source_url,
-      imageFilename: filenameFromUrl(
-        featured.source_url,
-        `miniatuur-${post.id || 'illustratie'}.jpg`
-      ),
-    };
-  }
-  const imgMatch = String(contentHtml || '').match(/<img[^>]+src=["']([^"']+)["']/i);
-  if (imgMatch) {
-    const imageUrl = fullSizeImageUrl(imgMatch[1]);
-    return {
-      imageUrl,
-      imageFilename: filenameFromUrl(imageUrl, `miniatuur-${post.id || 'illustratie'}.jpg`),
-    };
-  }
-  return { imageUrl: '', imageFilename: '' };
-}
-
-function parseMiniatuurFromPost(post) {
-  const title = stripTags(post.title?.rendered || '').replace(/\s+/g, ' ').trim();
-  const content = post.content?.rendered || '';
-  if (!/soundcloud/i.test(content) && !/miniatuur/i.test(content + ' ' + title)) return null;
-
-  const scMatch = content.match(/https:\/\/soundcloud\.com\/vrijburg-amsterdam\/[a-zA-Z0-9\-]+/);
-  const soundcloudUrl = scMatch ? scMatch[0] : '';
-
-  const text = stripTags(content);
-  const lines = text.split(/\n+/).map(l => l.replace(/\s+/g, ' ').trim()).filter(Boolean);
-
-  const fields = {};
-  for (const line of lines) {
-    let m;
-    if ((m = line.match(/^Geschreven door\s+(.+)$/i))) fields.geschreven = m[1];
-    else if ((m = line.match(/^Voorgelezen door\s+(.+)$/i))) fields.voorgelezen = m[1];
-    else if ((m = line.match(/^Geluidsmontage\s+(.+)$/i))) fields.montage = m[1];
-    else if ((m = line.match(/^Thema:\s*(.+)$/i))) fields.thema = m[1];
-    else if ((m = line.match(/^Titel:\s*(.+)$/i))) fields.titel = m[1];
-    else if ((m = line.match(/^Miniatuur\s+(\d+)$/i))) fields.nummer = m[1];
-    else if ((m = line.match(/^(Foto|Illustratie):\s*(.+)$/i))) {
-      fields.creditLabel = m[1];
-      fields.creditText = m[2];
-      fields.creditLine = `${m[1]}: ${m[2]}`;
-    }
-    else if ((m = line.match(/^(\d{1,2} \w+ \d{4})$/))) fields.datumTekst = m[1];
-  }
-
-  if (!fields.nummer) {
-    const m = title.match(/#\s*(\d+)/) || title.match(/\b(\d{3,4})\b/);
-    if (m) fields.nummer = m[1];
-  }
-  if (!fields.titel) {
-    fields.titel = title.replace(/#\s*\d+\s*$/, '').trim();
-  }
-
-  // Alleen echte miniaturen (met nummer of soundcloud-track)
-  if (!fields.nummer && !soundcloudUrl) return null;
-
-  // Fallback copyright uit featured caption (bijv. "Screenshot")
-  if (!fields.creditLine) {
-    const caption = stripTags(post?._embedded?.['wp:featuredmedia']?.[0]?.caption?.rendered || '')
-      .replace(/\s+/g, ' ')
-      .trim();
-    if (caption && !/^screenshot$/i.test(caption)) {
-      fields.creditLabel = 'Illustratie';
-      fields.creditText = caption;
-      fields.creditLine = `Illustratie: ${caption}`;
-    }
-  }
-
-  const image = extractPodcastImage(post, content);
-
-  return {
-    nummer: fields.nummer || '',
-    titel: fields.titel || title,
-    thema: fields.thema || '',
-    geschreven: fields.geschreven || '',
-    voorgelezen: fields.voorgelezen || '',
-    montage: fields.montage || '',
-    creditLabel: fields.creditLabel || '',
-    creditText: fields.creditText || '',
-    creditLine: fields.creditLine || '',
-    // backward-compat alias for older card builders
-    foto: fields.creditText || '',
-    imageUrl: image.imageUrl,
-    imageFilename: image.imageFilename || (
-      fields.nummer ? `miniatuur-${fields.nummer}.jpg` : 'miniatuur-illustratie.jpg'
-    ),
-    datumTekst: fields.datumTekst || (post.date ? formatDatum(post.date.slice(0, 10)) : ''),
-    pageUrl: post.link,
-    soundcloudUrl: soundcloudUrl || (fields.nummer
-      ? `${SOUNDCLOUD_USER}/vrijzinnige-miniatuur-blog-${fields.nummer}`
-      : SOUNDCLOUD_USER),
-    fetchedAt: new Date().toISOString(),
-  };
-}
-
 async function fetchLatestPodcast({ force = false } = {}) {
   if (!force && latestPodcast) return latestPodcast;
   if (!force && podcastFetchPromise) return podcastFetchPromise;
 
   podcastFetchPromise = (async () => {
     setPodcastStatus('Podcast ophalen…', '');
-    const url = new URL(VRIJBURG_POSTS_API);
-    url.searchParams.set('search', 'Vrijzinnige Miniatuur blog');
-    url.searchParams.set('per_page', '8');
-    url.searchParams.set('orderby', 'date');
-    url.searchParams.set('order', 'desc');
-    url.searchParams.set('_embed', '1');
-
-    const res = await fetch(url.toString());
-    if (!res.ok) throw new Error('Vrijburg blog-API niet bereikbaar');
-    const posts = await res.json();
-    for (const post of posts) {
-      const parsed = parseMiniatuurFromPost(post);
-      if (parsed) {
-        latestPodcast = parsed;
-        const creditHint = parsed.creditLine ? ` · ${parsed.creditLine}` : '';
-        setPodcastStatus(
-          `✓ Miniatuur ${parsed.nummer || ''}: ${parsed.titel}${creditHint}`.trim(),
-          'ok'
-        );
-        return parsed;
-      }
+    // www.vrijburg.nl stuurt geen CORS-header mee; de Edge Function `podcast`
+    // leest de nieuwste miniatuur server-side (supabase/functions/podcast).
+    if (!sb) throw new Error('Geen verbinding met de database');
+    const { data, error } = await sb.functions.invoke('podcast');
+    if (error || !data?.podcast) {
+      throw new Error(data?.error || 'Podcast ophalen mislukt');
     }
-    throw new Error('Geen recente Vrijzinnige Miniatuur gevonden');
+    const parsed = data.podcast;
+    parsed.datumTekst = parsed.datumTekst || (parsed.datum ? formatDatum(parsed.datum) : '');
+    parsed.fetchedAt = new Date().toISOString();
+    latestPodcast = parsed;
+    const creditHint = parsed.creditLine ? ` · ${parsed.creditLine}` : '';
+    setPodcastStatus(
+      `✓ Miniatuur ${parsed.nummer || ''}: ${parsed.titel}${creditHint}`.trim(),
+      'ok'
+    );
+    return parsed;
   })();
 
   try {
