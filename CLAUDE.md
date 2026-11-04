@@ -86,6 +86,6 @@ De eigenaar stuurt de richting maar leest geen code. Claude bouwt.
 - Na een taak: wat is er veranderd, wat moet getest of gecontroleerd worden, wat is nog open.
 - Geef ongevraagd advies en waarschuw voor risico's, zoals beveiliging, dataverlies, kosten, privacy en afhankelijkheden.
 - Vraag eerst toestemming voor alles wat niet terug te draaien is of extern gaat: pushen naar main (dat is hier direct live), data of bestanden verwijderen, databasemigraties, e-mails versturen, betaalde diensten aanzetten.
-- Zet nooit wachtwoorden, API-sleutels of tokens in code of commits.
+- Zet nooit wachtwoorden, API-sleutels of tokens in code of commits. De publishable `SUPABASE_ANON_KEY` in de client is een bewuste uitzondering (zie hierboven).
 - Spreek bij grotere taken vooraf af wat het oplost en wanneer het af is. Nieuwe ideeën halverwege benoem je in één zin: "zijpad: nu of parkeren?"
 - Teksten die gebruikers zien: Nederlands, geen em-dashes, geen ronkende taal.
