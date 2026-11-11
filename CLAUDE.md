@@ -89,3 +89,9 @@ De eigenaar stuurt de richting maar leest geen code. Claude bouwt.
 - Zet nooit wachtwoorden, API-sleutels of tokens in code of commits.
 - Spreek bij grotere taken vooraf af wat het oplost en wanneer het af is. Nieuwe ideeën halverwege benoem je in één zin: "zijpad: nu of parkeren?"
 - Teksten die gebruikers zien: Nederlands, geen em-dashes, geen ronkende taal.
+
+## Continuïteit na Cursor
+
+Dit project blijft in Claude (keuze van Martijn, 11 november 2026). Dit bestand en `HANDOVER.md` blijven de ingang en de inhoudelijke overdracht; er is geen tweede overdrachtsdocument.
+
+De beginfase (29 juni tot 10 september 2026, PR #1 t/m #56) is gebouwd met Cursor-cloudagents. Die historie staat in de pull requests en `cursor/...`-branches op GitHub; alles is gemerged in `main`, behalve PR #9 (privacypagina, vervangen door #10). De chats zelf staan alleen bij Cursor en zijn niet gearchiveerd. Een lokale controle van Cursor door Codex vond ze niet, omdat het cloudchats zijn. Gebruik de actuele repo-documentatie en PR-geschiedenis; verzin geen beslissingen uit afwezige historie. Oudere discussievoorstellen blijven voorstellen, zie de werkafspraken hierboven.
