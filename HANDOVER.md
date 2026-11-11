@@ -223,6 +223,19 @@ Zonder `RESEND_API_KEY` → HTTP 501 → UI opent mailto. Functie is al gedeploy
 - Liedbundels autocomplete of officiële API
 - Print-hulp “veelvoud van 4 pagina’s”
 
+**Nog open uit de feedback van Hiltje** (alleen na overleg, zie de gesprekstukken hieronder): gebed na de Groet, Uitzending en Zegen splitsen, labels en Mailchimp-tekst scheiden, structurele vrije lijsten, eenvoudig/uitgebreid-schakelaar. Al gedaan: voorbeden-licht en de bijzondere collecte.
+
+**Bewust niet gedaan** (tijdens de Cursor-fase besproken en afgewezen; niet opnieuw voorstellen zonder nieuwe reden)
+
+- Oneindige compositievrijheid: de standaarddienst voor Gigi is leidend, afwijken blijft begrensd.
+- Word pixel-perfect nabootsen.
+- De organist de hele orde van dienst laten bewerken (alleen de Muziek-blokken).
+- E-mailadressen van de andere partij in uitnodigingen.
+- QR-upload per dienst (er is één bijzondere QR).
+- Auth of ACL “even snel” erbij zetten; dat is een eigen traject (zie hierboven).
+
+**Werkwijze die hier werkt:** eerst adviseren, dan bouwen. Licht boven herontwerp. Bij een regressie terugdraaien.
+
 Gesprekstukken (niet uitvoeren zonder overleg): `LITURGIECIE-19AUG2026.md`, `PLAN-REACTIE-HILTJE-AUG2026.md`, `VERBETERPLAN-FEEDBACK-HILTJE.md`.
 
 ---
